@@ -1,0 +1,143 @@
+#!/bin/sh
+# Profile file. Runs on shell login. We also source this file in ~/.xsession and ~/.xsesionrc to have the same environment when logging in with X.
+
+stty -ixon # free C-q for other binding
+
+
+# path
+function addToPATH {
+  case ":$PATH:" in
+    *":$1:"*) :;; # already there
+    *) PATH="$1:$PATH";; # or PATH="$PATH:$1"
+  esac
+}
+
+for p in `find $HOME/opt -type d | grep bin`; do
+    addToPATH $p
+done
+
+addToPATH $HOME/dotfiles/bin
+
+source $HOME/.z.sh
+
+# alias
+alias ls='ls --color'
+alias palette='for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 180 -s "  "; echo -e "\e[m"'
+alias pwd='pwd -P'
+alias vimdiff='nvim -d'
+alias ipdb='python -m ipdb'
+alias icat='kitty +kitten icat'
+alias gps='git push'
+alias gpl='git pull'
+if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
+    alias ls='ls -G'
+fi
+alias gprun='cuthon --'
+alias cprun='cuthon -n 0 --'
+alias nsh='nvim +terminal +startinsert'
+iv(){
+    ls "$@" | sort -V | sxiv -i
+}
+
+export EDITOR="nvim"
+export TERMINAL="kitty"
+export GOPATH=$HOME/opt/go
+export XDG_CONFIG_HOME=$HOME/.config
+
+
+# pyenv
+if [ -d $HOME/.pyenv ];then
+    addToPATH $HOME/.pyenv/bin
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+    export PYENV_VIRTUALENV_DISABLE_PROMPT=0
+    # alias pudb='python -m pudb'
+fi
+
+setupvirtualenv(){
+    pip install -r $HOME/dotfiles/pyenv_default_packages
+    pip install neovim-remote
+}
+
+# nvim
+MANPAGER="nvim -c 'set ft=man' -"
+
+# nvim remote
+nvrte(){
+    if [[ $1 == /* ]];
+    then
+        nvr --remote-send "<esc><c-\><c-n>:Tabdrop $1<cr>"
+    else
+        nvr --remote-send "<esc><c-\><c-n>:Tabdrop `pwd`/$1<cr>"
+    fi
+}
+
+nvre(){
+    cur_buf_num=`nvr --remote-expr "bufnr('%')"`
+    if [[ $1 == /* ]];
+    then
+        nvr --remote-send "<esc><c-\><c-n>:edit $1<cr> | :bw! $cur_buf_num<cr>"
+    else
+        nvr --remote-send "<esc><c-\><c-n>:edit `pwd`/$1<cr> | :bw! $cur_buf_num<cr>"
+    fi
+}
+alias te='nvrte'
+alias e='nvre'
+
+# dtach
+dt(){
+dtach -A /tmp/$1 -r winch nvim +terminal +startinsert
+}
+
+# fzf
+addToPATH $HOME/.fzf/bin
+MANPAGER="nvim -c 'set ft=man' -"
+export FZF_DEFAULT_OPTS="--reverse --bind 'ctrl-f:page-down,ctrl-b:page-up,ctrl-y:execute-silent(echo {} | xclip -sel clip)+abort'"
+unalias z 2> /dev/null
+
+
+z() {
+  [ $# -gt 0 ] && _z "$*" && return
+  cd "$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
+}
+
+
+
+# tmux
+tm() {
+  [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
+  if [ $1 ]; then
+    tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
+  fi
+  session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
+}
+
+
+# rclone
+rpush() {
+    HOME=$HOME
+    PWD=$PWD
+    AFFIX=${PWD:${#HOME}}
+    rclone -P sync . gdrive:$AFFIX $@
+}
+
+rpull() {
+    HOME=$HOME
+    PWD=$PWD
+    AFFIX=${PWD:${#HOME}}
+    rclone -P sync gdrive:$AFFIX . $@
+}
+
+rdownload() {
+    HOME=$HOME
+    PWD=$PWD
+    AFFIX=${PWD:${#HOME}}
+    rclone -P copy gdrive:$AFFIX/$1 ./$1
+}
+
+rupload() {
+    HOME=$HOME
+    PWD=$PWD
+    AFFIX=${PWD:${#HOME}}
+    rclone -P copy ./$1 gdrive:$AFFIX/$1
+}

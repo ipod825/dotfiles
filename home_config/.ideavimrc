@@ -1,0 +1,34 @@
+source  ~/dotfiles/config/nvim/init.vim
+source ~/dotfiles/config/nvim/mapping.vim
+source ~/dotfiles/config/nvim/func.vim
+
+set timeoutlen=500
+set clipboard=unnamed
+nmap <c-o> :action ActivateProjectToolWindow<cr>
+nmap <A-d> :action GotoDeclaration<cr>
+nmap <A-k> :action FindUsages<cr>
+nmap <A-h> :action EditorLineStart<cr>
+nmap <A-l> :action EditorLineEnd<cr>
+imap <A-h> <Esc>:action EditorLineStart<cr>i
+imap <A-l> <Esc>:action EditorLineEnd<cr>i
+vmap <A-h> g^
+vmap <A-l> g$
+nmap / :action Find<cr>
+nmap <A-s> :q<cr>:action Back<cr>
+nmap <A-e> :action ActivateTerminalToolWindow<cr>
+nmap <leader>r :action ChooseRunConfiguration<cr>
+nmap <leader>d :action Debug<cr>
+nmap za :action CollapseRegion<cr>
+nmap zo :action ExpandRegion<cr>
+
+nnoremap \d :action ActivateDebugToolWindow<cr>
+nnoremap \b :action ToggleLineBreakpoint<cr>
+nnoremap \e :action EvaluateExpression<cr>
+nnoremap \r :action Resume<cr>
+nnoremap \s :action StepInto<cr>
+nnoremap \n :action StepOver<cr>
+nnoremap \u :action Debugger.PopFrame<cr>
+
+
+set surround
+set multiple-cursors

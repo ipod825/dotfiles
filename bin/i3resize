@@ -1,0 +1,25 @@
+#!/bin/sh
+# This script was made by `goferito` on Github.
+# Some cleanup by Luke.
+
+[ -z "$1" ] && echo "No direction provided" && exit 1
+distanceStr="4 px or 4 ppt"
+
+_i3resize() {
+  i3-msg resize "$1" "$2" "$distanceStr" || i3-msg resize "$3" "$4" "$distanceStr"
+}
+
+case $1 in
+  wider)
+    _i3resize grow left right
+    ;;
+  narrower)
+    _i3resize shrink left right
+    ;;
+  taller)
+    _i3resize grow up down
+    ;;
+  shorter)
+    _i3resize shrink up down
+    ;;
+esac

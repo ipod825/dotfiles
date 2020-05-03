@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+qdir=$HOME/.local/share/qutebrowser-day
+cqdir=$HOME/dotfiles/config/qutebrowser
+
+mkdir -p $qdir
+rm -rf $qdir/config
+rm -rf $qdir/data/greasemonkey
+ln -s $cqdir $qdir/config
+ln -s $cqdir/greasemonkey $qdir/data/greasemonkey
+qutebrowser -B $qdir

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cachefile=/tmp/.i3blocks-xrandr
+
+if [ ! -f "${cachefile}" ] ; then
+  value=0
+else
+  value=`cat ${cachefile}`
+fi
+
+if [ $value == "0" ]; then
+    xrandr --output eDP1 --auto --output HDMI1 --auto --left-of eDP1
+    echo 1 > ${cachefile}
+else
+    xrandr --output eDP1 --auto --scale 1x1 --output HDMI1 --off
+    echo 0 > ${cachefile}
+fi

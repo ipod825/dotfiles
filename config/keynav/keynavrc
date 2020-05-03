@@ -1,0 +1,44 @@
+# Use 'clear' to blow away any previous keybindings
+clear
+daemonize
+
+ctrl+semicolon start, cursorzoom 100 100, grid 3x3
+i cell-select 2x2
+Escape end
+ctrl+c warp,end
+h move-left
+j move-down
+k move-up
+l move-right
+ctrl+h cut-left
+ctrl+j cut-down
+ctrl+k cut-up
+ctrl+l cut-right
+Return warp,click 1,end
+space warp,doubleclick 1,end
+m warp,click 3,end
+d drag 1
+alt+j click 5
+alt+k click 4
+u history-back
+# Record keynav actions
+q record
+shift+at playback
+
+### Example using the 'sh' command.
+# Make firefox the active window
+# f sh "xdotool windowactivate $(xdotool search -title -- '- Mozilla Firefox')", end
+# Make a new tab in google chrome:
+# t sh "xdotool windowactivate $(xdotool search --title -- '- Google Chrome' | head -1); xdotool key ctrl+t",end
+# Paste
+# v sh "xdotool key shift+Insert"
+
+### Drag examples
+# Start drag holding the left mouse button
+# Start drag holding middle mouse + control and shift
+# w drag 2 ctrl+shift
+# Dragging with modifiers
+#q drag 1
+#ctrl+q drag 1 ctrl
+#shift+q drag 1 shift
+#shift+ctrl+q drag 1 shift+ctrl

@@ -1,0 +1,39 @@
+# {{{ window management
+super + q
+    i3-msg kill
+super + s
+    i3-msg split toggle
+super + e
+    i3-msg splith; $TERMINAL;
+super + o
+    i3-msg splitv; $TERMINAL;
+super + {h,l}
+    i3-msg focus {left,right}
+super + shift + {j,k}
+    i3-msg focus {down,up}
+super + w; l
+    exec i3lock -e -c 000000
+super + w; {r,e}
+    i3-msg {restart,exit}
+super + w; f
+    i3-msg floating toggle
+super + w; s
+    i3-msg move scratchpad
+super + w; shift + s
+    i3-msg cratchpad show && i3-msg floating toggle
+super + w; super + ctrl + {h,j,k,l}
+    i3-msg move {left,down,up,right}
+super + w;  {w,n,t,s}
+    i3resize {wider,narrower,taller,shorter}
+# }}}
+
+# {{{ workspace
+super + {1,2,3}
+    i3-msg workspace {1,2,3}
+super + shift + 1
+    i3-msg move container to workspace 1; i3-msg workspace 1
+super + shift + 2
+    i3-msg move container to workspace 2; i3-msg workspace 2
+super + shift + 3
+    i3-msg move container to workspace 3; i3-msg workspace 3
+# }}}

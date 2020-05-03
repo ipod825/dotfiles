@@ -1,0 +1,12 @@
+neovim
+neovim-remote
+ipython
+ipdb
+pudb
+python-language-server
+rope
+pyflakes
+pycodestyle
+pydocstyle
+yapf
+isort

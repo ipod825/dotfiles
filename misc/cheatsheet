@@ -1,0 +1,41 @@
+# ssh without password prompt
+cat ~/.ssh/id_rsa.pub | ssh remote 'cat >> ~/.ssh/authorized_keys'
+# xclip ssh private key
+xclip -sel clip ~/.ssh/id_rsa
+# git shallow clone
+git clone --depth=1
+# ssh forward local:123 to remote:456
+ssh -q -L 123:localhost:456 remote
+# ssh forward remote:123 to local:456
+ssh -R 123:localhost:456 remote
+# config under home
+./configure --prefix=$HOME/opt
+# wpa_supplicant
+wpa_supplicant -B -i INTERFACE -c <(wpa_passphrase SSID PSK)
+# terminux setfont
+pacman --sync --refresh terminus-font
+setfont /usr/share/kbd/consolefonts/ter-132n.psf.gz
+# tar git repo
+tar --exclude-vcs -zcvf repo.tgz repo
+# gpg list keys
+gpg --list-secret-keys --keyid-format LONG
+# gpg export keys
+gpg --armor --export <keyid>
+# gpg import keys | when failed, run gpg-connect-agent KILLAGENT
+gpg --import ~/gpg.priv
+# export/import gpg keys to remote
+gpg -a --export-secret-key | ssh remote 'cat >> ~/gpg.priv'
+# xrandr resolution
+xrandr --output eDP1 --mode "1600x900"
+# xranrd orientation
+xrandr -o normal left/right/inverted
+# chrome export/import search engine
+notify-send https://superuser.com/questions/280694/how-can-i-share-my-google-chrome-search-engine-entries
+# du list space occupation
+du -xh --max-depth=1 | sort -rh | head -n 11 | sed 1d
+# pgrep verbose
+pgrep PROG | xargs --no-run-if-empty ps fp
+# cd to git root
+cd `git rev-parse --show-toplevel`
+# netstat
+netstat -anp | grep port

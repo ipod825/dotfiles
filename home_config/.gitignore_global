@@ -1,0 +1,16 @@
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.pyc
+*.bbl
+*.blg
+__pycache__
+*.pyc
+.DS_StORE
+*.nav
+*.snm
+*.synctex.gz
+*.toc
+.lvimrc
+tags

@@ -1,0 +1,4 @@
+## arrow up
+"\e[A":history-substring-search-backward
+## arrow down
+"\e[B":history-substring-search-forward

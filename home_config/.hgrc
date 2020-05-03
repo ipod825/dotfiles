@@ -1,0 +1,10 @@
+[ui]
+merge = nvr
+editor = nvr -cc tabe --remote-wait +"setlocal bufhidden=wipe"
+
+[merge-tools]
+nvr.args = -s -cc tabnew $base -O $other $local
+nvr.gui = False
+
+[pager]
+ignore = log, cls

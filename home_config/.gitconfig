@@ -1,0 +1,31 @@
+[core]
+    editor = "nvim"
+	excludesfile = ~/.gitignore_global
+[user]
+	name = Shih-Ming Wang
+	email = swang150@ucsc.edu
+[alias]
+	st = status
+	cm = commit
+    co = checkout
+[push]
+	default = simple
+[diff]
+    tool = "vimdiff"
+[credential]
+	helper = cache
+[color]
+	ui = auto
+[http]
+	cookiefile = ~/.gitcookies
+[url "persistent-https://googleplex-android.git.corp.google.com"]
+	insteadof = https://googleplex-android.googlesource.com
+	insteadof = https://googleplex-android-review.googlesource.com
+[url "persistent-https://android.git.corp.google.com"]
+	insteadof = https://android.googlesource.com
+	insteadof = https://android-review.googlesource.com
+[url "persistent-https://partner-android.git.corp.google.com"]
+	insteadof = https://partner-android.googlesource.com
+	insteadof = https://partner-android-review.googlesource.com
+[pull]
+	rebase = true

@@ -1,0 +1,30 @@
+super + Return
+    $TERMINAL
+super + d
+    rofi -show run
+super + c
+    copyq read 0 1 2 | grep . | rofi -dmenu -multi-select | xclip -sel clippboard
+XF86MonBrightnessUp
+    xbacklight -inc 2
+XF86MonBrightnessDown
+    xbacklight -dec 2
+XF86AudioRaiseVolume
+    pulsemixer --change-volume +5 && pkill -RTMIN+10 i3blocks
+XF86AudioLowerVolume
+    pulsemixer --change-volume -5 && pkill -RTMIN+10 i3blocks
+XF86AudioMute
+    pulsemixer --toggle-mute && pkill -RTMIN+10 i3blocks
+Print
+    deepin-screenshot
+# {{{ mouse
+# super + {h,j,k,l}
+#     xdotool mousemove_relative -- {-26 0, 0 26, 0 -26, 26 0}
+super + j
+    xdotool click 5
+super + k
+    xdotool click 4
+super + m
+    xdotool click 1
+super + shift + m
+    xdotool keyup "super+M"; xdotool click --delay 0 3
+# }}}

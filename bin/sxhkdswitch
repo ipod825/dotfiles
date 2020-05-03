@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+cachefile=/tmp/.${USER}-sxhkdswitch
+
+classname=`xprop -id $(xprop -root _NET_ACTIVE_WINDOW | cut -d ' ' -f 5) WM_CLASS | cut -c 21- | cut -d '"' -f 1`
+
+rc="${HOME}/dotfiles/config/sxhkd/sxhkdrc"
+
+touch ${cachefile}
+if [[ $classname = `cat ${cachefile}` ]]; then
+    exit
+fi
+echo $classname > $cachefile
+
+pkill sxhkd
+if [ ! -f ${HOME}/dotfiles/config/sxhkd/sxhkdrc-${classname} ]; then
+    sxhkd -c "${rc}" "${rc}-common" &!
+else
+    sxhkd -c "${rc}" "${rc}-common" "${rc}-${classname}" &!
+fi
