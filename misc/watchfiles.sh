@@ -7,7 +7,8 @@ export C="$D/config"
 export A="$D/os/arch"
 export M="$D/misc"
 
-common="$HC/.zshrc $HC/.profile $HC/.xinitrc $HC/.Xresources \
+common="$D/setup.sh \
+        $HC/.zshrc $HC/.profile $HC/.xinitrc $HC/.Xresources \
         $C/i3/config $C/kitty/kitty.conf $C/libinput-gestures.conf $C/nvim/settings/rifle.conf $C/sxhkd/sxhkdrc* \
         $C/qutebrowser/config.py \
         $M/watchfiles.sh $M/cheatsheet \

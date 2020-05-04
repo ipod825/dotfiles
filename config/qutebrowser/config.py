@@ -64,9 +64,9 @@ c.bindings.commands['normal'] = {
     'u': 'fake-key <shift-space>',
     'x': 'tab-close',
     'X': 'undo',
-    '<alt-p>': 'spawn --userscript qute-pass',
     '<alt-m>': 'fake-key <space> ;; spawn --userscript view_in_mpv',
     '<alt-d>': 'download-clear',
+    '<alt-p>': 'fake-key i ;; spawn --userscript qute-pass',
     '<alt-f>':
     'config-cycle statusbar.hide ;; config-cycle tabs.show switching always ;; fullscreen',
     '<F11>':
@@ -94,6 +94,8 @@ c.bindings.commands['insert'] = {
     'jk': 'leave-mode',
     '<alt-h>': 'fake-key <home>',
     '<alt-l>': 'fake-key <end>',
+    '<alt-p>': 'spawn --userscript qute-pass',
+    '<alt-shift-p>': 'spawn --userscript qute-pass --password-only',
     '<ctrl-h>': 'fake-key <ctrl-left>',
     '<ctrl-l>': 'fake-key <ctrl-right>',
     '<ctrl-alt-h>': 'fake-key <left>',
