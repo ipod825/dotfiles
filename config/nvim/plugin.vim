@@ -554,7 +554,7 @@ let g:esearch = {
   \}
 
 augroup POST_PLUG_END
-    autocmd USER PLUG_END call esearch#map('<leader>f', 'esearch')
+    " autocmd USER PLUG_END call esearch#map('<leader>f', 'esearch')
     " autocmd USER PLUG_END call esearch#out#win#map('<cr>', {-> b:esearch.open('NewTabdrop')})
     " autocmd USER PLUG_END call esearch#out#win#map('t', {-> b:esearch.open('tab drop')})
     " au User esearch_win_event
