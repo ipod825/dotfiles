@@ -20,7 +20,7 @@ super + w; f
 super + w; s
     i3-msg move scratchpad
 super + w; shift + s
-    i3-msg cratchpad show && i3-msg floating toggle
+    i3-msg scratchpad show && i3-msg floating toggle
 super + w; super + ctrl + {h,j,k,l}
     i3-msg move {left,down,up,right}
 super + w;  {w,n,t,s}
