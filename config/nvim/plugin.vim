@@ -509,6 +509,9 @@ function! SearchWord()
     let s:fzf_ft=''
 endfunction
 "}}}
+
+Plug 'MattesGroeger/vim-bookmarks'
+
 Plug 'gcmt/taboo.vim'
 " taboo{{{
 let g:taboo_tab_format='%I%m%f '
