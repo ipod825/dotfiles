@@ -64,9 +64,11 @@ c.bindings.commands['normal'] = {
     'u': 'fake-key <shift-space>',
     'x': 'tab-close',
     'X': 'undo',
+    '<backspace>': 'enter-mode insert ;; fake-key <backspace>',
+    '<delete>': 'enter-mode insert ;; fake-key <delete>',
     '<alt-m>': 'fake-key <space> ;; spawn --userscript view_in_mpv',
     '<alt-d>': 'download-clear',
-    '<alt-p>': 'fake-key i ;; spawn --userscript qute-pass',
+    '<alt-p>': 'spawn --userscript qute-pass',
     '<alt-f>':
     'config-cycle statusbar.hide ;; config-cycle tabs.show switching always ;; fullscreen',
     '<F11>':
@@ -88,6 +90,8 @@ c.bindings.commands['command'] = {
     '<ctrl-k>': 'command-history-prev',
     '<ctrl-j>': 'command-history-next',
     '<ctrl-u>': 'leave-mode',
+    '<alt-h>': 'rl-beginning-of-line',
+    '<alt-l>': 'rl-end-of-line',
 }
 
 c.bindings.commands['insert'] = {
