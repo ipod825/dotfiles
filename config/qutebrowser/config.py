@@ -27,6 +27,16 @@ c.input.insert_mode.auto_load = True
 c.downloads.location.directory = f'{Path.home()}/Downloads'
 c.tabs.show_switching_delay = 3000
 c.session.lazy_restore = True
+c.colors.tabs.pinned.even.bg = 'grey'
+c.colors.tabs.pinned.odd.bg = 'grey'
+c.colors.tabs.pinned.selected.even.bg = '#61afef'
+c.colors.tabs.pinned.selected.odd.bg = '#61afef'
+c.colors.tabs.even.bg = 'grey'
+c.colors.tabs.odd.bg = 'grey'
+c.colors.tabs.selected.even.bg = '#61afef'
+c.colors.tabs.selected.odd.bg = '#61afef'
+c.tabs.title.format = '{audio}{current_title}'
+c.tabs.title.format_pinned = '{audio}'
 
 c.url.searchengines['g'] = 'https://www.google.com.ar/search?q={}'
 c.url.searchengines[
@@ -55,7 +65,7 @@ c.bindings.commands['normal'] = {
     '<ctrl-shift-tab>': 'tab-prev',
     '<ctrl-tab>': 'tab-next',
     'GF': 'hint links fill :spawn google-chrome  {hint-url}',
-    'Go': 'set-cmd-text :spawn google-chrome ',
+    'GO': 'set-cmd-text :spawn google-chrome ',
     ';': 'set-cmd-text :',
     '<ctrl-t>': 'set-cmd-text -s :open -t',
     'tp': 'tab-pin',
