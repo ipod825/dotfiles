@@ -14,7 +14,6 @@ c.zoom.default = '125%'
 c.aliases = {
     "q": "tab-close",
     "qa": "quit",
-    'og': 'spawn google-chrome {url}',
     'help': 'help --tab',
 }
 c.content.pdfjs = True
@@ -55,6 +54,8 @@ c.bindings.commands['normal'] = {
     '<ctrl-l>': 'tab-next',
     '<ctrl-shift-tab>': 'tab-prev',
     '<ctrl-tab>': 'tab-next',
+    'GF': 'hint links fill :spawn google-chrome  {hint-url}',
+    'Go': 'set-cmd-text :spawn google-chrome ',
     ';': 'set-cmd-text :',
     '<ctrl-t>': 'set-cmd-text -s :open -t',
     'tp': 'tab-pin',
