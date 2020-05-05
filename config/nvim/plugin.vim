@@ -591,6 +591,7 @@ Plug 'git@github.com:ipod825/vim-tabdrop'
 augroup TABDROP
     autocmd!
     autocmd FileType qf nnoremap <buffer> <cr> :QfTabdrop<cr>
+    autocmd FileType qf nnoremap <buffer> q :quit<cr>
 augroup END
 "}}}
 
