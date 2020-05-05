@@ -546,12 +546,12 @@ Plug 'eugen0329/vim-esearch', {'branch': 'development'}
 " vim-esearch {{{
 let g:esearch = {
   \ 'adapter':          'ag',
-  \ 'backend':          'nvim',
+  \ 'bckend':          'nvim',
   \ 'out':              'win',
   \ 'batch_size':       1000,
-  \ 'use':              ['visual', 'word_under_cursor', 'hlsearch', 'last'],
   \ 'default_mappings': 1,
   \}
+nmap <leader>f <Plug>(esearch)
 
 augroup POST_PLUG_END
     " autocmd USER PLUG_END call esearch#map('<leader>f', 'esearch')
