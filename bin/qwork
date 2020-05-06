@@ -8,4 +8,4 @@ rm -rf $qdir/config
 rm -rf $qdir/data/greasemonkey
 ln -s $cqdir $qdir/config
 ln -s $cqdir/greasemonkey $qdir/data/greasemonkey
-qutebrowser -B $qdir
+qutebrowser -B $qdir $1

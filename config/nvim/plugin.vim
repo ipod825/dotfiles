@@ -50,6 +50,7 @@ Plug 'majutsushi/tagbar'
 cnoreabbrev BB TagbarOpenAutoClose
 " }}}
 
+Plug 'vimwiki/vimwiki'
 
 Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-mark'
@@ -163,6 +164,17 @@ if exists('*nvim_open_win')
 Plug 'ncm2/float-preview.nvim'
 endif
 
+Plug 'nathanaelkane/vim-indent-guides', {'for': ['c', 'cpp', 'python']}
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_guide_size = 1
+
+Plug 't9md/vim-textmanip'
+" {{{
+xmap <c-m-k> <Plug>(textmanip-move-up)
+xmap <c-m-h> <Plug>(textmanip-move-left)
+xmap <c-m-l> <Plug>(textmanip-move-right)
+xmap <c-m-j> <Plug>(textmanip-move-down)
+" }}}
 
 Plug 'git@github.com:ipod825/julia-unicode.vim', {'for': 'julia'}
 Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] } " align code - helpful for latex table
@@ -217,9 +229,9 @@ function! s:Gotodef()
 endfunction
 
 nnoremap <m-d> :call <sid>Gotodef()<cr>
-nmap <M-s> :TabdropPopTag<cr><esc>
-nnoremap <M-k> :call LanguageClient_contextMenu()<cr>
-nnoremap <M-j> :call LanguageClient_textDocument_hover()<cr>
+nmap <m-s> :TabdropPopTag<cr><esc>
+nnoremap <c-]> <nop>
+nnoremap <c-t> <nop>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<cr>
 
 " }}}
@@ -298,6 +310,7 @@ function! s:Restore_mappings(mappings, mode) abort
     if (kv[1]!="")
       execute a:mode.'map '.kv[0]." ".kv[1]
     else
+      execute a:mode.'unmap '.kv[0]
       execute a:mode.'unmap '.kv[0]
     endif
   endfor
@@ -410,8 +423,38 @@ let g:Gitv_OpenPreviewOnLaunch = 0
 Plug 'kana/vim-textobj-user'
 Plug 'Julian/vim-textobj-variable-segment'
 Plug 'rhysd/vim-textobj-anyblock'
+Plug 'kana/vim-textobj-line'
+Plug 'kana/vim-textobj-entire'
+Plug 'terryma/vim-expand-region'
+Plug 'whatyouhide/vim-textobj-xmlattr', { 'for': ['html', 'xml'] }
+" {{{ vim-expand-region
+vmap <m-k> <Plug>(expand_region_expand)
+vmap <m-j> <Plug>(expand_region_shrink)
+nmap <m-k> <Plug>(expand_region_expand)
+nmap <m-j> <Plug>(expand_region_shrink)
+let g:expand_region_text_objects = {
+      \ 'iv'  :0,
+      \ 'av'  :0,
+      \ 'iw'  :0,
+      \ 'iW'  :0,
+      \ 'i"'  :0,
+      \ 'a"'  :0,
+      \ 'i''' :0,
+      \ 'a''' :0,
+      \ 'i]'  :1,
+      \ 'ib'  :1,
+      \ 'ab'  :1,
+      \ 'il'  :0,
+      \ 'ip'  :0,
+      \ 'ie'  :0,
+      \ 'ix'  :0,
+      \ 'ax'  :0,
+      \ }
+" }}}
+
 
 Plug 'machakann/vim-sandwich'
+Plug 'tpope/vim-abolish'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -562,18 +605,9 @@ let g:esearch.win_map = [
             \ {'lhs': 't',  'rhs': ':call b:esearch.open("tab drop")<cr>', 'mode': 'n' },
             \ {'lhs': 'q',  'rhs': ':tabclose<cr>', 'mode': 'n' },
             \]
-
-augroup POST_PLUG_END
-    " autocmd USER PLUG_END call esearch#map('<leader>f', 'esearch')
-    " autocmd USER PLUG_END call esearch#out#win#map('<cr>', {-> b:esearch.open('NewTabdrop')})
-    " autocmd USER PLUG_END call esearch#out#win#map('t', {-> b:esearch.open('tab drop')})
-    " au User esearch_win_event
-    "   \   let b:preview = esearch#debounce(b:esearch.preview, 100)
-    "   \ | au CursorMoved <buffer> call b:preview.apply({'align': 'right', 'close_on': []})
-augroup END
-
 " }}}
 
+Plug 'kkoomen/vim-doge'
 Plug 'will133/vim-dirdiff'
 Plug 'machakann/vim-swap'
 Plug 'jalvesaq/vimcmdline'

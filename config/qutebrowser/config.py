@@ -23,7 +23,6 @@ c.scrolling.bar = 'always'
 c.completion.use_best_match = True
 c.url.incdec_segments = ['path', 'query']
 c.statusbar.position = 'top'
-c.input.insert_mode.auto_load = True
 c.downloads.location.directory = f'{Path.home()}/Downloads'
 c.tabs.show_switching_delay = 3000
 c.session.lazy_restore = True
@@ -60,12 +59,15 @@ c.url.searchengines["DEFAULT"] = "https://www.google.com.ar/search?q={}"
 c.bindings.commands['normal'] = {
     'h': 'back',
     'l': 'forward',
+    'H': 'fake-key <left>',
+    'L': 'fake-key <right>',
     '<ctrl-h>': 'tab-prev',
     '<ctrl-l>': 'tab-next',
     '<ctrl-shift-tab>': 'tab-prev',
     '<ctrl-tab>': 'tab-next',
     'gf': 'hint links fill :spawn google-chrome  {hint-url}',
     'go': 'set-cmd-text :spawn google-chrome',
+    'gO': 'spawn google-chrome {url}',
     ';': 'set-cmd-text :',
     '<ctrl-t>': 'set-cmd-text -s :open -t',
     'tp': 'tab-pin',
@@ -84,7 +86,6 @@ c.bindings.commands['normal'] = {
     'config-cycle statusbar.hide ;; config-cycle tabs.show switching always ;; fullscreen',
     '<F11>':
     'config-cycle statusbar.hide ;; config-cycle tabs.show switching always ;; fullscreen',
-    '<ctrl-shift-p>': 'open -p',
     '<ctrl-alt-h>': 'tab-move -',
     '<ctrl-alt-l>': 'tab-move +',
 }

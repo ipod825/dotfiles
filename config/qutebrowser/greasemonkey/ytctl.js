@@ -19,27 +19,11 @@ var everForground = false;
 
 CSS();
 AddPanel();
-setInterval(KillStaticAd ,50);
-setInterval(KillVdoAd ,10);
 
 if(!document.hasFocus()){
     PauseBackgroundTab();
     WaitResumeOnForground();
 }
-
-function KillVdoAd () {
-    var classForOnlyVideoAds = 'ytp-ad-player-overlay'; // .video-ads at the top level also includes footer ads
-    var [adContainer] = document.getElementsByClassName(classForOnlyVideoAds);
-    const isAdHidden = !adContainer || adContainer.offsetParent === null;
-    if (!isAdHidden){
-        player.stopVideo();
-        setTimeout(()=>{
-            player.playVideo();
-            SetSpeed(curr_speed);
-        }, 1);
-    }
-}
-
 
 function CSS() {
     let sheet = document.createElement('style')
@@ -134,7 +118,38 @@ function WaitResumeOnForground(){
     }
 }
 
-function KillStaticAd() {
+// https://greasyfork.org/ru/scripts/386925-youtube-ad-cleaner-include-non-skippable-ads-works/code
+setInterval(adMonitor ,500);
+setInterval(killAd ,1);
+setInterval(()=>{counter = 0; console.log("Counter is reset by timer");} ,60000);
+window.addEventListener("click", ()=>{setTimeout(()=>{counter = 0; console.log("Counter is reset by mouse click");},2000);});
+var counter = 0;
+var fixLoopInvoked = false;
+
+function adMonitor()
+{
+    if (fixLoopInvoked){fixLoopInvoked=false;}
+    try
+    {
+      let ytplayer = document.getElementById(kplayerID);
+      let adState = ytplayer.getAdState();
+      if (adState === 1)
+      {
+          counter +=1;
+          Ads.cancelVdoAd();
+          if (ytplayer.getPlayerState() === -1) Ads.stopVdoAd();
+          console.log("Current counter is:" + counter);
+          if (counter >=2) {counter=0;console.log("Invoked fixLoop");fixLoopInvoked = true;Ads.fixLoop();}; //remove stubbon video ad
+      }
+    }
+    catch(e)
+    {
+        return;
+    }
+}
+
+function killAd()
+{
     Ads.removeByID();
     Ads.removeByClassName();
     Ads.removeByTagName();
@@ -144,7 +159,30 @@ var Ads = {
     "aId":["masthead-ad","player-ads","top-container","offer-module","pyv-watch-related-dest-url","ytd-promoted-video-renderer"],
     "aClass":["style-scope ytd-search-pyv-renderer","video-ads","ytd-compact-promoted-video-renderer"],
     "aTag":["ytd-promoted-sparkles-text-search-renderer"],
-    "removeByID":function(){this.aId.forEach(i=>{ let AdId = document.getElementById(i);if(AdId) AdId.remove();})},
-    "removeByClassName":function(){this.aClass.forEach(c=>{ let AdClass = document.getElementsByClassName(c);if(AdClass[0]) AdClass[0].remove();})},
-    "removeByTagName":function(){this.aTag.forEach(t=>{ let AdTag = document.getElementsByTagName(t);if(AdTag[0]) AdTag[0].remove();})},
+    "removeByID":function(){this.aId.forEach(i=>{ var AdId = document.getElementById(i);if(AdId) AdId.remove();})},
+    "removeByClassName":function(){this.aClass.forEach(c=>{ var AdClass = document.getElementsByClassName(c);if(AdClass[0]) AdClass[0].remove();})},
+    "removeByTagName":function(){this.aTag.forEach(t=>{ var AdTag = document.getElementsByTagName(t);if(AdTag[0]) AdTag[0].remove();})},
+    "cancelVdoAd":function(){
+        let player = document.getElementById(kplayerID);
+        player.cancelPlayback();
+        SetSpeed(curr_speed);
+        setTimeout(()=>{
+            player.playVideo();
+            SetSpeed(curr_speed);
+        },1);
+    },
+    "stopVdoAd":function(){
+        let player = document.getElementById(kplayerID);
+        player.stopVideo();
+        SetSpeed(curr_speed);
+        setTimeout(()=>{
+            player.playVideo();
+            SetSpeed(curr_speed);
+        },1);
+    },
+    "fixLoop":function(){
+        let myWin = window.open('', '_blank');
+        myWin.document.write("<script>function closeIt(){window.close();} window.onload=setTimeout(closeIt, 1000);<\/script><p>Skipping Ad ... auto close!!<\/p>");
+        myWin.focus();
+    }
 }
