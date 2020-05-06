@@ -552,9 +552,16 @@ let g:esearch = {
   \ 'bckend':          'nvim',
   \ 'out':              'win',
   \ 'batch_size':       1000,
+  \ 'prefill':    ['visual', 'hlsearch', 'cword', 'last'],
   \ 'default_mappings': 1,
   \}
 nmap <leader>f <Plug>(esearch)
+vmap <leader>f <Plug>(esearch)
+let g:esearch.win_map = [
+            \ {'lhs': '<cr>',  'rhs': ':call b:esearch.open("NewTabdrop")<cr>', 'mode': 'n' },
+            \ {'lhs': 't',  'rhs': ':call b:esearch.open("tab drop")<cr>', 'mode': 'n' },
+            \ {'lhs': 'q',  'rhs': ':tabclose<cr>', 'mode': 'n' },
+            \]
 
 augroup POST_PLUG_END
     " autocmd USER PLUG_END call esearch#map('<leader>f', 'esearch')
