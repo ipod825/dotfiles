@@ -164,10 +164,8 @@ if exists('*nvim_open_win')
 Plug 'ncm2/float-preview.nvim'
 endif
 
-Plug 'nathanaelkane/vim-indent-guides', {'for': ['c', 'cpp', 'python']}
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_guide_size = 1
-
+Plug 'vim-scripts/LargeFile'
+let g:LargeFile=1
 Plug 't9md/vim-textmanip'
 " {{{
 xmap <c-m-k> <Plug>(textmanip-move-up)
@@ -444,6 +442,8 @@ let g:expand_region_text_objects = {
       \ 'i]'  :1,
       \ 'ib'  :1,
       \ 'ab'  :1,
+      \ 'iB'  :1,
+      \ 'aB'  :1,
       \ 'il'  :0,
       \ 'ip'  :0,
       \ 'ie'  :0,
@@ -650,6 +650,7 @@ if has("persistent_undo")
 endif
 " }}}
 
+Plug 'AndrewRadev/linediff.vim'
 Plug 'vim-scripts/gtags.vim'
 Plug 'zhimsel/vim-stay'
 " {{{ vim-stay
@@ -669,11 +670,6 @@ let g:NETRRifleFile = $HOME."/dotfiles/config/nvim/settings/rifle.conf"
 let g:NETRIgnore = ['__pycache__', '*.pyc', '*.o', 'egg-info']
 let g:NETRColors = {'dir': 39, 'footer': 35, 'exe': 35}
 let g:NETRGuiColors = {'dir': '#00afff', 'footer': '#00af5f', 'exe': '#00af5f'}
-let g:NETRDefaultMapSkip = ['?','<cr>']
-let g:NETRVimCD = ['L']
-let g:NETRHelp = ['<F1>']
-let g:NETRBufPanelOpen = ['<cr>']
-let g:NETROpenCmd = 'NETRNewTabdrop'
 function! DuplicateNode()
     call netranger#cp(netranger#cur_node_path(), netranger#cur_node_path().'DUP')
 endfunction
