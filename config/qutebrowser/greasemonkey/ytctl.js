@@ -131,7 +131,7 @@ function adMonitor()
     if (fixLoopInvoked){fixLoopInvoked=false;}
     try
     {
-      let ytplayer = document.getElementById(kplayerID);
+      let ytplayer = document.getElementById("movie_player");
       let adState = ytplayer.getAdState();
       if (adState === 1)
       {
@@ -162,27 +162,7 @@ var Ads = {
     "removeByID":function(){this.aId.forEach(i=>{ var AdId = document.getElementById(i);if(AdId) AdId.remove();})},
     "removeByClassName":function(){this.aClass.forEach(c=>{ var AdClass = document.getElementsByClassName(c);if(AdClass[0]) AdClass[0].remove();})},
     "removeByTagName":function(){this.aTag.forEach(t=>{ var AdTag = document.getElementsByTagName(t);if(AdTag[0]) AdTag[0].remove();})},
-    "cancelVdoAd":function(){
-        let player = document.getElementById(kplayerID);
-        player.cancelPlayback();
-        SetSpeed(curr_speed);
-        setTimeout(()=>{
-            player.playVideo();
-            SetSpeed(curr_speed);
-        },1);
-    },
-    "stopVdoAd":function(){
-        let player = document.getElementById(kplayerID);
-        player.stopVideo();
-        SetSpeed(curr_speed);
-        setTimeout(()=>{
-            player.playVideo();
-            SetSpeed(curr_speed);
-        },1);
-    },
-    "fixLoop":function(){
-        let myWin = window.open('', '_blank');
-        myWin.document.write("<script>function closeIt(){window.close();} window.onload=setTimeout(closeIt, 1000);<\/script><p>Skipping Ad ... auto close!!<\/p>");
-        myWin.focus();
-    }
+    "cancelVdoAd":function(){ console.log('cancelled video ad'); document.getElementById("movie_player").cancelPlayback();setTimeout(()=>{document.getElementById("movie_player").playVideo();},1);},
+    "stopVdoAd":function(){ console.log('stopped video ad'); document.getElementById("movie_player").stopVideo();setTimeout(()=>{document.getElementById("movie_player").playVideo();},1);},
+    "fixLoop":function(){console.log('fixLoop is triggered');let myWin = window.open('', '_blank');myWin.document.write("<script>function closeIt(){window.close();} window.onload=setTimeout(closeIt, 1000);<\/script><p>Skipping Ad ... auto close!!<\/p>");myWin.focus();}
 }

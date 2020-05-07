@@ -605,6 +605,12 @@ let g:esearch.win_map = [
             \ {'lhs': 't',  'rhs': ':call b:esearch.open("tab drop")<cr>', 'mode': 'n' },
             \ {'lhs': 'q',  'rhs': ':tabclose<cr>', 'mode': 'n' },
             \]
+augroup ESEARCH
+    autocmd!
+    autocmd User esearch_win_config
+                \   let b:autopreview = esearch#debounce(b:esearch.split_preview, 100)
+                \ | autocmd CursorMoved <buffer> call b:autopreview.apply('vsplit')
+augroup END
 " }}}
 
 Plug 'kkoomen/vim-doge'

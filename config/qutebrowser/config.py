@@ -51,8 +51,6 @@ c.url.searchengines[
     'map'] = 'https://www.google.com/maps/search/{}?hl=en&source=opensearch'
 c.url.searchengines[
     'scholar'] = 'https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q={}&btnG='
-c.url.searchengines[
-    'yt'] = 'https://www.youtube.com/results?search_query={}&utm_source=opensearch'
 
 c.url.searchengines["DEFAULT"] = "https://www.google.com.ar/search?q={}"
 
