@@ -164,8 +164,6 @@ if exists('*nvim_open_win')
 Plug 'ncm2/float-preview.nvim'
 endif
 
-Plug 'vim-scripts/LargeFile'
-let g:LargeFile=1
 Plug 't9md/vim-textmanip'
 " {{{
 xmap <c-m-k> <Plug>(textmanip-move-up)

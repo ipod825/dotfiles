@@ -1,3 +1,6 @@
+" Plug 'vim-scripts/LargeFile'
+" let g:LargeFile=10
+
 " Plug 'mg979/vim-xtabline'
 " " vim-xtabline {{{
 " let g:xtabline_settings = {}
@@ -6,6 +9,7 @@
 " let g:xtabline_settings.show_right_corner = 0
 " let g:xtabline_settings.buffer_format = 2
 " " }}}
+
 " Plug 'sgur/vim-textobj-parameter'
 " Plug 'liuchengxu/vista.vim'
 " " vista{{{
