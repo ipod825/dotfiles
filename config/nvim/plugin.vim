@@ -399,7 +399,7 @@ function! s:LensDisable()
     return v:false
 endfunction
 let g:Lens_custom_disable_check = function('s:LensDisable')
-let g:lens#disabled_filetypes = ['netranger', 'gitv']
+let g:lens#disabled_filetypes = ['netranger', 'gitv', 'esearch']
 let g:lens#disabled_buftypes = ['terminal']
 let g:lens#specify_dim_by_ratio = v:true
 let g:lens#width_resize_min=0.7
@@ -540,7 +540,7 @@ function! SearchWord()
     let s:fzf_ft=&ft
     augroup FzfSearchWord
         autocmd!
-        autocmd FileType fzf if strlen(s:fzf_ft) && s:fzf_ft!= "man" | silent! let &ft=s:fzf_ft | endif
+        " autocmd FileType fzf if strlen(s:fzf_ft) && s:fzf_ft!= "man" | silent! let &ft=s:fzf_ft | endif
     augroup END
         silent call fzf#run(fzf#wrap({
                     \   'source':  map(getline(1, '$'), '(v:key + 1) . ": " . v:val '),
@@ -600,7 +600,7 @@ nmap <leader>f <Plug>(esearch)
 vmap <leader>f <Plug>(esearch)
 let g:esearch.win_map = [
             \ {'lhs': '<cr>',  'rhs': ':call b:esearch.open("NewTabdrop")<cr>', 'mode': 'n' },
-            \ {'lhs': 't',  'rhs': ':call b:esearch.open("tab drop")<cr>', 'mode': 'n' },
+            \ {'lhs': 't',  'rhs': ':call b:esearch.open("NETRTabdrop")<cr>', 'mode': 'n' },
             \ {'lhs': 'q',  'rhs': ':tabclose<cr>', 'mode': 'n' },
             \]
 augroup ESEARCH
