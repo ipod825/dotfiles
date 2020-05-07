@@ -165,11 +165,17 @@ augroup end
 
 
 function! EndOfWord()
-    if matchstr(getline('.'), '\%' . col('.') . 'c.') == ','
-        normal! l
+    let cur_line = getline('.')
+    if match(cur_line[col('.')-1], ' ') > -1
+        normal! w
     else
         normal! el
     endif
+    " if matchstr(, '\%' . col('.') . 'c.') == ','
+    "     normal! l
+    " else
+    "     normal! el
+    " endif
 endfunction
 
 function! Bwipeout()
