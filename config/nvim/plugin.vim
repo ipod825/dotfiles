@@ -526,7 +526,13 @@ endfunction
 
 function! RemoveRedundantWhiteSpace()
     let l:save = winsaveview()
-    %s/\(\S\)\s\+\(\S\)/\1 \2/g
+
+    if mode()=='v'
+        '<,'>s/\(\S\)\s\+\(\S\)/\1 \2/g
+    else
+        %s/\(\S\)\s\+\(\S\)/\1 \2/g
+    endif
+
     call winrestview(l:save)
 endfunction
 
@@ -598,10 +604,11 @@ let g:esearch = {
   \}
 nmap <leader>f <Plug>(esearch)
 vmap <leader>f <Plug>(esearch)
+let g:esearch.filemanager_integration=v:false
 let g:esearch.win_map = [
-            \ {'lhs': '<cr>',  'rhs': ':call b:esearch.open("NewTabdrop")<cr>', 'mode': 'n' },
-            \ {'lhs': 't',  'rhs': ':call b:esearch.open("NETRTabdrop")<cr>', 'mode': 'n' },
-            \ {'lhs': 'q',  'rhs': ':tabclose<cr>', 'mode': 'n' },
+            \ [ 'n', '<cr>',  ':call b:esearch.open("NewTabdrop")<cr>'],
+            \ [ 'n', 't',  ':call b:esearch.open("NETRTabdrop")<cr>'],
+            \ [ 'n', 'q',  ':tabclose<cr>'],
             \]
 augroup ESEARCH
     autocmd!
