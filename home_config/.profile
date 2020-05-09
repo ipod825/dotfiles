@@ -29,6 +29,7 @@ alias ipdb='python -m ipdb'
 alias icat='kitty +kitten icat'
 alias gps='git push'
 alias gpl='git pull'
+alias gst='git status'
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
     alias ls='ls -G'
 fi
