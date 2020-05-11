@@ -83,10 +83,6 @@ augroup GENERAL "{{{
     " Automatically change directory (avoid vim-fugitive)
     autocmd BufEnter * if &ft != 'gitcommit' | silent! lcd %:p:h | endif
 
-    " Stay in previous tab when closed.
-    autocmd TabEnter * let g:lat_tab_at_edge = (tabpagenr() == tabpagenr('$') || tabpagenr()== 1)
-    autocmd TabClosed * if !g:lat_tab_at_edge | normal! gT | endif
-
     " Man in new tab
     autocmd BufWinEnter * if @% =~ "^man://" | wincmd T | endif
     " Automatically restore cursor position

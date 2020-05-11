@@ -51,6 +51,31 @@ cnoreabbrev BB TagbarOpenAutoClose
 " }}}
 
 Plug 'vimwiki/vimwiki'
+let g:vimwiki_folding='list'
+function! VimwikiLinkHandler(link)
+try
+  execute 'silent !qday '.a:link
+  return 1
+catch
+  echo "This can happen for a variety of reasons ..."
+endtry
+return 0
+endfunction
+function! SetupVimWiki()
+    vmap <buffer> <m-cr> <Plug>VimwikiNormalizeLinkVisualCR
+    vmap <buffer> <m-d> <Plug>VimwikiFollowLink
+    vmap <buffer> <m-s> <Plug>VimwikiGoBackLink
+endfunction
+augroup VIMWIKI
+    autocmd!
+    autocmd Filetype vimwiki command! -buffer BrowseCurrent
+            \ if filewritable(expand('%')) | silent noautocmd w | endif
+            \ <bar>
+            \ execute 'silent !'.$BROWSER.' '.vimwiki#html#Wiki2HTML(
+            \         expand(vimwiki#vars#get_wikilocal('path_html')),
+            \         expand('%'))
+    autocmd Filetype vimwiki call <sid>SetupVimWiki()
+augroup END
 
 Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-mark'
