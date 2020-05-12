@@ -30,6 +30,9 @@ alias icat='kitty +kitten icat'
 alias gps='git push'
 alias gpl='git pull'
 alias gst='git status'
+alias glg='git log'
+alias gck='git checkout'
+
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
     alias ls='ls -G'
 fi
