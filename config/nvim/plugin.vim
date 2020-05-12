@@ -408,7 +408,7 @@ endfunction
 
 Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'}
 " vim-fugitive {{{
-cnoreabbrev G tab Git
+cnoreabbrev g tab Git
 " }}}
 
 Plug 'camspiers/animate.vim'
@@ -432,10 +432,10 @@ let g:lens#width_resize_max=0.7
 
 Plug 'tpope/vim-dispatch'
 
-Plug 'junegunn/gv.vim', {'on': 'GV!'}
 Plug 'git@github.com:ipod825/gitv'
 " gitv {{{
 cnoreabbrev gv Gitv --all
+cnoreabbrev gvb Gitv! --all
 let g:Gitv_WipeAllOnClose = 1
 let g:Gitv_DoNotMapCtrlKey = 1
 let g:Gitv_OpenPreviewOnLaunch = 0
@@ -502,15 +502,17 @@ nnoremap <silent><leader><Enter> :call fzf#run(fzf#wrap({
         \   'sink': function('FZFExecFnOrCmd'),
         \}))<cr>
 
-command! F call fzf#run({
+command! OpenRecnetFile call fzf#run({
 \ 'source':  filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|N:\\|term\\|^/tmp/\\|.git/'"),
 \ 'sink':    'Tabdrop',
 \})
+cnoreabbrev f OpenRecnetFile
 
-command! D call fzf#run({
+command! OpenRecentDirectory call fzf#run({
 \ 'source':  map(filter(copy(v:oldfiles), "v:val =~ 'N:'"), 'v:val[2:]'),
 \ 'sink':    'Tabdrop',
 \})
+cnoreabbrev d OpenRecentDirectory
 
 
 function! FZFExecFnOrCmd(name)
