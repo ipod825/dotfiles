@@ -79,6 +79,7 @@ nnoremap <c-m-up> <c-w>-
 nnoremap <c-m-left> <c-w><
 nnoremap <c-m-right> <c-w>>
 nnoremap q :quit<cr>
+nnoremap Q q
 " }}}
 
 " aliasing {{{
