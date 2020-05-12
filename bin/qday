@@ -5,7 +5,11 @@ cqdir=$HOME/dotfiles/config/qutebrowser
 
 mkdir -p $qdir
 rm -rf $qdir/config
-rm -rf $qdir/data/greasemonkey
 ln -s $cqdir $qdir/config
+
+rm -rf $qdir/data/greasemonkey
 ln -s $cqdir/greasemonkey $qdir/data/greasemonkey
+
+rm -rf $qdir/data/userscripts
+ln -s $cqdir/userscripts $qdir/data/userscripts
 qutebrowser -B $qdir $1

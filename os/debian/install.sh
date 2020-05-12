@@ -1,7 +1,6 @@
 sudo apt-get -y install acpi
 sudo apt-get -y install xbacklight x11-xserver-utils
 sudo apt-get -y install xdotool wmctrl libinput-tools sxhkd
-sudo apt-get -y install alttab
 
 if ! [ -x /usr/bin/libinput-gestures ]; then
     pushd /tmp
@@ -20,3 +19,7 @@ sudo apt-get -y install pulsemixer mpv mpd xclip copyq deepin-screenshot
 
 sudo apt-get -y install libssl-dev
 sudo apt-get -y install man zsh git sudo htop dtach
+
+# # Not up-to-date. Install from source
+# sudo apt-get -y install alttab
+# sudo apt-get -y install qutebrowser

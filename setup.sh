@@ -36,7 +36,6 @@ function pyenv_install(){
     pip install -r $DOTDIR/misc/pyenv_default_packages
 }
 
-
 LinkDotfiles $DOTDIR/config $XDG_CONFIG_HOME
 LinkDotfiles $DOTDIR/home_config ~
 LinkDotfiles $DOTDIR/partial_config/.ssh ~/.ssh
@@ -50,9 +49,15 @@ if [ ! -d $HOME/.pyenv ];then
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
     pyenv_install 3
+    pip install qutebrowser PyQt5 PyQtWebEngine
     pyenv global miniconda3-latest
 fi
 
+
+echo "==Setting qutebrowser=="
+pip install qutebrowser PyQt5 PyQtWebEngine --upgrade
+
+echo "==Setting kitty=="
 mkdir -p $HOME/opt
 if [ ! -d $HOME/opt/kitty.app ]; then
     curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin dest=$HOME/opt
