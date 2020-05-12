@@ -78,6 +78,7 @@ nnoremap <c-m-down> <c-w>+
 nnoremap <c-m-up> <c-w>-
 nnoremap <c-m-left> <c-w><
 nnoremap <c-m-right> <c-w>>
+nnoremap q :quit<cr>
 " }}}
 
 " aliasing {{{
@@ -151,19 +152,6 @@ endfunction
 
 " }}}
 
-
-" quickfix {{{
-function! OpenIntQuickFix()
-  normal! <cr>
-  cclose
-endfunction
-augroup QUICKFIX
-  autocmd!
-  autocmd FileType quickfix nnoremap <buffer> <cr> :call OpenIntQuickFix()<cr>
-augroup end
-" }}}
-
-
 function! EndOfWord()
     let cur_line = getline('.')
     if match(cur_line[col('.')-1], ' ') > -1
@@ -171,11 +159,6 @@ function! EndOfWord()
     else
         normal! el
     endif
-    " if matchstr(, '\%' . col('.') . 'c.') == ','
-    "     normal! l
-    " else
-    "     normal! el
-    " endif
 endfunction
 
 function! Bwipeout()

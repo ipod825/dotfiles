@@ -706,7 +706,7 @@ function! DuplicateNode()
 endfunction
 
 function! NETRCloseTab()
-    if tabpagenr()>1
+    if tabpagenr('$')>1
         tabclose
     else
         qall
