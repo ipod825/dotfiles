@@ -121,20 +121,9 @@ augroup END
 
 Plug 'fatih/vim-go', {'for': 'go'}
 
-Plug 'jiangmiao/auto-pairs'
-" auto-pairs {{{
-let g:AutoPairsMapCh = '<nop>'
-let g:AutoPairsShortcutToggle = '<nop>'
-let g:AutoPairsShortcutJump = '<nop>'
-let g:AutoPairsDelete = '<nop>'
-let g:AutoPairsMultilineClose = 0
-augroup AUTO_PAIRS
-    autocmd!
-    autocmd BufEnter *.tex,*.md,*.adoc let g:AutoPairs["$"] = "$"
-    autocmd BufLeave *.tex,*.md,*.adoc unlet g:AutoPairs["$"]
-    autocmd BufEnter *.scm unlet g:AutoPairs["'"]
-    autocmd BufLeave *.scm let g:AutoPairs["'"] = "'"
-augroup End
+Plug 'cohama/lexima.vim'
+" lexima {{{
+inoremap <m-e> <esc>ldlepi
 " }}}
 
 Plug 'tpope/vim-endwise'

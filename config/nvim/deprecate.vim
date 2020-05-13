@@ -6,6 +6,27 @@
 " let g:floaterm_position='bottom'
 " let g:floaterm_width=0.95
 " let g:floaterm_height=0.4
+" Plug 'jiangmiao/auto-pairs'
+" " auto-pairs {{{
+" let g:AutoPairsMapCh = '<nop>'
+" let g:AutoPairsShortcutToggle = '<nop>'
+" let g:AutoPairsShortcutJump = '<nop>'
+" let g:AutoPairsDelete = '<nop>'
+" let g:AutoPairsMultilineClose = 0
+" augroup AUTO_PAIRS
+"     autocmd!
+"     autocmd BufEnter *.tex,*.md,*.adoc let g:AutoPairs["$"] = "$"
+"     autocmd BufLeave *.tex,*.md,*.adoc unlet g:AutoPairs["$"]
+"     autocmd BufEnter *.scm unlet g:AutoPairs["'"]
+"     autocmd BufLeave *.scm let g:AutoPairs["'"] = "'"
+" augroup End
+" " }}}
+" Plug 'git@github.com:ipod825/gitv'
+" " gitv {{{
+" cnoreabbrev gv Gitv --all
+" let g:Gitv_WipeAllOnClose = 1
+" let g:Gitv_DoNotMapCtrlKey = 1
+" let g:Gitv_OpenPreviewOnLaunch = 0
 " " }}}
 
 " Plug 'vim-scripts/LargeFile'
