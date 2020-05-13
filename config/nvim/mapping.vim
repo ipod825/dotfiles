@@ -41,20 +41,6 @@ tnoremap <m-h> <home>
 tnoremap <m-l> <end>
 "}}}
 
-let s:reused_term_buf=0
-function ReuseTerm()
-    if s:reused_term_buf>0
-        if bufnr() == s:reused_term_buf
-            quit
-        else
-            execute s:reused_term_buf.'sb'
-        endif
-    else
-        exec 'new term://'.$SHELL
-        let s:reused_term_buf = bufnr()
-    endif
-endfunction
-
 " Terminal {{{
 if has('nvim')
     nnoremap <m-t> :exec 'tabe term://'.$SHELL<cr>
@@ -226,6 +212,22 @@ function! MoveToNextTab()
   "opening current buffer in new window
   exe "b".l:cur_buf
 endfunc
+
+let s:reused_term_buf = get(s:, 'reused_term_buf', 0)
+function! ReuseTerm()
+    if s:reused_term_buf>0
+        if bufnr() == s:reused_term_buf
+            quit
+        else
+            execute s:reused_term_buf.'sb'
+        endif
+    else
+        exec 'new term://'.$SHELL
+        let s:reused_term_buf = bufnr()
+        autocmd BufUnload <buffer> let s:reused_term_buf=0
+    endif
+endfunction
+
 
 let s:nojkbuf = {}
 augroup TERMNOJK
