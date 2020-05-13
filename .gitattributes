@@ -1,3 +1,4 @@
+/home_config/.gitconfig_android filter=git-crypt diff=git-crypt
 /config/nvim/gwork.vim filter=git-crypt diff=git-crypt
 /partial_config/.ssh/config filter=git-crypt diff=git-crypt
 /config/qutebrowser/bookmarks/urls filter=git-crypt diff=git-crypt

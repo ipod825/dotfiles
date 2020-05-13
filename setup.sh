@@ -31,7 +31,7 @@ function pyenv_install(){
     export PYENV_VERSION=miniconda$1-latest
     conda update -q -y conda
 
-    LD=$(pyenv root)/versions/miniconda3-latest/compiler_compat/ld
+    LD=$(pyenv root)/versions/miniconda$1-latest/compiler_compat/ld
     mv ${LD} ${LD}-old
     pip install -r $DOTDIR/misc/pyenv_default_packages
 }
