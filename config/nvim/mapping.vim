@@ -30,7 +30,7 @@ cnoremap <c-k> <Up>
 onoremap <m-h> g^
 onoremap <m-l> g$
 vnoremap <m-h> g^
-vnoremap <m-l> g$
+vnoremap <m-l> g$<left>
 nnoremap <m-h> g^
 nnoremap <m-l> g$
 inoremap <m-h> <Esc>g^i
@@ -41,11 +41,27 @@ tnoremap <m-h> <home>
 tnoremap <m-l> <end>
 "}}}
 
+let s:reused_term_buf=0
+function ReuseTerm()
+    if s:reused_term_buf>0
+        if bufnr() == s:reused_term_buf
+            quit
+        else
+            execute s:reused_term_buf.'sb'
+        endif
+    else
+        exec 'new term://'.$SHELL
+        let s:reused_term_buf = bufnr()
+    endif
+endfunction
+
 " Terminal {{{
 if has('nvim')
     nnoremap <m-t> :exec 'tabe term://'.$SHELL<cr>
     nnoremap <m-o> :exec 'new term://'.$SHELL<cr>
     nnoremap <m-e> :exec 'vnew term://'.$SHELL<cr>
+    nnoremap <m-r> :call ReuseTerm()<cr>
+    tnoremap <m-r> <c-\><c-n>:call ReuseTerm()<cr>
 else
     nnoremap <m-t> :tabe<cr>:term ++curwin ++close zsh<cr>
     nnoremap <m-o> :term ++close zsh<cr>
@@ -112,9 +128,6 @@ vnoremap <m-y> "+y
 nnoremap U :call CommentUnwrap()<cr>
 " pressing dw is easier but de is more natural
 onoremap w :call EndOfWord()<cr>
-" shift in visual mode
-vnoremap < <gv
-vnoremap > >gv
 " folding
 nmap <leader><space> za
 vnoremap <space> zf

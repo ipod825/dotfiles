@@ -1,10 +1,13 @@
-" Plug 'git@github.com:ipod825/gitv'
-" " gitv {{{
-" cnoreabbrev gv Gitv --all
-" let g:Gitv_WipeAllOnClose = 1
-" let g:Gitv_DoNotMapCtrlKey = 1
-" let g:Gitv_OpenPreviewOnLaunch = 0
+" Plug 'voldikss/vim-floaterm'
+" " {{{ vim-floaterm
+" nnoremap <m-f> :FloatermToggle<cr>
+" tnoremap <m-f> <c-\><c-n>:FloatermToggle<cr>
+" let g:floaterm_wintype='normal'
+" let g:floaterm_position='bottom'
+" let g:floaterm_width=0.95
+" let g:floaterm_height=0.4
 " " }}}
+
 " Plug 'vim-scripts/LargeFile'
 " let g:LargeFile=10
 

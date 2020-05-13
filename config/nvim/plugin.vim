@@ -195,6 +195,11 @@ xmap <c-m-k> <Plug>(textmanip-move-up)
 xmap <c-m-h> <Plug>(textmanip-move-left)
 xmap <c-m-l> <Plug>(textmanip-move-right)
 xmap <c-m-j> <Plug>(textmanip-move-down)
+" shift in visual mode
+" nmap < V<Plug>(textmanip-move-left)<esc>
+" nmap > V<Plug>(textmanip-move-right)<esc>
+" vmap << <Plug>(textmanip-move-left)
+" vmap >> <Plug>(textmanip-move-right)
 " }}}
 
 Plug 'git@github.com:ipod825/julia-unicode.vim', {'for': 'julia'}
@@ -686,15 +691,6 @@ Plug 'vim-scripts/gtags.vim'
 Plug 'zhimsel/vim-stay'
 " {{{ vim-stay
 set viewoptions=cursor,folds,slash,unix
-" }}}
-Plug 'voldikss/vim-floaterm'
-" {{{ vim-floaterm
-nnoremap <m-f> :FloatermToggle<cr>
-tnoremap <m-f> <c-\><c-n>:FloatermToggle<cr>
-let g:floaterm_wintype='normal'
-let g:floaterm_position='bottom'
-let g:floaterm_width=0.95
-let g:floaterm_height=0.4
 " }}}
 
 Plug 'git@github.com:ipod825/vim-netranger'
