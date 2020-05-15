@@ -220,9 +220,11 @@ function! ReuseTerm()
             quit
         else
             execute s:reused_term_buf.'sb'
+            wincmd J
         endif
     else
         exec 'new term://'.$SHELL
+        wincmd J
         let s:reused_term_buf = bufnr()
         autocmd BufUnload <buffer> let s:reused_term_buf=0
     endif

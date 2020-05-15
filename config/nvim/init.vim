@@ -5,7 +5,7 @@ let g:vim_dir=fnamemodify($MYVIMRC, ":h")."/"
 exec 'source '.g:vim_dir.'mapping.vim'
 exec 'source '.g:vim_dir.'plugin.vim'
 try
-  exec 'source '.g:vim_dir.'gwork.vim'
+    exec 'source '.g:vim_dir.'gwork.vim'
 catch
 endtry
 
@@ -40,6 +40,7 @@ set shiftwidth=4
 set tabstop=4
 set expandtab
 set completeopt=menuone,noinsert
+set shada=!,'1000,<50,s10,h
 colorscheme one
 call one#highlight("CursorLine", '', '353a42', 'bold')
 hi esearchMatch cterm=bold ctermfg=145 ctermbg=16 gui=bold guifg=#000000 guibg=#5a93f2
