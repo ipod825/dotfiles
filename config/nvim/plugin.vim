@@ -280,437 +280,360 @@ augroup POST_PLUG_END
             autocmd Filetype tex call deoplete#custom#var('omni', 'input_patterns', {'tex': g:vimtex#re#deoplete})
         augroup END
     endif
+augroup END
 
-    let g:tex_conceal="abdgm"
-    highlight Conceal term=bold cterm=bold ctermbg=236
-    highlight Conceal cterm=bold ctermfg=255 ctermbg=233
-    highlight Conceal term=bold cterm=bold ctermbg=red
-    highlight Conceal cterm=bold ctermfg=255 ctermbg=red
-    " }}}
+let g:tex_conceal="abdgm"
+highlight Conceal term=bold cterm=bold ctermbg=236
+highlight Conceal cterm=bold ctermfg=255 ctermbg=233
+highlight Conceal term=bold cterm=bold ctermbg=red
+highlight Conceal cterm=bold ctermfg=255 ctermbg=red
+" }}}
 
-    Plug 'airblade/vim-rooter' " FindRootDirectory() is used for fzf
-    " vim-rooter
-    let g:rooter_manual_only = 1
-    "}}}
+Plug 'airblade/vim-rooter' " FindRootDirectory() is used for fzf
+" vim-rooter
+let g:rooter_manual_only = 1
+"}}}
 
-    Plug 'sheerun/vim-polyglot'
-    Plug 'mboughaba/i3config.vim', {'for': 'i3'}
-    Plug 'SirVer/ultisnips'
-    " ultisnips {{{
-    let g:UltiSnipsExpandTrigger='<tab>'
-    let g:UltiSnipsJumpForwardTrigger='<tab>'
-    let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
-    let g:UltiSnipsEditSplit = 'vertical'
-    let g:UltiSnipsSnippetsDir=g:vim_dir . 'snippets'
-    " }}}
+Plug 'sheerun/vim-polyglot'
+Plug 'mboughaba/i3config.vim', {'for': 'i3'}
+Plug 'SirVer/ultisnips'
+" ultisnips {{{
+let g:UltiSnipsExpandTrigger='<tab>'
+let g:UltiSnipsJumpForwardTrigger='<tab>'
+let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
+let g:UltiSnipsEditSplit = 'vertical'
+let g:UltiSnipsSnippetsDir=g:vim_dir . 'snippets'
+" }}}
 
-    Plug 'honza/vim-snippets'
+Plug 'honza/vim-snippets'
 
-    packadd termdebug
-    " Termdebug {{{
-    command! Debug execute 'call <sid>Debug()'
-    command!  -nargs=* DebugGo call <sid>DebugGo(<f-args>)
-    command!  -nargs=* DebugGoStop call <sid>DebugGoStop()
-    command!  -nargs=* Test echo <q-args>
+packadd termdebug
+" Termdebug {{{
+command! Debug execute 'call <sid>Debug()'
+command!  -nargs=* DebugGo call <sid>DebugGo(<f-args>)
+command!  -nargs=* DebugGoStop call <sid>DebugGoStop()
+command!  -nargs=* Test echo <q-args>
 
-    function! s:Save_mappings(keys, mode) abort
-        let mappings = {}
-        for l:key in a:keys
-            let mappings[l:key] = maparg(l:key, a:mode)
-        endfor
-        return mappings
-    endfu
+function! s:Save_mappings(keys, mode) abort
+    let mappings = {}
+    for l:key in a:keys
+        let mappings[l:key] = maparg(l:key, a:mode)
+    endfor
+    return mappings
+endfu
 
-    function! s:Restore_mappings(mappings, mode) abort
-        for kv in items(a:mappings)
-            if (kv[1]!="")
-                execute a:mode.'map '.kv[0]." ".kv[1]
-            else
-                execute a:mode.'unmap '.kv[0]
-                execute a:mode.'unmap '.kv[0]
-            endif
-        endfor
-    endfu
-
-    function! s:MapDebug()
-        let g:saved_normal_mappings = <sid>Save_mappings(['n','s','c','B','C','e','f','U','D','t'], 'n')
-        let g:saved_visual_mappings = <sid>Save_mappings(['e'], 'x')
-        nnoremap n :call TermDebugSendCommand('next')<cr>
-        nnoremap s :call TermDebugSendCommand('step')<cr>
-        nnoremap c :call TermDebugSendCommand('continue')<cr>
-        nnoremap B :Break<cr>
-        nnoremap C :Clear<cr>
-        nnoremap e :Evaluate<cr>
-        nnoremap f :Finish<cr>
-        nnoremap U :call TermDebugSendCommand('up')<cr>
-        nnoremap D :call TermDebugSendCommand('down')<cr>
-        nnoremap t :call TermDebugSendCommand('until '.line('.'))<cr>
-        xmap e :Evaluate<cr>
-    endfunction
-
-    function! s:UnmapDebug()
-        call <sid>Restore_mappings(g:saved_normal_mappings, 'n')
-        let g:saved_normal_mappings = {}
-        call <sid>Restore_mappings(g:saved_visual_mappings, 'x')
-        let g:saved_visual_mappings = {}
-    endfunction
-
-    function! s:Debug()
-        let bin=expand('%:r')
-        wincmd H
-        Program
-        wincmd J
-        resize 10
-        call <sid>MapDebug()
-        Gdb
-        execute 'autocmd BufUnload <buffer> call <sid>UnmapDebug()'
-        call feedkeys('file '.bin."\<cr>")
-    endfunction
-
-    function! s:GoMapDebug()
-        let g:saved_normal_mappings = <sid>Save_mappings(['n','s','c','B','C','e','f','U','D','t'], 'n')
-        " let g:saved_visual_mappings = <sid>Save_mappings(['e'], 'x')
-        nnoremap n :GoDebugNext<cr>
-        nnoremap s :GoDebugStep<cr>
-        nnoremap c :GoDebugContinue<cr>
-        nnoremap B :GoDebugBreakpoint<cr>
-        nnoremap e :GoDebugPrint<cr>
-        nnoremap f :GoDebugStepOut<cr>
-        " nnoremap U :call TermDebugSendCommand('up')<cr>
-        " nnoremap D :call TermDebugSendCommand('down')<cr>
-        " nnoremap t :call TermDebugSendCommand('until '.line('.'))<cr>
-        " xmap e :Evaluate<cr>
-    endfunction
-
-    function! s:GoUnmapDebug()
-        call <sid>Restore_mappings(g:saved_normal_mappings, 'n')
-        let g:saved_normal_mappings = {}
-        " call <sid>Restore_mappings(g:saved_visual_mappings, 'x')
-        " let g:saved_visual_mappings = {}
-    endfunction
-
-
-    function! s:DebugGo(...)
-        call <sid>GoMapDebug()
-        exe 'GoDebugStart '.join(a:000)
-    endfunction
-
-    function! s:DebugGoStop()
-        call <sid>GoUnmapDebug()
-        exe 'GoDebugStop'
-    endfunction
-
-    " }}}
-
-    Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'}
-    " vim-fugitive {{{
-    cnoreabbrev g tab Git
-    " }}}
-
-    " Plug 'camspiers/animate.vim'
-    " let g:animate#duration = 100.0
-    " Plug 'camspiers/lens.vim'
-    " Plug 'git@github.com:ipod825/lens.vim', {'branch': 'disableoption'}
-    " lens.vim {{{
-    function! s:LensDisable()
-        if &diff
-            return v:true
+function! s:Restore_mappings(mappings, mode) abort
+    for kv in items(a:mappings)
+        if (kv[1]!="")
+            execute a:mode.'map '.kv[0]." ".kv[1]
+        else
+            execute a:mode.'unmap '.kv[0]
+            execute a:mode.'unmap '.kv[0]
         endif
-        return v:false
-    endfunction
-    let g:Lens_custom_disable_check = function('s:LensDisable')
-    let g:lens#disabled_filetypes = ['netranger', 'gitv', 'esearch']
-    let g:lens#disabled_buftypes = ['terminal']
-    let g:lens#specify_dim_by_ratio = v:true
-    let g:lens#width_resize_min=0.7
-    let g:lens#width_resize_max=0.7
-    " }}}
+    endfor
+endfu
 
-    Plug 'tpope/vim-dispatch'
-    Plug 'AndrewRadev/linediff.vim'
+function! s:MapDebug()
+    let g:saved_normal_mappings = <sid>Save_mappings(['n','s','c','B','C','e','f','U','D','t'], 'n')
+    let g:saved_visual_mappings = <sid>Save_mappings(['e'], 'x')
+    nnoremap n :call TermDebugSendCommand('next')<cr>
+    nnoremap s :call TermDebugSendCommand('step')<cr>
+    nnoremap c :call TermDebugSendCommand('continue')<cr>
+    nnoremap B :Break<cr>
+    nnoremap C :Clear<cr>
+    nnoremap e :Evaluate<cr>
+    nnoremap f :Finish<cr>
+    nnoremap U :call TermDebugSendCommand('up')<cr>
+    nnoremap D :call TermDebugSendCommand('down')<cr>
+    nnoremap t :call TermDebugSendCommand('until '.line('.'))<cr>
+    xmap e :Evaluate<cr>
+endfunction
 
-    Plug 'git@github.com:ipod825/gitv'
-    " gitv {{{
-    cnoreabbrev gv Gitv --all
-    cnoreabbrev gvb Gitv! --all
-    let g:Gitv_WipeAllOnClose = 1
-    let g:Gitv_DoNotMapCtrlKey = 1
-    let g:Gitv_OpenPreviewOnLaunch = 0
-    " }}}
-    Plug 'kana/vim-textobj-user'
-    Plug 'Julian/vim-textobj-variable-segment'
-    Plug 'rhysd/vim-textobj-anyblock'
-    Plug 'kana/vim-textobj-line'
-    Plug 'kana/vim-textobj-entire'
-    Plug 'terryma/vim-expand-region'
-    Plug 'whatyouhide/vim-textobj-xmlattr', { 'for': ['html', 'xml'] }
-    " {{{ vim-expand-region
-    vmap <m-k> <Plug>(expand_region_expand)
-    vmap <m-j> <Plug>(expand_region_shrink)
-    nmap <m-k> <Plug>(expand_region_expand)
-    nmap <m-j> <Plug>(expand_region_shrink)
-    let g:expand_region_text_objects = {
-                \ 'iv'  :0,
-                \ 'av'  :0,
-                \ 'iw'  :0,
-                \ 'iW'  :0,
-                \ 'i"'  :0,
-                \ 'a"'  :0,
-                \ 'i''' :0,
-                \ 'a''' :0,
-                \ 'i]'  :1,
-                \ 'ib'  :1,
-                \ 'ab'  :1,
-                \ 'iB'  :1,
-                \ 'aB'  :1,
-                \ 'il'  :0,
-                \ 'ip'  :0,
-                \ 'ie'  :0,
-                \ 'ix'  :0,
-                \ 'ax'  :0,
-                \ }
-    " }}}
+function! s:UnmapDebug()
+    call <sid>Restore_mappings(g:saved_normal_mappings, 'n')
+    let g:saved_normal_mappings = {}
+    call <sid>Restore_mappings(g:saved_visual_mappings, 'x')
+    let g:saved_visual_mappings = {}
+endfunction
+
+function! s:Debug()
+    let bin=expand('%:r')
+    wincmd H
+    Program
+    wincmd J
+    resize 10
+    call <sid>MapDebug()
+    Gdb
+    execute 'autocmd BufUnload <buffer> call <sid>UnmapDebug()'
+    call feedkeys('file '.bin."\<cr>")
+endfunction
+
+function! s:GoMapDebug()
+    let g:saved_normal_mappings = <sid>Save_mappings(['n','s','c','B','C','e','f','U','D','t'], 'n')
+    " let g:saved_visual_mappings = <sid>Save_mappings(['e'], 'x')
+    nnoremap n :GoDebugNext<cr>
+    nnoremap s :GoDebugStep<cr>
+    nnoremap c :GoDebugContinue<cr>
+    nnoremap B :GoDebugBreakpoint<cr>
+    nnoremap e :GoDebugPrint<cr>
+    nnoremap f :GoDebugStepOut<cr>
+    " nnoremap U :call TermDebugSendCommand('up')<cr>
+    " nnoremap D :call TermDebugSendCommand('down')<cr>
+    " nnoremap t :call TermDebugSendCommand('until '.line('.'))<cr>
+    " xmap e :Evaluate<cr>
+endfunction
+
+function! s:GoUnmapDebug()
+    call <sid>Restore_mappings(g:saved_normal_mappings, 'n')
+    let g:saved_normal_mappings = {}
+    " call <sid>Restore_mappings(g:saved_visual_mappings, 'x')
+    " let g:saved_visual_mappings = {}
+endfunction
 
 
-    Plug 'machakann/vim-sandwich'
-    Plug 'tpope/vim-abolish'
+function! s:DebugGo(...)
+    call <sid>GoMapDebug()
+    exe 'GoDebugStart '.join(a:000)
+endfunction
 
-    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-    Plug 'junegunn/fzf.vim'
-    " fzf.vim {{{
-    let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.95 } }
-    let $FZF_DEFAULT_COMMAND = 'find .'
-    let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'ctrl-v': 'vsplit' }
+function! s:DebugGoStop()
+    call <sid>GoUnmapDebug()
+    exe 'GoDebugStop'
+endfunction
 
-    nnoremap <silent> / :call SearchWord()<cr>
-    nnoremap ? /
-    nnoremap <c-o> :exec "Files " . FindRootDirectory()<cr>
-    tnoremap <c-o> <c-\><c-n>:exec "Files " . FindRootDirectory()<cr>
-    nnoremap <silent><leader>e :call fzf#run(fzf#wrap({
-                \   'source':  systemlist('$HOME/dotfiles/misc/watchfiles.sh nvim'),
-                \}))<cr>
+" }}}
 
-    if !exists("g:utility_commands_loaded")
-        let g:utility_commands = ['Buffers','YankAbsPath', 'YankBaseName', 'OpenRelatedFile', 'ClearSign', 'SaveWithoutFix', 'RemoveRedundantWhiteSpace']
-        let g:utility_commands_loaded = 1
+Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'}
+" vim-fugitive {{{
+cnoreabbrev g tab Git
+" }}}
+
+" Plug 'camspiers/animate.vim'
+" let g:animate#duration = 100.0
+" Plug 'camspiers/lens.vim'
+" Plug 'git@github.com:ipod825/lens.vim', {'branch': 'disableoption'}
+" lens.vim {{{
+function! s:LensDisable()
+    if &diff
+        return v:true
     endif
-    nnoremap <silent><leader><Enter> :call fzf#run(fzf#wrap({
-                \   'source':  sort(g:utility_commands),
-                \   'sink': function('FZFExecFnOrCmd'),
-                \}))<cr>
+    return v:false
+endfunction
+let g:Lens_custom_disable_check = function('s:LensDisable')
+let g:lens#disabled_filetypes = ['netranger', 'gitv', 'esearch']
+let g:lens#disabled_buftypes = ['terminal']
+let g:lens#specify_dim_by_ratio = v:true
+let g:lens#width_resize_min=0.7
+let g:lens#width_resize_max=0.7
+" }}}
 
-    command! OpenRecnetFile call fzf#run({
-                \ 'source':  filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|N:\\|term\\|^/tmp/\\|.git/'"),
-                \ 'sink':    'Tabdrop',
-                \})
-    cnoreabbrev f OpenRecnetFile
+Plug 'tpope/vim-dispatch'
+Plug 'AndrewRadev/linediff.vim'
 
-    command! OpenRecentDirectory call fzf#run({
-                \ 'source':  map(filter(copy(v:oldfiles), "v:val =~ 'N:'"), 'v:val[2:]'),
-                \ 'sink':    'Tabdrop',
-                \})
-    cnoreabbrev d OpenRecentDirectory
+Plug 'git@github.com:ipod825/gitv'
+" gitv {{{
+cnoreabbrev gv Gitv --all
+cnoreabbrev gvb Gitv! --all
+let g:Gitv_WipeAllOnClose = 1
+let g:Gitv_DoNotMapCtrlKey = 1
+let g:Gitv_OpenPreviewOnLaunch = 0
+" }}}
+Plug 'kana/vim-textobj-user'
+Plug 'Julian/vim-textobj-variable-segment'
+Plug 'rhysd/vim-textobj-anyblock'
+Plug 'kana/vim-textobj-line'
+Plug 'kana/vim-textobj-entire'
+Plug 'terryma/vim-expand-region'
+Plug 'whatyouhide/vim-textobj-xmlattr', { 'for': ['html', 'xml'] }
+" {{{ vim-expand-region
+vmap <m-k> <Plug>(expand_region_expand)
+vmap <m-j> <Plug>(expand_region_shrink)
+nmap <m-k> <Plug>(expand_region_expand)
+nmap <m-j> <Plug>(expand_region_shrink)
+let g:expand_region_text_objects = {
+            \ 'iv'  :0,
+            \ 'av'  :0,
+            \ 'iw'  :0,
+            \ 'iW'  :0,
+            \ 'i"'  :0,
+            \ 'a"'  :0,
+            \ 'i''' :0,
+            \ 'a''' :0,
+            \ 'i]'  :1,
+            \ 'ib'  :1,
+            \ 'ab'  :1,
+            \ 'iB'  :1,
+            \ 'aB'  :1,
+            \ 'il'  :0,
+            \ 'ip'  :0,
+            \ 'ie'  :0,
+            \ 'ix'  :0,
+            \ 'ax'  :0,
+            \ }
+" }}}
 
 
-    function! FZFExecFnOrCmd(name)
-        if exists(":".a:name)
-            execute a:name
-        else
-            execute 'call '.a:name.'()'
-        endif
-    endfunction
+Plug 'machakann/vim-sandwich'
+Plug 'tpope/vim-abolish'
 
-    function! SaveWithoutFix()
-        let g:ale_fix_on_save = 0
-        write
-        let g:ale_fix_on_save = 1
-    endfunction
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+" fzf.vim {{{
+let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.95 } }
+let $FZF_DEFAULT_COMMAND = 'find .'
+let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'ctrl-v': 'vsplit' }
+"}}}
 
-    function! ClearSign()
-        exe 'sign unplace * buffer='.bufnr()
-    endfunction
+nnoremap <silent><leader><Enter> :call fzf#run(fzf#wrap({
+            \   'source':  sort(g:utility_commands),
+            \   'sink': function('FZFExecFnOrCmd'),
+            \}))<cr>
 
-    function! OpenRelatedFile()
-        let name=expand('%:t:r')
-        exec "Files " . FindRootDirectory()
-        call feedkeys("i")
-        call feedkeys(name)
-    endfunction
+command! OpenRecnetFile call fzf#run({
+            \ 'source':  filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|N:\\|term\\|^/tmp/\\|.git/'"),
+            \ 'sink':    'Tabdrop',
+            \})
+cnoreabbrev f OpenRecnetFile
 
-    function! YankAbsPath()
-        let @+=expand('%:p')
-        let @"=expand('%:p')
-    endfunction
+command! OpenRecentDirectory call fzf#run({
+            \ 'source':  map(filter(copy(v:oldfiles), "v:val =~ 'N:'"), 'v:val[2:]'),
+            \ 'sink':    'Tabdrop',
+            \})
+cnoreabbrev d OpenRecentDirectory
 
-    function! YankBaseName()
-        let @+=expand('%:p:t')
-        let @"=expand('%:p:t')
-    endfunction
 
-    function! RemoveRedundantWhiteSpace()
-        let l:save = winsaveview()
 
-        if mode()=='v'
-            '<,'>s/\(\S\)\s\+\(\S\)/\1 \2/g
-        else
-            %s/\(\S\)\s\+\(\S\)/\1 \2/g
-        endif
+Plug 'MattesGroeger/vim-bookmarks'
 
-        call winrestview(l:save)
-    endfunction
-
-    function! s:Line_handler(l)
-        let keys = split(a:l, ':')
-        exec keys[0]
-        call feedkeys('zz')
-    endfunction
-
-    function! SearchWord()
-        let s:fzf_ft=&ft
-        augroup FzfSearchWord
-            autocmd!
-            " autocmd FileType fzf if strlen(s:fzf_ft) && s:fzf_ft!= "man" | silent! let &ft=s:fzf_ft | endif
-        augroup END
-        silent call fzf#run(fzf#wrap({
-                    \   'source':  map(getline(1, '$'), '(v:key + 1) . ": " . v:val '),
-                    \   'sink':    function('s:Line_handler'),
-                    \   'options': '+s -e --ansi',
-                    \}))
-        let s:fzf_ft=''
-    endfunction
-    "}}}
-
-    Plug 'MattesGroeger/vim-bookmarks'
-
-    Plug 'gcmt/taboo.vim'
-    " taboo{{{
-    let g:taboo_tab_format='%I%m%f '
-    let g:taboo_renamed_tab_format='%I%m%l '
-    fu! TabooCustomExpand(name)
-        let out = a:name
-        let i = 20
-        if len(out)>i
-            let out = a:name[:i-2].".."
-        endif
-        return out
-    endfu
-    " }}}
-    Plug 'justinmk/vim-sneak'
-    " sneak {{{
-    " let g:sneak#label = 1
-    nmap <nop> <Plug>Sneak_s
-    nmap <nop> <Plug>Sneak_S
-    nmap f <Plug>Sneak_f
-    nmap F <Plug>Sneak_F
-    nmap H <Plug>Sneak_,
-    nmap L <Plug>Sneak_;
-    vmap H <Plug>Sneak_,
-    vmap L <Plug>Sneak_;
-    let g:sneak#absolute_dir=1
-    " }}}
-    Plug 'maxbrunsfeld/vim-yankstack' " clipboard stack
-    " vim-yankstack {{{
-    let g:yankstack_yank_keys = ['y', 'd', 'x', 'c']
-    nmap <M-p> <Plug>yankstack_substitute_older_paste
-    nmap <M-n> <Plug>yankstack_substitute_newer_paste
-    " }}}
-    " Plug 'eugen0329/vim-esearch'
-    Plug 'eugen0329/vim-esearch', {'branch': 'development'}
-    " vim-esearch {{{
-    let g:esearch = {
-                \ 'adapter':          'ag',
-                \ 'bckend':          'nvim',
-                \ 'out':              'win',
-                \ 'batch_size':       1000,
-                \ 'prefill':    ['visual', 'hlsearch', 'cword', 'last'],
-                \ 'default_mappings': 1,
-                \}
-    nmap <leader>f <Plug>(esearch)
-    vmap <leader>f <Plug>(esearch)
-    let g:esearch.filemanager_integration=v:false
-    let g:esearch.win_map = [
-                \ [ 'n', '<cr>',  ':call b:esearch.open("NewTabdrop")<cr>'],
-                \ [ 'n', 't',  ':call b:esearch.open("NETRTabdrop")<cr>'],
-                \ [ 'n', 'q',  ':tabclose<cr>'],
-                \]
-    augroup ESEARCH
-        autocmd!
-        autocmd User esearch_win_config
-                    \   let b:autopreview = esearch#debounce(b:esearch.split_preview, 100)
-                    \ | autocmd CursorMoved <buffer> call b:autopreview.apply('vsplit')
-    augroup END
-    " }}}
-
-    Plug 'kkoomen/vim-doge'
-    Plug 'will133/vim-dirdiff'
-    Plug 'machakann/vim-swap'
-    Plug 'jalvesaq/vimcmdline'
-    " vimcmdline {{{
-    let g:cmdline_map_start          = '<LocalLeader>s'
-    let g:cmdline_map_send           = 'E'
-    let g:cmdline_map_send_and_stay  = '<LocalLeader>E'
-    let cmdline_app = {}
-    let cmdline_app['matlab'] = 'matlab -nojvm -nodisplay -nosplash'
-    let cmdline_app['python'] = 'ipython'
-    let cmdline_app['sh'] = 'zsh'
-    let cmdline_app['zsh'] = 'zsh'
-    let g:cmdline_vsplit      = 1      " Split the window vertically
-    " }}}
-
-    Plug 'embear/vim-localvimrc'
-    " vim-localvimrc {{{
-    let g:localvimrc_ask = 0
-    " }}}
-    Plug 'git@github.com:ipod825/vim-tabdrop'
-    " vim-tabdrop {{{
-    augroup TABDROP
-        autocmd!
-        autocmd FileType qf nnoremap <buffer> <cr> :QfTabdrop<cr>
-        autocmd FileType qf nnoremap <buffer> q :quit<cr>
-    augroup END
-    "}}}
-
-    Plug 'mbbill/undotree'                  " unlimited undo
-    " undotree {{{
-    if has("persistent_undo")
-        execute "set undodir=".g:vim_dir."undo/"
-        set undofile
+Plug 'gcmt/taboo.vim'
+" taboo{{{
+let g:taboo_tab_format='%I%m%f '
+let g:taboo_renamed_tab_format='%I%m%l '
+fu! TabooCustomExpand(name)
+    let out = a:name
+    let i = 20
+    if len(out)>i
+        let out = a:name[:i-2].".."
     endif
-    " }}}
+    return out
+endfu
+" }}}
+Plug 'justinmk/vim-sneak'
+" sneak {{{
+" let g:sneak#label = 1
+nmap <nop> <Plug>Sneak_s
+nmap <nop> <Plug>Sneak_S
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+nmap H <Plug>Sneak_,
+nmap L <Plug>Sneak_;
+vmap H <Plug>Sneak_,
+vmap L <Plug>Sneak_;
+let g:sneak#absolute_dir=1
+" }}}
+Plug 'maxbrunsfeld/vim-yankstack' " clipboard stack
+" vim-yankstack {{{
+let g:yankstack_yank_keys = ['y', 'd', 'x', 'c']
+nmap <M-p> <Plug>yankstack_substitute_older_paste
+nmap <M-n> <Plug>yankstack_substitute_newer_paste
+" }}}
+" Plug 'eugen0329/vim-esearch'
+Plug 'eugen0329/vim-esearch', {'branch': 'development'}
+" vim-esearch {{{
+let g:esearch = {
+            \ 'adapter':          'ag',
+            \ 'bckend':          'nvim',
+            \ 'out':              'win',
+            \ 'batch_size':       1000,
+            \ 'prefill':    ['visual', 'hlsearch', 'cword', 'last'],
+            \ 'default_mappings': 1,
+            \}
+nmap <leader>f <Plug>(esearch)
+vmap <leader>f <Plug>(esearch)
+let g:esearch.filemanager_integration=v:false
+let g:esearch.win_map = [
+            \ [ 'n', '<cr>',  ':call b:esearch.open("NewTabdrop")<cr>'],
+            \ [ 'n', 't',  ':call b:esearch.open("NETRTabdrop")<cr>'],
+            \ [ 'n', 'q',  ':tabclose<cr>'],
+            \]
+augroup ESEARCH
+    autocmd!
+    autocmd User esearch_win_config
+                \   let b:autopreview = esearch#debounce(b:esearch.split_preview, 100)
+                \ | autocmd CursorMoved <buffer> call b:autopreview.apply('vsplit')
+augroup END
+" }}}
 
-    Plug 'AndrewRadev/linediff.vim'
-    Plug 'vim-scripts/gtags.vim'
-    Plug 'zhimsel/vim-stay'
-    " {{{ vim-stay
-    set viewoptions=cursor,folds,slash,unix
-    " }}}
+Plug 'kkoomen/vim-doge'
+Plug 'will133/vim-dirdiff'
+Plug 'machakann/vim-swap'
+Plug 'jalvesaq/vimcmdline'
+" vimcmdline {{{
+let g:cmdline_map_start          = '<LocalLeader>s'
+let g:cmdline_map_send           = 'E'
+let g:cmdline_map_send_and_stay  = '<LocalLeader>E'
+let cmdline_app = {}
+let cmdline_app['matlab'] = 'matlab -nojvm -nodisplay -nosplash'
+let cmdline_app['python'] = 'ipython'
+let cmdline_app['sh'] = 'zsh'
+let cmdline_app['zsh'] = 'zsh'
+let g:cmdline_vsplit      = 1      " Split the window vertically
+" }}}
 
-    Plug 'git@github.com:ipod825/vim-netranger'
-    " vim-netranger {{{
-    let g:NETRRifleFile = $HOME."/dotfiles/config/nvim/settings/rifle.conf"
-    let g:NETRIgnore = ['__pycache__', '*.pyc', '*.o', 'egg-info']
-    let g:NETRColors = {'dir': 39, 'footer': 35, 'exe': 35}
-    let g:NETRGuiColors = {'dir': '#00afff', 'footer': '#00af5f', 'exe': '#00af5f'}
-    function! DuplicateNode()
-        call netranger#cp(netranger#cur_node_path(), netranger#cur_node_path().'DUP')
-    endfunction
+Plug 'embear/vim-localvimrc'
+" vim-localvimrc {{{
+let g:localvimrc_ask = 0
+" }}}
+Plug 'git@github.com:ipod825/vim-tabdrop'
+" vim-tabdrop {{{
+augroup TABDROP
+    autocmd!
+    autocmd FileType qf nnoremap <buffer> <cr> :QfTabdrop<cr>
+    autocmd FileType qf nnoremap <buffer> q :quit<cr>
+augroup END
+"}}}
 
-    function! NETRCloseTab()
-        if tabpagenr('$')>1
-            tabclose
-        else
-            qall
-        endif
-    endfunction
+Plug 'mbbill/undotree'                  " unlimited undo
+" undotree {{{
+if has("persistent_undo")
+    execute "set undodir=".g:vim_dir."undo/"
+    set undofile
+endif
+" }}}
 
-    function! NETRInit()
-        call netranger#mapvimfn('yp', "DuplicateNode")
-        call netranger#mapvimfn('q', "NETRCloseTab")
-    endfunction
+Plug 'AndrewRadev/linediff.vim'
+Plug 'vim-scripts/gtags.vim'
+Plug 'zhimsel/vim-stay'
+" {{{ vim-stay
+set viewoptions=cursor,folds,slash,unix
+" }}}
 
-    autocmd! USER NETRInit call NETRInit()
-    " }}}
+Plug 'git@github.com:ipod825/vim-netranger'
+" vim-netranger {{{
+let g:NETRRifleFile = $HOME."/dotfiles/config/nvim/settings/rifle.conf"
+let g:NETRIgnore = ['__pycache__', '*.pyc', '*.o', 'egg-info']
+let g:NETRColors = {'dir': 39, 'footer': 35, 'exe': 35}
+let g:NETRGuiColors = {'dir': '#00afff', 'footer': '#00af5f', 'exe': '#00af5f'}
+function! DuplicateNode()
+    call netranger#cp(netranger#cur_node_path(), netranger#cur_node_path().'DUP')
+endfunction
 
-    call plug#end()
+function! NETRCloseTab()
+    if tabpagenr('$')>1
+        tabclose
+    else
+        qall
+    endif
+endfunction
 
-    silent doautocmd USER PLUG_END
+function! NETRInit()
+    call netranger#mapvimfn('yp', "DuplicateNode")
+    call netranger#mapvimfn('q', "NETRCloseTab")
+endfunction
+
+autocmd! USER NETRInit call NETRInit()
+" }}}
+
+call plug#end()
+
+silent doautocmd USER PLUG_END
