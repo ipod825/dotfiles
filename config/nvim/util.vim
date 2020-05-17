@@ -15,6 +15,8 @@ function! s:ExecFnOrCmd(name) "{{{
         execute a:name
     elseif exists('*<sid>'.a:name)
         execute 'call <sid>'.a:name.'()'
+    elseif exists('*'.a:name)
+        execute 'call '.a:name.'()'
     endif
 endfunction
 "}}}

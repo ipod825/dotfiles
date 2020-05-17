@@ -102,7 +102,6 @@ function! s:MarkSearchResult()
 endfunction
 
 function! s:SelectAllMark()
-
     call feedkeys("\<Plug>(VM-Start-Regex-Search)".join(mark#ToList(),"\\|")."\<cr>")
     call feedkeys("\<Plug>(VM-Select-All)")
 endfunction

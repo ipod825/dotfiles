@@ -7,6 +7,8 @@ exec 'source '.g:vim_dir.'plugin.vim'
 exec 'source '.g:vim_dir.'util.vim'
 try
     exec 'source '.g:vim_dir.'gwork.vim'
+    exec 'source '.g:vim_dir.'g4.vim'
+    exec 'source '.g:vim_dir.'android.vim'
 catch
 endtry
 
