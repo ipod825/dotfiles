@@ -1,0 +1,5 @@
+[Default Applications]
+text/html=qwork.desktop;qday.desktop;
+text/xml=qwork.desktop;qday.desktop;
+x-scheme-handler/http=qwork.desktop;qday.desktop;
+x-scheme-handler/https=qwork.desktop;qday.desktop;

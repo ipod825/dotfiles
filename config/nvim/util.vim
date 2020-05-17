@@ -1,20 +1,53 @@
 let g:util_commands= []
-function! AddUtilComand(cmd)
+function! s:AddUtilComand(cmd)
     if index(g:util_commands, a:cmd) < 0
         call insert(g:util_commands, a:cmd)
     endif
 endfunction
 
-" {{{ Current buffer search
-nnoremap <silent> / :call SearchWord()<cr>
-nnoremap ? /
-function! s:Line_handler(l)
-    let keys = split(a:l, ':')
-    exec keys[0]
-    call feedkeys('zz')
-endfunction
+nnoremap <silent><leader><cr> :call fzf#run(fzf#wrap({
+            \   'source':  sort(g:util_commands),
+            \   'sink': function('<sid>ExecFnOrCmd'),
+            \}))<cr>
 
-function! SearchWord()
+function! s:ExecFnOrCmd(name) "{{{
+    if exists(":".a:name)
+        execute a:name
+    elseif exists('*<sid>'.a:name)
+        execute 'call <sid>'.a:name.'()'
+    endif
+endfunction
+"}}}
+
+function! s:MapUtil(mapping, cmd) "{{{
+    if exists('*<sid>'.a:cmd)
+        let cmd = ':call <sid>'.a:cmd.'()<cr>'
+    else
+        let cmd = a:cmd
+    endif
+    exec 'nnoremap '.a:mapping.' '.cmd
+endfunction
+"}}}
+
+function! s:OpenRecentFile() "{{{
+    call fzf#run({
+                \ 'source':  filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|N:\\|term\\|^/tmp/\\|.git/'"),
+                \ 'sink':    'Tabdrop',
+                \})
+endfunction
+"}}}
+cnoreabbrev f call <sid>OpenRecentFile()
+
+function! s:OpenRecentDirectory() "{{{
+    call fzf#run({
+                \ 'source':  map(filter(copy(v:oldfiles), "v:val =~ 'N:'"), 'v:val[2:]'),
+                \ 'sink':    'Tabdrop',
+                \})
+endfunction
+"}}}
+cnoreabbrev d call <sid>OpenRecentDirectory()
+
+function! s:SearchWord() "{{{
     let s:fzf_ft=&ft
     augroup FzfSearchWord
         autocmd!
@@ -26,64 +59,67 @@ function! SearchWord()
                 \}))
     let s:fzf_ft=''
 endfunction
-" }}}
+function! s:Line_handler(l)
+    let keys = split(a:l, ':')
+    exec keys[0]
+    call feedkeys('zz')
+endfunction
+"}}}
+call s:MapUtil('/', 'SearchWord')
+nnoremap ? /
 
-" {{{ Open files from project root
-function! _OpenFileFromProjectRoot()
+function! s:OpenFileFromProjectRoot() "{{{
     exec "Files " . FindRootDirectory()
 endfunction
-nnoremap <c-o> :call _OpenFileFromProjectRoot()<cr>
-tnoremap <c-o> <c-\><c-n>:call _OpenFileFromProjectRoot()<cr>
-" }}}
+call s:MapUtil('<c-o>', 'OpenFileFromProjectRoot')
+"}}}
 
-" {{{ Open config files
-command! OpenConfigFiles :call fzf#run(fzf#wrap({
-            \   'source':  systemlist('$HOME/dotfiles/misc/watchfiles.sh nvim'),
-            \}))<cr>
-nnoremap <silent><leader>e :OpenConfigFiles<cr>
-" }}}
-
-function! FZFExecFnOrCmd(name)
-    if exists(":".a:name)
-        execute a:name
-    else
-        execute 'call '.a:name.'()'
-    endif
+function! s:OpenConfigFiles() "{{{
+    call fzf#run(fzf#wrap({
+                \   'source':  systemlist('$HOME/dotfiles/misc/watchfiles.sh nvim'),
+                \}))
 endfunction
+call s:MapUtil('<leader>e', 'OpenConfigFiles')
+"}}}
 
-function! SaveWithoutFix()
+function! s:SaveWithoutFix() "{{{
     let g:ale_fix_on_save = 0
     write
     let g:ale_fix_on_save = 1
 endfunction
-call AddUtilComand('SaveWithoutFix')
+"}}}
+call s:AddUtilComand('SaveWithoutFix')
 
-function! ClearSign()
+function! s:ClearSign() "{{{
     exe 'sign unplace * buffer='.bufnr()
 endfunction
-call AddUtilComand('ClearSign')
+"}}}
+call s:AddUtilComand('ClearSign')
 
-function! OpenRelatedFile()
+function! s:OpenRelatedFile() "{{{
     let name=expand('%:t:r')
     exec "Files " . FindRootDirectory()
     call feedkeys("i")
     call feedkeys(name)
 endfunction
-call AddUtilComand('OpenRelatedFile')
+"}}}
+call s:AddUtilComand('OpenRelatedFile')
 
-function! YankAbsPath()
+function! s:YankAbsPath() "{{{
     let @+=expand('%:p')
     let @"=expand('%:p')
 endfunction
-call AddUtilComand('YankAbsPath')
+"}}}
+call s:AddUtilComand('YankAbsPath')
 
-function! YankBaseName()
+function! s:YankBaseName() "{{{
     let @+=expand('%:p:t')
     let @"=expand('%:p:t')
 endfunction
-call AddUtilComand('YankBaseName')
+"}}}
+call s:AddUtilComand('YankBaseName')
 
-function! RemoveRedundantWhiteSpace()
+function! s:RemoveRedundantWhiteSpace() "{{{
     let l:save = winsaveview()
 
     if mode()=='v'
@@ -94,4 +130,5 @@ function! RemoveRedundantWhiteSpace()
 
     call winrestview(l:save)
 endfunction
-call AddUtilComand('RemoveRedundantWhiteSpace')
+"}}}
+call s:AddUtilComand('RemoveRedundantWhiteSpace')

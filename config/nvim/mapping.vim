@@ -1,8 +1,7 @@
 let mapleader=' '
 " Mode Changing {{{
 nnoremap ; :
-inoremap jk <Esc>
-cnoremap jk <Esc>
+noremap! jk <Esc>
 cnoremap <m-d> <c-f>dwi
 onoremap jk <Esc>
 vnoremap <cr> <Esc>
@@ -16,14 +15,10 @@ nmap <c-j> }
 nmap <c-k> {
 vnoremap <c-j> }
 vnoremap <c-k> {
-inoremap <c-h> <Left>
-inoremap <c-l> <Right>
-inoremap <c-j> <Down>
-inoremap <c-k> <Up>
-cnoremap <c-h> <Left>
-cnoremap <c-l> <Right>
-cnoremap <c-j> <Down>
-cnoremap <c-k> <Up>
+noremap! <c-h> <Left>
+noremap! <c-l> <Right>
+noremap! <c-j> <Down>
+noremap! <c-k> <Up>
 "}}}
 
 " Moving Around (home,END) {{{
@@ -80,7 +75,7 @@ nnoremap <c-m-down> <c-w>+
 nnoremap <c-m-up> <c-w>-
 nnoremap <c-m-left> <c-w><
 nnoremap <c-m-right> <c-w>>
-nnoremap q :quit<cr>
+nnoremap q :call Bwipeout()<cr>
 nnoremap Q q
 " }}}
 
@@ -163,7 +158,11 @@ endfunction
 
 function! Bwipeout()
     if bufname('#')!=''
-        bwipeout
+        if &ft == 'netranger'
+            tabclose
+        else
+            bwipeout
+        endif
     else
         close
     endif

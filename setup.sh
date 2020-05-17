@@ -22,6 +22,7 @@ echo "==Linking dotfiles=="
 [ ! -d $XDG_CONFIG_HOME ] && mkdir $XDG_CONFIG_HOME
 
 function LinkDotfiles {
+    mkdir -p $2
     find "$1" -maxdepth 1 -mindepth 1 | rev | cut -d / -f 1 | rev | xargs -I{} rm -rf "$2"/{}
     find "$1" -maxdepth 1 -mindepth 1 | rev | cut -d / -f 1 | rev | xargs -I{} ln -sf "$1"/{} "$2"/{}
 }
@@ -39,6 +40,7 @@ function pyenv_install(){
 LinkDotfiles $DOTDIR/config $XDG_CONFIG_HOME
 LinkDotfiles $DOTDIR/home_config ~
 LinkDotfiles $DOTDIR/partial_config/.ssh ~/.ssh
+LinkDotfiles $DOTDIR/partial_config/.local/share/applications ~/.local/share/applications
 
 echo "==Setting pyenv=="
 if [ ! -d $HOME/.pyenv ];then

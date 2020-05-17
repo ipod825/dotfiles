@@ -88,7 +88,6 @@ nvre(){
 }
 alias te='nvrte'
 alias e='nvre'
-
 # dtach
 dt(){
 dtach -A /tmp/$1 -r winch nvim +terminal +startinsert
@@ -100,12 +99,10 @@ MANPAGER="nvim -c 'set ft=man' -"
 export FZF_DEFAULT_OPTS="--color hl:1,hl+:1,bg+:239 --reverse --bind 'ctrl-f:page-down,ctrl-b:page-up,ctrl-y:execute-silent(echo {} | xclip -sel clip)+abort'"
 unalias z 2> /dev/null
 
-
 z() {
   [ $# -gt 0 ] && _z "$*" && return
   cd "$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
 }
-
 
 
 # tmux
