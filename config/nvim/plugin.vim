@@ -106,7 +106,13 @@ function! s:SelectAllMark()
     call feedkeys("\<Plug>(VM-Select-All)")
 endfunction
 
+function! s:VSelectAllMark()
+    call feedkeys("\<Plug>(VM-Start-Regex-Search)".join(mark#ToList(),"\\|")."\<cr>")
+    call feedkeys("\<Plug>(VM-Select-All)")
+endfunction
+
 nmap <leader>r :call <sid>SelectAllMark()<cr>
+vmap <leader>r :<c-u>call <sid>VSelectAllMark()<cr>
 
 augroup VIM-MARK
     autocmd!
@@ -117,9 +123,22 @@ augroup END
 
 Plug 'fatih/vim-go', {'for': 'go'}
 
-Plug 'cohama/lexima.vim' "{{{
+Plug 'jiangmiao/auto-pairs' "{{{
 inoremap <m-e> <esc>ldlepi
-"}}}
+let g:AutoPairsShortcutFastWrap = '<nop>'
+let g:AutoPairsMapCh = '<nop>'
+let g:AutoPairsShortcutToggle = '<nop>'
+let g:AutoPairsShortcutJump = '<nop>'
+let g:AutoPairsDelete = '<nop>'
+let g:AutoPairsMultilineClose = 0
+augroup AUTO_PAIRS
+    autocmd!
+    autocmd BufEnter *.tex,*.md,*.adoc let g:AutoPairs["$"] = "$"
+    autocmd BufLeave *.tex,*.md,*.adoc unlet g:AutoPairs["$"]
+    autocmd BufEnter *.scm unlet g:AutoPairs["'"]
+    autocmd BufLeave *.scm let g:AutoPairs["'"] = "'"
+augroup End
+" }}}
 
 Plug 'tpope/vim-endwise'
 
@@ -461,13 +480,13 @@ Plug 'rhysd/vim-textobj-anyblock'
 Plug 'kana/vim-textobj-line'
 Plug 'kana/vim-textobj-entire'
 Plug 'terryma/vim-expand-region'
-Plug 'whatyouhide/vim-textobj-xmlattr', { 'for': ['html', 'xml'] } " vim-expand-region
+Plug 'whatyouhide/vim-textobj-xmlattr', { 'for': ['html', 'xml'] } "{{{
 vmap <m-k> <Plug>(expand_region_expand)
 vmap <m-j> <Plug>(expand_region_shrink)
 nmap <m-k> <Plug>(expand_region_expand)
 nmap <m-j> <Plug>(expand_region_shrink)
 let g:expand_region_text_objects = {
-            \ 'iv'  :0,
+            \ 'iv' :0,
             \ 'av'  :0,
             \ 'iw'  :0,
             \ 'iW'  :0,

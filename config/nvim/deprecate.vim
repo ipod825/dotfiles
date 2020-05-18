@@ -1,3 +1,37 @@
+"Plug 'Shougo/denite.nvim', {'do': ':UpdateRemotePlugins'} "{{{
+"autocmd FileType denite call s:denite_my_settings()
+"autocmd FileType denite-filter call s:denite_filter_my_settings()
+
+"function! s:denite_filter_my_settings() abort
+"    imap <silent><buffer> <c-c> <Plug>(denite_filter_quit)
+"endfunction
+"function! s:denite_my_settings() abort
+"  nnoremap <silent><buffer><expr> <CR>
+"  \ denite#do_map('do_action')
+"  nnoremap <silent><buffer><expr> d
+"  \ denite#do_map('do_action', 'delete')
+"  nnoremap <silent><buffer><expr> p
+"  \ denite#do_map('do_action', 'preview')
+"  nnoremap <silent><buffer><expr> q
+"  \ denite#do_map('quit')
+"  nnoremap <silent><buffer><expr> i
+"  \ denite#do_map('open_filter_buffer')
+"  nnoremap <silent><buffer><expr> <Space>
+"  \ denite#do_map('toggle_select').'j'
+"endfunction
+"augroup POST_PLUG_END
+"    autocmd USER PLUG_END call denite#custom#option('default', {
+"          \'winheight': 90*winheight(0)/100,
+"          \'floating_preview': v:true,
+"          \'filter_split_direction': 'floating',
+"          \'highlight_mode_insert': 'CursorLine',
+"          \'highlight_matched_range': 'None',
+"          \ })
+"augroup END
+""}}}
+"Plug 'cohama/lexima.vim' "{{{
+"inoremap <m-e> <esc>ldlepi
+""}}}
 " Plug 'voldikss/vim-floaterm'
 " " {{{ vim-floaterm
 " nnoremap <m-f> :FloatermToggle<cr>
@@ -6,21 +40,6 @@
 " let g:floaterm_position='bottom'
 " let g:floaterm_width=0.95
 " let g:floaterm_height=0.4
-" Plug 'jiangmiao/auto-pairs'
-" " auto-pairs {{{
-" let g:AutoPairsMapCh = '<nop>'
-" let g:AutoPairsShortcutToggle = '<nop>'
-" let g:AutoPairsShortcutJump = '<nop>'
-" let g:AutoPairsDelete = '<nop>'
-" let g:AutoPairsMultilineClose = 0
-" augroup AUTO_PAIRS
-"     autocmd!
-"     autocmd BufEnter *.tex,*.md,*.adoc let g:AutoPairs["$"] = "$"
-"     autocmd BufLeave *.tex,*.md,*.adoc unlet g:AutoPairs["$"]
-"     autocmd BufEnter *.scm unlet g:AutoPairs["'"]
-"     autocmd BufLeave *.scm let g:AutoPairs["'"] = "'"
-" augroup End
-" " }}}
 " Plug 'git@github.com:ipod825/gitv'
 " " gitv {{{
 " cnoreabbrev gv Gitv --all

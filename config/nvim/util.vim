@@ -6,8 +6,12 @@ function! s:AddUtilComand(cmd)
 endfunction
 
 nnoremap <silent><leader><cr> :call fzf#run(fzf#wrap({
-            \   'source':  sort(g:util_commands),
-            \   'sink': function('<sid>ExecFnOrCmd'),
+            \ 'source': sort(g:util_commands),
+            \ 'sink': function('<sid>ExecFnOrCmd'),
+            \}))<cr>
+vnoremap <silent><leader><cr> :<c-u>call fzf#run(fzf#wrap({
+            \ 'source': sort(g:util_commands),
+            \ 'sink': function('<sid>ExecFnOrCmd'),
             \}))<cr>
 
 function! s:ExecFnOrCmd(name) "{{{
@@ -33,8 +37,8 @@ endfunction
 
 function! s:OpenRecentFile() "{{{
     call fzf#run({
-                \ 'source':  filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|N:\\|term\\|^/tmp/\\|.git/'"),
-                \ 'sink':    'Tabdrop',
+                \ 'source': filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|N:\\|term\\|^/tmp/\\|.git/'"),
+                \ 'sink': 'Tabdrop',
                 \})
 endfunction
 "}}}
@@ -42,8 +46,8 @@ cnoreabbrev f call <sid>OpenRecentFile()
 
 function! s:OpenRecentDirectory() "{{{
     call fzf#run({
-                \ 'source':  map(filter(copy(v:oldfiles), "v:val =~ 'N:'"), 'v:val[2:]'),
-                \ 'sink':    'Tabdrop',
+                \ 'source': map(filter(copy(v:oldfiles), "v:val =~ 'N:'"), 'v:val[2:]'),
+                \ 'sink': 'Tabdrop',
                 \})
 endfunction
 "}}}
@@ -55,16 +59,16 @@ function! s:SearchWord() "{{{
         autocmd!
     augroup END
     silent call fzf#run(fzf#wrap({
-                \   'source':  map(getline(1, '$'), '(v:key + 1) . ": " . v:val '),
-                \   'sink':    function('s:Line_handler'),
-                \   'options': '+s -e --ansi',
+                \ 'source': map(getline(1, '$'), '(v:key + 1) . ": " . v:val '),
+                \ 'sink': function('s:Line_handler'),
+                \ 'options': '+s -e --ansi',
                 \}))
     let s:fzf_ft=''
 endfunction
 function! s:Line_handler(l)
     let keys = split(a:l, ':')
     exec keys[0]
-    call feedkeys('zz')
+    echom mode()
 endfunction
 "}}}
 call s:MapUtil('/', 'SearchWord')
@@ -78,7 +82,7 @@ call s:MapUtil('<c-o>', 'OpenFileFromProjectRoot')
 
 function! s:OpenConfigFiles() "{{{
     call fzf#run(fzf#wrap({
-                \   'source':  systemlist('$HOME/dotfiles/misc/watchfiles.sh nvim'),
+                \ 'source': systemlist('$HOME/dotfiles/misc/watchfiles.sh nvim'),
                 \}))
 endfunction
 call s:MapUtil('<leader>e', 'OpenConfigFiles')
@@ -120,16 +124,14 @@ function! s:YankBaseName() "{{{
 endfunction
 "}}}
 call s:AddUtilComand('YankBaseName')
+function! VRemoveRedundantWhiteSpace()     "{{{
+    exec "'<,'>s/\(\S\)\s\+\(\S\)/\1 \2/g"    "{{{
+endfunction
+call s:AddUtilComand('VRemoveRedundantWhiteSpace')
 
-function! s:RemoveRedundantWhiteSpace() "{{{
+function! RemoveRedundantWhiteSpace()     "{{{
     let l:save = winsaveview()
-
-    if mode()=='v'
-        '<,'>s/\(\S\)\s\+\(\S\)/\1 \2/g
-    else
-        %s/\(\S\)\s\+\(\S\)/\1 \2/g
-    endif
-
+    %s/\(\S\)\s\+\(\S\)/\1 \2/g
     call winrestview(l:save)
 endfunction
 "}}}
