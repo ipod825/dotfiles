@@ -18,6 +18,7 @@ filetype indent on      " Enable filetype-specific indenting
 filetype plugin on      " Enable filetype-specific plugins
 set hidden              " Enable you to edit other buffer without saving current buffer
 set mouse=              " Disable mouse (for using mouse to copy text from to system clipboard)
+set incsearch
 set copyindent          " Copy the previous indentation on autoindenting
 set smartindent
 set ignorecase          " Ignore case when searching

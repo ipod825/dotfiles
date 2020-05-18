@@ -37,17 +37,12 @@ tnoremap <m-l> <end>
 "}}}
 
 " Terminal {{{
-if has('nvim')
-    nnoremap <m-t> :exec 'tabe term://'.$SHELL<cr>
-    nnoremap <m-o> :exec 'new term://'.$SHELL<cr>
-    nnoremap <m-e> :exec 'vnew term://'.$SHELL<cr>
-    nnoremap <m-r> :call ReuseTerm('default')<cr>
-    tnoremap <m-r> <c-\><c-n>:call ReuseTerm('default')<cr>
-else
-    nnoremap <m-t> :tabe<cr>:term ++curwin ++close zsh<cr>
-    nnoremap <m-o> :term ++close zsh<cr>
-    nnoremap <m-e> :vertical term ++close zsh<cr>
-endif
+nnoremap <m-t> :call OpenTerm('t')<cr>
+nnoremap <m-o> :call OpenTerm('s')<cr>
+nnoremap <m-e> :call OpenTerm('v')<cr>
+nnoremap <m-s-t> :call ReuseTerm('t')<cr>
+nnoremap <m-s-o> :call ReuseTerm('s')<cr>
+nnoremap <m-s-e> :call ReuseTerm('v')<cr>
 tnoremap jk <c-\><c-n>
 tnoremap <m-j> <c-\><c-n>:call ToggleTermNojk()<cr>i
 tnoremap <m-k> <c-\><c-n>:ToggleTermInsert<cr>
@@ -213,19 +208,11 @@ function! MoveToNextTab()
 endfunc
 
 function! OpenTerm(split, ...)
-    if a:0>0
-        let l:term_buf_nr = a:1
-    else
-        let l:term_buf_nr = 0
-    endif
-
-    if a:split == 's'
-        let l:split = 'split'
-    else
-        let l:split = 'vsplit'
-    endif
+    let l:term_buf_nr = a:0>0? a:1 : 0
+    let l:split = a:split=='v'? 'vsplit' : 'split'
 
     if l:term_buf_nr > 0
+        exec l:split
         exec l:term_buf_nr.'b'
     else
         if has('nvim')
@@ -243,13 +230,9 @@ endfunction
 
 let s:reused_term_buf = get(s:, 'reused_term_buf', {})
 function! ReuseTerm(position, ...)
-    if a:0 >0
-        let l:name = a:1
-    else
-        let l:name = 'default'
-    endif
+    let l:name = a:0>0? a:1 : 'default'
 
-    if !haskey(s:reused_term_buf, l:name)
+    if !has_key(s:reused_term_buf, l:name)
         let s:reused_term_buf[l:name] = 0
     endif
     let l:buf_nr = s:reused_term_buf[l:name]
@@ -258,8 +241,8 @@ function! ReuseTerm(position, ...)
         call OpenTerm(a:position, l:buf_nr)
     else
         call OpenTerm(a:position)
-        let s:reused_term_buf[l:name] = l:buf_nr
-        autocmd BufUnload <buffer> let s:reused_term_buf[l:name]=0
+        let s:reused_term_buf[l:name] = bufnr()
+        exec 'autocmd BufUnload <buffer> let s:reused_term_buf["'.l:name.'"]=0'
     endif
 endfunction
 

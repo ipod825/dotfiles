@@ -1,0 +1,1 @@
+../../config/nvim/g4.vim
