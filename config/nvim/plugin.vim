@@ -87,6 +87,9 @@ nnoremap <silent><leader>/ :let @/=""<cr>:silent MarkClear<cr>
 nmap n <Plug>MarkSearchCurrentNext
 nmap N <Plug>MarkSearchCurrentPrev
 
+function! StartMarkSearch()
+    autocmd CursorMoved * ++once silent call s:MarkSearchResult()
+endfunction
 function! s:MarkSearchResult()
     let search_pat = getreg('/')
     if empty(search_pat)
@@ -113,11 +116,11 @@ endfunction
 
 nmap <leader>r :call <sid>SelectAllMark()<cr>
 vmap <leader>r :<c-u>call <sid>VSelectAllMark()<cr>
+nnoremap ? :call StartMarkSearch()<cr>/
 
 augroup VIM-MARK
     autocmd!
     autocmd VimEnter * let @/=""
-    autocmd CursorMoved * silent call s:MarkSearchResult()
 augroup END
 "}}}
 

@@ -68,11 +68,9 @@ endfunction
 function! s:Line_handler(l)
     let keys = split(a:l, ':')
     exec keys[0]
-    echom mode()
 endfunction
 "}}}
 call s:MapUtil('/', 'SearchWord')
-nnoremap ? /
 
 function! s:OpenFileFromProjectRoot() "{{{
     exec "Files " . FindRootDirectory()
