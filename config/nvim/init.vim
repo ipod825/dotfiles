@@ -7,8 +7,8 @@ exec 'source '.g:vim_dir.'plugin.vim'
 exec 'source '.g:vim_dir.'util.vim'
 try
     exec 'source '.g:vim_dir.'gwork.vim'
-    exec 'source '.g:vim_dir.'g4.vim'
     exec 'source '.g:vim_dir.'android.vim'
+    exec 'source '.g:vim_dir.'g4.vim'
 catch
 endtry
 
@@ -43,7 +43,6 @@ set shiftwidth=4
 set tabstop=4
 set expandtab
 set completeopt=menuone,noinsert
-set shada=!,'1000,<50,s10,h
 colorscheme one
 call one#highlight("CursorLine", '', '353a42', 'bold')
 hi esearchMatch cterm=bold ctermfg=145 ctermbg=16 gui=bold guifg=#000000 guibg=#5a93f2
@@ -61,6 +60,7 @@ if has('nvim')
 
     set inccommand=split
     let $GIT_EDITOR = 'nvr -cc tabe --remote-wait +"setlocal bufhidden=wipe"'
+    set shada=!,'1000,<50,s10,h
 endif
 " }}}
 

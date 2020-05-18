@@ -298,28 +298,64 @@ command!  -nargs=* DebugGo call <sid>DebugGo(<f-args>)
 command!  -nargs=* DebugGoStop call <sid>DebugGoStop()
 command!  -nargs=* Test echo <q-args>
 
-function! s:Save_mappings(keys, mode) abort
+function! Save_mappings(keys, mode, is_global) abort
     let mappings = {}
-    for l:key in a:keys
-        let mappings[l:key] = maparg(l:key, a:mode)
-    endfor
+    if a:is_global
+        for l:key in a:keys
+            let buf_local_map = maparg(l:key, a:mode, 0, 1)
+            sil! exe a:mode.'unmap <buffer> '.l:key
+            let map_info        = maparg(l:key, a:mode, 0, 1)
+            let mappings[l:key] = !empty(map_info)
+                                \     ? map_info
+                                \     : {
+                                        \ 'unmapped' : 1,
+                                        \ 'buffer'   : 0,
+                                        \ 'lhs'      : l:key,
+                                        \ 'mode'     : a:mode,
+                                        \ }
+            call Restore_mappings({l:key : buf_local_map})
+        endfor
+    else
+        for l:key in a:keys
+            let map_info        = maparg(l:key, a:mode, 0, 1)
+            let mappings[l:key] = !empty(map_info)
+                                \     ? map_info
+                                \     : {
+                                        \ 'unmapped' : 1,
+                                        \ 'buffer'   : 1,
+                                        \ 'lhs'      : l:key,
+                                        \ 'mode'     : a:mode,
+                                        \ }
+        endfor
+    endif
     return mappings
 endfu
 
-function! s:Restore_mappings(mappings, mode) abort
-    for kv in items(a:mappings)
-        if (kv[1]!="")
-            execute a:mode.'map '.kv[0]." ".kv[1]
+function! Restore_mappings(mappings) abort
+    for [lhs, mapping] in items(a:mappings)
+        if has_key(mapping, 'unmapped')
+            sil! exe mapping.mode.'unmap '
+                                \ .(mapping.buffer ? ' <buffer> ' : '')
+                                \ . mapping.lhs
         else
-            execute a:mode.'unmap '.kv[0]
-            execute a:mode.'unmap '.kv[0]
+            let rhs = mapping.rhs
+            if has_key(mapping, 'sid')
+                let rhs = substitute(rhs, '<SID>', '<SNR>'.mapping.sid.'_', 'g')
+            endif
+            exe     mapping.mode
+               \ . (mapping.noremap ? 'noremap   ' : 'map ')
+               \ . (mapping.buffer  ? ' <buffer> ' : '')
+               \ . (mapping.expr    ? ' <expr>   ' : '')
+               \ . (mapping.nowait  ? ' <nowait> ' : '')
+               \ . (mapping.silent  ? ' <silent> ' : '')
+               \ . lhs.' '.rhs
         endif
     endfor
 endfu
 
 function! s:MapDebug()
-    let g:saved_normal_mappings = <sid>Save_mappings(['n','s','c','B','C','e','f','U','D','t'], 'n')
-    let g:saved_visual_mappings = <sid>Save_mappings(['e'], 'x')
+    let g:saved_normal_mappings = Save_mappings(['n','s','c','B','C','e','f','U','D','t'], 'n', 1)
+    let g:saved_visual_mappings = Save_mappings(['e'], 'x', 1)
     nnoremap n :call TermDebugSendCommand('next')<cr>
     nnoremap s :call TermDebugSendCommand('step')<cr>
     nnoremap c :call TermDebugSendCommand('continue')<cr>
@@ -334,9 +370,9 @@ function! s:MapDebug()
 endfunction
 
 function! s:UnmapDebug()
-    call <sid>Restore_mappings(g:saved_normal_mappings, 'n')
+    call Restore_mappings(g:saved_normal_mappings)
     let g:saved_normal_mappings = {}
-    call <sid>Restore_mappings(g:saved_visual_mappings, 'x')
+    call Restore_mappings(g:saved_visual_mappings)
     let g:saved_visual_mappings = {}
 endfunction
 
@@ -353,7 +389,7 @@ function! s:Debug()
 endfunction
 
 function! s:GoMapDebug()
-    let g:saved_normal_mappings = <sid>Save_mappings(['n','s','c','B','C','e','f','U','D','t'], 'n')
+    let g:saved_normal_mappings = <sid>Save_mappings(['n','s','c','B','C','e','f','U','D','t'], 'n', 1)
     " let g:saved_visual_mappings = <sid>Save_mappings(['e'], 'x')
     nnoremap n :GoDebugNext<cr>
     nnoremap s :GoDebugStep<cr>
@@ -368,9 +404,9 @@ function! s:GoMapDebug()
 endfunction
 
 function! s:GoUnmapDebug()
-    call <sid>Restore_mappings(g:saved_normal_mappings, 'n')
+    call Restore_mappings(g:saved_normal_mappings)
     let g:saved_normal_mappings = {}
-    " call <sid>Restore_mappings(g:saved_visual_mappings, 'x')
+    " call estore_mappings(g:saved_visual_mappings)
     " let g:saved_visual_mappings = {}
 endfunction
 
