@@ -35,6 +35,26 @@ function! s:MapUtil(mapping, cmd) "{{{
 endfunction
 "}}}
 
+function! s:UniqueList(lst)
+    let res = {}
+    for i in a:lst
+        let res[i] = 0
+    endfor
+    return keys(res)
+endfunction
+
+function! s:GitCheckBranch() "{{{
+    let locals = map(systemlist('git branch'), {i,b->b[2:]})
+    let refs = join(map(copy(locals), {i,b->'refs/heads/'.b}), ' ')
+    let tracked = s:UniqueList(systemlist('git for-each-ref --format="%(upstream:short)" '.refs))
+    silent call fzf#run(fzf#wrap({
+                \ 'source': extend(locals, tracked),
+                \ 'sink': '!git checkout '
+                \}))
+endfunction
+"}}}
+cnoreabbrev gcb call <sid>GitCheckBranch()
+
 function! s:OpenRecentFile() "{{{
     silent call fzf#run(fzf#wrap({
                 \ 'source': filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|N:\\|term\\|^/tmp/\\|.git/'"),

@@ -70,8 +70,7 @@
 " let g:vista_close_on_jump=1
 " }}}
 
-" Plug 'junegunn/gv.vim', {'on_cmd': 'GV'}
-" " GV{{{
+" Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
 " cnoreabbrev GB GV --branches
 " augroup GVmapping
 "     autocmd FileType GV nmap r q:GB<cr>

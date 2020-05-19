@@ -122,6 +122,8 @@ augroup GENERAL "{{{
     autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
 
     autocmd Filetype help map q :close<cr>
+
+    autocmd FileType qf nnoremap <buffer> <cr> :call PersistentQf()<cr>
 augroup END
 " }}}
 
@@ -144,4 +146,9 @@ function! MyFoldText()
     return line . repeat(" ",fillcharcount) . fdnfo
 endfunction
 
+function! PersistentQf()
+    QfTabdrop
+    copen
+    wincmd w
+endfunction
 " }}}

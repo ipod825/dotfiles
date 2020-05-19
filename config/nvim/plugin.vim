@@ -471,12 +471,16 @@ Plug 'tpope/vim-dispatch'
 Plug 'AndrewRadev/linediff.vim'
 
 Plug 'git@github.com:ipod825/gitv' "{{{
-cnoreabbrev gv Gitv --all
-cnoreabbrev gvb Gitv! --all
 let g:Gitv_WipeAllOnClose = 1
 let g:Gitv_DoNotMapCtrlKey = 1
 let g:Gitv_OpenPreviewOnLaunch = 0
 "}}}
+Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
+cnoreabbrev gv --branches
+augroup GVmapping
+    autocmd FileType GV nmap r q:GB<cr>
+augroup END
+" }}}
 Plug 'kana/vim-textobj-user'
 Plug 'Julian/vim-textobj-variable-segment'
 Plug 'rhysd/vim-textobj-anyblock'
@@ -597,11 +601,6 @@ Plug 'embear/vim-localvimrc' "{{{
 let g:localvimrc_ask = 0
 "}}}
 Plug 'git@github.com:ipod825/vim-tabdrop' "{{{
-augroup TABDROP
-    autocmd!
-    autocmd FileType qf nnoremap <buffer> <cr> :QfTabdrop<cr>
-    autocmd FileType qf nnoremap <buffer> q :quit<cr>
-augroup END
 "}}}
 
 Plug 'mbbill/undotree' "{{{
