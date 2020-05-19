@@ -37,12 +37,12 @@ tnoremap <m-l> <end>
 "}}}
 
 " Terminal {{{
-nnoremap <m-t> :call OpenTerm('t')<cr>
-nnoremap <m-o> :call OpenTerm('s')<cr>
-nnoremap <m-e> :call OpenTerm('v')<cr>
-nnoremap <m-s-t> :call ReuseTerm('t')<cr>
-nnoremap <m-s-o> :call ReuseTerm('s')<cr>
-nnoremap <m-s-e> :call ReuseTerm('v')<cr>
+nnoremap <m-t> :call OpenTerm('Tabdrop')<cr>
+nnoremap <m-o> :call OpenTerm('split')<cr>
+nnoremap <m-e> :call OpenTerm('vsplit')<cr>
+nnoremap <m-s-t> :call ReuseTerm('Tabdrop')<cr>
+nnoremap <m-s-o> :call ReuseTerm('split')<cr>
+nnoremap <m-s-e> :call ReuseTerm('vsplit')<cr>
 tnoremap jk <c-\><c-n>
 tnoremap <m-j> <c-\><c-n>:call ToggleTermNojk()<cr>i
 tnoremap <m-k> <c-\><c-n>:ToggleTermInsert<cr>
@@ -207,42 +207,35 @@ function! MoveToNextTab()
   exe "b".l:cur_buf
 endfunc
 
-function! OpenTerm(split, ...)
-    let l:term_buf_nr = a:0>0? a:1 : 0
-    let l:split = a:split=='v'? 'vsplit' : 'split'
-
-    if l:term_buf_nr > 0
-        exec l:split
-        exec l:term_buf_nr.'b'
+function! OpenTerm(opencmd, ...)
+    if a:0 > 0
+        exec a:opencmd.' '.a:1
     else
         if has('nvim')
-            exec l:split.' term://'.$SHELL
+            exec a:opencmd
+            term
+            startinsert
         else
-            exec l:split
+            exec a:opencmd
             exec 'term ++close ++curwin '.$SHELL
         endif
     endif
-
-    if a:split == 't'
-        wincmd T
-    endif
 endfunction
 
-let s:reused_term_buf = get(s:, 'reused_term_buf', {})
-function! ReuseTerm(position, ...)
+let s:reused_term_fname = get(s:, 'reused_term_fname', {})
+function! ReuseTerm(opencmd, ...)
     let l:name = a:0>0? a:1 : 'default'
 
-    if !has_key(s:reused_term_buf, l:name)
-        let s:reused_term_buf[l:name] = 0
-    endif
-    let l:buf_nr = s:reused_term_buf[l:name]
-
-    if l:buf_nr > 0
-        call OpenTerm(a:position, l:buf_nr)
+    if !has_key(s:reused_term_fname, l:name)
+        call OpenTerm(a:opencmd)
+        let s:reused_term_fname[l:name] = expand('%:p')
+        exec 'autocmd BufUnload <buffer> unlet s:reused_term_fname["'.l:name.'"]'
+        tnoremap <buffer> <c-d> <c-\><c-n>:quit<cr>
+        nnoremap <buffer> q :quit<cr>
+        return v:false
     else
-        call OpenTerm(a:position)
-        let s:reused_term_buf[l:name] = bufnr()
-        exec 'autocmd BufUnload <buffer> let s:reused_term_buf["'.l:name.'"]=0'
+        call OpenTerm(a:opencmd, s:reused_term_fname[l:name])
+        return v:true
     endif
 endfunction
 

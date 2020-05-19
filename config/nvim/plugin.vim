@@ -623,7 +623,10 @@ let g:NETRIgnore = ['__pycache__', '*.pyc', '*.o', 'egg-info']
 let g:NETRColors = {'dir': 39, 'footer': 35, 'exe': 35}
 let g:NETRGuiColors = {'dir': '#00afff', 'footer': '#00af5f', 'exe': '#00af5f'}
 function! DuplicateNode()
-    call netranger#cp(netranger#cur_node_path(), netranger#cur_node_path().'DUP')
+    let path = netranger#cur_node_path()
+    let dir = fnamemodify(path, ':p:h').'/'
+    let newname = 'DUP'.fnamemodify(path, ':p:t')
+    call netranger#cp(path, dir.newname)
 endfunction
 
 function! NETRInit()

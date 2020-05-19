@@ -36,19 +36,17 @@ endfunction
 "}}}
 
 function! s:OpenRecentFile() "{{{
-    call fzf#run({
+    silent call fzf#run(fzf#wrap({
                 \ 'source': filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|N:\\|term\\|^/tmp/\\|.git/'"),
-                \ 'sink': 'Tabdrop',
-                \})
+                \}))
 endfunction
 "}}}
 cnoreabbrev f call <sid>OpenRecentFile()
 
 function! s:OpenRecentDirectory() "{{{
-    call fzf#run({
+    silent call fzf#run(fzf#wrap({
                 \ 'source': map(filter(copy(v:oldfiles), "v:val =~ 'N:'"), 'v:val[2:]'),
-                \ 'sink': 'Tabdrop',
-                \})
+                \}))
 endfunction
 "}}}
 cnoreabbrev d call <sid>OpenRecentDirectory()
