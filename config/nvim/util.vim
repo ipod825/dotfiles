@@ -49,7 +49,7 @@ function! s:GitCheckBranch() "{{{
     let tracked = s:UniqueList(systemlist('git for-each-ref --format="%(upstream:short)" '.refs))
     silent call fzf#run(fzf#wrap({
                 \ 'source': extend(locals, tracked),
-                \ 'sink': '!git checkout '
+                \ 'sink': 'silent !git checkout '
                 \}))
 endfunction
 "}}}
