@@ -528,8 +528,8 @@ let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'c
 Plug 'MattesGroeger/vim-bookmarks'
 
 Plug 'gcmt/taboo.vim' "{{{
-let g:taboo_tab_format='%I%m%f '
-let g:taboo_renamed_tab_format='%I%m%l '
+let g:taboo_tab_format='%I%m%f❚'
+let g:taboo_renamed_tab_format='%I%m%l❚'
 fu! TabooCustomExpand(name)
     let out = a:name
     let i = 20
