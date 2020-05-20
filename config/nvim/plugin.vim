@@ -356,6 +356,9 @@ endfu
 
 function! Restore_mappings(mappings) abort
     for [lhs, mapping] in items(a:mappings)
+        if empty(mapping)
+            continue
+        endif
         if has_key(mapping, 'unmapped')
             sil! exe mapping.mode.'unmap '
                                 \ .(mapping.buffer ? ' <buffer> ' : '')
