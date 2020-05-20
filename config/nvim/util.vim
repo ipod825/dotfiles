@@ -63,9 +63,24 @@ endfunction
 "}}}
 cnoreabbrev f call <sid>OpenRecentFile()
 
+function s:DirTabdrop(path) "{{{
+    let l:bufnr = bufnr('N:'.a:path)
+    if l:bufnr>0
+        let l:win_ids = win_findbuf(l:bufnr)
+        if len(l:win_ids)>0
+            call win_gotoid(l:win_ids[0])
+        else
+            exec "tabedit " . a:path
+        endif
+    else
+        exec "tabedit " . a:path
+    endif
+endfunction
+"}}}
 function! s:OpenRecentDirectory() "{{{
     silent call fzf#run(fzf#wrap({
                 \ 'source': map(filter(copy(v:oldfiles), "v:val =~ 'N:'"), 'v:val[2:]'),
+                \ 'sink': function('s:DirTabdrop')
                 \}))
 endfunction
 "}}}

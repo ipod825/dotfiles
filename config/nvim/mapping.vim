@@ -37,12 +37,9 @@ tnoremap <m-l> <end>
 "}}}
 
 " Terminal {{{
-nnoremap <m-t> :call OpenTerm('Tabdrop')<cr>
-nnoremap <m-o> :call OpenTerm('split')<cr>
-nnoremap <m-e> :call OpenTerm('vsplit')<cr>
-nnoremap <m-s-t> :call ReuseTerm('Tabdrop')<cr>
-nnoremap <m-s-o> :call ReuseTerm('split')<cr>
-nnoremap <m-s-e> :call ReuseTerm('vsplit')<cr>
+nnoremap <m-t> :call ReuseTerm('Tabdrop', getcwd())<cr>
+nnoremap <m-o> :call ReuseTerm('split', getcwd())<cr>
+nnoremap <m-e> :call ReuseTerm('vsplit', getcwd())<cr>
 tnoremap jk <c-\><c-n>
 tnoremap <m-j> <c-\><c-n>:call ToggleTermNojk()<cr>i
 tnoremap <m-k> <c-\><c-n>:ToggleTermInsert<cr>
