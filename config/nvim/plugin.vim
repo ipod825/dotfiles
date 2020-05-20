@@ -625,7 +625,7 @@ let g:NETRRifleFile = $HOME."/dotfiles/config/nvim/settings/rifle.conf"
 let g:NETRIgnore = ['__pycache__', '*.pyc', '*.o', 'egg-info']
 let g:NETRColors = {'dir': 39, 'footer': 35, 'exe': 35}
 let g:NETRGuiColors = {'dir': '#00afff', 'footer': '#00af5f', 'exe': '#00af5f'}
-let g:NETRPreviewDefaultOn = v:false
+" let g:NETRPreviewDefaultOn = v:false
 let g:NETRRifleDisplayError = v:false
 function! DuplicateNode()
     let path = netranger#cur_node_path()

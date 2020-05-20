@@ -57,23 +57,29 @@ cnoreabbrev gcb call <sid>GitCheckBranch()
 
 function! s:OpenRecentFile() "{{{
     silent call fzf#run(fzf#wrap({
-                \ 'source': filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|N:\\|term\\|^/tmp/\\|.git/'"),
+                \ 'source': filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|term\\|^/tmp/\\|.git/'"),
+                \ 'sink': function('s:RecentFileTabdrop')
                 \}))
 endfunction
 "}}}
 cnoreabbrev f call <sid>OpenRecentFile()
 
-function s:DirTabdrop(path) "{{{
-    let l:bufnr = bufnr('N:'.a:path)
+function s:RecentFileTabdrop(path) "{{{
+    if a:path[:1]=='N:'
+        let l:target = a:path[2:]
+    else
+        let l:target = a:path
+    endif
+    let l:bufnr = bufnr(a:path)
     if l:bufnr>0
         let l:win_ids = win_findbuf(l:bufnr)
         if len(l:win_ids)>0
             call win_gotoid(l:win_ids[0])
         else
-            exec "tabedit " . a:path
+            exec "tabedit " . l:target
         endif
     else
-        exec "tabedit " . a:path
+        exec "tabedit " . l:target
     endif
 endfunction
 "}}}
@@ -84,7 +90,6 @@ function! s:OpenRecentDirectory() "{{{
                 \}))
 endfunction
 "}}}
-cnoreabbrev d call <sid>OpenRecentDirectory()
 
 function! s:SearchWord() "{{{
     let s:fzf_ft=&ft
