@@ -38,6 +38,10 @@ let g:lightline = {
             \              [ 'percent' ],
             \              [ 'fileencoding', 'filetype' ] ]
             \  },
+            \ 'inactive': {
+            \   'left': [ [ 'filename' ] ],
+            \   'right': [ [ 'gitbranch', 'lineinfo' ],
+            \               [ 'percent' ] ] },
             \ 'component': {
             \         'tagbar': ' %{tagbar#currenttag("%s", "", "f")}',
             \         'gitbranch': '%{fugitive#head()}',

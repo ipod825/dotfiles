@@ -90,7 +90,7 @@ alias te='nvrte'
 alias e='nvre'
 # dtach
 dt(){
-dtach -A /tmp/$1 -r winch nvim +terminal +startinsert
+dtach -A /tmp/$1 -r winch nvim .
 }
 
 # fzf
