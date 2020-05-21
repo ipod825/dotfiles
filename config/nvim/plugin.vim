@@ -33,15 +33,15 @@ let g:lightline = {
             \ 'colorscheme': 'wombat' ,
             \ 'active': {
             \   'left': [ [ 'mode', 'paste' ],
-            \             [ 'gitbranch', 'readonly', 'filename', 'modified' ], ['tagbar'] ],
-            \   'right': [ [ 'lineinfo' ],
+            \             [ 'readonly', 'filename', 'modified' ], ['tagbar'] ],
+            \   'right': [ ['lineinfo' ],
             \              [ 'percent' ],
-            \              [ 'fileencoding', 'filetype' ] ]
+            \              [ 'gitbranch', 'fileencoding', 'filetype' ] ]
             \  },
             \ 'inactive': {
             \   'left': [ [ 'filename' ] ],
-            \   'right': [ [ 'gitbranch', 'lineinfo' ],
-            \               [ 'percent' ] ] },
+            \   'right': [ [ 'lineinfo' ],
+            \               ['gitbranch',  'percent' ] ] },
             \ 'component': {
             \         'tagbar': ' %{tagbar#currenttag("%s", "", "f")}',
             \         'gitbranch': '%{fugitive#head()}',
@@ -461,10 +461,10 @@ augroup FUGITIVE
 augroup END
 "}}}
 
-" Plug 'camspiers/animate.vim'
-" let g:animate#duration = 100.0
-" Plug 'camspiers/lens.vim'
-" Plug 'git@github.com:ipod825/lens.vim', {'branch': 'disableoption'}  {{{
+Plug 'camspiers/animate.vim'
+let g:animate#duration = 100.0
+Plug 'camspiers/lens.vim'
+Plug 'git@github.com:ipod825/lens.vim', {'branch': 'disableoption'} "{{{
 function! s:LensDisable()
     if &diff
         return v:true

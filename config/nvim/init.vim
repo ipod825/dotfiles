@@ -122,6 +122,7 @@ augroup GENERAL "{{{
     autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
 
     autocmd TermOpen * setlocal nobuflisted
+    autocmd Filetype qf nnoremap <cr> <c-w>o<cr>
     autocmd Filetype help map q :close<cr>
 augroup END
 " }}}

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+adb root && adb remount
+
+if [[ ! $? -eq "0" ]]; then
+    adb reboot && adbwait && adb root && adb remount
+fi
+
+echo "Syncing ..."
+adb sync
+echo "Done"
