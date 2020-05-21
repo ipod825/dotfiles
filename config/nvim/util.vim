@@ -130,7 +130,7 @@ function! s:SaveWithoutFix() "{{{
     let g:ale_fix_on_save = 1
 endfunction
 "}}}
-call s:AddUtilComand('SaveWithoutFix')
+cnoreabbrev ww call <sid>SaveWithoutFix()
 
 function! s:ClearSign() "{{{
     exe 'sign unplace * buffer='.bufnr()

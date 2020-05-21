@@ -455,6 +455,10 @@ endfunction
 
 Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'} "{{{
 cnoreabbrev g tab Git
+augroup FUGITIVE
+    autocmd!
+    autocmd Filetype fugitive nmap <buffer> <leader><space> =
+augroup END
 "}}}
 
 " Plug 'camspiers/animate.vim'

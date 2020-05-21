@@ -121,6 +121,7 @@ augroup GENERAL "{{{
     autocmd BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd
     autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
 
+    autocmd TermOpen * setlocal nobuflisted
     autocmd Filetype help map q :close<cr>
 augroup END
 " }}}
