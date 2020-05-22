@@ -454,7 +454,6 @@ endfunction
 "}}}
 
 Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'} "{{{
-cnoreabbrev g tab Git
 augroup FUGITIVE
     autocmd!
     autocmd Filetype fugitive nmap <buffer> <leader><space> =
@@ -463,11 +462,11 @@ augroup END
 
 
 Plug 'ipod825/war.vim' "{{{
-augroup WAR
-    autocmd Filetype qf :call war#fire(-1, 0.9, -1, 0.05)
-    autocmd Filetype fugitive :call war#fire(-1, 0.9, -1, 0.1)
-augroup END
-"}}}
+ augroup WAR
+     autocmd Filetype qf :call war#fire(-1, 0.9, -1, 0.05)
+     autocmd Filetype fugitive :call war#fire(-1, 0.9, -1, 0.1)
+ augroup END
+" }}}
 Plug 'tpope/vim-dispatch'
 Plug 'AndrewRadev/linediff.vim'
 
