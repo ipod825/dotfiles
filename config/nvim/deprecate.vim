@@ -1,3 +1,18 @@
+"Plug 'camspiers/lens.vim'
+"Plug 'git@github.com:ipod825/lens.vim', {'branch': 'disableoption'} "{{{
+"function! s:LensDisable()
+"    if &diff
+"        return v:true
+"    endif
+"    return v:false
+"endfunction
+"" let g:Lens_custom_disable_check = function('s:LensDisable')
+"let g:lens#disabled_filetypes = ['netranger', 'gitv', 'esearch']
+"" let g:lens#disabled_buftypes = ['terminal']
+"let g:lens#specify_dim_by_ratio = v:true
+"let g:lens#width_resize_min=0.7
+"let g:lens#width_resize_max=0.7
+""}}}
 "Plug 'Shougo/denite.nvim', {'do': ':UpdateRemotePlugins'} "{{{
 "autocmd FileType denite call s:denite_my_settings()
 "autocmd FileType denite-filter call s:denite_filter_my_settings()

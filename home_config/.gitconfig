@@ -8,6 +8,9 @@
 [includeIf "gitdir:android/"]
     path = .gitconfig_android
 
+[diff]
+    tool = diff-so-fancy
+
 [alias]
 	st = status
 	cm = commit
