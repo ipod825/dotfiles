@@ -463,8 +463,10 @@ augroup END
 
 Plug 'ipod825/war.vim' "{{{
  augroup WAR
+     autocmd!
      autocmd Filetype qf :call war#fire(-1, 0.9, -1, 0.05)
      autocmd Filetype fugitive :call war#fire(-1, 0.9, -1, 0.1)
+     autocmd Filetype git :call war#fire(0.95, -1, 0.3, -1)
  augroup END
 " }}}
 Plug 'tpope/vim-dispatch'
@@ -478,7 +480,7 @@ let g:Gitv_OpenPreviewOnLaunch = 0
 Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
 cnoreabbrev gv --branches
 augroup GVmapping
-    autocmd FileType GV nmap r q:GB<cr>
+    autocmd FileType GV nmap <buffer> r q:GB<cr>
 augroup END
 " }}}
 Plug 'kana/vim-textobj-user'

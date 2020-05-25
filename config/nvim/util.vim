@@ -43,13 +43,23 @@ function! s:UniqueList(lst)
     return keys(res)
 endfunction
 
+function! s:GitBranchDelete() "{{{
+    let locals = map(systemlist('git branch'), {i,b->b[2:]})
+    silent call fzf#run(fzf#wrap({
+                \ 'source': locals,
+                \ 'sink': '!git branch -D '
+                \}))
+endfunction
+"}}}
+cnoreabbrev gbd call <sid>GitBranchDelete()
+
 function! s:GitCheckBranch() "{{{
     let locals = map(systemlist('git branch'), {i,b->b[2:]})
     let refs = join(map(copy(locals), {i,b->'refs/heads/'.b}), ' ')
     let tracked = s:UniqueList(systemlist('git for-each-ref --format="%(upstream:short)" '.refs))
     silent call fzf#run(fzf#wrap({
                 \ 'source': extend(locals, tracked),
-                \ 'sink': 'silent !git checkout '
+                \ 'sink': '!git checkout '
                 \}))
 endfunction
 "}}}
@@ -124,13 +134,12 @@ endfunction
 call s:MapUtil('<leader>e', 'OpenConfigFiles')
 "}}}
 
-function! s:SaveWithoutFix() "{{{
-    let g:ale_fix_on_save = 0
+function! s:ToggleSaveWithoutFix() "{{{
+    let b:ale_fix_on_save = 1 - get(b:, "ale_fix_on_save", 1)
     write
-    let g:ale_fix_on_save = 1
 endfunction
 "}}}
-cnoreabbrev ww call <sid>SaveWithoutFix()
+call s:AddUtilComand('ToggleSaveWithoutFix')
 
 function! s:ClearSign() "{{{
     exe 'sign unplace * buffer='.bufnr()
