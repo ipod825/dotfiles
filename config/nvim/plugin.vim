@@ -464,7 +464,7 @@ augroup END
 "}}}
 
 
-Plug 'ipod825/war.vim' "{{{
+Plug 'git@github.com:ipod825/war.vim' "{{{
  augroup WAR
      autocmd!
      autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0.2)
