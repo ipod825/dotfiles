@@ -7,15 +7,16 @@ if !filereadable(vim_plug_file)
     call system('curl -fLo '.g:vim_dir.'autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim')
 endif
 
-augroup POST_PLUG_END
-    " This augroup enables us to call functions defined in a plugin before
-    " plug#end() call.
-    autocmd!
-augroup END
-
 call plug#begin(g:vim_dir . 'bundle')
 Plug 'junegunn/vim-plug'
 Plug 'rakr/vim-one'
+augrou ONE
+    autocmd!
+    autocmd USER PLUG_END colorscheme one
+    autocmd USER PLUG_END call one#highlight("CursorLine", '', '213b40', 'bold')
+    autocmd USER PLUG_END call one#highlight("Visual", '', '213b40', '')
+augrou END
+
 Plug 'vim-scripts/gtags.vim'
 Plug 'wsdjeg/vim-fetch'
 
@@ -286,7 +287,8 @@ let g:vimtex_fold_enabled = 1
 let g:polyglot_disabled = ['latex']
 let g:vimtex_log_ignore=['25']
 let g:vimtex_view_general_viewer = 'zathura'
-augroup POST_PLUG_END
+augroup VIMTEX
+    autocmd!
     if &rtp =~ 'deoplete.nvim'
         call deoplete#custom#var('omni', 'input_patterns', {
                     \ 'tex': g:vimtex#re#deoplete
@@ -586,6 +588,7 @@ augroup ESEARCH
     autocmd User esearch_win_config
                 \   let b:autopreview = esearch#debounce(b:esearch.split_preview, 100)
                 \ | autocmd CursorMoved <buffer> call b:autopreview.apply('vsplit')
+    autocmd USER PLUG_END hi esearchMatch cterm=bold ctermfg=145 ctermbg=16 gui=bold guifg=#000000 guibg=#5a93f2
 augroup END
 "}}}
 

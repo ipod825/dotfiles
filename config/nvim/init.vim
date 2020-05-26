@@ -1,7 +1,10 @@
 " .nvimrc of ipod825
 
-let g:vim_dir=fnamemodify($MYVIMRC, ":h")."/"
+" These setting needs to be in front of colorscheme command.
+syntax on
+set background=dark
 
+let g:vim_dir=fnamemodify($MYVIMRC, ":h")."/"
 exec 'source '.g:vim_dir.'mapping.vim'
 exec 'source '.g:vim_dir.'plugin.vim'
 exec 'source '.g:vim_dir.'util.vim'
@@ -36,17 +39,12 @@ set diffopt+=vertical
 set virtualedit=block
 set showmatch           " Highlight matching ) and }
 set cursorline
-syntax on
-set background=dark
-set termguicolors
 set winminwidth=0
 set shiftwidth=4
 set tabstop=4
 set expandtab
 set completeopt=menuone,noinsert
-colorscheme one
-call one#highlight("CursorLine", '', '353a42', 'bold')
-hi esearchMatch cterm=bold ctermfg=145 ctermbg=16 gui=bold guifg=#000000 guibg=#5a93f2
+set termguicolors
 
 let g:terminal_scrollback_buffer_size=100000
 if has('nvim')
