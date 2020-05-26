@@ -95,15 +95,3 @@ if [ ! -z $gpg_key ]; then
     fi
     git-crypt unlock
 fi
-
-# echo -n "Install (compile from source) vim?(y/n):"
-# read decision
-# if [ $decision == "y" ]; then
-#     echo "==Setting vim=="
-#     if [ ! -x $HOME/opt/vim ]; then
-#         bash ./vim_install.sh
-#     fi
-#     if [ ! -d home_config/.vim/bundle ];then
-#         vim +PlugInstall +qall
-#     fi
-# fi
