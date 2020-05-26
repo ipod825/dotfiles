@@ -22,6 +22,9 @@ Plug 'wsdjeg/vim-fetch'
 Plug 'tpope/vim-commentary' "{{{
 nmap <c-_> gcc
 vmap <c-_> gc
+augroup COMMENTARY
+    autocmd Filetype c,cpp setlocal commentstring=//\ %s
+augroup END
 "}}}
 Plug 'luochen1990/rainbow' "{{{
 let g:rainbow_active = 1
@@ -464,8 +467,8 @@ augroup END
 Plug 'ipod825/war.vim' "{{{
  augroup WAR
      autocmd!
-     autocmd Filetype qf :call war#fire(-1, 0.9, -1, 0.05)
-     autocmd Filetype fugitive :call war#fire(-1, 0.9, -1, 0.1)
+     autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0.2)
+     autocmd Filetype fugitive :call war#fire(-1, 0.8, -1, 0.1)
      autocmd Filetype git :call war#fire(0.95, -1, 0.3, -1)
  augroup END
 " }}}
@@ -478,9 +481,9 @@ let g:Gitv_DoNotMapCtrlKey = 1
 let g:Gitv_OpenPreviewOnLaunch = 0
 "}}}
 Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
-cnoreabbrev gv --branches
+cnoreabbrev gv GV --branches
 augroup GVmapping
-    autocmd FileType GV nmap <buffer> r q:GB<cr>
+    autocmd FileType GV nmap <buffer> r q:gv<cr>
 augroup END
 " }}}
 Plug 'kana/vim-textobj-user'

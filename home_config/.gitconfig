@@ -25,3 +25,5 @@
 	ui = auto
 [pull]
 	rebase = true
+[branch]
+	autosetuprebase = always
