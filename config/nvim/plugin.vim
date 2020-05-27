@@ -525,6 +525,7 @@ let g:expand_region_text_objects = {
 
 
 Plug 'tpope/vim-abolish'
+Plug 'skywind3000/asyncrun.vim'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim' "{{{

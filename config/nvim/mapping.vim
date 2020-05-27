@@ -75,8 +75,8 @@ nnoremap Q q
 cnoreabbrev help tab help
 cnoreabbrev te Tabdrop
 cnoreabbrev tc tabclose
-cnoreabbrev gps G push
-cnoreabbrev gpl G pull
+cnoreabbrev gps AsyncRun git push
+cnoreabbrev gpl AsyncRun git pull
 let $SUDO_ASKPASS="/usr/bin/ssh-askpass"
 cnoreabbrev sudow w !sudo -A tee %
 cnoreabbrev man Man
