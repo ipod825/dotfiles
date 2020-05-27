@@ -528,6 +528,7 @@ Plug 'tpope/vim-abolish'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim' "{{{
+autocmd VimEnter * command! -bang -nargs=? Files call fzf#vim#files(<q-args>, {'options': '--no-preview'}, <bang>0)
 let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.95 } }
 let $FZF_DEFAULT_COMMAND = 'find .'
 let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'ctrl-v': 'vsplit' }
