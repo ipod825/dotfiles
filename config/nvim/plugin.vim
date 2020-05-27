@@ -48,8 +48,8 @@ let g:lightline = {
             \   'right': [['lineinfo'],
             \               ['gitbranch']] },
             \ 'component': {
-            \         'tagbar': ' %{tagbar#currenttag("%s", "", "f")}',
-            \         'gitbranch': '%{fugitive#head()}'."⎇",
+            \         'tagbar': '⚓'.'%{tagbar#currenttag("%s", "", "f")}',
+            \         'gitbranch': "⎇ ".'%{fugitive#head()}',
             \         'asyncrun': '%{g:asyncrun_status}',
             \ },
             \ }
