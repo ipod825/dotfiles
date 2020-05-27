@@ -36,19 +36,20 @@ Plug 'itchyny/lightline.vim' "{{{
 let g:lightline = {
             \ 'colorscheme': 'wombat' ,
             \ 'active': {
-            \   'left': [ [ 'mode', 'paste' ],
-            \             [ 'readonly', 'filename', 'modified' ], ['tagbar'] ],
-            \   'right': [ ['lineinfo' ],
-            \              [ 'percent' ],
-            \              [ 'asyncrun', 'gitbranch', 'fileencoding', 'filetype' ] ]
+            \   'left': [[ 'mode', 'paste' ],
+            \            [ 'readonly', 'filename', 'modified'],
+            \            ['tagbar']],
+            \   'right': [['lineinfo'],
+            \              [ 'percent'],
+            \              ['gitbranch']]
             \  },
             \ 'inactive': {
-            \   'left': [ [ 'filename' ] ],
-            \   'right': [ [ 'lineinfo' ],
-            \               ['gitbranch',  'percent' ] ] },
+            \   'left': [['filename'] ],
+            \   'right': [['lineinfo'],
+            \               ['gitbranch']] },
             \ 'component': {
             \         'tagbar': ' %{tagbar#currenttag("%s", "", "f")}',
-            \         'gitbranch': '%{fugitive#head()}',
+            \         'gitbranch': '%{fugitive#head()}'."⎇",
             \         'asyncrun': '%{g:asyncrun_status}',
             \ },
             \ }
