@@ -67,7 +67,7 @@ cnoreabbrev gcb call <sid>GitCheckBranch()
 
 function! s:OpenRecentFile() "{{{
     silent call fzf#run(fzf#wrap({
-                \ 'source': filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|term\\|^/tmp/\\|.git/\\|Search ‹'"),
+                \ 'source': uniq(filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|term\\|^/tmp/\\|.git/\\|Search ‹'")),
                 \ 'sink': function('s:RecentFileTabdrop')
                 \}))
 endfunction
