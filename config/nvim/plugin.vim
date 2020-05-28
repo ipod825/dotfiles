@@ -50,13 +50,14 @@ let g:lightline = {
             \ 'component': {
             \         'tagbar': '⚓'.'%{tagbar#currenttag("%s", "", "f")}',
             \         'gitbranch': "⎇ ".'%{fugitive#head()}',
-            \         'asyncrun': '%{g:asyncrun_status}',
             \ },
             \ }
 "}}}
 Plug 'majutsushi/tagbar' "{{{
 cnoreabbrev BB TagbarOpenAutoClose
 "}}}
+
+Plug 'brookhong/cscope.vim'
 
 Plug 'vimwiki/vimwiki' "{{{
 let g:vimwiki_folding='list'
@@ -527,7 +528,6 @@ let g:expand_region_text_objects = {
 
 
 Plug 'tpope/vim-abolish'
-Plug 'skywind3000/asyncrun.vim'
 Plug 'mh21/errormarker.vim'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
