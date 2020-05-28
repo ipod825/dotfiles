@@ -79,6 +79,7 @@ augroup GENERAL "{{{
     command! ToggleTermInsert execute "let s:auto_term_insert=1-s:auto_term_insert"
     if has('nvim')
         autocmd TermOpen * setlocal wrap
+        autocmd TermOpen * setlocal nobuflisted
     else
         autocmd TerminalOpen * setlocal wrap
     endif
@@ -119,7 +120,6 @@ augroup GENERAL "{{{
     autocmd BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd
     autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
 
-    autocmd TermOpen * setlocal nobuflisted
     autocmd Filetype qf nnoremap <cr> <c-w>o<cr>
     autocmd Filetype help map q :close<cr>
 augroup END
