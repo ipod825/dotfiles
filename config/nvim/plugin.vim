@@ -57,9 +57,6 @@ Plug 'majutsushi/tagbar' "{{{
 cnoreabbrev BB TagbarOpenAutoClose
 "}}}
 
-Plug 'brookhong/cscope.vim'
-
-
 Plug 'inkarkat/vim-ingo-library'
 Plug 'inkarkat/vim-mark' "{{{
 let g:mw_no_mappings = 1
@@ -512,8 +509,11 @@ let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'c
 "}}}
 
 Plug 'MattesGroeger/vim-bookmarks'
+Plug g:vim_dir.'bundle/vim-bookmark'
+" let g:bookmark_opencmd = 'Tabdrop'
 
-Plug 'gcmt/taboo.vim' "{{{
+" Plug 'gcmt/taboo.vim' "{{{
+Plug 'git@github.com:ipod825/taboo.vim' "{{{
 let g:taboo_tab_format='%I%m%f❚'
 let g:taboo_renamed_tab_format='%I%m%l❚'
 fu! TabooCustomExpand(name)
