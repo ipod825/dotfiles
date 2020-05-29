@@ -126,7 +126,7 @@ augroup End
 " }}}
 
 Plug 'skywind3000/asyncrun.vim' "{{{
-autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | endif
+autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | else | echom Success! | endif
 cnoreabbrev gps AsyncRun git push
 cnoreabbrev gpl AsyncRun git pull
 "}}}
