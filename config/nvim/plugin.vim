@@ -129,6 +129,7 @@ Plug 'skywind3000/asyncrun.vim' "{{{
 autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | else | echo "Success!" | endif
 cnoreabbrev gps AsyncRun git push
 cnoreabbrev gpl AsyncRun git pull
+cnoreabbrev gck exec 'AsyncRun git checkout '.expand('<cword>')
 "}}}
 Plug 'tpope/vim-endwise'
 
@@ -466,7 +467,7 @@ let g:Gitv_OpenPreviewOnLaunch = 0
 Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
 cnoreabbrev gv GV --branches
 augroup GVmapping
-    autocmd FileType GV nmap <buffer> r q:gv<cr>
+    autocmd FileType GV nmap <buffer> r :quit<cr>:gv<cr>
 augroup END
 " }}}
 Plug 'kana/vim-textobj-user'
