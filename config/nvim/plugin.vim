@@ -126,7 +126,7 @@ augroup End
 " }}}
 
 Plug 'skywind3000/asyncrun.vim' "{{{
-autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | else | echom Success! | endif
+autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | else | echom "Success!" | endif
 cnoreabbrev gps AsyncRun git push
 cnoreabbrev gpl AsyncRun git pull
 "}}}
@@ -437,9 +437,12 @@ endfunction
 "}}}
 
 Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'} "{{{
+let g:fugitive_auto_close = get(g:, 'fugitive_auto_close', v:false)
 augroup FUGITIVE
     autocmd!
     autocmd Filetype fugitive nmap <buffer> <leader><space> =
+    autocmd Filetype fugitive autocmd BufEnter <buffer> if g:fugitive_auto_close | let g:fugitive_auto_close=v:false | quit | endif
+    autocmd Filetype gitcommit autocmd BufWinLeave <buffer> ++once let g:fugitive_auto_close=v:true
 augroup END
 "}}}
 
