@@ -463,6 +463,8 @@ let g:Gitv_WipeAllOnClose = 1
 let g:Gitv_DoNotMapCtrlKey = 1
 let g:Gitv_OpenPreviewOnLaunch = 0
 "}}}
+
+Plug 'idanarye/vim-merginal'
 Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
 cnoreabbrev gv GV --branches
 augroup GVmapping
