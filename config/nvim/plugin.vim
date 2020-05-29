@@ -465,9 +465,40 @@ let g:Gitv_OpenPreviewOnLaunch = 0
 "}}}
 Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
 cnoreabbrev gv GV --branches
+function! s:BranchFilter(k, v)
+    if a:v=='HEAD'
+        return
+    elseif a:v=~ 'HEAD ->'
+        return a:v[8:]
+    else
+        return a:v
+    endif
+endfunction
+let s:gckbranch = get(s:, 'gckbranch', '')
+function! GckCandidate()
+    let l:res = [gv#sha()]
+    let l:branches = matchstr(getline('.'), '([^)]*) ')
+    if !empty(l:branches)
+        let l:branches = l:branches[1:len(l:branches)-3]
+        call extend(l:res, split(l:branches, ','))
+        let l:res = map(l:res, function('<sid>BranchFilter'))
+    endif
+    if len(l:res)>1
+        call fzf#run(fzf#wrap({
+                \ 'source': sort(l:res),
+                \ 'sink': function('GckFinalizeCandidate'),
+            \}))
+        return s:gckbranch
+    else
+        return l:res[0]
+    endif
+endfunction
+function! GckFinalizeCandidate(branch)
+    let s:gckbranch = a:branch
+endfunction
 augroup GVmapping
     autocmd FileType GV nmap <buffer> r :quit<cr>:gv<cr>
-    autocmd FileType GV nnoremap <buffer> gck :exec 'AsyncRun git checkout '.gv#sha()<cr>
+    autocmd FileType GV nnoremap <buffer> gck :exec 'AsyncRun git checkout '.GckCandidate()<cr>
 augroup END
 " }}}
 Plug 'kana/vim-textobj-user'
