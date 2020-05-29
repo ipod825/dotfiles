@@ -130,8 +130,6 @@ autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | endif
 cnoreabbrev gps AsyncRun git push
 cnoreabbrev gpl AsyncRun git pull
 "}}}
-cnoreabbrev gps !git push
-cnoreabbrev gpl !git pull
 Plug 'tpope/vim-endwise'
 
 Plug 'tpope/vim-surround'
