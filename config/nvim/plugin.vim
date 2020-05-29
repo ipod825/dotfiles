@@ -465,6 +465,14 @@ let g:Gitv_OpenPreviewOnLaunch = 0
 "}}}
 Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
 cnoreabbrev gv GV --branches
+augroup GVmapping
+    autocmd FileType GV nmap <buffer> r :quit<cr>:gv<cr>
+    autocmd FileType GV nnoremap <buffer> gck :call <sid>Gck()<cr>
+augroup END
+function! s:Gck()
+    let l:cand = GckCandidate()
+    exec 'AsyncRun git checkout '.l:cand
+endfunction
 function! s:BranchFilter(k, v)
     if a:v=='HEAD'
         return
@@ -475,6 +483,9 @@ function! s:BranchFilter(k, v)
     endif
 endfunction
 let s:gckbranch = get(s:, 'gckbranch', '')
+function! GckFinalizeCandidate(branch)
+    let s:gckbranch = a:branch
+endfunction
 function! GckCandidate()
     let l:res = [gv#sha()]
     let l:branches = matchstr(getline('.'), '([^)]*) ')
@@ -493,13 +504,6 @@ function! GckCandidate()
         return l:res[0]
     endif
 endfunction
-function! GckFinalizeCandidate(branch)
-    let s:gckbranch = a:branch
-endfunction
-augroup GVmapping
-    autocmd FileType GV nmap <buffer> r :quit<cr>:gv<cr>
-    autocmd FileType GV nnoremap <buffer> gck :exec 'AsyncRun git checkout '.GckCandidate()<cr>
-augroup END
 " }}}
 Plug 'kana/vim-textobj-user'
 Plug 'Julian/vim-textobj-variable-segment'
