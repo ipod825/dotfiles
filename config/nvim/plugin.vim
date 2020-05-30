@@ -38,22 +38,35 @@ let g:lightline = {
             \ 'colorscheme': 'wombat' ,
             \ 'active': {
             \   'left': [[ 'mode', 'paste' ],
-            \            [ 'readonly', 'filename', 'modified'],
+            \            [ 'readonly', 'filename'],
+            \            ['fugitiveobj'],
             \            ['tagbar']],
             \   'right': [['lineinfo'],
             \              [ 'percent'],
             \              ['gitbranch'], ['asyncrun']]
             \  },
             \ 'inactive': {
-            \   'left': [['filename'] ],
+            \   'left': [['filename'],
+            \            ['fugitiveobj']],
             \   'right': [['lineinfo'],
             \               ['gitbranch']] },
             \ 'component': {
             \         'tagbar': '⚓'.'%{tagbar#currenttag("%s", "", "f")}',
             \         'gitbranch': "⎇ ".'%{fugitive#head()}',
-            \         'asyncrun': '%{g:asyncrun_status=="running"?g:asyncrun_status:""}'
+            \         'asyncrun': '%{g:asyncrun_status=="running"?g:asyncrun_status:""}',
+            \         'fugitiveobj': '%{FugitiveObj()}'
             \ },
             \ }
+function! FugitiveObj()
+    let res = expand('%:p')
+    let ind = match(res, '.git//')
+    if ind<0
+        return ''
+    endif
+    let res = res[ind+6:]
+    let ind = match(res, '/')
+    return res[:min([5, ind-1])]
+endfunction
 "}}}
 Plug 'majutsushi/tagbar' "{{{
 cnoreabbrev BB TagbarOpenAutoClose
