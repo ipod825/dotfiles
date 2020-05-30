@@ -126,7 +126,7 @@ augroup End
 " }}}
 
 Plug 'skywind3000/asyncrun.vim' "{{{
-autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | else | echo "Success!" | endif
+autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | else | echoerr "Success!" | endif
 cnoreabbrev gps AsyncRun git push
 cnoreabbrev gpl AsyncRun git pull
 "}}}
@@ -452,7 +452,7 @@ Plug 'git@github.com:ipod825/war.vim' "{{{
      autocmd!
      autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0.2)
      autocmd Filetype fugitive :call war#fire(-1, 0.8, -1, 0.1)
-     autocmd Filetype git :call war#fire(0.95, -1, 0.3, -1)
+     autocmd Filetype git :call war#fire(0.95, 0.8, 0.3, 0.1)
  augroup END
 " }}}
 Plug 'tpope/vim-dispatch'
