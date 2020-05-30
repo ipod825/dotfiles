@@ -37,26 +37,34 @@ let g:asyncrun_status=get(g:,'asyncrun_status',"success")
 let g:lightline = {
             \ 'colorscheme': 'wombat' ,
             \ 'active': {
-            \   'left': [[ 'mode', 'paste' ],
-            \            [ 'readonly', 'filename'],
+            \   'left': [['mode', 'paste'],
+            \            ['readonly', 'filename'],
             \            ['fugitiveobj'],
             \            ['tagbar']],
             \   'right': [['lineinfo'],
-            \              [ 'percent'],
+            \              ['percent'],
             \              ['gitbranch'], ['asyncrun']]
             \  },
             \ 'inactive': {
             \   'left': [['filename'],
             \            ['fugitiveobj']],
             \   'right': [['lineinfo'],
-            \               ['gitbranch']] },
+            \              ['percent'],
+            \               ['gitbranch']]},
             \ 'component': {
             \         'tagbar': '⚓'.'%{tagbar#currenttag("%s", "", "f")}',
-            \         'gitbranch': "⎇ ".'%{fugitive#head()}',
+            \         'gitbranch': '%{GitBranch()}',
             \         'asyncrun': '%{g:asyncrun_status=="running"?g:asyncrun_status:""}',
             \         'fugitiveobj': '%{FugitiveObj()}'
             \ },
             \ }
+function! GitBranch()
+    let res = fugitive#head()
+    if empty(res)
+        let res = system('git rev-parse HEAD')[:5]
+    endif
+    return "⎇ ".res
+endfunction
 function! FugitiveObj()
     let res = expand('%:p')
     let ind = match(res, '.git//')
@@ -65,7 +73,7 @@ function! FugitiveObj()
     endif
     let res = res[ind+6:]
     let ind = match(res, '/')
-    return res[:min([5, ind-1])]
+    return "⎇ ".res[:min([5, ind-1])]
 endfunction
 "}}}
 Plug 'majutsushi/tagbar' "{{{
@@ -536,7 +544,6 @@ Plug 'Julian/vim-textobj-variable-segment'
 Plug 'sgur/vim-textobj-parameter'
 Plug 'rhysd/vim-textobj-anyblock'
 Plug 'kana/vim-textobj-line'
-Plug 'kana/vim-textobj-entire'
 Plug 'terryma/vim-expand-region'
 Plug 'whatyouhide/vim-textobj-xmlattr', { 'for': ['html', 'xml'] } "{{{
 vmap <m-k> <Plug>(expand_region_expand)
@@ -545,7 +552,9 @@ nmap <m-k> <Plug>(expand_region_expand)
 nmap <m-j> <Plug>(expand_region_shrink)
 let g:expand_region_text_objects = {
             \ 'iv' :0,
+            \ '2iv' :0,
             \ 'av'  :0,
+            \ '2av'  :0,
             \ 'iw'  :0,
             \ 'iW'  :0,
             \ 'i"'  :0,
@@ -560,7 +569,6 @@ let g:expand_region_text_objects = {
             \ 'a,'  :0,
             \ 'il'  :0,
             \ 'ip'  :0,
-            \ 'ie'  :0,
             \ 'ix'  :0,
             \ 'ax'  :0,
             \ }
@@ -620,10 +628,9 @@ let g:esearch = {
             \ 'bckend':          'nvim',
             \ 'out':              'win',
             \ 'batch_size':       1000,
-            \ 'prefill':    ['visual', 'hlsearch', 'cword', 'last'],
             \ 'default_mappings': 1,
             \}
-nmap <leader>f <Plug>(esearch)
+nmap <leader>f <Plug>(operator-esearch-prefill)aw
 vmap <leader>f <Plug>(esearch)
 let g:esearch.filemanager_integration=v:false
 let g:esearch.win_map = [
@@ -633,9 +640,6 @@ let g:esearch.win_map = [
             \]
 augroup ESEARCH
     autocmd!
-    autocmd User esearch_win_config
-                \   let b:autopreview = esearch#debounce(b:esearch.split_preview, 100)
-                \ | autocmd CursorMoved <buffer> call b:autopreview.apply('vsplit')
     autocmd USER PLUG_END hi esearchMatch cterm=bold ctermfg=145 ctermbg=16 gui=bold guifg=#000000 guibg=#5a93f2
 augroup END
 "}}}
