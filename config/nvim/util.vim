@@ -75,24 +75,27 @@ endfunction
 cnoreabbrev f call <sid>OpenRecentFile()
 "}}}
 
-function! s:SearchWord() "{{{
-    let s:fzf_ft=&ft
-    augroup FzfSearchWord
-        autocmd!
-    augroup END
+function! s:SearchWordExact() "{{{
     silent call fzf#run(fzf#wrap({
                 \ 'source': map(getline(1, '$'), '(v:key + 1) . ": " . v:val '),
                 \ 'sink': function('s:Line_handler'),
                 \ 'options': '+s -e --ansi',
                 \}))
-    let s:fzf_ft=''
+endfunction
+function! s:SearchWord() "{{{
+    silent call fzf#run(fzf#wrap({
+                \ 'source': map(getline(1, '$'), '(v:key + 1) . ": " . v:val '),
+                \ 'sink': function('s:Line_handler'),
+                \ 'options': '+s --ansi --algo=v1',
+                \}))
 endfunction
 function! s:Line_handler(l)
     let keys = split(a:l, ':')
     exec keys[0]
 endfunction
 "}}}
-call s:MapUtil('/', 'SearchWord')
+call s:MapUtil('/', 'SearchWordExact')
+call s:MapUtil('<m-/>', 'SearchWord')
 
 function! s:OpenFileFromProjectRoot() "{{{
     exec "Files " . FindRootDirectory()

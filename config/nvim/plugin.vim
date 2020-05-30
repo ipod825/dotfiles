@@ -128,7 +128,7 @@ augroup End
 Plug 'skywind3000/asyncrun.vim' "{{{
 augroup ASYNCRUN
     autocmd!
-    autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | else | call input("Success!") | endif
+    autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | else | !echo "Success!" | endif
 augroup END
 cnoreabbrev gps AsyncRun git push
 cnoreabbrev gpl AsyncRun git pull
@@ -469,6 +469,10 @@ let g:Gitv_OpenPreviewOnLaunch = 0
 
 Plug 'idanarye/vim-merginal'
 let g:merginal_splitType=''
+augroup MERGINAL
+    autocmd!
+    autocmd BufEnter Merginal:* wincmd J
+augroup EDN
 Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
 cnoreabbrev gv GV --branches
 augroup GVmapping
