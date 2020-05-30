@@ -33,6 +33,7 @@ let g:rainbow_conf = {'ctermfgs': ['1', '2', '3', '6']}
 "}}}
 
 Plug 'itchyny/lightline.vim' "{{{
+let g:asyncrun_status=get(g:,'asyncrun_status',"success")
 let g:lightline = {
             \ 'colorscheme': 'wombat' ,
             \ 'active': {
@@ -41,7 +42,7 @@ let g:lightline = {
             \            ['tagbar']],
             \   'right': [['lineinfo'],
             \              [ 'percent'],
-            \              ['gitbranch']]
+            \              ['gitbranch'], ['asyncrun']]
             \  },
             \ 'inactive': {
             \   'left': [['filename'] ],
@@ -50,6 +51,7 @@ let g:lightline = {
             \ 'component': {
             \         'tagbar': '⚓'.'%{tagbar#currenttag("%s", "", "f")}',
             \         'gitbranch': "⎇ ".'%{fugitive#head()}',
+            \         'asyncrun': '%{g:asyncrun_status=="running"?g:asyncrun_status:""}'
             \ },
             \ }
 "}}}
@@ -128,7 +130,7 @@ augroup End
 Plug 'skywind3000/asyncrun.vim' "{{{
 augroup ASYNCRUN
     autocmd!
-    autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | else | !echo "Success!" | endif
+    autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | endif
 augroup END
 cnoreabbrev gps AsyncRun git push
 cnoreabbrev gpl AsyncRun git pull
