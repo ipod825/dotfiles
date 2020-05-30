@@ -479,10 +479,11 @@ Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
 cnoreabbrev gv GV --branches
 augroup GVmapping
     autocmd FileType GV nmap <buffer> r :quit<cr>:gv<cr>
-    autocmd FileType GV nnoremap <buffer> gck :call <sid>Gck()<cr>
+    autocmd FileType GV nnoremap <buffer> cc :call <sid>Gck()<cr>
 augroup END
 function! s:Gck()
     let l:cand = GckCandidate()
+    echom l:cand
     exec 'AsyncRun git checkout '.l:cand
 endfunction
 function! s:BranchFilter(k, v)
