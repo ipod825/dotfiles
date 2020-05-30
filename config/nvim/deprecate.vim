@@ -1,3 +1,10 @@
+" Plug 'idanarye/vim-merginal' "{{{
+" let g:merginal_splitType=''
+" augroup MERGINAL
+"     autocmd!
+"     autocmd BufEnter Merginal:* wincmd J
+" augroup END
+"}}}
 " Plug 'RRethy/vim-illuminate'
 "Plug 'vimwiki/vimwiki' "{{{
 "let g:vimwiki_folding='list'

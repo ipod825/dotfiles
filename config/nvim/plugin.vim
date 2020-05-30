@@ -470,6 +470,11 @@ augroup FUGITIVE
     autocmd Filetype fugitive autocmd BufEnter <buffer> if g:fugitive_auto_close | let g:fugitive_auto_close=v:false | quit | endif
     autocmd Filetype gitcommit autocmd BufWinLeave <buffer> ++once let g:fugitive_auto_close=v:true
 augroup END
+function! s:Glog()
+    return "sp | wincmd T | Gclog"
+endfunction
+cnoreabbrev <expr> glog <sid>Glog()
+cnoreabbrev gg tab Git
 "}}}
 
 
@@ -481,32 +486,20 @@ Plug 'git@github.com:ipod825/war.vim' "{{{
      autocmd Filetype git :call war#fire(0.95, 0.8, 0.3, 0.1)
  augroup END
 " }}}
-Plug 'tpope/vim-dispatch'
 Plug 'AndrewRadev/linediff.vim'
 
-Plug 'git@github.com:ipod825/gitv' "{{{
-let g:Gitv_WipeAllOnClose = 1
-let g:Gitv_DoNotMapCtrlKey = 1
-let g:Gitv_OpenPreviewOnLaunch = 0
-"}}}
-
-Plug 'idanarye/vim-merginal'
-let g:merginal_splitType=''
-augroup MERGINAL
-    autocmd!
-    autocmd BufEnter Merginal:* wincmd J
-augroup EDN
 Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
 cnoreabbrev gv GV --branches
 augroup GVmapping
     autocmd FileType GV nmap <buffer> r :quit<cr>:gv<cr>
-    autocmd FileType GV nnoremap <buffer> cc :call <sid>Gck()<cr>
+    autocmd FileType GV call s:CustomizeGV()
 augroup END
-function! s:Gck()
-    let l:cand = GckCandidate()
-    echom l:cand
-    exec 'AsyncRun git checkout '.l:cand
+
+function! s:CustomizeGV()
+    nnoremap <buffer> cc :call <sid>GVCheckout()<cr>
+    nnoremap <buffer> dd :call <sid>GVDiff()<cr>
 endfunction
+
 function! s:BranchFilter(k, v)
     if a:v=='HEAD'
         return
@@ -516,29 +509,38 @@ function! s:BranchFilter(k, v)
         return a:v
     endif
 endfunction
-let s:gckbranch = get(s:, 'gckbranch', '')
-function! GckFinalizeCandidate(branch)
-    let s:gckbranch = a:branch
-endfunction
-function! GckCandidate()
-    let l:res = [gv#sha()]
+
+function! s:GVCheckout()
+    let l:cand = [gv#sha()]
     let l:branches = matchstr(getline('.'), '([^)]*) ')
     if !empty(l:branches)
         let l:branches = l:branches[1:len(l:branches)-3]
-        call extend(l:res, split(l:branches, ','))
-        let l:res = map(l:res, function('<sid>BranchFilter'))
+        call extend(l:cand, split(l:branches, ','))
+        let l:cand = map(l:cand, function('<sid>BranchFilter'))
     endif
-    if len(l:res)>1
+    if len(l:cand)>1
         call fzf#run(fzf#wrap({
-                \ 'source': sort(l:res),
-                \ 'sink': function('GckFinalizeCandidate'),
+                \ 'source': sort(l:cand),
+                \ 'sink': 'AsyncRun git checkout',
             \}))
-        return s:gckbranch
     else
-        return l:res[0]
+        exec 'AsyncRun git checkout '.l:cand[0]
     endif
 endfunction
+
+function! s:GVDiff()
+    " exec 'Git difftool -y '.gv#sha().' HEAD'
+    let l:sha = gv#sha()
+    vnew
+    set filetype=git
+    set buftype=nowrite
+    exec 'Gread! diff '.l:sha.' '.system('git rev-parse HEAD')
+    setlocal nomodifiable
+    call fugitive#MapCfile()
+    call fugitive#MapJumps()
+endfunction
 " }}}
+
 Plug 'kana/vim-textobj-user'
 Plug 'Julian/vim-textobj-variable-segment'
 Plug 'sgur/vim-textobj-parameter'
