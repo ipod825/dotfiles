@@ -1,3 +1,4 @@
+" Plug 'RRethy/vim-illuminate'
 "Plug 'vimwiki/vimwiki' "{{{
 "let g:vimwiki_folding='list'
 "function! VimwikiLinkHandler(link)

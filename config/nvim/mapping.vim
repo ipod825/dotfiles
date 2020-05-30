@@ -67,7 +67,7 @@ nnoremap <c-m-down> <c-w>+
 nnoremap <c-m-up> <c-w>-
 nnoremap <c-m-left> <c-w><
 nnoremap <c-m-right> <c-w>>
-nnoremap q :call Bwipeout()<cr>
+nnoremap q :quit<cr>
 nnoremap Q q
 " }}}
 
@@ -143,18 +143,6 @@ function! EndOfWord()
         normal! w
     else
         normal! el
-    endif
-endfunction
-
-function! Bwipeout()
-    if bufname('#')!=''
-        if &ft == 'netranger'
-            tabclose
-        else
-            bwipeout
-        endif
-    else
-        close
     endif
 endfunction
 
