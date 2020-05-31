@@ -80,16 +80,16 @@ Plug 'majutsushi/tagbar' "{{{
 cnoreabbrev BB TagbarOpenAutoClose
 "}}}
 
-Plug g:vim_dir.'bundle/msearch.vim'
-nmap 8 <Plug>MSToggleAdd
-vmap 8 <Plug>MSVisualToggleAdd
-nmap * <Plug>MSExclusiveAdd
-vmap * <Plug>MSVisualExclusiveAdd
+Plug 'git@github.com:ipod825/msearch.vim'
+nmap 8 <Plug>MSToggleAddCword
+vmap 8 <Plug>MSToggleAddVisual
+nmap * <Plug>MSExclusiveAddCword
+vmap * <Plug>MSExclusiveAddVisual
 nmap n <Plug>MSNext
 nmap N <Plug>MSPrev
 nmap <leader>n <Plug>MSToggleJump
 nmap <leader>/ <Plug>MSClear
-nmap ? <Plug>MSAddBySearchBackward
+nmap ? <Plug>MSAddBySearchForward
 function! s:SelectAllMark()
     call feedkeys("\<Plug>(VM-Start-Regex-Search)".join(msearch#joint_pattern())."\<cr>")
     call feedkeys("\<Plug>(VM-Select-All)")
@@ -163,6 +163,11 @@ fun! VM_Start()
     vmap <buffer> <m-l> $
     vmap <buffer> <m-h> 0
 endfun
+function! s:SelectAllMark()
+    call feedkeys("\<Plug>(VM-Start-Regex-Search)".msearch#joint_pattern()."\<cr>")
+    call feedkeys("\<Plug>(VM-Select-All)")
+endfunction
+nmap <leader>r :call <sid>SelectAllMark()<cr>
 
 Plug 'Shougo/neco-vim'
 if exists('*nvim_open_win')
