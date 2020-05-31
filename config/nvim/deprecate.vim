@@ -1,3 +1,51 @@
+"Plug 'inkarkat/vim-ingo-library'
+"Plug 'inkarkat/vim-mark' "{{{
+"let g:mw_no_mappings = 1
+"let g:mwDefaultHighlightingPalette = 'maximum'
+"nnoremap <silent> 8 :let @/=""<cr>:call feedkeys("\<Plug>MarkSet")<cr>
+"nmap * :let @/=""<cr>:silent MarkClear<cr>:call feedkeys("\<Plug>MarkSet")<cr>
+"vnoremap <silent> 8 :<c-u>let @/=""<cr>:<C-u>if ! mark#DoMark(v:count, mark#GetVisualSelectionAsLiteralPattern())[0]<Bar>execute "normal! \<lt>C-\>\<lt>C-n>\<lt>Esc>"<Bar>endif<CR>
+"vnoremap <silent> * :<c-u>let @/=""<cr>:silent MarkClear<cr>:<C-u>if ! mark#DoMark(v:count, mark#GetVisualSelectionAsLiteralPattern())[0]<Bar>execute "normal! \<lt>C-\>\<lt>C-n>\<lt>Esc>"<Bar>endif<CR>
+"nnoremap <silent><leader>/ :let @/=""<cr>:silent MarkClear<cr>
+"nmap n <Plug>MarkSearchCurrentNext
+"nmap N <Plug>MarkSearchCurrentPrev
+
+"function! StartMarkSearch()
+"    autocmd CursorMoved * ++once silent call s:MarkSearchResult()
+"endfunction
+"function! s:MarkSearchResult()
+"    let search_pat = getreg('/')
+"    if empty(search_pat)
+"        return
+"    endif
+
+"    let ind = index(mark#ToList(), search_pat)
+"    if ind == -1
+"        call mark#DoMarkAndSetCurrent(v:count, ingo#regexp#magic#Normalize(search_pat))
+"    endif
+"    let s:last_search=search_pat
+"    let @/=""
+"endfunction
+
+"function! s:SelectAllMark()
+"    call feedkeys("\<Plug>(VM-Start-Regex-Search)".join(mark#ToList(),"\\|")."\<cr>")
+"    call feedkeys("\<Plug>(VM-Select-All)")
+"endfunction
+
+"function! s:VSelectAllMark()
+"    call feedkeys("\<Plug>(VM-Start-Regex-Search)".join(mark#ToList(),"\\|")."\<cr>")
+"    call feedkeys("\<Plug>(VM-Select-All)")
+"endfunction
+
+"nmap <leader>r :call <sid>SelectAllMark()<cr>
+"vmap <leader>r :<c-u>call <sid>VSelectAllMark()<cr>
+"nnoremap ? :call StartMarkSearch()<cr>/
+
+"augroup VIM-MARK
+"    autocmd!
+"    autocmd VimEnter * let @/=""
+"augroup END
+""}}}
 " Plug 'idanarye/vim-merginal' "{{{
 " let g:merginal_splitType=''
 " augroup MERGINAL
@@ -5,6 +53,7 @@
 "     autocmd BufEnter Merginal:* wincmd J
 " augroup END
 "}}}
+
 " Plug 'RRethy/vim-illuminate'
 "Plug 'vimwiki/vimwiki' "{{{
 "let g:vimwiki_folding='list'

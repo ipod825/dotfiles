@@ -1,5 +1,5 @@
 let g:util_commands= []
-function! s:AddUtilComand(cmd)
+function! AddUtilComand(cmd)
     if index(g:util_commands, a:cmd) < 0
         call insert(g:util_commands, a:cmd)
     endif
@@ -116,13 +116,13 @@ function! s:ToggleSaveWithoutFix() "{{{
     write
 endfunction
 "}}}
-call s:AddUtilComand('ToggleSaveWithoutFix')
+call AddUtilComand('ToggleSaveWithoutFix')
 
 function! s:ClearSign() "{{{
     exe 'sign unplace * buffer='.bufnr()
 endfunction
 "}}}
-call s:AddUtilComand('ClearSign')
+call AddUtilComand('ClearSign')
 
 function! s:OpenRelatedFile() "{{{
     let name=expand('%:t:r')
@@ -131,25 +131,25 @@ function! s:OpenRelatedFile() "{{{
     call feedkeys(name)
 endfunction
 "}}}
-call s:AddUtilComand('OpenRelatedFile')
+call AddUtilComand('OpenRelatedFile')
 
 function! s:YankAbsPath() "{{{
     let @+=expand('%:p')
     let @"=expand('%:p')
 endfunction
 "}}}
-call s:AddUtilComand('YankAbsPath')
+call AddUtilComand('YankAbsPath')
 
 function! s:YankBaseName() "{{{
     let @+=expand('%:p:t')
     let @"=expand('%:p:t')
 endfunction
 "}}}
-call s:AddUtilComand('YankBaseName')
+call AddUtilComand('YankBaseName')
 function! VRemoveRedundantWhiteSpace()     "{{{
     exec "'<,'>s/\(\S\)\s\+\(\S\)/\1 \2/g"    "{{{
 endfunction
-call s:AddUtilComand('VRemoveRedundantWhiteSpace')
+call AddUtilComand('VRemoveRedundantWhiteSpace')
 
 function! RemoveRedundantWhiteSpace()     "{{{
     let l:save = winsaveview()
@@ -157,4 +157,4 @@ function! RemoveRedundantWhiteSpace()     "{{{
     call winrestview(l:save)
 endfunction
 "}}}
-call s:AddUtilComand('RemoveRedundantWhiteSpace')
+call AddUtilComand('RemoveRedundantWhiteSpace')

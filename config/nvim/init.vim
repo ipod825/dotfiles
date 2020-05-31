@@ -131,6 +131,7 @@ function! VimRcWrite()
     setlocal commentstring=\"%s
     call lightline#update()
     call lightline#highlight()
+    call msearch#define_highlight(v:true)
 endfunction
 
 function! MyFoldText()
