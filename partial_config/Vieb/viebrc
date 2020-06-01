@@ -29,6 +29,7 @@ nmap <c-t> <action.openNewTab>o
 nmap x <action.closeTab>
 nmap d 5j
 nmap u 5k
+nmap <space> d
 nmap j <pointer.scrollDown>
 nmap k <pointer.scrollUp>
 nmap X <action.reopenTab>
@@ -41,7 +42,7 @@ nmap <c-a-l> <action.moveTabForward>
 nmap O <action.openNewTab>o
 nmap q <action.closeTab>
 nmap <c-s-n> :set<space>clearhistoryonquit!<cr>
-nmap <space> d
+nmap <c-w> <action.closeTab>
 
 inoremap <c-i> <action.editWithVim>
 
