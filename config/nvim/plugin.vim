@@ -601,9 +601,11 @@ let g:esearch = {
 nmap <leader>f <Plug>(operator-esearch-prefill)aw
 vmap <leader>f <Plug>(esearch)
 let g:esearch.filemanager_integration=v:false
+let g:esearch.default_mappings = 0
 let g:esearch.win_map = [
-            \ [ 'n', '<cr>',  ':call b:esearch.open("NewTabdrop")<cr>'],
+            \ [ 'n', '<cr>', ':call b:esearch.open("NewTabdrop")<cr>'],
             \ [ 'n', 't',  ':call b:esearch.open("NETRTabdrop")<cr>'],
+            \ [ 'n', 'P', ':call b:esearch.split_preview_open()<cr>'],
             \ [ 'n', 'q',  ':tabclose<cr>'],
             \]
 augroup ESEARCH
