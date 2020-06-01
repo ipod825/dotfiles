@@ -1,0 +1,96 @@
+set mouse
+set search='https://www.google.com/search?q='
+set vimcommand="kitty nvim"
+set adblocker=update
+set cache=full
+set favicons=30day
+set ignorecase
+set mouse
+set permissioncamera=allow
+set permissionmicrophone=allow
+set redirecttohttp
+set search=https://google.com/search?q=
+set mintabwidth=0
+set permissiongeolocation=allow
+set permissionfullscreen=allow
+set permissionmediadevices=allow
+
+inoremap jk <action.toNormalMode>
+inoremap <c-h> a
+
+nmap h <action.backInHistory>
+nmap l <action.forwardInHistory>
+nmap <c-h> <action.previousTab>
+nmap <c-l> <action.nextTab>
+nmap <c-s-Tab> <action.previousTab>
+nmap <c-Tab> <action.nextTab>
+nmap ; :
+nmap <c-t> <action.openNewTab>o
+nmap x <action.closeTab>
+nmap d 5j
+nmap u 5k
+nmap j <pointer.scrollDown>
+nmap k <pointer.scrollUp>
+nmap X <action.reopenTab>
+nmap f <action.startFollowCurrentTab>
+nmap F <action.startFollowNewTab>
+nmap o <action.toExploreMode>
+nmap <c-c> vvy
+nmap <c-a-h> <action.moveTabBackward>
+nmap <c-a-l> <action.moveTabForward>
+nmap O <action.openNewTab>o
+nmap q <action.closeTab>
+nmap <c-s-n> :set<space>clearhistoryonquit!<cr>
+nmap <space> d
+
+inoremap <c-i> <action.editWithVim>
+
+fmap <C-c> <action.stopFollowMode>
+
+cmap jk <action.toNormalMode>
+cmap <c-c> <action.toNormalMode>
+cmap <c-j> <action.commandHistoryNext>
+cmap <c-k> <action.commandHistoryPrevious>
+
+smap <c-c> <action.toNormalMode>
+
+pmap <cr> <pointer.leftClick>
+pmap <c-c> <action.toNormalMode>
+pmap DD <pointer.scrollDown>
+pmap UU <pointer.scrollUp>
+pmap d 10DD
+pmap u 10UU
+pmap ; <Esc>;
+pmap <a-l> <pointer.moveRightMax>
+pmap <a-h> <pointer.moveLeftMax>
+pmap J <pointer.moveFastDown>
+pmap K <pointer.moveFastUp>
+pmap w <pointer.moveFastRight>
+pmap b <pointer.moveFastLeft>
+pmap W w
+pmap B b
+pmap H b
+pmap L w
+pmap e w
+pmap E w
+pmap i <pointer.inspectElement>
+pmap <c-h> <pointer.moveSlowLeft>
+pmap <c-l> <pointer.moveSlowRight>
+
+vmap DD <pointer.scrollDown>
+vmap UU <pointer.scrollUp>
+vmap d 10DD
+vmap u 10UU
+vmap ; <Esc>;
+vmap <a-l> <pointer.moveRightMax>
+vmap <a-h> <pointer.moveLeftMax>
+vmap J <pointer.moveFastDown>
+vmap K <pointer.moveFastUp>
+vmap w <pointer.moveFastRight>
+vmap b <pointer.moveFastLeft>
+vmap W w
+vmap B b
+vmap H b
+vmap L w
+vmap e w
+vmap E w

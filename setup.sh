@@ -41,6 +41,7 @@ LinkDotfiles $DOTDIR/config $XDG_CONFIG_HOME
 LinkDotfiles $DOTDIR/home_config ~
 LinkDotfiles $DOTDIR/partial_config/.ssh ~/.ssh
 LinkDotfiles $DOTDIR/partial_config/.local/share/applications ~/.local/share/applications
+LinkDotfiles $DOTDIR/partial_config/Vieb ~/.config/Vieb
 
 echo "==Setting pyenv=="
 if [ ! -d $HOME/.pyenv ];then
