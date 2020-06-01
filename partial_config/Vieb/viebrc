@@ -43,8 +43,13 @@ nmap O <action.openNewTab>o
 nmap q <action.closeTab>
 nmap <c-s-n> :set<space>clearhistoryonquit!<cr>
 nmap <c-w> <action.closeTab>
+nmap K <action.zoomIn>
+nmap J <action.zoomOut>
+nmap <PageUp> <action.scrollPageUp>
+nmap <PageDown> <action.scrollPageDown>
 
-inoremap <c-i> <action.editWithVim>
+imap <c-i> <action.editWithVim>
+imap <c-t> <Esc><action.openNewTab>o
 
 fmap <C-c> <action.stopFollowMode>
 
