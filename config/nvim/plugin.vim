@@ -98,8 +98,18 @@ nmap <leader>r :call <sid>SelectAllMark()<cr>
 
 Plug 'fatih/vim-go', {'for': 'go'}
 
+function! s:AutoPairsJump()
+    call feedkeys('l')
+    let l:b = getline('.')[col('.')+1]
+    call feedkeys('dl')
+    if match(l:b, "[\"' ]")  == -1
+        call feedkeys('e')
+    endif
+    call feedkeys('pi')
+endfunction
+
 Plug 'jiangmiao/auto-pairs' "{{{
-inoremap <m-e> <esc>ldlepi
+inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
 let g:AutoPairsShortcutFastWrap = '<nop>'
 let g:AutoPairsMapCh = '<nop>'
 let g:AutoPairsShortcutToggle = '<nop>'
