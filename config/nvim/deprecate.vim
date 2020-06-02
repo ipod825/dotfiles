@@ -1,3 +1,12 @@
+"function! s:OpenRecentFile() "{{{
+"    silent call fzf#run(fzf#wrap({
+"                \ 'source': filter(filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|term\\|^/tmp/\\|.git/\\|Search ‹'"), " isdirectory(v:val) || filereadable(v:val)"),
+"                \ 'sink': 'Tabdrop'
+"                \}))
+"endfunction
+""}}}
+"cnoreabbrev f call <sid>OpenRecentFile()
+
 " Plug 'MattesGroeger/vim-bookmarks'
 " Plug g:vim_dir.'bundle/vim-bookmark'
 " let g:bookmark_opencmd = 'Tabdrop'

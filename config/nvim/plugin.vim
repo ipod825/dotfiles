@@ -633,6 +633,9 @@ let cmdline_app['zsh'] = 'zsh'
 let g:cmdline_vsplit      = 1      " Split the window vertically
 "}}}
 
+Plug 'git@github.com:ipod825/fzf-mru.vim'
+cnoreabbrev f FZFMru
+
 Plug 'embear/vim-localvimrc' "{{{
 let g:localvimrc_ask = 0
 "}}}

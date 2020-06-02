@@ -65,15 +65,6 @@ endfunction
 "}}}
 cnoreabbrev gcb call <sid>GitCheckBranch()
 
-function! s:OpenRecentFile() "{{{
-    silent call fzf#run(fzf#wrap({
-                \ 'source': filter(filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|term\\|^/tmp/\\|.git/\\|Search ‹'"), " isdirectory(v:val) || filereadable(v:val)"),
-                \ 'sink': 'Tabdrop'
-                \}))
-endfunction
-"}}}
-cnoreabbrev f call <sid>OpenRecentFile()
-"}}}
 
 function! s:SearchWordExact() "{{{
     silent call fzf#run(fzf#wrap({
