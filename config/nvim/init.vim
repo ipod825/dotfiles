@@ -89,13 +89,10 @@ augroup GENERAL "{{{
 
     " Man in new tab
     autocmd BufWinEnter * if @% =~ "^man://" | wincmd T | endif
-    " Automatically restore cursor position
-    autocmd BufReadPost * if line("'\"") > 0|if line("'\"") <= line("$")|exe("norm '\"")|else|exe "norm $"|endif|endif
 
     " Disables automatic commenting on newline:
     autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
-    autocmd filetype python setlocal foldmethod=indent
+    autocmd FileType python setlocal foldmethod=indent
 
     " Writing
     autocmd BufEnter *.tex,*.md,*.adoc setlocal spell

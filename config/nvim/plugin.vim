@@ -450,7 +450,8 @@ Plug 'git@github.com:ipod825/war.vim' "{{{
      autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0.2)
      autocmd Filetype fugitive :call war#fire(-1, 0.8, -1, 0.1)
      autocmd Filetype git :call war#fire(0.95, 0.8, 0.3, 0.1)
-     autocmd Filetype esearch :call war#fire(0.5, -1, -1, 0.1)
+     autocmd Filetype esearch :call war#fire(0.5, -1, -1, 0.2)
+     autocmd Filetype bookmark :call war#fire(-1, 0.8, -1, -1)
  augroup END
 " }}}
 Plug 'AndrewRadev/linediff.vim'
@@ -555,11 +556,13 @@ let $FZF_DEFAULT_COMMAND = 'find .'
 let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'ctrl-v': 'vsplit' }
 "}}}
 
-Plug 'MattesGroeger/vim-bookmarks'
-Plug g:vim_dir.'bundle/vim-bookmark'
-" let g:bookmark_opencmd = 'Tabdrop'
+Plug 'git@github.com:ipod825/vim-bookmark' "{{{
+nnoremap m :BookmarkAdd<cr>
+nnoremap M :BookmarkAddPos<cr>
+nnoremap ' :BookmarkGo<cr>
+let g:bookmark_opencmd='NewTabdrop'
+" }}}
 
-" Plug 'gcmt/taboo.vim' "{{{
 Plug 'git@github.com:ipod825/taboo.vim' "{{{
 let g:taboo_tab_format='%I%m%f❚'
 let g:taboo_renamed_tab_format='%I%m%l❚'
@@ -575,15 +578,15 @@ endfu
 
 Plug 'machakann/vim-sandwich'
 Plug 'justinmk/vim-sneak' "{{{
- nmap gs <Plug>Sneak_s
- nmap gS <Plug>Sneak_S
- nmap f <Plug>Sneak_f
- nmap F <Plug>Sneak_F
- nmap H <Plug>Sneak_,
- nmap L <Plug>Sneak_;
- vmap H <Plug>Sneak_,
- vmap L <Plug>Sneak_;
- let g:sneak#absolute_dir=1
+nmap gs <Plug>Sneak_s
+nmap gS <Plug>Sneak_S
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+nmap H <Plug>Sneak_,
+nmap L <Plug>Sneak_;
+vmap H <Plug>Sneak_,
+vmap L <Plug>Sneak_;
+let g:sneak#absolute_dir=1
 "}}}
 Plug 'maxbrunsfeld/vim-yankstack' " clipboard stack  {{{
 let g:yankstack_yank_keys = ['y', 'd', 'x', 'c']
@@ -645,7 +648,7 @@ endif
 
 Plug 'AndrewRadev/linediff.vim'
 Plug 'vim-scripts/gtags.vim'
-Plug 'zhimsel/vim-stay' " vim-stay
+Plug 'zhimsel/vim-stay' " vim-stay {{{
 set viewoptions=cursor,folds,slash,unix
 "}}}
 
@@ -654,7 +657,7 @@ let g:NETRRifleFile = $HOME."/dotfiles/config/nvim/settings/rifle.conf"
 let g:NETRIgnore = ['__pycache__', '*.pyc', '*.o', 'egg-info', 'tags']
 let g:NETRColors = {'dir': 39, 'footer': 35, 'exe': 35}
 let g:NETRGuiColors = {'dir': '#00afff', 'footer': '#00af5f', 'exe': '#00af5f'}
-" let g:NETRPreviewDefaultOn = v:false
+let g:NETRDefaultMapSkip = ["'"]
 let g:NETRRifleDisplayError = v:false
 function! DuplicateNode()
     let path = netranger#cur_node_path()

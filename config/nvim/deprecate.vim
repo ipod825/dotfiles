@@ -1,3 +1,6 @@
+" Plug 'MattesGroeger/vim-bookmarks'
+" Plug g:vim_dir.'bundle/vim-bookmark'
+" let g:bookmark_opencmd = 'Tabdrop'
 "Plug 'inkarkat/vim-ingo-library'
 "Plug 'inkarkat/vim-mark' "{{{
 "let g:mw_no_mappings = 1
