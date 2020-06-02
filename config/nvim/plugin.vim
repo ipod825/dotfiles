@@ -560,7 +560,7 @@ Plug 'git@github.com:ipod825/vim-bookmark' "{{{
 nnoremap m :BookmarkAdd<cr>
 nnoremap M :BookmarkAddPos<cr>
 nnoremap ' :BookmarkGo<cr>
-let g:bookmark_opencmd='NewTabdrop'
+let g:bookmark_opencmd='Tabdrop'
 " }}}
 
 Plug 'git@github.com:ipod825/taboo.vim' "{{{
@@ -618,7 +618,7 @@ augroup ESEARCH
 augroup END
 "}}}
 
-" Plug 'kkoomen/vim-doge'
+Plug 'kkoomen/vim-doge'
 Plug 'will133/vim-dirdiff'
 Plug 'machakann/vim-swap'
 Plug 'jalvesaq/vimcmdline' "{{{
@@ -657,7 +657,7 @@ let g:NETRRifleFile = $HOME."/dotfiles/config/nvim/settings/rifle.conf"
 let g:NETRIgnore = ['__pycache__', '*.pyc', '*.o', 'egg-info', 'tags']
 let g:NETRColors = {'dir': 39, 'footer': 35, 'exe': 35}
 let g:NETRGuiColors = {'dir': '#00afff', 'footer': '#00af5f', 'exe': '#00af5f'}
-let g:NETRDefaultMapSkip = ["'"]
+let g:NETRDefaultMapSkip = ["'", "m"]
 let g:NETRRifleDisplayError = v:false
 function! DuplicateNode()
     let path = netranger#cur_node_path()
