@@ -1,5 +1,4 @@
 set mouse
-set search='https://www.google.com/search?q='
 set vimcommand="kitty nvim"
 set adblocker=update
 set cache=full
@@ -15,7 +14,7 @@ set permissiongeolocation=allow
 set permissionfullscreen=allow
 set permissionmediadevices=allow
 
-inoremap jk <action.toNormalMode>
+inoremap jk <bs><bs><action.toNormalMode>
 inoremap <c-h> a
 
 nmap h <action.backInHistory>
@@ -27,11 +26,15 @@ nmap <c-Tab> <action.nextTab>
 nmap ; :
 nmap <c-t> <action.openNewTab>o
 nmap x <action.closeTab>
-nmap d 5j
-nmap u 5k
+nmap d <action.scrollPageDown>
+nmap u <action.scrollPageUp>
 nmap <space> d
 nmap j <pointer.scrollDown>
 nmap k <pointer.scrollUp>
+nmap <down> j
+nmap <up> k
+nmap H <left>
+nmap L <right>
 nmap X <action.reopenTab>
 nmap f <action.startFollowCurrentTab>
 nmap F <action.startFollowNewTab>
@@ -47,9 +50,20 @@ nmap K <action.zoomIn>
 nmap J <action.zoomOut>
 nmap <PageUp> <action.scrollPageUp>
 nmap <PageDown> <action.scrollPageDown>
+nmap i <action.insertAtFirstInput>
 
 imap <c-i> <action.editWithVim>
 imap <c-t> <Esc><action.openNewTab>o
+imap <a-h> <home>
+imap <a-l> <end>
+imap <c-a-h> <c-left>
+imap <c-a-l> <c-right>
+imap <c-h> <left>
+imap <c-l> <right>
+imap <c-k> <up>
+imap <c-j> <down>
+imap <c-s-a-h> <c-s-left>
+imap <c-s-a-l> <c-s-right>
 
 fmap <C-c> <action.stopFollowMode>
 
@@ -62,10 +76,8 @@ smap <c-c> <action.toNormalMode>
 
 pmap <cr> <pointer.leftClick>
 pmap <c-c> <action.toNormalMode>
-pmap DD <pointer.scrollDown>
-pmap UU <pointer.scrollUp>
-pmap d 10DD
-pmap u 10UU
+pmap d 10<pointer.scrollDown>
+pmap u 10<pointer.scrollUp>
 pmap ; <Esc>;
 pmap <a-l> <pointer.moveRightMax>
 pmap <a-h> <pointer.moveLeftMax>
@@ -80,13 +92,14 @@ pmap L w
 pmap e w
 pmap E w
 pmap i <pointer.inspectElement>
+pmap i <pointer.insertAtPosition>
 pmap <c-h> <pointer.moveSlowLeft>
 pmap <c-l> <pointer.moveSlowRight>
+pmap m <pointer.leftClick>
+pmap M <pointer.rightClick>
 
-vmap DD <pointer.scrollDown>
-vmap UU <pointer.scrollUp>
-vmap d 10DD
-vmap u 10UU
+vmap d 10<pointer.scrollDown>
+vmap u 10<pointer.scrollUp>
 vmap ; <Esc>;
 vmap <a-l> <pointer.moveRightMax>
 vmap <a-h> <pointer.moveLeftMax>
