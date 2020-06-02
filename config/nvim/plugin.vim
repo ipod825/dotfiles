@@ -567,10 +567,16 @@ let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'c
 "}}}
 
 Plug 'git@github.com:ipod825/vim-bookmark' "{{{
-nnoremap m :BookmarkAdd<cr>
-nnoremap M :BookmarkAddPos<cr>
+nnoremap m :BookmarkAddPos<cr>
+nnoremap M :BookmarkDelPos<cr>
+nnoremap <c-m> :BookmarkAdd<cr>
+nnoremap <c-M> :BookmarkDel<cr>
 nnoremap ' :BookmarkGo<cr>
 let g:bookmark_opencmd='Tabdrop'
+function! s:Bookmark_pos_context_fn()
+    return [tagbar#currenttag("%s", "", "f"), getline('.')]
+endfunction
+let g:Bookmark_pos_context_fn = function('s:Bookmark_pos_context_fn')
 " }}}
 
 Plug 'git@github.com:ipod825/taboo.vim' "{{{

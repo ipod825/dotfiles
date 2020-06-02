@@ -32,6 +32,9 @@ alias gpl='git pull'
 alias gst='git status'
 alias glg='git log'
 alias gck='git checkout'
+alias gdf='git diff'
+alias gad='git add -u'
+alias gcm='git commit -m'
 
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
     alias ls='ls -G'
