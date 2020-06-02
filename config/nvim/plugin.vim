@@ -609,7 +609,7 @@ let g:esearch.default_mappings = 0
 let g:esearch.win_map = [
             \ [ 'n', '<cr>', ':call b:esearch.open("NewTabdrop")<cr>'],
             \ [ 'n', 't',  ':call b:esearch.open("NETRTabdrop")<cr>'],
-            \ [ 'n', 'P', ':call b:esearch.split_preview_open()<cr>'],
+            \ [ 'n', 'pp', ':call b:esearch.split_preview_open() | wincmd W<cr>'],
             \ [ 'n', 'q',  ':tabclose<cr>'],
             \]
 augroup ESEARCH
