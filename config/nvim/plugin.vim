@@ -571,8 +571,8 @@ let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'c
 Plug 'git@github.com:ipod825/vim-bookmark' "{{{
 nnoremap m :BookmarkAddPos<cr>
 nnoremap <a-m> :BookmarkDelPos<cr>
-nnoremap <c-m> :BookmarkAdd<cr>
-nnoremap <c-a-m> :BookmarkDel<cr>
+cnoreabbrev bma BookmarkAdd
+cnoreabbrev bmd BookmarkDel
 nnoremap ' :BookmarkGo<cr>
 let g:bookmark_opencmd='Tabdrop'
 function! s:Bookmark_pos_context_fn()
@@ -686,9 +686,13 @@ function! DuplicateNode()
     let newname = 'DUP'.fnamemodify(path, ':p:t')
     call netranger#cp(path, dir.newname)
 endfunction
+function! NETRBookMark()
+    BookmarkAdd
+endfunction
 
 function! NETRInit()
     call netranger#mapvimfn('yp', "DuplicateNode")
+    call netranger#mapvimfn('m', "NETRBookMark")
 endfunction
 
 autocmd! USER NETRInit call NETRInit()
