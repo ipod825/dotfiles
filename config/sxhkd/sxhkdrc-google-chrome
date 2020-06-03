@@ -1,17 +1,1 @@
-ctrl + h
-    sxhkdbind ctrl h ctrl Page_Up
-
-ctrl + l
-    sxhkdbind ctrl l ctrl Page_Down
-
-ctrl + alt + h
-    sxhkdbind ctrl+alt h ctrl+shift Page_Up
-
-ctrl + alt + l
-    sxhkdbind ctrl+alt l ctrl+shift Page_Down
-
-alt + h
-    sxhkdbind alt h Home
-
-alt + l
-    sxhkdbind alt l End
+sxhkdrc-browser
