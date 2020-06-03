@@ -108,6 +108,8 @@ function! s:AutoPairsJump()
     call feedkeys('pi')
 endfunction
 
+Plug 'tpope/vim-scriptease'
+
 Plug 'jiangmiao/auto-pairs' "{{{
 inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
 let g:AutoPairsShortcutFastWrap = '<nop>'
