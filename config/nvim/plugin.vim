@@ -651,12 +651,16 @@ let cmdline_app['zsh'] = 'zsh'
 let g:cmdline_vsplit      = 1      " Split the window vertically
 "}}}
 
-Plug 'git@github.com:ipod825/fzf-mru.vim'
-cnoreabbrev f FZFMru
+Plug 'git@github.com:ipod825/mru.vim'
+function! s:Fzfmru() "{{{
+    silent call fzf#run(fzf#wrap({
+                \ 'source': mru#list(),
+                \}))
+endfunction
+cnoreabbrev f call <sid>Fzfmru()
 
 Plug 'embear/vim-localvimrc' "{{{
 let g:localvimrc_ask = 0
-"}}}
 Plug 'git@github.com:ipod825/vim-tabdrop' "{{{
 "}}}
 
@@ -667,6 +671,8 @@ if has("persistent_undo")
 endif
 "}}}
 
+Plug 'Yggdroot/indentLine'
+Plug 'andymass/vim-matchup'
 Plug 'AndrewRadev/linediff.vim'
 Plug 'vim-scripts/gtags.vim'
 Plug 'zhimsel/vim-stay' " vim-stay {{{

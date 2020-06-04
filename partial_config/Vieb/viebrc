@@ -28,7 +28,6 @@ nmap <c-t> <action.openNewTab>o
 nmap x <action.closeTab>
 nmap d <action.scrollPageDown>
 nmap u <action.scrollPageUp>
-nmap <space> d
 nmap j <pointer.scrollDown>
 nmap k <pointer.scrollUp>
 nmap <down> j
@@ -51,6 +50,7 @@ nmap J <action.zoomOut>
 nmap <PageUp> <action.scrollPageUp>
 nmap <PageDown> <action.scrollPageDown>
 nmap i <action.insertAtFirstInput>
+nmap <a-f> <action.toggleFullscreen>
 
 imap <c-i> <action.editWithVim>
 imap <c-t> <Esc><action.openNewTab>o
@@ -97,6 +97,8 @@ pmap <c-h> <pointer.moveSlowLeft>
 pmap <c-l> <pointer.moveSlowRight>
 pmap m <pointer.leftClick>
 pmap M <pointer.rightClick>
+pmap <C-h> <Esc><C-h>
+pmap <C-l> <Esc><C-l>
 
 vmap d 10<pointer.scrollDown>
 vmap u 10<pointer.scrollUp>
