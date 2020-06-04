@@ -651,13 +651,13 @@ let cmdline_app['zsh'] = 'zsh'
 let g:cmdline_vsplit      = 1      " Split the window vertically
 "}}}
 
-Plug 'git@github.com:ipod825/mru.vim'
+Plug 'ipod825/fzf-mru.vim'
 function! s:Fzfmru() "{{{
     silent call fzf#run(fzf#wrap({
                 \ 'source': mru#list(),
                 \}))
 endfunction
-cnoreabbrev f call <sid>Fzfmru()
+cnoreabbrev f FZFMru
 
 Plug 'embear/vim-localvimrc' "{{{
 let g:localvimrc_ask = 0
@@ -693,12 +693,17 @@ function! DuplicateNode()
     call netranger#cp(path, dir.newname)
 endfunction
 function! NETRBookMark()
-    BookmarkAdd
+    BookmarkAdd netranger
+endfunction
+
+function! NETRBookMarkGo()
+    BookmarkGo netranger
 endfunction
 
 function! NETRInit()
     call netranger#mapvimfn('yp', "DuplicateNode")
     call netranger#mapvimfn('m', "NETRBookMark")
+    call netranger#mapvimfn("\'", "NETRBookMarkGo")
 endfunction
 
 autocmd! USER NETRInit call NETRInit()
