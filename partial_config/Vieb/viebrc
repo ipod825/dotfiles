@@ -1,6 +1,6 @@
 set guinavbar=onupdate
 set mouse
-set vimcommand="xterm -e nvim"
+set vimcommand="kitty nvim"
 set adblocker=update
 set cache=full
 set favicons=30day
