@@ -74,9 +74,9 @@ MANPAGER="nvim -c 'set ft=man' -"
 nvrte(){
     if [[ $1 == /* ]];
     then
-        nvr --remote-send "<esc><c-\><c-n>:Tabdrop $1<cr>"
+        nvr --remote-send "<c-\><c-n>:Tabdrop $1<cr>"
     else
-        nvr --remote-send "<esc><c-\><c-n>:Tabdrop `pwd`/$1<cr>"
+        nvr --remote-send "<c-\><c-n>:Tabdrop `pwd`/$1<cr>"
     fi
 }
 
@@ -84,9 +84,9 @@ nvre(){
     cur_buf_num=`nvr --remote-expr "bufnr('%')"`
     if [[ $1 == /* ]];
     then
-        nvr --remote-send "<esc><c-\><c-n>:edit $1<cr> | :bw! $cur_buf_num<cr>"
+        nvr --remote-send "<c-\><c-n>:edit $1<cr> | :bw! $cur_buf_num<cr>"
     else
-        nvr --remote-send "<esc><c-\><c-n>:edit `pwd`/$1<cr> | :bw! $cur_buf_num<cr>"
+        nvr --remote-send "<c-\><c-n>:edit `pwd`/$1<cr> | :bw! $cur_buf_num<cr>"
     fi
 }
 alias te='nvrte'
