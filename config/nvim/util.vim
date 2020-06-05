@@ -102,6 +102,15 @@ endfunction
 call s:MapUtil('<leader>e', 'OpenConfigFiles')
 "}}}
 
+function! s:OpenRecentFile() "{{{
+    silent call fzf#run(fzf#wrap({
+                \ 'source': filter(filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|term\\|^/tmp/\\|.git/\\|Search ‹'"), " isdirectory(v:val) || filereadable(v:val)"),
+                \ 'sink': 'Tabdrop'
+                \}))
+endfunction
+"}}}
+cnoreabbrev f call <sid>OpenRecentFile()
+
 function! s:ToggleSaveWithoutFix() "{{{
     let b:ale_fix_on_save = 1 - get(b:, "ale_fix_on_save", 1)
     write
