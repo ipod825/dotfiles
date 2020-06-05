@@ -651,6 +651,15 @@ let cmdline_app['zsh'] = 'zsh'
 let g:cmdline_vsplit      = 1      " Split the window vertically
 "}}}
 
+Plug 'pechorin/any-jump.vim'
+Plug 'ipod825/fzf-mru.vim'
+function! s:Fzfmru() "{{{
+    silent call fzf#run(fzf#wrap({
+                \ 'source': mru#list(),
+                \}))
+endfunction
+cnoreabbrev f FZFMru
+
 Plug 'embear/vim-localvimrc' "{{{
 let g:localvimrc_ask = 0
 Plug 'git@github.com:ipod825/vim-tabdrop' "{{{
