@@ -1,3 +1,4 @@
+set guinavbar=onupdate
 set mouse
 set vimcommand="kitty nvim"
 set adblocker=update
