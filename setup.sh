@@ -52,13 +52,8 @@ if [ ! -d $HOME/.pyenv ];then
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
     pyenv_install 3
-    pip install qutebrowser PyQt5 PyQtWebEngine
     pyenv global miniconda3-latest
 fi
-
-
-echo "==Setting qutebrowser=="
-pip install qutebrowser PyQt5 PyQtWebEngine --upgrade
 
 echo "==Setting kitty=="
 mkdir -p $HOME/opt
