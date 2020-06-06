@@ -66,18 +66,11 @@ endfunction
 cnoreabbrev gcb call <sid>GitCheckBranch()
 
 
-function! s:SearchWordExact() "{{{
-    silent call fzf#run(fzf#wrap({
-                \ 'source': map(getline(1, '$'), '(v:key + 1) . ": " . v:val '),
-                \ 'sink': function('s:Line_handler'),
-                \ 'options': '+s -e --ansi',
-                \}))
-endfunction
 function! s:SearchWord() "{{{
     silent call fzf#run(fzf#wrap({
                 \ 'source': map(getline(1, '$'), '(v:key + 1) . ": " . v:val '),
                 \ 'sink': function('s:Line_handler'),
-                \ 'options': '+s --ansi --algo=v1',
+                \ 'options': '+s -e --ansi',
                 \}))
 endfunction
 function! s:Line_handler(l)
@@ -85,8 +78,7 @@ function! s:Line_handler(l)
     exec keys[0]
 endfunction
 "}}}
-call s:MapUtil('/', 'SearchWordExact')
-call s:MapUtil('<m-/>', 'SearchWord')
+call s:MapUtil('/', 'SearchWord')
 
 function! s:OpenFileFromProjectRoot() "{{{
     exec "Files " . FindRootDirectory()
@@ -105,7 +97,8 @@ call s:MapUtil('<leader>e', 'OpenConfigFiles')
 function! s:OpenRecentFile() "{{{
     silent call fzf#run(fzf#wrap({
                 \ 'source': filter(filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|term\\|^/tmp/\\|.git/\\|Search ‹'"), " isdirectory(v:val) || filereadable(v:val)"),
-                \ 'sink': 'Tabdrop'
+                \ 'sink': 'Tabdrop',
+                \ 'options': '+s --history-size=30 --history='.$HOME.'/.cache/fzf-mru',
                 \}))
 endfunction
 "}}}
@@ -158,3 +151,19 @@ function! RemoveRedundantWhiteSpace()     "{{{
 endfunction
 "}}}
 call AddUtilComand('RemoveRedundantWhiteSpace')
+
+
+nnoremap <leader>oi :call RecallInserts2()<CR>
+function! RecallInserts2()
+	if !exists('b:inserts')
+		return
+	endif
+	:call fzf#run({'source': uniq(keys(b:inserts)),'sink':function('PInsert'),'options': '-m'})
+endfunction
+
+function! RecallInserts()
+	if !exists('b:inserts')
+		return
+	endif
+	:call fzf#run({'source': uniq(keys(b:inserts)),'sink':function('PInsert2'),'options': '-m'})
+endfunction

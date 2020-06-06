@@ -248,8 +248,6 @@ function! s:Gotodef()
 endfunction
 nnoremap <m-d> :call <sid>Gotodef()<cr>
 nmap <m-s> :TabdropPopTag<cr><esc>
-nnoremap <c-]> <nop>
-nnoremap <c-t> <nop>
 nnoremap <silent> K :call LanguageClient#textDocument_hover()<cr>
 "}}}
 
@@ -527,6 +525,7 @@ Plug 'sgur/vim-textobj-parameter'
 Plug 'rhysd/vim-textobj-anyblock'
 Plug 'kana/vim-textobj-line'
 Plug 'terryma/vim-expand-region'
+Plug 'machakann/vim-textobj-functioncall'
 Plug 'whatyouhide/vim-textobj-xmlattr', { 'for': ['html', 'xml'] } "{{{
 vmap <m-k> <Plug>(expand_region_expand)
 vmap <m-j> <Plug>(expand_region_shrink)
@@ -534,11 +533,8 @@ nmap <m-k> <Plug>(expand_region_expand)
 nmap <m-j> <Plug>(expand_region_shrink)
 let g:expand_region_text_objects = {
             \ 'iv' :0,
-            \ '2iv' :0,
             \ 'av'  :0,
-            \ '2av'  :0,
             \ 'iw'  :0,
-            \ 'iW'  :0,
             \ 'i"'  :0,
             \ 'a"'  :0,
             \ 'i''' :0,
@@ -549,6 +545,7 @@ let g:expand_region_text_objects = {
             \ 'iB'  :1,
             \ 'aB'  :1,
             \ 'a,'  :0,
+            \ 'if'  :0,
             \ 'il'  :0,
             \ 'ip'  :0,
             \ 'ix'  :0,
@@ -652,26 +649,32 @@ let g:cmdline_vsplit      = 1      " Split the window vertically
 "}}}
 
 Plug 'pechorin/any-jump.vim'
-Plug 'ipod825/fzf-mru.vim'
-function! s:Fzfmru() "{{{
-    silent call fzf#run(fzf#wrap({
-                \ 'source': mru#list(),
-                \}))
-endfunction
-cnoreabbrev f FZFMru
 
 Plug 'embear/vim-localvimrc' "{{{
 let g:localvimrc_ask = 0
 Plug 'git@github.com:ipod825/vim-tabdrop' "{{{
 "}}}
 
-Plug 'mbbill/undotree' "{{{
-if has("persistent_undo")
-    execute "set undodir=".g:vim_dir."undo/"
-    set undofile
-endif
-"}}}
+Plug 'simnalamburt/vim-mundo' "{{{
+execute "set undodir=".g:vim_dir."undo/"
+let g:mundo_width = float2nr(0.2 * &columns)
+let g:mundo_preview_height = float2nr(0.5 * &lines)
+let g:mundo_right = 1
+let mundo_preview_bottom = 1
+set undofile
+augroup MUNDO
+    autocmd!
+    autocmd Filetype MundoDiff set wrap
+augroup END
+""}}}
+"Plug 'mbbill/undotree' "{{{
+"if has("persistent_undo")
+"    execute "set undodir=".g:vim_dir."undo/"
+"    set undofile
+"endif
+""}}}
 
+Plug 'rbtnn/vim-vimscript_lasterror'
 Plug 'Yggdroot/indentLine'
 Plug 'andymass/vim-matchup'
 Plug 'AndrewRadev/linediff.vim'
