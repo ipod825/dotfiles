@@ -1,3 +1,5 @@
+" Plug 'rhysd/vim-grammarous'
+" Plug 'Yggdroot/LeaderF', { 'do': '.\install.sh' }
 " Plug 'ipod825/fzf-mru.vim'
 " function! s:Fzfmru() "{{{
 "     silent call fzf#run(fzf#wrap({

@@ -593,7 +593,7 @@ endfu
 
 Plug 'machakann/vim-sandwich'
 Plug 'justinmk/vim-sneak' "{{{
-nmap gs <Plug>Sneak_s
+nmap S <Plug>Sneak_s
 nmap gS <Plug>Sneak_S
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
@@ -603,6 +603,8 @@ vmap H <Plug>Sneak_,
 vmap L <Plug>Sneak_;
 let g:sneak#absolute_dir=1
 "}}}
+
+Plug 'machakann/vim-swap'
 Plug 'maxbrunsfeld/vim-yankstack' " clipboard stack  {{{
 let g:yankstack_yank_keys = ['y', 'd', 'x', 'c']
 nmap <M-p> <Plug>yankstack_substitute_older_paste
@@ -635,7 +637,6 @@ augroup END
 
 Plug 'kkoomen/vim-doge'
 Plug 'will133/vim-dirdiff'
-Plug 'machakann/vim-swap'
 Plug 'jalvesaq/vimcmdline' "{{{
 let g:cmdline_map_start          = '<LocalLeader>s'
 let g:cmdline_map_send           = 'E'
