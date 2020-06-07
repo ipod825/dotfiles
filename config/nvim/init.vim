@@ -45,6 +45,7 @@ set tabstop=4
 set expandtab
 set completeopt=menuone,noinsert
 set termguicolors
+set scrolloff=2
 
 let g:terminal_scrollback_buffer_size=100000
 if has('nvim')

@@ -287,8 +287,7 @@ highlight Conceal term=bold cterm=bold ctermbg=red
 highlight Conceal cterm=bold ctermfg=255 ctermbg=red
 "}}}
 
-Plug 'airblade/vim-rooter' " FindRootDirectory() is used for fzf
-" vim-rooter
+Plug 'airblade/vim-rooter' "{{{
 let g:rooter_manual_only = 1
 "}}}
 
@@ -303,6 +302,7 @@ let g:UltiSnipsSnippetsDir=g:vim_dir . 'snippets'
 "}}}
 
 Plug 'honza/vim-snippets'
+Plug 'rhysd/vim-grammarous', {'on': 'GrammarousCheck'}
 
 packadd termdebug "{{{
 command! Debug execute 'call <sid>Debug()'
