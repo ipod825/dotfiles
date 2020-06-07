@@ -40,6 +40,9 @@ tnoremap <m-l> <end>
 nnoremap <m-t> :call ReuseTerm('Tabdrop', getcwd())<cr>
 nnoremap <m-o> :call ReuseTerm('split', getcwd())<cr>
 nnoremap <m-e> :call ReuseTerm('vsplit', getcwd())<cr>
+nnoremap <m-s-t> :call OpenTerm('Tabdrop')<cr>
+nnoremap <m-s-o> :call OpenTerm('split')<cr>
+nnoremap <m-s-e> :call OpenTerm('vsplit')<cr>
 tnoremap jk <c-\><c-n>
 tnoremap <m-j> <c-\><c-n>:call ToggleTermNojk()<cr>i
 tnoremap <m-k> <c-\><c-n>:ToggleTermInsert<cr>
