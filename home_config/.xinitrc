@@ -4,7 +4,7 @@ xset r rate 200 40
 $HOME/projects/keynav/keynav daemonize
 libinput-gestures &
 dunst &
-copyq &
+# copyq &
 xautolock -corners 00+- -cornerdelay 1 -cornerredelay 10 -time 20 -locker "i3lock -e -c 000000" -detectsleep &
 
 
