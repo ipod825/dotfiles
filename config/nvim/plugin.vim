@@ -87,6 +87,8 @@ nmap * <Plug>MSExclusiveAddCword
 vmap * <Plug>MSExclusiveAddVisual
 nmap n <Plug>MSNext
 nmap N <Plug>MSPrev
+omap n <Plug>MSNext
+omap N <Plug>MSPrev
 nmap <leader>n <Plug>MSToggleJump
 nmap <leader>/ <Plug>MSClear
 nmap ? <Plug>MSAddBySearchForward

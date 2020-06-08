@@ -3,3 +3,4 @@ map <Left> navigate previous
 
 map l navigate next
 map <Right> navigate next
+set selection-clipboard clipboard
