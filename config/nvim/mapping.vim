@@ -19,6 +19,7 @@ noremap! <c-h> <Left>
 noremap! <c-l> <Right>
 noremap! <c-j> <Down>
 noremap! <c-k> <Up>
+nnoremap <cr> <c-w>w
 "}}}
 
 " Moving Around (home,END) {{{
