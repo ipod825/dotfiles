@@ -106,6 +106,7 @@ onoremap w :call EndOfWord()<cr>
 " folding
 nmap <leader><space> za
 vnoremap <space> zf
+nnoremap <m-i> :call <sid>ShowInfo()<cr>
 " }}}
 
 " Diff {{{
@@ -253,4 +254,8 @@ function! CommentUnwrap()
     endif
     normal! vgq
     set textwidth=0
+endfunction
+
+function! s:ShowInfo()
+    echo '⚓'.tagbar#currenttag("%s", "", "f")
 endfunction
