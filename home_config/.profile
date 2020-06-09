@@ -35,6 +35,7 @@ alias gck='git checkout'
 alias gdf='git diff'
 alias gad='git add -u'
 alias gcm='git commit -m'
+alias gca='git commit -a -m'
 
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
     alias ls='ls -G'

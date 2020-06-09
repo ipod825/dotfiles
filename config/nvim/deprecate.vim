@@ -1,3 +1,9 @@
+"Plug 'mbbill/undotree' "{{{
+"if has("persistent_undo")
+"    execute "set undodir=".g:vim_dir."undo/"
+"    set undofile
+"endif
+""}}}
 " Plug 'rhysd/vim-grammarous'
 " Plug 'Yggdroot/LeaderF', { 'do': '.\install.sh' }
 " Plug 'ipod825/fzf-mru.vim'

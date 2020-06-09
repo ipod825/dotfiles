@@ -9,6 +9,19 @@ endif
 
 call plug#begin(g:vim_dir . 'bundle')
 Plug 'junegunn/vim-plug'
+Plug 'simnalamburt/vim-mundo' "{{{
+execute "set undodir=".g:vim_dir."undo/"
+let g:mundo_width = float2nr(0.2 * &columns)
+let g:mundo_preview_height = float2nr(0.5 * &lines)
+let g:mundo_right = 1
+let mundo_preview_bottom = 1
+set undofile
+augroup MUNDO
+    autocmd!
+    autocmd Filetype MundoDiff set wrap
+augroup END
+""}}}
+
 Plug 'rakr/vim-one'
 augrou ONE
     autocmd!
@@ -17,6 +30,7 @@ augrou ONE
     autocmd USER PLUG_END call one#highlight("Visual", '', '213b40', '')
 augrou END
 
+Plug 'tpope/vim-scriptease'
 Plug 'vim-scripts/gtags.vim'
 Plug 'wsdjeg/vim-fetch'
 
@@ -28,7 +42,7 @@ augroup COMMENTARY
 augroup END
 "}}}
 Plug 'luochen1990/rainbow' "{{{
-let g:rainbow_active = 1
+let g:rainbow_active = 0
 let g:rainbow_conf = {'ctermfgs': ['1', '2', '3', '6']}
 "}}}
 
@@ -39,8 +53,7 @@ let g:lightline = {
             \ 'active': {
             \   'left': [['mode', 'paste'],
             \            ['readonly', 'filename'],
-            \            ['fugitiveobj'],
-            \            ['tagbar']],
+            \            ['fugitiveobj']],
             \   'right': [['lineinfo'],
             \              ['percent'],
             \              ['gitbranch'], ['asyncrun']]
@@ -76,8 +89,24 @@ function! FugitiveObj()
     return "⎇ ".res[:min([5, ind-1])]
 endfunction
 "}}}
+
 Plug 'majutsushi/tagbar' "{{{
 cnoreabbrev BB TagbarOpenAutoClose
+"}}}
+
+Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'} "{{{
+let g:fugitive_auto_close = get(g:, 'fugitive_auto_close', v:false)
+augroup FUGITIVE
+    autocmd!
+    autocmd Filetype fugitive nmap <buffer> <leader><space> =
+    autocmd Filetype fugitive autocmd BufEnter <buffer> if g:fugitive_auto_close | let g:fugitive_auto_close=v:false | quit | endif
+    autocmd Filetype gitcommit autocmd BufWinLeave <buffer> ++once let g:fugitive_auto_close=v:true
+augroup END
+function! s:Glog()
+    return "sp | wincmd T | Gclog"
+endfunction
+cnoreabbrev <expr> glog <sid>Glog()
+cnoreabbrev gg tab Git
 "}}}
 
 Plug 'git@github.com:ipod825/msearch.vim'
@@ -109,8 +138,6 @@ function! s:AutoPairsJump()
     endif
     call feedkeys('pi')
 endfunction
-
-Plug 'tpope/vim-scriptease'
 
 Plug 'jiangmiao/auto-pairs' "{{{
 inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
@@ -183,10 +210,10 @@ function! s:SelectAllMark()
 endfunction
 nmap <leader>r :call <sid>SelectAllMark()<cr>
 
-Plug 'Shougo/neco-vim'
-if exists('*nvim_open_win')
-    Plug 'ncm2/float-preview.nvim'
-endif
+" Plug 'Shougo/neco-vim'
+" if exists('*nvim_open_win')
+"     Plug 'ncm2/float-preview.nvim'
+" endif
 
 Plug 't9md/vim-textmanip' "{{{
 xmap <c-m-k> <Plug>(textmanip-move-up)
@@ -207,7 +234,6 @@ nmap ga <Plug>(EasyAlign)
 "}}}
 
 
-Plug 'jordwalke/VimCloser'
 Plug 'w0rp/ale' " (only used as formatter) {{{
 let g:ale_sign_error = 'E'
 let g:ale_sign_warning = 'W'
@@ -440,20 +466,6 @@ endfunction
 
 "}}}
 
-Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'} "{{{
-let g:fugitive_auto_close = get(g:, 'fugitive_auto_close', v:false)
-augroup FUGITIVE
-    autocmd!
-    autocmd Filetype fugitive nmap <buffer> <leader><space> =
-    autocmd Filetype fugitive autocmd BufEnter <buffer> if g:fugitive_auto_close | let g:fugitive_auto_close=v:false | quit | endif
-    autocmd Filetype gitcommit autocmd BufWinLeave <buffer> ++once let g:fugitive_auto_close=v:true
-augroup END
-function! s:Glog()
-    return "sp | wincmd T | Gclog"
-endfunction
-cnoreabbrev <expr> glog <sid>Glog()
-cnoreabbrev gg tab Git
-"}}}
 
 
 Plug 'git@github.com:ipod825/war.vim' "{{{
@@ -657,25 +669,6 @@ Plug 'embear/vim-localvimrc' "{{{
 let g:localvimrc_ask = 0
 Plug 'git@github.com:ipod825/vim-tabdrop' "{{{
 "}}}
-
-Plug 'simnalamburt/vim-mundo' "{{{
-execute "set undodir=".g:vim_dir."undo/"
-let g:mundo_width = float2nr(0.2 * &columns)
-let g:mundo_preview_height = float2nr(0.5 * &lines)
-let g:mundo_right = 1
-let mundo_preview_bottom = 1
-set undofile
-augroup MUNDO
-    autocmd!
-    autocmd Filetype MundoDiff set wrap
-augroup END
-""}}}
-"Plug 'mbbill/undotree' "{{{
-"if has("persistent_undo")
-"    execute "set undodir=".g:vim_dir."undo/"
-"    set undofile
-"endif
-""}}}
 
 Plug 'rbtnn/vim-vimscript_lasterror'
 Plug 'Yggdroot/indentLine'
