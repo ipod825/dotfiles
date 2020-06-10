@@ -56,7 +56,7 @@ cnoreabbrev gbd call <sid>GitBranchDelete()
 function! s:GitCheckBranch() "{{{
     let locals = map(systemlist('git branch'), {i,b->b[2:]})
     let refs = join(map(copy(locals), {i,b->'refs/heads/'.b}), ' ')
-    let tracked = s:UniqueList(systemlist('git for-each-ref --format="%(upstream:short)" '.refs))
+    let tracked = s:UniqueList(filter(systemlist('git for-each-ref --format="%(upstream:short)" '.refs), "!empty(v:val)"))
     silent call fzf#run(fzf#wrap({
                 \ 'source': extend(locals, tracked),
                 \ 'sink': '!git checkout '
