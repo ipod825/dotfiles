@@ -663,6 +663,10 @@ let cmdline_app['zsh'] = 'zsh'
 let g:cmdline_vsplit      = 1      " Split the window vertically
 "}}}
 
+Plug 'wellle/context.vim', {'on_cmd': ['ContextPeek']} "{{{
+let g:context_enabled = 0
+nnoremap <m-i> :ContextPeek<cr>
+"}}}
 Plug 'embear/vim-localvimrc' "{{{
 let g:localvimrc_ask = 0
 Plug 'git@github.com:ipod825/vim-tabdrop' "{{{

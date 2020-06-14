@@ -106,7 +106,6 @@ onoremap w :call EndOfWord()<cr>
 " folding
 nmap <leader><space> za
 vnoremap <space> zf
-nnoremap <m-i> :call <sid>ShowInfo()<cr>
 " }}}
 
 " Diff {{{
