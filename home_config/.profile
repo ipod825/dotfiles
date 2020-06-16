@@ -118,6 +118,18 @@ tm() {
   session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
 }
 
+# repo sync without -c should only happen in the mirror repository, in which we
+# can use "command repo sync"
+repo () {
+    if [[ "$1" = "sync" ]]; then
+        if [[ "$*" != *" -c"* ]]; then
+            echo "Sync without -c; aborting.";
+            return 1;
+        fi;
+    fi;
+    command repo "$@"
+}
+
 
 # rclone
 rpush() {

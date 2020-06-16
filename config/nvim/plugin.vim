@@ -664,7 +664,7 @@ let g:cmdline_vsplit      = 1      " Split the window vertically
 "}}}
 
 Plug 'wellle/context.vim', {'on_cmd': ['ContextPeek']} "{{{
-let g:context_enabled = 0
+let g:context_enabled=0
 nnoremap <m-i> :ContextPeek<cr>
 "}}}
 Plug 'embear/vim-localvimrc' "{{{
