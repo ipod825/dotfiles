@@ -97,7 +97,6 @@ call s:MapUtil('<leader>e', 'OpenConfigFiles')
 function! s:OpenRecentFile() "{{{
     silent call fzf#run(fzf#wrap({
                 \ 'source': filter(filter(copy(v:oldfiles), "v:val !~ 'fugitive:\\|term\\|^/tmp/\\|.git/\\|Search ‹'"), " isdirectory(v:val) || filereadable(v:val)"),
-                \ 'sink': 'Tabdrop',
                 \ 'options': '+s --history-size=30 --history='.$HOME.'/.cache/fzf-mru',
                 \}))
 endfunction
