@@ -46,6 +46,22 @@ let g:rainbow_active = 0
 let g:rainbow_conf = {'ctermfgs': ['1', '2', '3', '6']}
 "}}}
 
+Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'} "{{{
+let g:fugitive_auto_close = get(g:, 'fugitive_auto_close', v:false)
+augroup FUGITIVE
+    autocmd!
+    autocmd Filetype fugitive nmap <buffer> <leader><space> =
+    autocmd Filetype fugitive autocmd BufEnter <buffer> if g:fugitive_auto_close | let g:fugitive_auto_close=v:false | quit | endif
+    autocmd Filetype gitcommit autocmd BufWinLeave <buffer> ++once let g:fugitive_auto_close=v:true
+augroup END
+function! s:Glog()
+    return "sp | wincmd T | Gclog"
+endfunction
+cnoreabbrev <expr> glog <sid>Glog()
+cnoreabbrev gg tab Git
+"}}}
+
+
 Plug 'itchyny/lightline.vim' "{{{
 let g:asyncrun_status=get(g:,'asyncrun_status',"success")
 let g:lightline = {
@@ -90,25 +106,6 @@ function! FugitiveObj()
 endfunction
 "}}}
 
-Plug 'majutsushi/tagbar' "{{{
-cnoreabbrev BB TagbarOpenAutoClose
-"}}}
-
-Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'} "{{{
-let g:fugitive_auto_close = get(g:, 'fugitive_auto_close', v:false)
-augroup FUGITIVE
-    autocmd!
-    autocmd Filetype fugitive nmap <buffer> <leader><space> =
-    autocmd Filetype fugitive autocmd BufEnter <buffer> if g:fugitive_auto_close | let g:fugitive_auto_close=v:false | quit | endif
-    autocmd Filetype gitcommit autocmd BufWinLeave <buffer> ++once let g:fugitive_auto_close=v:true
-augroup END
-function! s:Glog()
-    return "sp | wincmd T | Gclog"
-endfunction
-cnoreabbrev <expr> glog <sid>Glog()
-cnoreabbrev gg tab Git
-"}}}
-
 Plug 'git@github.com:ipod825/msearch.vim'
 nmap 8 <Plug>MSToggleAddCword
 vmap 8 <Plug>MSToggleAddVisual
@@ -129,16 +126,6 @@ nmap <leader>r :call <sid>SelectAllMark()<cr>
 
 Plug 'fatih/vim-go', {'for': 'go'}
 
-function! s:AutoPairsJump()
-    call feedkeys('l')
-    let l:b = getline('.')[col('.')+1]
-    call feedkeys('dl')
-    if match(l:b, "[\"' ]")  == -1
-        call feedkeys('e')
-    endif
-    call feedkeys('pi')
-endfunction
-
 Plug 'jiangmiao/auto-pairs' "{{{
 inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
 let g:AutoPairsShortcutFastWrap = '<nop>'
@@ -154,6 +141,15 @@ augroup AUTO_PAIRS
     autocmd BufEnter *.scm unlet g:AutoPairs["'"]
     autocmd BufLeave *.scm let g:AutoPairs["'"] = "'"
 augroup End
+function! s:AutoPairsJump()
+    call feedkeys('l')
+    let l:b = getline('.')[col('.')+1]
+    call feedkeys('dl')
+    if match(l:b, "[\"' ]")  == -1
+        call feedkeys('e')
+    endif
+    call feedkeys('pi')
+endfunction
 " }}}
 
 Plug 'skywind3000/asyncrun.vim' "{{{
@@ -183,8 +179,6 @@ let g:VM_maps['Goto Next'] = '<c-j>'
 let g:VM_maps["Undo"] = 'u'
 let g:VM_maps["Redo"] = '<c-r>'
 let g:VM_maps["Numbers"] = '<leader>n'
-
-
 let g:VM_maps["Visual Add"] = '<C-n>'
 let g:VM_maps["Visual Find"] = '<C-n>'
 let g:VM_maps["Visual Regex"] = '<leader>/'
@@ -209,11 +203,6 @@ function! s:SelectAllMark()
     call feedkeys("\<Plug>(VM-Select-All)")
 endfunction
 nmap <leader>r :call <sid>SelectAllMark()<cr>
-
-" Plug 'Shougo/neco-vim'
-" if exists('*nvim_open_win')
-"     Plug 'ncm2/float-preview.nvim'
-" endif
 
 Plug 't9md/vim-textmanip' "{{{
 xmap <c-m-k> <Plug>(textmanip-move-up)

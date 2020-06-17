@@ -1,3 +1,10 @@
+" Plug 'Shougo/neco-vim'
+" if exists('*nvim_open_win')
+"     Plug 'ncm2/float-preview.nvim'
+" endif
+"Plug 'majutsushi/tagbar' "{{{
+"cnoreabbrev BB TagbarOpenAutoClose
+""}}}
 "Plug 'mbbill/undotree' "{{{
 "if has("persistent_undo")
 "    execute "set undodir=".g:vim_dir."undo/"
