@@ -326,7 +326,7 @@ let g:UltiSnipsExpandTrigger='<tab>'
 let g:UltiSnipsJumpForwardTrigger='<tab>'
 let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
 let g:UltiSnipsEditSplit = 'vertical'
-let g:UltiSnipsSnippetDirectories=[g:vim_dir.'snippets']
+let g:UltiSnipsSnippetDirectories=[g:vim_dir.'UltiSnips']
 "}}}
 
 Plug 'honza/vim-snippets'
