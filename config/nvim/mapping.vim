@@ -82,7 +82,7 @@ cnoreabbrev tc tabclose
 let $SUDO_ASKPASS="/usr/bin/ssh-askpass"
 cnoreabbrev sudow w !sudo -A tee %
 cnoreabbrev man Man
-cnoremap qq :call Bwipeout()<cr>
+cnoremap qq :bwipeout<cr>
 " }}}
 
 " searching {{{
