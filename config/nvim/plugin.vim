@@ -697,6 +697,8 @@ function! NETRInit()
     call netranger#mapvimfn("\'", "NETRBookMarkGo")
 endfunction
 
+let g:NETRCustomNopreview={->winnr()==2 && winnr('$')==2}
+
 autocmd! USER NETRInit call NETRInit()
 "}}}
 

@@ -42,7 +42,3 @@ command=$SCRIPT_DIR/volume
 interval=once
 signal=10
 color=#00afff
-
-[xrandr]
-full_text=xrandr
-command=$SCRIPT_DIR/xrandr
