@@ -152,6 +152,10 @@ function! s:AutoPairsJump()
 endfunction
 " }}}
 
+Plug 'majutsushi/tagbar' "{{{
+cnoreabbrev BB TagbarOpenAutoClose
+"}}}
+
 Plug 'skywind3000/asyncrun.vim' "{{{
 augroup ASYNCRUN
     autocmd!
