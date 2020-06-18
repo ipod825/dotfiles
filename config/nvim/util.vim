@@ -14,13 +14,20 @@ vnoremap <silent><leader><cr> :<c-u>call fzf#run(fzf#wrap({
             \ 'sink': function('<sid>ExecFnOrCmd'),
             \}))<cr>
 
+" using timer_start because if ExecFnOrCmd executed within fzf#run, there's
+" sometimes some problems.
+let s:execname = ''
 function! s:ExecFnOrCmd(name) "{{{
-    if exists(":".a:name)
-        execute a:name
-    elseif exists('*<sid>'.a:name)
-        execute 'call <sid>'.a:name.'()'
-    elseif exists('*'.a:name)
-        execute 'call '.a:name.'()'
+    let s:execname = a:name
+    call timer_start(0, function('s:ExecFnOrCmdImpl'))
+endfunction
+function! s:ExecFnOrCmdImpl(t) "{{{
+    if exists(":".s:execname)
+        execute s:execname
+    elseif exists('*<sid>'.s:execname)
+        execute 'call <sid>'.s:execname.'()'
+    elseif exists('*'.s:execname)
+        execute 'call '.s:execname.'()'
     endif
 endfunction
 "}}}
