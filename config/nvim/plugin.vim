@@ -63,24 +63,48 @@ cnoreabbrev G Gina status --opener=split
 
 Plug 'itchyny/lightline.vim' "{{{
 let g:asyncrun_status=get(g:,'asyncrun_status',"success")
+" let g:lightline = {
+"             \ 'colorscheme': 'wombat' ,
+"             \ 'active': {
+"             \   'left': [['mode', 'paste'],
+"             \            ['readonly', 'filename'],
+"             \            ['fugitiveobj']],
+"             \   'right': [['lineinfo'],
+"             \              ['percent'],
+"             \              ['gitbranch'], ['asyncrun']]
+"             \  },
+"             \ 'inactive': {
+"             \   'left': [['filename'],
+"             \            ['fugitiveobj']],
+"             \   'right': [['lineinfo'],
+"             \              ['percent'],
+"             \               ['gitbranch']]},
+"             \ 'component': {
+"             \         'tagbar': '⚓'.'%{tagbar#currenttag("%s", "", "f")}',
+"             \         'gitbranch': '%{GitBranch()}',
+"             \         'asyncrun': '%{g:asyncrun_status=="running"?g:asyncrun_status:""}',
+"             \         'fugitiveobj': '%{FugitiveObj()}'
+"             \ },
+"             \ }
 let g:lightline = {
             \ 'colorscheme': 'wombat' ,
             \ 'active': {
             \   'left': [['mode', 'paste'],
             \            ['readonly', 'filename'],
-            \            ['fugitiveobj']],
+            \            ],
             \   'right': [['lineinfo'],
             \              ['percent'],
-            \              ['gitbranch'], ['asyncrun']]
+            \              ['gitst'],['asyncrun']]
             \  },
             \ 'inactive': {
             \   'left': [['filename'],
-            \            ['fugitiveobj']],
+            \            ],
             \   'right': [['lineinfo'],
             \              ['percent'],
-            \               ['gitbranch']]},
+            \               ]},
             \ 'component': {
             \         'tagbar': '⚓'.'%{tagbar#currenttag("%s", "", "f")}',
+            \         'gitst': '%{gina#component#repo#preset("fancy")}',
             \         'gitbranch': '%{GitBranch()}',
             \         'asyncrun': '%{g:asyncrun_status=="running"?g:asyncrun_status:""}',
             \         'fugitiveobj': '%{FugitiveObj()}'
@@ -102,6 +126,18 @@ function! FugitiveObj()
     let res = res[ind+6:]
     let ind = match(res, '/')
     return "⎇ ".res[:min([5, ind-1])]
+endfunction
+
+function MyGitStatus() abort
+  let staged = gina#component#status#staged()
+  let unstaged = gina#component#status#unstaged()
+  let conflicted = gina#component#status#conflicted()
+  return printf(
+        \ 's: %s, u: %s, c: %s',
+        \ staged,
+        \ unstaged,
+        \ conflicted,
+        \)
 endfunction
 "}}}
 
@@ -464,11 +500,12 @@ Plug 'git@github.com:ipod825/war.vim' "{{{
  augroup WAR
      autocmd!
      autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0.2)
-     autocmd Filetype fugitive :call war#fire(-1, 0.95, -1, 0.1)
-     autocmd Filetype gina-status :call war#fire(-1, 0.95, -1, 0.1)
+     autocmd Filetype fugitive :call war#fire(-1, 1, -1, 0.01)
+     autocmd Filetype gina-status :call war#fire(-1, 1, -1, 0.01)
+     autocmd Filetype diff :call war#fire(-1, 1, -1, 0.01)
      autocmd Filetype git :call war#fire(-1, 0.8, -1, 0.1)
      autocmd Filetype esearch :call war#fire(0.8, -1, 0.2, -1)
-     autocmd Filetype bookmark :call war#fire(-1, 0.8, -1, -1)
+     autocmd Filetype bookmark :call war#fire(-1, 1, -1, -1)
  augroup END
 " }}}
 Plug 'AndrewRadev/linediff.vim'
