@@ -64,11 +64,10 @@ augroup GINA
     autocmd USER PLUG_END call s:SetupGina()
 augroup END
 function! s:SetupGina()
-	call gina#custom#mapping#nmap(
-	      \ 'status', 'cc',
-	      \ ':Gina commit<CR>',
-	      \ {'noremap': 1, 'silent': 1},
-	      \)
+	call gina#custom#mapping#nmap('/.*', '<cr>','<Plug>(gina-edit-tab)')
+	call gina#custom#mapping#nmap('status', '-','<Plug>(gina-index-toggle)', {'nowait': v:true})
+	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
+	call gina#custom#mapping#nmap('status', 'cc',':Gina commit<CR>')
 endfunction
 "}}}
 

@@ -37,6 +37,7 @@ tnoremap <m-h> <home>
 tnoremap <m-l> <end>
 "}}}
 
+
 " Terminal {{{
 nnoremap <m-t> :call ReuseTerm('Tabdrop', getcwd())<cr>
 nnoremap <m-o> :call ReuseTerm('split', getcwd())<cr>
