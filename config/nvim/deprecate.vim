@@ -1,3 +1,34 @@
+"Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'} "{{{
+"let g:fugitive_auto_close = get(g:, 'fugitive_auto_close', v:false)
+"augroup FUGITIVE
+"    autocmd!
+"    autocmd Filetype fugitive nmap <buffer> <leader><space> =
+"    autocmd Filetype fugitive autocmd BufEnter <buffer> if g:fugitive_auto_close | let g:fugitive_auto_close=v:false | quit | endif
+"    autocmd Filetype gitcommit autocmd BufWinLeave <buffer> ++once let g:fugitive_auto_close=v:true
+"augroup END
+"function! s:Glog()
+"    return "sp | wincmd T | Gclog"
+"endfunction
+"cnoreabbrev <expr> glog <sid>Glog()
+"cnoreabbrev gg tab Git
+" function! GitBranch()
+"     let res = fugitive#head()
+"     if empty(res)
+"         let res = system('git rev-parse HEAD')[:5]
+"     endif
+"     return "⎇ ".res
+" endfunction
+" function! FugitiveObj()
+"     let res = expand('%:p')
+"     let ind = match(res, '.git//')
+"     if ind<0
+"         return ''
+"     endif
+"     let res = res[ind+6:]
+"     let ind = match(res, '/')
+"     return "⎇ ".res[:min([5, ind-1])]
+" endfunction
+""}}}
 "Plug 'luochen1990/rainbow' "{{{
 "let g:rainbow_active = 0
 "let g:rainbow_conf = {'ctermfgs': ['1', '2', '3', '6']}

@@ -42,23 +42,10 @@ augroup COMMENTARY
 augroup END
 "}}}
 
-"Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'} "{{{
-"let g:fugitive_auto_close = get(g:, 'fugitive_auto_close', v:false)
-"augroup FUGITIVE
-"    autocmd!
-"    autocmd Filetype fugitive nmap <buffer> <leader><space> =
-"    autocmd Filetype fugitive autocmd BufEnter <buffer> if g:fugitive_auto_close | let g:fugitive_auto_close=v:false | quit | endif
-"    autocmd Filetype gitcommit autocmd BufWinLeave <buffer> ++once let g:fugitive_auto_close=v:true
-"augroup END
-"function! s:Glog()
-"    return "sp | wincmd T | Gclog"
-"endfunction
-"cnoreabbrev <expr> glog <sid>Glog()
-"cnoreabbrev gg tab Git
-""}}}
-
 Plug 'lambdalisue/gina.vim' "{{{
 cnoreabbrev G Gina status -s --opener=split
+cnoreabbrev gbr Gina branch --opener=split
+cnoreabbrev glg Gina log --opener=split
 cnoreabbrev gps Gina push
 cnoreabbrev gpl Gina pull
 augroup GINA
@@ -67,7 +54,8 @@ augroup GINA
 augroup END
 function! s:SetupGina()
 	call gina#custom#mapping#nmap('/.*', '<cr>','<Plug>(gina-edit-tab)')
-	call gina#custom#mapping#nmap('status', '-','<Plug>(gina-index-toggle)', {'nowait': v:true})
+	call gina#custom#mapping#nmap('status', '-','<Plug>(gina-index-toggle)j', {'nowait': v:true})
+	call gina#custom#mapping#vmap('status', '-','<Plug>(gina-index-toggle)j', {'nowait': v:true})
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
 	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit --opener=split<CR>')
 endfunction
@@ -76,29 +64,6 @@ endfunction
 
 Plug 'itchyny/lightline.vim' "{{{
 let g:asyncrun_status=get(g:,'asyncrun_status',"success")
-" let g:lightline = {
-"             \ 'colorscheme': 'wombat' ,
-"             \ 'active': {
-"             \   'left': [['mode', 'paste'],
-"             \            ['readonly', 'filename'],
-"             \            ['fugitiveobj']],
-"             \   'right': [['lineinfo'],
-"             \              ['percent'],
-"             \              ['gitbranch'], ['asyncrun']]
-"             \  },
-"             \ 'inactive': {
-"             \   'left': [['filename'],
-"             \            ['fugitiveobj']],
-"             \   'right': [['lineinfo'],
-"             \              ['percent'],
-"             \               ['gitbranch']]},
-"             \ 'component': {
-"             \         'tagbar': '⚓'.'%{tagbar#currenttag("%s", "", "f")}',
-"             \         'gitbranch': '%{GitBranch()}',
-"             \         'asyncrun': '%{g:asyncrun_status=="running"?g:asyncrun_status:""}',
-"             \         'fugitiveobj': '%{FugitiveObj()}'
-"             \ },
-"             \ }
 let g:lightline = {
             \ 'colorscheme': 'wombat' ,
             \ 'active': {
@@ -123,26 +88,15 @@ let g:lightline = {
             \         'fugitiveobj': '%{FugitiveObj()}'
             \ },
             \ }
-function! GitBranch()
-    let res = fugitive#head()
-    if empty(res)
-        let res = system('git rev-parse HEAD')[:5]
-    endif
-    return "⎇ ".res
-endfunction
-function! FugitiveObj()
-    let res = expand('%:p')
-    let ind = match(res, '.git//')
-    if ind<0
-        return ''
-    endif
-    let res = res[ind+6:]
-    let ind = match(res, '/')
-    return "⎇ ".res[:min([5, ind-1])]
-endfunction
 
 function GitInfo() abort
-    return "⎇ ".gina#component#repo#branch()
+    let br = gina#component#repo#branch()
+    let ah = gina#component#traffic#ahead()
+    let bh =  gina#component#traffic#behind()
+    let br = empty(br)?'':"⎇ ".br
+    let ah = ah!=0?'↑'.ah:''
+    let bh = bh!=0?'↓'.bh:''
+    return br.ah.bh
 endfunction
 "}}}
 
@@ -506,6 +460,9 @@ Plug 'git@github.com:ipod825/war.vim' "{{{
      autocmd Filetype fugitive :call war#fire(-1, 1, -1, 0)
      autocmd Filetype gina-status :call war#fire(-1, 1, -1, 0)
      autocmd Filetype gina-commit :call war#fire(-1, 1, -1, 0)
+     autocmd Filetype gina-log :call war#fire(-1, 1, -1, 0)
+     autocmd Filetype gina-branch :call war#fire(-1, 1, -1, 0)
+     autocmd Filetype gina-changes :call war#fire(1, -1, 0, -1)
      autocmd Filetype diff :call war#fire(-1, 1, -1, 0)
      autocmd Filetype git :call war#fire(-1, 0.8, -1, 0.1)
      autocmd Filetype esearch :call war#fire(0.8, -1, 0.2, -1)
