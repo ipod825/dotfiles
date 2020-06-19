@@ -87,6 +87,9 @@ endfunction
      let br = gina#component#repo#branch()
      let ah = gina#component#traffic#ahead()
      let bh =  gina#component#traffic#behind()
+     if br=~ '[0-9a-f]\{40\}'
+         let br = br[:5]
+     endif
      let br = empty(br)?'':"⎇ ".br
      let ah = ah!=0?'↑'.ah:''
      let bh = bh!=0?'↓'.bh:''
