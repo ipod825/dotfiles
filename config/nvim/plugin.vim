@@ -77,6 +77,10 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('log', '<leader><cr>','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-tab)')
+    call gina#custom#mapping#nmap('branch', '<leader>n','<Plug>(gina-branch-new)')
+    call gina#custom#mapping#nmap('branch', '<leader>d','<Plug>(gina-branch-delete-force)')
+    call gina#custom#mapping#nmap('branch', '<leader>r','<Plug>(gina-branch-move)')
+    call gina#custom#mapping#nmap('branch', '<leader>t','<Plug>(gina-branch-set-upstream-to)')
 endfunction
  function GitInfo() abort
      let br = gina#component#repo#branch()
