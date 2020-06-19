@@ -41,25 +41,24 @@ augroup COMMENTARY
     autocmd Filetype c,cpp setlocal commentstring=//\ %s
 augroup END
 "}}}
-Plug 'luochen1990/rainbow' "{{{
-let g:rainbow_active = 0
-let g:rainbow_conf = {'ctermfgs': ['1', '2', '3', '6']}
-"}}}
 
-Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'} "{{{
-let g:fugitive_auto_close = get(g:, 'fugitive_auto_close', v:false)
-augroup FUGITIVE
-    autocmd!
-    autocmd Filetype fugitive nmap <buffer> <leader><space> =
-    autocmd Filetype fugitive autocmd BufEnter <buffer> if g:fugitive_auto_close | let g:fugitive_auto_close=v:false | quit | endif
-    autocmd Filetype gitcommit autocmd BufWinLeave <buffer> ++once let g:fugitive_auto_close=v:true
-augroup END
-function! s:Glog()
-    return "sp | wincmd T | Gclog"
-endfunction
-cnoreabbrev <expr> glog <sid>Glog()
-cnoreabbrev gg tab Git
-"}}}
+"Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'} "{{{
+"let g:fugitive_auto_close = get(g:, 'fugitive_auto_close', v:false)
+"augroup FUGITIVE
+"    autocmd!
+"    autocmd Filetype fugitive nmap <buffer> <leader><space> =
+"    autocmd Filetype fugitive autocmd BufEnter <buffer> if g:fugitive_auto_close | let g:fugitive_auto_close=v:false | quit | endif
+"    autocmd Filetype gitcommit autocmd BufWinLeave <buffer> ++once let g:fugitive_auto_close=v:true
+"augroup END
+"function! s:Glog()
+"    return "sp | wincmd T | Gclog"
+"endfunction
+"cnoreabbrev <expr> glog <sid>Glog()
+"cnoreabbrev gg tab Git
+""}}}
+
+Plug 'lambdalisue/gina.vim'
+cnoreabbrev G Gina status --opener=split
 
 
 Plug 'itchyny/lightline.vim' "{{{
@@ -466,6 +465,7 @@ Plug 'git@github.com:ipod825/war.vim' "{{{
      autocmd!
      autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0.2)
      autocmd Filetype fugitive :call war#fire(-1, 0.95, -1, 0.1)
+     autocmd Filetype gina-status :call war#fire(-1, 0.95, -1, 0.1)
      autocmd Filetype git :call war#fire(-1, 0.8, -1, 0.1)
      autocmd Filetype esearch :call war#fire(0.8, -1, 0.2, -1)
      autocmd Filetype bookmark :call war#fire(-1, 0.8, -1, -1)
@@ -669,7 +669,6 @@ Plug 'rbtnn/vim-vimscript_lasterror'
 Plug 'Yggdroot/indentLine'
 Plug 'andymass/vim-matchup'
 Plug 'AndrewRadev/linediff.vim'
-Plug 'vim-scripts/gtags.vim'
 Plug 'zhimsel/vim-stay' " vim-stay {{{
 set viewoptions=cursor,folds,slash,unix
 "}}}

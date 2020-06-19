@@ -1,3 +1,7 @@
+"Plug 'luochen1990/rainbow' "{{{
+"let g:rainbow_active = 0
+"let g:rainbow_conf = {'ctermfgs': ['1', '2', '3', '6']}
+""}}}
 " Plug 'Shougo/neco-vim'
 " if exists('*nvim_open_win')
 "     Plug 'ncm2/float-preview.nvim'
