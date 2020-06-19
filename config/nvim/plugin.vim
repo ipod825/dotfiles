@@ -57,8 +57,20 @@ augroup END
 "cnoreabbrev gg tab Git
 ""}}}
 
-Plug 'lambdalisue/gina.vim'
-cnoreabbrev G Gina status --opener=split
+Plug 'lambdalisue/gina.vim' "{{{
+cnoreabbrev G Gina status -s --opener=split
+augroup GINA
+    autocmd!
+    autocmd USER PLUG_END call s:SetupGina()
+augroup END
+function! s:SetupGina()
+	call gina#custom#mapping#nmap(
+	      \ 'status', 'cc',
+	      \ ':Gina commit<CR>',
+	      \ {'noremap': 1, 'silent': 1},
+	      \)
+endfunction
+"}}}
 
 
 Plug 'itchyny/lightline.vim' "{{{
@@ -500,9 +512,10 @@ Plug 'git@github.com:ipod825/war.vim' "{{{
  augroup WAR
      autocmd!
      autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0.2)
-     autocmd Filetype fugitive :call war#fire(-1, 1, -1, 0.01)
-     autocmd Filetype gina-status :call war#fire(-1, 1, -1, 0.01)
-     autocmd Filetype diff :call war#fire(-1, 1, -1, 0.01)
+     autocmd Filetype fugitive :call war#fire(-1, 1, -1, 0)
+     autocmd Filetype gina-status :call war#fire(-1, 1, -1, 0)
+     autocmd Filetype gina-commit :call war#fire(-1, 1, -1, 0)
+     autocmd Filetype diff :call war#fire(-1, 1, -1, 0)
      autocmd Filetype git :call war#fire(-1, 0.8, -1, 0.1)
      autocmd Filetype esearch :call war#fire(0.8, -1, 0.2, -1)
      autocmd Filetype bookmark :call war#fire(-1, 1, -1, -1)
