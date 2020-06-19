@@ -53,7 +53,7 @@ augrou END
 Plug 'lambdalisue/gina.vim' "{{{
 cnoreabbrev G Gina status -s
 cnoreabbrev gbr Gina branch
-cnoreabbrev glg Gina log
+cnoreabbrev glg Gina log --branches
 cnoreabbrev gps Gina push
 cnoreabbrev gpl Gina pull
 augroup GINA
@@ -77,6 +77,7 @@ function! s:SetupGina()
 	call gina#custom#mapping#nmap('status', 'ca',':quit<cr>:Gina commit --amend<CR>')
     call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-changes-of)')
     call gina#custom#mapping#nmap('log', '<leader><cr>','<Plug>(gina-changes-between)')
+    call gina#custom#mapping#nmap('log', '<leader>w',':set wrap!<cr>')
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('branch', '<leader>n','<Plug>(gina-branch-new)')
