@@ -55,12 +55,6 @@ if [ ! -d $HOME/.pyenv ];then
     pyenv global miniconda3-latest
 fi
 
-echo "==Setting kitty=="
-mkdir -p $HOME/opt
-if [ ! -d $HOME/opt/kitty.app ]; then
-    curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin dest=$HOME/opt
-fi
-
 echo "==Setting neovim=="
 if [ ! -x $HOME/opt/bin/nvim ]; then
     mkdir -p $HOME/opt/bin
@@ -91,3 +85,9 @@ if [ ! -z $gpg_key ]; then
     fi
     git-crypt unlock
 fi
+
+# echo "==Setting kitty=="
+# mkdir -p $HOME/opt
+# if [ ! -d $HOME/opt/kitty.app ]; then
+#     curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin dest=$HOME/opt
+# fi

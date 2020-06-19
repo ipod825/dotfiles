@@ -48,7 +48,7 @@ iv(){
 }
 
 export EDITOR="nvim"
-export TERMINAL="kitty"
+export TERMINAL="xterm"
 export BROWSER='qday'
 export GOPATH=$HOME/opt/go
 export XDG_CONFIG_HOME=$HOME/.config

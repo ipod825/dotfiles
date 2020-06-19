@@ -1,6 +1,7 @@
 from pathlib import Path
 
-c.editor.command = ['kitty', 'nvim', '-f', '{file}']
+# c.editor.command = ['kitty', 'nvim', '-f', '{file}']
+c.editor.command = ['xterm', '-e' 'nvim', '-f', '{file}']
 c.editor.encoding = 'utf-8'
 c.tabs.position = 'top'
 c.tabs.width = '10%'
