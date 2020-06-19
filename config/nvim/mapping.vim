@@ -206,7 +206,8 @@ function! OpenTerm(opencmd, ...)
             startinsert
         else
             exec a:opencmd
-            exec 'term ++close ++curwin '.$SHELL
+            exec 'term ++close ++curwin ++kill=9'.$SHELL
+            silent! normal! i
         endif
     endif
 endfunction
