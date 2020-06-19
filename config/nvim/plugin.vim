@@ -482,6 +482,7 @@ Plug 'git@github.com:ipod825/war.vim' "{{{
      autocmd Filetype fugitive :call war#fire(-1, 1, -1, 0)
      autocmd Filetype gina-status :call war#fire(-1, 1, -1, 1)
      autocmd Filetype gina-commit :call war#fire(-1, 1, -1, 0)
+     autocmd Filetype gina-stash-show :call war#fire(-1, 1, -1, 0)
      autocmd Filetype gina-log :call war#fire(-1, 1, -1, 0)
      autocmd Filetype gina-branch :call war#fire(-1, 1, -1, 0)
      autocmd Filetype gina-changes :call war#fire(1, 1, 0, 0)
