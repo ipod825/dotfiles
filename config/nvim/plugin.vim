@@ -107,7 +107,7 @@ let g:lightline = {
             \            ],
             \   'right': [['lineinfo'],
             \              ['percent'],
-            \              ['gitst'],['asyncrun']]
+            \              ['gitinfo'],['asyncrun']]
             \  },
             \ 'inactive': {
             \   'left': [['filename'],
@@ -117,7 +117,7 @@ let g:lightline = {
             \               ]},
             \ 'component': {
             \         'tagbar': '⚓'.'%{tagbar#currenttag("%s", "", "f")}',
-            \         'gitst': '%{gina#component#repo#preset("fancy")}',
+            \         'gitinfo': '%{GitInfo()}',
             \         'gitbranch': '%{GitBranch()}',
             \         'asyncrun': '%{g:asyncrun_status=="running"?g:asyncrun_status:""}',
             \         'fugitiveobj': '%{FugitiveObj()}'
@@ -141,16 +141,8 @@ function! FugitiveObj()
     return "⎇ ".res[:min([5, ind-1])]
 endfunction
 
-function MyGitStatus() abort
-  let staged = gina#component#status#staged()
-  let unstaged = gina#component#status#unstaged()
-  let conflicted = gina#component#status#conflicted()
-  return printf(
-        \ 's: %s, u: %s, c: %s',
-        \ staged,
-        \ unstaged,
-        \ conflicted,
-        \)
+function GitInfo() abort
+    return "⎇ ".gina#component#repo#branch()
 endfunction
 "}}}
 
