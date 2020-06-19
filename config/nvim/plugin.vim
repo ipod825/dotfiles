@@ -67,7 +67,7 @@ function! s:SetupGina()
 	call gina#custom#mapping#nmap('/.*', '<cr>','<Plug>(gina-edit-tab)')
 	call gina#custom#mapping#nmap('status', '-','<Plug>(gina-index-toggle)', {'nowait': v:true})
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
-	call gina#custom#mapping#nmap('status', 'cc',':Gina commit<CR>')
+	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit --opener=split<CR>')
 endfunction
 "}}}
 
