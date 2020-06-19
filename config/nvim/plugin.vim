@@ -27,7 +27,8 @@ augrou ONE
     autocmd!
     autocmd USER PLUG_END colorscheme one
     autocmd USER PLUG_END call one#highlight("CursorLine", '', '213b40', 'bold')
-    autocmd USER PLUG_END call one#highlight("Visual", '', '213b40', '')
+    autocmd USER PLUG_END call one#highlight("Visual", '', '2e5057', '')
+    autocmd USER PLUG_END call one#highlight("Comment", '7c7d7d', '', '')
 augrou END
 
 Plug 'tpope/vim-scriptease'
