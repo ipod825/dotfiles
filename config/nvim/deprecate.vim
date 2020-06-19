@@ -11,7 +11,7 @@
 "endfunction
 "cnoreabbrev <expr> glog <sid>Glog()
 "cnoreabbrev gg tab Git
-" function! GitBranch()
+" function! GitInfo()
 "     let res = fugitive#head()
 "     if empty(res)
 "         let res = system('git rev-parse HEAD')[:5]

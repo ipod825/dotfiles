@@ -42,6 +42,13 @@ augroup COMMENTARY
 augroup END
 "}}}
 
+Plug 'jreybert/vimagit', {'on_cmd': 'Magit'} "{{{
+augroup MAGIT
+    autocmd!
+    autocmd Filetype magit wincmd T
+augrou END
+"}}}
+
 Plug 'lambdalisue/gina.vim' "{{{
 cnoreabbrev G Gina status -s
 cnoreabbrev gbr Gina branch
@@ -53,18 +60,33 @@ augroup GINA
     autocmd USER PLUG_END call s:SetupGina()
 augroup END
 function! s:SetupGina()
-	call gina#custom#command#option('/\%(status\|branch\|log\|commit\)', '--opener', 'split')
+	call gina#custom#command#option('/\%(status\|branch\|commit\)', '--opener', 'split')
+	call gina#custom#command#option('/\%(log\)', '--opener', 'tabedit')
 	call gina#custom#command#option('/\%(changes\)', '--opener', 'vsplit')
-	call gina#custom#mapping#nmap('/.*', '<cr>','<Plug>(gina-edit-tab)')
+	call gina#custom#mapping#nmap('status', '<cr>','<Plug>(gina-edit-tab)')
 	call gina#custom#mapping#nmap('status', '-','<Plug>(gina-index-toggle)j', {'nowait': v:true})
-	call gina#custom#mapping#vmap('status', '-','<Plug>(gina-index-toggle)j', {'nowait': v:true})
+	call gina#custom#mapping#vmap('status', '-','<Plug>(gina-index-toggle)', {'nowait': v:true})
+	call gina#custom#mapping#nmap('status', '<','<Plug>(gina-index-stage)j', {'nowait': v:true})
+	call gina#custom#mapping#vmap('status', '<','<Plug>(gina-index-stage)', {'nowait': v:true})
+	call gina#custom#mapping#nmap('status', '>','<Plug>(gina-index-unstage)j', {'nowait': v:true})
+	call gina#custom#mapping#vmap('status', '>','<Plug>(gina-index-unstage)', {'nowait': v:true})
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
+	call gina#custom#mapping#nmap('status', 'DD','<Plug>(gina-compare-tab)')
 	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit<CR>')
     call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-changes-of)')
     call gina#custom#mapping#nmap('log', '<leader><cr>','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-tab)')
 endfunction
+ function GitInfo() abort
+     let br = gina#component#repo#branch()
+     let ah = gina#component#traffic#ahead()
+     let bh =  gina#component#traffic#behind()
+     let br = empty(br)?'':"⎇ ".br
+     let ah = ah!=0?'↑'.ah:''
+     let bh = bh!=0?'↓'.bh:''
+     return br.ah.bh
+ endfunction
 "}}}
 
 
@@ -89,21 +111,10 @@ let g:lightline = {
             \ 'component': {
             \         'tagbar': '⚓'.'%{tagbar#currenttag("%s", "", "f")}',
             \         'gitinfo': '%{GitInfo()}',
-            \         'gitbranch': '%{GitBranch()}',
             \         'asyncrun': '%{g:asyncrun_status=="running"?g:asyncrun_status:""}',
             \         'fugitiveobj': '%{FugitiveObj()}'
             \ },
             \ }
-
-function GitInfo() abort
-    let br = gina#component#repo#branch()
-    let ah = gina#component#traffic#ahead()
-    let bh =  gina#component#traffic#behind()
-    let br = empty(br)?'':"⎇ ".br
-    let ah = ah!=0?'↑'.ah:''
-    let bh = bh!=0?'↓'.bh:''
-    return br.ah.bh
-endfunction
 "}}}
 
 Plug 'git@github.com:ipod825/msearch.vim'
