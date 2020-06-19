@@ -59,6 +59,8 @@ augroup END
 
 Plug 'lambdalisue/gina.vim' "{{{
 cnoreabbrev G Gina status -s --opener=split
+cnoreabbrev gps Gina push
+cnoreabbrev gpl Gina pull
 augroup GINA
     autocmd!
     autocmd USER PLUG_END call s:SetupGina()
@@ -207,8 +209,6 @@ augroup ASYNCRUN
     autocmd!
     autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | endif
 augroup END
-cnoreabbrev gps AsyncRun git push
-cnoreabbrev gpl AsyncRun git pull
 "}}}
 Plug 'tpope/vim-endwise'
 
