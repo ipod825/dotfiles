@@ -58,6 +58,9 @@ function! s:SetupGina()
 	call gina#custom#mapping#vmap('status', '-','<Plug>(gina-index-toggle)j', {'nowait': v:true})
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
 	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit --opener=split<CR>')
+    call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-changes-of-vsplit)')
+    call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
+    call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-tab)')
 endfunction
 "}}}
 
@@ -462,7 +465,7 @@ Plug 'git@github.com:ipod825/war.vim' "{{{
      autocmd Filetype gina-commit :call war#fire(-1, 1, -1, 0)
      autocmd Filetype gina-log :call war#fire(-1, 1, -1, 0)
      autocmd Filetype gina-branch :call war#fire(-1, 1, -1, 0)
-     autocmd Filetype gina-changes :call war#fire(1, -1, 0, -1)
+     autocmd Filetype gina-changes :call war#fire(1, 1, 0, 0)
      autocmd Filetype diff :call war#fire(-1, 1, -1, 0)
      autocmd Filetype git :call war#fire(-1, 0.8, -1, 0.1)
      autocmd Filetype esearch :call war#fire(0.8, -1, 0.2, -1)
