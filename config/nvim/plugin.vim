@@ -43,9 +43,9 @@ augroup END
 "}}}
 
 Plug 'lambdalisue/gina.vim' "{{{
-cnoreabbrev G Gina status -s --opener=split
-cnoreabbrev gbr Gina branch --opener=split
-cnoreabbrev glg Gina log --opener=split
+cnoreabbrev G Gina status -s
+cnoreabbrev gbr Gina branch
+cnoreabbrev glg Gina log
 cnoreabbrev gps Gina push
 cnoreabbrev gpl Gina pull
 augroup GINA
@@ -53,12 +53,15 @@ augroup GINA
     autocmd USER PLUG_END call s:SetupGina()
 augroup END
 function! s:SetupGina()
+	call gina#custom#command#option('/\%(status\|branch\|log\|commit\)', '--opener', 'split')
+	call gina#custom#command#option('/\%(changes\)', '--opener', 'vsplit')
 	call gina#custom#mapping#nmap('/.*', '<cr>','<Plug>(gina-edit-tab)')
 	call gina#custom#mapping#nmap('status', '-','<Plug>(gina-index-toggle)j', {'nowait': v:true})
 	call gina#custom#mapping#vmap('status', '-','<Plug>(gina-index-toggle)j', {'nowait': v:true})
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
-	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit --opener=split<CR>')
-    call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-changes-of-vsplit)')
+	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit<CR>')
+    call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-changes-of)')
+    call gina#custom#mapping#nmap('log', '<leader><cr>','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-tab)')
 endfunction
