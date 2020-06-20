@@ -1,3 +1,7 @@
+"Plug 'git@github.com:ipod825/taboo.vim' "{{{
+"let g:taboo_tab_format='%I%m%f❚'
+"let g:taboo_renamed_tab_format='%I%m%l❚'
+""}}}
 " Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
 " cnoreabbrev gv GV --branches
 " augroup GVmapping

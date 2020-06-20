@@ -91,17 +91,18 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('branch', '<leader>t','<Plug>(gina-branch-set-upstream-to)')
 endfunction
 
-function GitInfo() abort
+function! GitInfo() abort
     let br = gina#component#repo#branch()
-    let ah = gina#component#traffic#ahead()
-    let bh =  gina#component#traffic#behind()
     if br=~ '[0-9a-f]\{40\}'
         let br = br[:5]
     endif
     let br = empty(br)?'':"⎇ ".br
-    let ah = ah!=0?'↑'.ah:''
-    let bh = bh!=0?'↓'.bh:''
-    return br.ah.bh
+    return br
+    " let ah = gina#component#traffic#ahead()
+    " let bh =  gina#component#traffic#behind()
+    " let ah = ah!=0?'↑'.ah:''
+    " let bh = bh!=0?'↓'.bh:''
+    " return br.ah.bh
 endfunction
 
 function! s:BranchFilter(k, v)
@@ -175,6 +176,31 @@ let g:lightline = {
             \         'fugitiveobj': '%{FugitiveObj()}'
             \ },
             \ }
+"}}}
+
+Plug g:vim_dir.'bundle/taboverflow.vim' "{{{
+nmap <c-m-h> <Plug>TabMovePrev
+nmap <c-m-l> <Plug>TabMoveNext
+function s:MyTabLabel(n)
+    let buflist = tabpagebuflist(a:n)
+    let winnr = tabpagewinnr(a:n)
+    let bufname = fnamemodify(bufname(buflist[winnr - 1]), ':t')
+    for buf in buflist
+        if getbufvar(buf, '&filetype') == 'netranger'
+            let bufname = '📂'.fnamemodify(bufname(buflist[winnr - 1]), ':t')
+            break
+        endif
+    endfor
+    let res = '%#Visual#'.taboverflow#unicode_num(a:n)
+    if a:n == tabpagenr()
+        let res .= '%#TabLineSel#'
+    else
+        let res .= '%#TabLine#'
+    endif
+    let res .= bufname
+    return res
+endfunction
+let g:TaboverflowLabel = function('s:MyTabLabel')
 "}}}
 
 Plug 'git@github.com:ipod825/msearch.vim'
@@ -535,7 +561,7 @@ augroup WAR
     autocmd!
     autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0)
     autocmd Filetype fugitive :call war#fire(-1, 1, -1, 0)
-    autocmd Filetype gina-status :call war#fire(-1, 1, -1, 1)
+    autocmd Filetype gina-status :call war#fire(-1, 1, -1, 0)
     autocmd Filetype gina-commit :call war#fire(-1, 1, -1, 0)
     autocmd Filetype gina-stash-show :call war#fire(-1, 1, -1, 0)
     autocmd Filetype gina-log :call war#fire(-1, 1, -1, 0)
@@ -607,18 +633,6 @@ endfunction
 let g:Bookmark_pos_context_fn = function('s:Bookmark_pos_context_fn')
 " }}}
 
-Plug 'git@github.com:ipod825/taboo.vim' "{{{
-let g:taboo_tab_format='%I%m%f❚'
-let g:taboo_renamed_tab_format='%I%m%l❚'
-fu! TabooCustomExpand(name)
-    let out = a:name
-    let i = 20
-    if len(out)>i
-        let out = a:name[:i-2].".."
-    endif
-    return out
-endfu
-"}}}
 
 Plug 'machakann/vim-sandwich'
 Plug 'justinmk/vim-sneak' "{{{
