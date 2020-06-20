@@ -559,7 +559,7 @@ endfunction
 Plug 'git@github.com:ipod825/war.vim' "{{{
 augroup WAR
     autocmd!
-    autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0)
+    autocmd Filetype qf :call war#fire(-1, 0.7, -1, 0.3)
     autocmd Filetype fugitive :call war#fire(-1, 1, -1, 0)
     autocmd Filetype gina-status :call war#fire(-1, 1, -1, 0)
     autocmd Filetype gina-commit :call war#fire(-1, 1, -1, 0)
@@ -615,6 +615,7 @@ Plug 'mh21/errormarker.vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim' "{{{
 autocmd VimEnter * command! -bang -nargs=? Files call fzf#vim#files(<q-args>, {'options': '--no-preview'}, <bang>0)
+autocmd VimEnter * command! -bang -nargs=? Buffers call fzf#vim#buffers(<q-args>, {'options': '--no-preview'}, <bang>0)
 let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.95 } }
 let $FZF_DEFAULT_COMMAND = 'find .'
 let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'ctrl-v': 'vsplit' }
