@@ -67,17 +67,21 @@ function! s:SetupGina()
 	call gina#custom#mapping#nmap('status', '<cr>','<Plug>(gina-edit-tab)')
 	call gina#custom#mapping#nmap('status', '-','<Plug>(gina-index-toggle)j', {'nowait': v:true})
 	call gina#custom#mapping#vmap('status', '-','<Plug>(gina-index-toggle)', {'nowait': v:true})
-	call gina#custom#mapping#nmap('status', 'H','<Plug>(gina-index-stage)j', {'nowait': v:true})
-	call gina#custom#mapping#vmap('status', 'H','<Plug>(gina-index-stage)', {'nowait': v:true})
-	call gina#custom#mapping#nmap('status', 'L','<Plug>(gina-index-unstage)j', {'nowait': v:true})
-	call gina#custom#mapping#vmap('status', 'L','<Plug>(gina-index-unstage)', {'nowait': v:true})
+	call gina#custom#mapping#nmap('status', 'X','<Plug>(gina-index-discard)')
+	call gina#custom#mapping#vmap('status', 'X','<Plug>(gina-index-discard)')
+	call gina#custom#mapping#nmap('status', 'H','<Plug>(gina-index-stage)j')
+	call gina#custom#mapping#vmap('status', 'H','<Plug>(gina-index-stage)')
+	call gina#custom#mapping#nmap('status', 'L','<Plug>(gina-index-unstage)j')
+	call gina#custom#mapping#vmap('status', 'L','<Plug>(gina-index-unstage)')
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
 	call gina#custom#mapping#nmap('status', 'DD','<Plug>(gina-compare-vsplit)')
 	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit<CR>')
-	call gina#custom#mapping#nmap('status', 'ca',':quit<cr>:Gina commit --amend<CR>')
+	call gina#custom#mapping#nmap('status', 'ca',':quit<cr>:Gina commit --amend --allow-empty<CR>')
     call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-changes-of)')
     call gina#custom#mapping#nmap('log', '<leader><cr>','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('log', '<leader>w',':set wrap!<cr>')
+    call gina#custom#mapping#nmap('log', 'cc',':call GinaLogCheckout()<cr>')
+    call gina#custom#mapping#nmap('log', 'R',':call GinaLogRebase()<cr>')
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('branch', 'o','<Plug>(gina-branch-new)')
@@ -86,18 +90,63 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('branch', 'cw','<Plug>(gina-branch-move)')
     call gina#custom#mapping#nmap('branch', '<leader>t','<Plug>(gina-branch-set-upstream-to)')
 endfunction
- function GitInfo() abort
-     let br = gina#component#repo#branch()
-     let ah = gina#component#traffic#ahead()
-     let bh =  gina#component#traffic#behind()
-     if br=~ '[0-9a-f]\{40\}'
-         let br = br[:5]
-     endif
-     let br = empty(br)?'':"⎇ ".br
-     let ah = ah!=0?'↑'.ah:''
-     let bh = bh!=0?'↓'.bh:''
-     return br.ah.bh
- endfunction
+
+function GitInfo() abort
+    let br = gina#component#repo#branch()
+    let ah = gina#component#traffic#ahead()
+    let bh =  gina#component#traffic#behind()
+    if br=~ '[0-9a-f]\{40\}'
+        let br = br[:5]
+    endif
+    let br = empty(br)?'':"⎇ ".br
+    let ah = ah!=0?'↑'.ah:''
+    let bh = bh!=0?'↓'.bh:''
+    return br.ah.bh
+endfunction
+
+function! s:BranchFilter(k, v)
+    if a:v=='HEAD'
+        return
+    elseif a:v=~ 'HEAD ->'
+        return a:v[8:]
+    else
+        return a:v
+    endif
+endfunction
+
+function! s:GinaLogCandidate()
+    let l:cand = [getline('.')[5:11]]
+    let l:branches = matchstr(getline('.'), '([^)]*)')
+    if !empty(l:branches)
+        let l:branches = l:branches[1:len(l:branches)-2]
+        call extend(l:cand, split(l:branches, ','))
+        let l:cand = map(l:cand, function('<sid>BranchFilter'))
+    endif
+    return l:cand
+endfunction
+
+function! s:GinaLogCheckoutPost(branch)
+    exec '!git checkout '.a:branch
+    Gina log --branches --opener=edit
+endfunction
+
+function! GinaLogCheckout()
+    let l:cand = s:GinaLogCandidate()
+    if len(l:cand)>1
+        call fzf#run(fzf#wrap({
+                \ 'source': sort(l:cand),
+                \ 'sink': function('s:GinaLogCheckoutPost'),
+            \}))
+    else
+        call s:GinaLogCheckoutPost(l:cand[0])
+    endif
+endfunction
+
+function! GinaLogRebase()
+    let l:cand = s:GinaLogCandidate()[0]
+    echom l:cand
+    exec 'Gina!! rebase -i '.l:cand
+endfunction
 "}}}
 
 
@@ -482,75 +531,22 @@ endfunction
 
 
 Plug 'git@github.com:ipod825/war.vim' "{{{
- augroup WAR
-     autocmd!
-     autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0)
-     autocmd Filetype fugitive :call war#fire(-1, 1, -1, 0)
-     autocmd Filetype gina-status :call war#fire(-1, 1, -1, 1)
-     autocmd Filetype gina-commit :call war#fire(-1, 1, -1, 0)
-     autocmd Filetype gina-stash-show :call war#fire(-1, 1, -1, 0)
-     autocmd Filetype gina-log :call war#fire(-1, 1, -1, 0)
-     autocmd Filetype gina-branch :call war#fire(-1, 1, -1, 0)
-     autocmd Filetype gina-changes :call war#fire(1, 1, 0, 0)
-     autocmd Filetype git :call war#fire(-1, 0.8, -1, 0.1)
-     autocmd Filetype esearch :call war#fire(0.8, -1, 0.2, -1)
-     autocmd Filetype bookmark :call war#fire(-1, 1, -1, -1)
- augroup END
+augroup WAR
+    autocmd!
+    autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0)
+    autocmd Filetype fugitive :call war#fire(-1, 1, -1, 0)
+    autocmd Filetype gina-status :call war#fire(-1, 1, -1, 1)
+    autocmd Filetype gina-commit :call war#fire(-1, 1, -1, 0)
+    autocmd Filetype gina-stash-show :call war#fire(-1, 1, -1, 0)
+    autocmd Filetype gina-log :call war#fire(-1, 1, -1, 0)
+    autocmd Filetype gina-branch :call war#fire(-1, 1, -1, 0)
+    autocmd Filetype gina-changes :call war#fire(1, 1, 0, 0)
+    autocmd Filetype git :call war#fire(-1, 0.8, -1, 0.1)
+    autocmd Filetype esearch :call war#fire(0.8, -1, 0.2, -1)
+    autocmd Filetype bookmark :call war#fire(-1, 1, -1, -1)
+augroup END
 " }}}
 Plug 'AndrewRadev/linediff.vim'
-
-Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
-cnoreabbrev gv GV --branches
-augroup GVmapping
-    autocmd FileType GV nmap <buffer> r :quit<cr>:gv<cr>
-    autocmd FileType GV call s:CustomizeGV()
-augroup END
-
-function! s:CustomizeGV()
-    nnoremap <buffer> cc :call <sid>GVCheckout()<cr>
-    nnoremap <buffer> dd :call <sid>GVDiff()<cr>
-endfunction
-
-function! s:BranchFilter(k, v)
-    if a:v=='HEAD'
-        return
-    elseif a:v=~ 'HEAD ->'
-        return a:v[8:]
-    else
-        return a:v
-    endif
-endfunction
-
-function! s:GVCheckout()
-    let l:cand = [gv#sha()]
-    let l:branches = matchstr(getline('.'), '([^)]*) ')
-    if !empty(l:branches)
-        let l:branches = l:branches[1:len(l:branches)-3]
-        call extend(l:cand, split(l:branches, ','))
-        let l:cand = map(l:cand, function('<sid>BranchFilter'))
-    endif
-    if len(l:cand)>1
-        call fzf#run(fzf#wrap({
-                \ 'source': sort(l:cand),
-                \ 'sink': 'AsyncRun git checkout',
-            \}))
-    else
-        exec 'AsyncRun git checkout '.l:cand[0]
-    endif
-endfunction
-
-function! s:GVDiff()
-    " exec 'Git difftool -y '.gv#sha().' HEAD'
-    let l:sha = gv#sha()
-    vnew
-    set filetype=git
-    set buftype=nowrite
-    exec 'Gread! diff '.l:sha.' '.system('git rev-parse HEAD')
-    setlocal nomodifiable
-    call fugitive#MapCfile()
-    call fugitive#MapJumps()
-endfunction
-" }}}
 
 Plug 'kana/vim-textobj-user'
 Plug 'Julian/vim-textobj-variable-segment'

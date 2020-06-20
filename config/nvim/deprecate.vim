@@ -1,3 +1,45 @@
+" Plug 'junegunn/gv.vim', {'on_cmd': 'GV'} "{{{
+" cnoreabbrev gv GV --branches
+" augroup GVmapping
+"     autocmd FileType GV nmap <buffer> r :quit<cr>:gv<cr>
+"     autocmd FileType GV call s:CustomizeGV()
+" augroup END
+
+" function! s:CustomizeGV()
+"     nnoremap <buffer> cc :call <sid>GVCheckout()<cr>
+"     nnoremap <buffer> dd :call <sid>GVDiff()<cr>
+" endfunction
+
+" function! s:GVCheckout()
+"     let l:cand = [gv#sha()]
+"     let l:branches = matchstr(getline('.'), '([^)]*) ')
+"     if !empty(l:branches)
+"         let l:branches = l:branches[1:len(l:branches)-3]
+"         call extend(l:cand, split(l:branches, ','))
+"         let l:cand = map(l:cand, function('<sid>BranchFilter'))
+"     endif
+"     if len(l:cand)>1
+"         call fzf#run(fzf#wrap({
+"                 \ 'source': sort(l:cand),
+"                 \ 'sink': 'AsyncRun git checkout',
+"             \}))
+"     else
+"         exec 'AsyncRun git checkout '.l:cand[0]
+"     endif
+" endfunction
+
+" function! s:GVDiff()
+"     " exec 'Git difftool -y '.gv#sha().' HEAD'
+"     let l:sha = gv#sha()
+"     vnew
+"     set filetype=git
+"     set buftype=nowrite
+"     exec 'Gread! diff '.l:sha.' '.system('git rev-parse HEAD')
+"     setlocal nomodifiable
+"     call fugitive#MapCfile()
+"     call fugitive#MapJumps()
+" endfunction
+" " }}}
 "Plug 'tpope/vim-fugitive', {'on_cmd': ['Gstatus', 'Gdiff'], 'augroup': 'fugitive'} "{{{
 "let g:fugitive_auto_close = get(g:, 'fugitive_auto_close', v:false)
 "augroup FUGITIVE
