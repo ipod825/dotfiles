@@ -80,9 +80,10 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('log', '<leader>w',':set wrap!<cr>')
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-tab)')
-    call gina#custom#mapping#nmap('branch', '<leader>n','<Plug>(gina-branch-new)')
-    call gina#custom#mapping#nmap('branch', '<leader>d','<Plug>(gina-branch-delete-force)')
-    call gina#custom#mapping#nmap('branch', '<leader>r','<Plug>(gina-branch-move)')
+    call gina#custom#mapping#nmap('branch', 'o','<Plug>(gina-branch-new)')
+    call gina#custom#mapping#nmap('branch', 'dd','<Plug>(gina-branch-delete)')
+    call gina#custom#mapping#nmap('branch', 'DD','<Plug>(gina-branch-delete-force)')
+    call gina#custom#mapping#nmap('branch', 'cw','<Plug>(gina-branch-move)')
     call gina#custom#mapping#nmap('branch', '<leader>t','<Plug>(gina-branch-set-upstream-to)')
 endfunction
  function GitInfo() abort
@@ -483,7 +484,7 @@ endfunction
 Plug 'git@github.com:ipod825/war.vim' "{{{
  augroup WAR
      autocmd!
-     autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0.2)
+     autocmd Filetype qf :call war#fire(-1, 0.8, -1, 0)
      autocmd Filetype fugitive :call war#fire(-1, 1, -1, 0)
      autocmd Filetype gina-status :call war#fire(-1, 1, -1, 1)
      autocmd Filetype gina-commit :call war#fire(-1, 1, -1, 0)
