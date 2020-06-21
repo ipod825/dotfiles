@@ -675,7 +675,7 @@ let g:localvimrc_ask = 0
 Plug 'git@github.com:ipod825/vim-tabdrop'
 Plug 'rbtnn/vim-vimscript_lasterror', {'on_cmd': 'VimscriptLastError'}
 Plug 'Yggdroot/indentLine' "{{{
-let g:indentLine_concealcursor='nvic'
+let g:indentLine_concealcursor='nvc'
 "}}}
 Plug 'andymass/vim-matchup'
 Plug 'AndrewRadev/linediff.vim'
