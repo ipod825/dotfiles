@@ -178,7 +178,7 @@ let g:lightline = {
             \ }
 "}}}
 
-Plug g:vim_dir.'bundle/taboverflow.vim' "{{{
+Plug 'ipod825/taboverflow.vim' "{{{
 nmap <c-m-h> <Plug>TabMovePrev
 nmap <c-m-l> <Plug>TabMoveNext
 function s:MyTabLabel(n)
