@@ -49,6 +49,8 @@ augroup MAGIT
     autocmd Filetype magit wincmd T
 augrou END
 "}}}
+Plug 'rhysd/git-messenger.vim' "{{{
+"}}}
 
 Plug 'lambdalisue/gina.vim' "{{{
 cnoreabbrev G Gina status -s
@@ -181,26 +183,6 @@ let g:lightline = {
 Plug 'ipod825/taboverflow.vim' "{{{
 nmap <c-m-h> <Plug>TabMovePrev
 nmap <c-m-l> <Plug>TabMoveNext
-function s:MyTabLabel(n)
-    let buflist = tabpagebuflist(a:n)
-    let winnr = tabpagewinnr(a:n)
-    let bufname = fnamemodify(bufname(buflist[winnr - 1]), ':t')
-    for buf in buflist
-        if getbufvar(buf, '&filetype') == 'netranger'
-            let bufname = '📂'.fnamemodify(bufname(buflist[winnr - 1]), ':t')
-            break
-        endif
-    endfor
-    let res = '%#Visual#'.taboverflow#unicode_num(a:n)
-    if a:n == tabpagenr()
-        let res .= '%#TabLineSel#'
-    else
-        let res .= '%#TabLine#'
-    endif
-    let res .= bufname
-    return res
-endfunction
-let g:TaboverflowLabel = function('s:MyTabLabel')
 "}}}
 
 Plug 'git@github.com:ipod825/msearch.vim'
@@ -683,7 +665,7 @@ let cmdline_app['zsh'] = 'zsh'
 let g:cmdline_vsplit = 1      " Split the window vertically
 "}}}
 
-Plug 'wellle/context.vim', {'on_cmd': ['ContextPeek']} "{{{
+Plug 'wellle/context.vim', {'on_cmd': 'ContextPeek'} "{{{
 let g:context_enabled=0
 nnoremap <m-i> :ContextPeek<cr>
 "}}}
