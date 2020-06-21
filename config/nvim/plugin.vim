@@ -260,9 +260,6 @@ augroup ASYNCRUN
 augroup END
 "}}}
 Plug 'tpope/vim-endwise'
-
-Plug 'tpope/vim-surround'
-
 Plug 'mg979/vim-visual-multi' "{{{
 let g:VM_default_mappings = 0
 let g:VM_reselect_first = 1
@@ -417,7 +414,6 @@ let g:UltiSnipsEditSplit = 'vertical'
 let g:UltiSnipsSnippetDirectories=[g:vim_dir.'UltiSnips']
 "}}}
 
-Plug 'honza/vim-snippets'
 Plug 'rhysd/vim-grammarous', {'on': 'GrammarousCheck'}
 
 packadd termdebug "{{{
@@ -554,8 +550,6 @@ endfunction
 
 "}}}
 
-
-
 Plug 'git@github.com:ipod825/war.vim' "{{{
 augroup WAR
     autocmd!
@@ -572,7 +566,6 @@ augroup WAR
     autocmd Filetype bookmark :call war#fire(-1, 1, -1, -1)
 augroup END
 " }}}
-Plug 'AndrewRadev/linediff.vim'
 
 Plug 'kana/vim-textobj-user'
 Plug 'Julian/vim-textobj-variable-segment'
@@ -608,9 +601,7 @@ let g:expand_region_text_objects = {
             \ }
 "}}}
 
-
 Plug 'tpope/vim-abolish'
-Plug 'mh21/errormarker.vim'
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim' "{{{
@@ -624,8 +615,8 @@ let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'c
 Plug 'git@github.com:ipod825/vim-bookmark' "{{{
 nnoremap m :BookmarkAddPos<cr>
 nnoremap <a-m> :BookmarkDelPos<cr>
-cnoreabbrev bma BookmarkAdd
-cnoreabbrev bmd BookmarkDel
+cnoreabbrev bma BookmarkAdd netranger
+cnoreabbrev bmd BookmarkDel netranger
 nnoremap ' :BookmarkGo<cr>
 let g:bookmark_opencmd='Tabdrop'
 function! s:Bookmark_pos_context_fn()
@@ -633,7 +624,6 @@ function! s:Bookmark_pos_context_fn()
 endfunction
 let g:Bookmark_pos_context_fn = function('s:Bookmark_pos_context_fn')
 " }}}
-
 
 Plug 'machakann/vim-sandwich'
 Plug 'justinmk/vim-sneak' "{{{
@@ -690,7 +680,7 @@ let cmdline_app['matlab'] = 'matlab -nojvm -nodisplay -nosplash'
 let cmdline_app['python'] = 'ipython'
 let cmdline_app['sh'] = 'zsh'
 let cmdline_app['zsh'] = 'zsh'
-let g:cmdline_vsplit      = 1      " Split the window vertically
+let g:cmdline_vsplit = 1      " Split the window vertically
 "}}}
 
 Plug 'wellle/context.vim', {'on_cmd': ['ContextPeek']} "{{{
@@ -699,11 +689,12 @@ nnoremap <m-i> :ContextPeek<cr>
 "}}}
 Plug 'embear/vim-localvimrc' "{{{
 let g:localvimrc_ask = 0
-Plug 'git@github.com:ipod825/vim-tabdrop' "{{{
 "}}}
-
-Plug 'rbtnn/vim-vimscript_lasterror'
-Plug 'Yggdroot/indentLine'
+Plug 'git@github.com:ipod825/vim-tabdrop'
+Plug 'rbtnn/vim-vimscript_lasterror', {'on_cmd': 'VimscriptLastError'}
+Plug 'Yggdroot/indentLine' "{{{
+let g:indentLine_concealcursor='nvic'
+"}}}
 Plug 'andymass/vim-matchup'
 Plug 'AndrewRadev/linediff.vim'
 Plug 'zhimsel/vim-stay' " vim-stay {{{

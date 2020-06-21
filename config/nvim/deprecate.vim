@@ -1,3 +1,5 @@
+" Plug 'tpope/vim-surround'
+" Plug 'honza/vim-snippets'
 "Plug 'git@github.com:ipod825/taboo.vim' "{{{
 "let g:taboo_tab_format='%I%m%f❚'
 "let g:taboo_renamed_tab_format='%I%m%l❚'

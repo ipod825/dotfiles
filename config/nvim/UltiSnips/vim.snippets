@@ -1,11 +1,57 @@
-snippet fori "fori"
+snippet for "fori"
 for ${1:i} in range(${2:last})
 	${0}
 endfor
 endsnippet
 
-snippet while "while"
+snippet fori "for range"
+for ${1:i} in range(${2:last})
+	${0}
+endfor
+endsnippet
+
+snippet while
 while ${1:v:true}
 	${0}
 endwhile
+endsnippet
+
+snippet fu "function"
+function! ${1:fname}(${2:arg})
+	${0}
+endfunction
+endsnippet
+
+snippet Plug
+Plug '${1}' "{{{
+"}}}
+endsnippet
+
+snippet if
+if ${1:cond}
+	${0}
+endif
+endsnippet
+
+snippet ifelse
+if ${1:cond}
+	${2}
+else
+	${0}
+endif
+endsnippet
+
+snippet aug "augroup"
+augroup ${1:GROUP}
+	autocmd!
+	${0}
+augroup END
+endsnippet
+
+snippet aut "autocmd"
+autocmd ${1:BufEnter} ${2:pattern} ${3:command}
+endsnippet
+
+snippet get
+get(${1:g}:, '${2:name}', ${3:default})
 endsnippet
