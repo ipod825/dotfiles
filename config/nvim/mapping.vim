@@ -201,12 +201,11 @@ function! OpenTerm(opencmd, ...)
         if has('nvim')
             exec a:opencmd
             term
-            startinsert
         else
             exec a:opencmd
             exec 'term ++close ++curwin ++kill=9'.$SHELL
-            silent! normal! i
         endif
+        silent! normal! i
     endif
 endfunction
 
