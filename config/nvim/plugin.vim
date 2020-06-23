@@ -55,7 +55,7 @@ Plug 'rhysd/git-messenger.vim' "{{{
 Plug 'lambdalisue/gina.vim' "{{{
 cnoreabbrev G Gina status -s
 cnoreabbrev gbr Gina branch
-cnoreabbrev glg Gina log --branches
+cnoreabbrev glg Gina log --branches --graph
 cnoreabbrev gps Gina push
 cnoreabbrev gpl Gina pull
 augroup GINA
@@ -78,21 +78,27 @@ function! s:SetupGina()
 	call gina#custom#mapping#nmap('status', 'L','<Plug>(gina-index-unstage)j')
 	call gina#custom#mapping#vmap('status', 'L','<Plug>(gina-index-unstage)')
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
-	call gina#custom#mapping#nmap('status', 'DD','<Plug>(gina-compare-vsplit)')
+	call gina#custom#mapping#nmap('status', 'sd','<Plug>(gina-compare-vsplit)')
 	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit<CR>')
 	call gina#custom#mapping#nmap('status', 'ca',':quit<cr>:Gina commit --amend --allow-empty<CR>')
     call gina#custom#mapping#nmap('log', 'dd','<Plug>(gina-changes-of)')
-    call gina#custom#mapping#nmap('log', '<leader><cr>','<Plug>(gina-changes-between)')
+    call gina#custom#mapping#nmap('log', 'DD','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('log', '<leader>w',':set wrap!<cr>')
     call gina#custom#mapping#nmap('log', 'cc',':call GinaLogCheckout()<cr>')
+    call gina#custom#mapping#nmap('log', 'rs',':call GinaLogReset(''--soft'')<cr>')
+    call gina#custom#mapping#nmap('log', 'rm',':call GinaLogReset(''--mixed'')<cr>')
+    call gina#custom#mapping#nmap('log', 'rh',':call GinaLogReset(''--hard'')<cr>')
     call gina#custom#mapping#nmap('log', 'R',':call GinaLogRebase()<cr>')
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-vsplit)')
     call gina#custom#mapping#nmap('branch', 'o','<Plug>(gina-branch-new)')
-    call gina#custom#mapping#nmap('branch', 'dd','<Plug>(gina-branch-delete)')
-    call gina#custom#mapping#nmap('branch', 'DD','<Plug>(gina-branch-delete-force)')
-    call gina#custom#mapping#nmap('branch', 'cw','<Plug>(gina-branch-move)')
+    call gina#custom#mapping#nmap('branch', '<leader>d','<Plug>(gina-branch-delete)')
+    call gina#custom#mapping#nmap('branch', '<leader>D','<Plug>(gina-branch-delete-force)')
+    call gina#custom#mapping#nmap('branch', '<leader>r','<Plug>(gina-branch-move)')
     call gina#custom#mapping#nmap('branch', '<leader>t','<Plug>(gina-branch-set-upstream-to)')
+    call gina#custom#mapping#nmap('branch', 'dd','<Plug>(gina-changes-of)')
+    call gina#custom#mapping#nmap('branch', 'DD','<Plug>(gina-changes-between)')
+    call gina#custom#mapping#nmap('branch', 'R','<Plug>(gina-commit-rebase)')
 endfunction
 
 function! GitInfo() abort
@@ -120,7 +126,7 @@ function! s:BranchFilter(k, v)
 endfunction
 
 function! s:GinaLogCandidate()
-    let l:cand = [getline('.')[5:11]]
+    let l:cand = [matchstr(getline('.'), '[0-9a-f]\{6,9\}')]
     let l:branches = matchstr(getline('.'), '([^)]*)')
     if !empty(l:branches)
         let l:branches = l:branches[1:len(l:branches)-2]
@@ -137,6 +143,7 @@ endfunction
 
 function! GinaLogCheckout()
     let l:cand = s:GinaLogCandidate()
+    echom l:cand
     if len(l:cand)>1
         call fzf#run(fzf#wrap({
                 \ 'source': sort(l:cand),
@@ -151,6 +158,11 @@ function! GinaLogRebase()
     let l:cand = s:GinaLogCandidate()[0]
     echom l:cand
     exec 'Gina!! rebase -i '.l:cand
+endfunction
+
+function! GinaLogReset(opt)
+    let l:cand = s:GinaLogCandidate()
+    exec 'Gina reset 'a:opt.' '.l:cand[0]
 endfunction
 "}}}
 
