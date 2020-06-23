@@ -548,6 +548,7 @@ augroup WAR
     autocmd Filetype git :call war#fire(-1, 0.8, -1, 0.1)
     autocmd Filetype esearch :call war#fire(0.8, -1, 0.2, -1)
     autocmd Filetype bookmark :call war#fire(-1, 1, -1, -1)
+    autocmd Filetype bookmark :call war#enter(-1)
 augroup END
 " }}}
 
