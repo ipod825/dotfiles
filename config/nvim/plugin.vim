@@ -708,9 +708,9 @@ function! NETRBookMarkGo()
 endfunction
 
 function! NETRInit()
-    call netranger#mapvimfn('yp', "DuplicateNode")
-    call netranger#mapvimfn('m', "NETRBookMark")
-    call netranger#mapvimfn("\'", "NETRBookMarkGo")
+    call netranger#api#mapvimfn('yp', "DuplicateNode")
+    call netranger#api#mapvimfn('m', "NETRBookMark")
+    call netranger#api#mapvimfn("\'", "NETRBookMarkGo")
 endfunction
 
 let g:NETRCustomNopreview={->winnr()==2 && winnr('$')==2}
