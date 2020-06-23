@@ -124,12 +124,13 @@ augroup END
 " }}}
 
 " functions {{{
+function! SetColorScheme(...)
+    colorscheme one
+endfunction
 function! VimRcWrite()
     setlocal foldmethod=marker
     setlocal commentstring=\"%s
-    call lightline#update()
-    call lightline#highlight()
-    call msearch#define_highlight(v:true)
+    call timer_start(10, function('SetColorScheme'))
 endfunction
 
 function! MyFoldText()

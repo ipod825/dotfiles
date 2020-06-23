@@ -22,14 +22,15 @@ augroup MUNDO
 augroup END
 ""}}}
 
-Plug 'rakr/vim-one'
+Plug 'rakr/vim-one' "{{{
 augrou ONE
     autocmd!
+    autocmd ColorScheme * call one#highlight("CursorLine", '', '2e5057', 'bold')
+    autocmd ColorScheme * call one#highlight("Visual", '', '2e5057', '')
+    autocmd ColorScheme * call one#highlight("Comment", '7c7d7d', '', '')
     autocmd USER PLUG_END colorscheme one
-    autocmd USER PLUG_END call one#highlight("CursorLine", '', '2e5057', 'bold')
-    autocmd USER PLUG_END call one#highlight("Visual", '', '2e5057', '')
-    autocmd USER PLUG_END call one#highlight("Comment", '7c7d7d', '', '')
 augrou END
+"}}}
 
 Plug 'tpope/vim-scriptease'
 Plug 'vim-scripts/gtags.vim'
@@ -662,7 +663,7 @@ let g:esearch.win_map = [
             \]
 augroup ESEARCH
     autocmd!
-    autocmd USER PLUG_END hi esearchMatch cterm=bold ctermfg=145 ctermbg=16 gui=bold guifg=#000000 guibg=#5a93f2
+    autocmd ColorScheme * highlight! link esearchMatch Cursor
 augroup END
 "}}}
 
