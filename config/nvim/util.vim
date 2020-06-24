@@ -157,19 +157,3 @@ function! RemoveRedundantWhiteSpace()     "{{{
 endfunction
 "}}}
 call AddUtilComand('RemoveRedundantWhiteSpace')
-
-
-nnoremap <leader>oi :call RecallInserts2()<CR>
-function! RecallInserts2()
-	if !exists('b:inserts')
-		return
-	endif
-	:call fzf#run({'source': uniq(keys(b:inserts)),'sink':function('PInsert'),'options': '-m'})
-endfunction
-
-function! RecallInserts()
-	if !exists('b:inserts')
-		return
-	endif
-	:call fzf#run({'source': uniq(keys(b:inserts)),'sink':function('PInsert2'),'options': '-m'})
-endfunction
