@@ -132,6 +132,7 @@ function! VimRcWrite()
     setlocal commentstring=\"%s
     call timer_start(10, function('SetColorScheme'))
 endfunction
+call SetColorScheme()
 
 function! MyFoldText()
     let nucolwidth = &fdc + &number*&numberwidth

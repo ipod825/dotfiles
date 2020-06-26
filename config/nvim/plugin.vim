@@ -28,7 +28,6 @@ augrou ONE
     autocmd ColorScheme * call one#highlight("CursorLine", '', '2e5057', 'bold')
     autocmd ColorScheme * call one#highlight("Visual", '', '2e5057', '')
     autocmd ColorScheme * call one#highlight("Comment", '7c7d7d', '', '')
-    autocmd USER PLUG_END colorscheme one
 augrou END
 "}}}
 
@@ -703,6 +702,8 @@ Plug 'git@github.com:ipod825/vim-tabdrop'
 Plug 'rbtnn/vim-vimscript_lasterror', {'on_cmd': 'VimscriptLastError'}
 Plug 'Yggdroot/indentLine' "{{{
 let g:indentLine_concealcursor='nvc'
+"}}}
+Plug 'mipmip/vim-scimark' "{{{
 "}}}
 Plug 'andymass/vim-matchup'
 Plug 'AndrewRadev/linediff.vim'
