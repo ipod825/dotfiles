@@ -39,3 +39,7 @@ pgrep PROG | xargs --no-run-if-empty ps fp
 cd `git rev-parse --show-toplevel`
 # netstat
 netstat -anp | grep port
+# git make patch
+git format-patch -1 <sha>
+# git apply patch
+git am < <patch>
