@@ -2,6 +2,13 @@ snippet ing
 #include "`!v ClientRoot()`/${0}"
 endsnippet
 
+snippet main
+int main (int argc, char** argv){
+	${0}
+	return 0;
+}
+endsnippet
+
 snippet todo "// TODO"
 // TODO(${1:`echo $USER`}): ${0:todo}
 endsnippet
