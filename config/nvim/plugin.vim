@@ -193,12 +193,15 @@ let g:lightline = {
             \         'fugitiveobj': '%{FugitiveObj()}'
             \ },
             \ }
+let g:lightline.tab = {
+		    \ 'active': [ 'modified', 'filename' ],
+		    \ 'inactive': [ 'modified', 'filename' ] }
 "}}}
 
-Plug 'ipod825/taboverflow.vim' "{{{
-nmap <c-m-h> <Plug>TabMovePrev
-nmap <c-m-l> <Plug>TabMoveNext
-"}}}
+"Plug 'ipod825/taboverflow.vim' "{{{
+"nmap <c-m-h> <Plug>TabMovePrev
+"nmap <c-m-l> <Plug>TabMoveNext
+""}}}
 
 Plug 'git@github.com:ipod825/msearch.vim'
 nmap 8 <Plug>MSToggleAddCword
@@ -547,6 +550,9 @@ endfunction
 
 "}}}
 
+Plug 'chrisbra/Recover.vim' "{{{
+"}}}
+
 Plug 'git@github.com:ipod825/war.vim' "{{{
 augroup WAR
     autocmd!
@@ -560,7 +566,7 @@ augroup WAR
     autocmd Filetype gina-changes :call war#fire(1, 1, 0, 0)
     autocmd Filetype git :call war#fire(-1, 0.8, -1, 0.1)
     autocmd Filetype esearch :call war#fire(0.8, -1, 0.2, -1)
-    autocmd Filetype bookmark :call war#fire(-1, 1, -1, -1)
+    autocmd Filetype bookmark :call war#fire(-1, 1, 0.2, -1)
     autocmd Filetype bookmark :call war#enter(-1)
 augroup END
 " }}}
@@ -615,12 +621,17 @@ nnoremap m :BookmarkAddPos<cr>
 nnoremap <a-m> :BookmarkDelPos<cr>
 cnoreabbrev bma BookmarkAdd netranger
 cnoreabbrev bmd BookmarkDel netranger
+cnoreabbrev bmg BookmarkGo netranger
 nnoremap ' :BookmarkGo<cr>
 let g:bookmark_opencmd='Tabdrop'
 function! s:Bookmark_pos_context_fn()
     return [tagbar#currenttag("%s", "", "f"), getline('.')]
 endfunction
 let g:Bookmark_pos_context_fn = function('s:Bookmark_pos_context_fn')
+augroup BOOKMARK
+    autocmd!
+    autocmd Filetype bookmark nmap <buffer> pp :call bookmark#preview('vsplit')<cr>
+augroup END
 " }}}
 
 Plug 'machakann/vim-sandwich'

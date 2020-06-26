@@ -126,7 +126,6 @@ call AddUtilComand('ClearSign')
 function! s:OpenRelatedFile() "{{{
     let name=expand('%:t:r')
     exec "Files " . FindRootDirectory()
-    call feedkeys("i")
     call feedkeys(name)
 endfunction
 "}}}
