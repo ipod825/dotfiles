@@ -57,6 +57,8 @@ tnoremap <c-j> <down>
 " Tab switching {{{
 nnoremap <c-h> gT
 nnoremap <c-l> gt
+nnoremap <c-m-h> :tabmove -1<cr>
+nnoremap <c-m-l> :tabmove +1<cr>
 tnoremap <c-h> <c-\><c-n>gT
 tnoremap <c-l> <c-\><c-n>gt
 nnoremap <c-m-j> <c-\><c-n>:call MoveToPrevTab()<cr>
