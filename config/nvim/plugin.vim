@@ -719,10 +719,10 @@ let g:NETRGuiColors = {'dir': '#00afff', 'footer': '#00af5f', 'exe': '#00af5f'}
 let g:NETRDefaultMapSkip = ["<cr>"]
 let g:NETRRifleDisplayError = v:false
 function! DuplicateNode()
-    let path = netranger#cur_node_path()
+    let path = netranger#api#cur_node_path()
     let dir = fnamemodify(path, ':p:h').'/'
     let newname = 'DUP'.fnamemodify(path, ':p:t')
-    call netranger#cp(path, dir.newname)
+    call netranger#api#cp(path, dir.newname)
 endfunction
 function! NETRBookMark()
     BookmarkAdd netranger
