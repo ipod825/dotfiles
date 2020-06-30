@@ -405,12 +405,13 @@ let g:rooter_manual_only = 1
 
 Plug 'sheerun/vim-polyglot'
 Plug 'mboughaba/i3config.vim', {'for': 'i3'}
-Plug 'SirVer/ultisnips' "{{{
-let g:UltiSnipsExpandTrigger='<tab>'
-let g:UltiSnipsJumpForwardTrigger='<tab>'
-let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
-let g:UltiSnipsEditSplit = 'vertical'
-let g:UltiSnipsSnippetDirectories=[g:vim_dir.'UltiSnips']
+
+Plug 'Shougo/neosnippet.vim' "{{{
+let g:neosnippet#disable_runtime_snippets = {'_' : 1}
+let g:neosnippet#snippets_directory=[g:vim_dir.'NeoSnips']
+imap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
+smap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
+xmap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_target)" : "\<Tab>"
 "}}}
 
 Plug 'rhysd/vim-grammarous', {'on': 'GrammarousCheck'}

@@ -1,3 +1,10 @@
+"Plug 'SirVer/ultisnips' "{{{
+"let g:UltiSnipsExpandTrigger='<tab>'
+"let g:UltiSnipsJumpForwardTrigger='<tab>'
+"let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
+"let g:UltiSnipsEditSplit = 'vertical'
+"let g:UltiSnipsSnippetDirectories=[g:vim_dir.'UltiSnips']
+""}}}
 " Plug 'tpope/vim-surround'
 " Plug 'honza/vim-snippets'
 "Plug 'git@github.com:ipod825/taboo.vim' "{{{

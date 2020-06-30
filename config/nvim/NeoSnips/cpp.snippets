@@ -1,0 +1,42 @@
+snippet ing
+    #include "`! ClientRoot()`/${0}"
+
+snippet cout
+    std::cout << ${1} << std::endl;
+
+snippet main
+    int main (int argc, char** argv){
+        ${0}
+        return 0;
+    }
+
+snippet todo
+abbr "// TODO"
+    // TODO(${1:`$USER`}): ${0:todo}
+
+snippet inc
+abbr "#include<>"
+    #include <${1:iostream}>
+
+snippet inu
+abbr #include ""
+    #include "${1:util.h}"
+
+snippet name
+alias namespace
+    namespace ${1:name} {
+    ${0}
+    } // namespace ${1}
+
+snippet ifndef "#ifndef"
+    #ifndef ${1:HEADER}
+    #define `!p snip.rv = t[1]`
+    #endif /* `!p snip.rv = t[1]` */
+
+snippet for "for loop (for)"
+    for (uint32_t ${1:i} = ${2:0}; $1 < ${3:count}; ++$1) {
+        $0
+    }
+
+snippet reinp "reinterpret_cast"
+    reinterpret_cast<${1:type}>(${2:val})

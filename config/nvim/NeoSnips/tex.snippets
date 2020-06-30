@@ -1,0 +1,52 @@
+snippet documentclass
+	\documentclass[${1:12pt}]{${2:article}}
+
+	\begin{document}
+		${0}
+	\end{document}
+
+snippet asgntitle
+	Shih-Ming Wang (swang150) \hfill ${1} Assignment ${2}\\
+	${0}
+
+snippet lr)
+	\left( ${0} \right)
+
+snippet lr}
+	\left\{ ${0} \right\}
+
+snippet lr]
+	\left[ ${0} \right]
+
+snippet funcase
+	${1:function} = \left\{
+		\begin{array}{ll}
+			${2:case1} & ${3:condition} \\\\
+			${4:case2} & ${0:otherwise}
+		\end{array}
+	\right.
+
+snippet pkggeo
+	\usepackage{geometry}
+	\geometry{
+		a4paper,
+		left=25mm,
+		right=25mm,
+		top=15mm,
+		bottom=15mm,
+	}
+	${0}
+
+snippet pkgams
+	\usepackage{amssymb,amsmath,amsthm}
+	${0}
+
+snippet extendmath
+	\newcommand{\expect}[1]{\mathbb{E} \left[ #1 \right]}
+	\newcommand{\expects}[2]{\mathbb{E}_{#1} \left[ #2 \right]}
+	\newcommand{\prob}[1]{\mathbb{P}\left[ #1 \right]}
+	\newcommand{\probs}[2]{\mathbb{P}_{#1}\left[ #2 \right]}
+	\newcommand{\var}[1]{Var\left[ #1 \right]}
+	\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+	\newcommand{\ceil}[1]{\lceil#1 \rceil}
+	${0}

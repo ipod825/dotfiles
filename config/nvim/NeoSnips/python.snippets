@@ -1,0 +1,33 @@
+snippet parse_args
+    import argparse
+    def parse_arg():
+        parser = argparse.ArgumentParser(description='${1:description}')
+        parser.add_argument('-${2:i}', '--${3:inpf}', default=${4:0}, help='${5}')
+        return parser.parse_args()
+
+snippet main
+    if __name__ == "__main__":
+        ${0}
+
+snippet fm
+    f'${0}'
+
+snippet plot
+    from matplotlib import pyplot as plt
+    plt.imshow(${1:img})
+    plt.show()
+    import sys
+    sys.exit(-1)
+
+snippet exit
+    __import__('sys').exit(-1)
+
+snippet subplot
+    from matplotlib import pyplot as plt
+    plt.subplot(1, 2, 1)
+    plt.imshow(${1:img1})
+    plt.subplot(1, 2, 2)
+    plt.imshow(${2:img2})
+    plt.show()
+    import sys
+    sys.exit(-1)

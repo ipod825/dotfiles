@@ -1,0 +1,54 @@
+snippet for
+    for ${1:e} in ${2:list}
+        ${0}
+    endfor
+
+snippet fori
+abbr "for range"
+    for ${1:i} in range(${2:last})
+        ${0}
+    endfor
+
+snippet while
+    while ${1:v:true}
+        ${0}
+    endwhile
+
+snippet fu
+abbr "function"
+alias fun,function
+    function! ${1:fname}(${2:arg})
+        ${0}
+    endfunction
+
+snippet Plug
+    Plug '${1}' "{{{
+    "}}}
+
+snippet if
+    if ${1:cond}
+        ${0}
+    endif
+
+snippet ifelse
+    if ${1:cond}
+        ${2}
+    else
+        ${0}
+    endif
+
+snippet aug
+abbr "augroup"
+alias augroup
+    augroup ${1:GROUP}
+        autocmd!
+        ${0}
+    augroup END
+
+snippet aut
+abbr "autocmd"
+alias autocmd
+    autocmd ${1:BufEnter} ${2:pattern} ${3:command}
+
+snippet get
+    get(${1:g}:, '${2:name}', ${3:default})
