@@ -67,6 +67,7 @@ if [ ! -x $HOME/opt/bin/nvim ]; then
         wget -O $HOME/opt/bin/nvim https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
     fi
     chmod u+x $HOME/opt/bin/nvim
+    pip install pynvim --upgrade
 fi
 if [ ! -d config/nvim/bundle ];then
      $HOME/opt/bin/nvim +PlugInstall +qall
