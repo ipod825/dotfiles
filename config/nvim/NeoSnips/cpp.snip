@@ -40,3 +40,24 @@ snippet for "for loop (for)"
 
 snippet reinp "reinterpret_cast"
     reinterpret_cast<${1:type}>(${2:val})
+
+snippet switch
+options indent
+  switch (${1:var}) {
+    case ${2:c1}: {
+      ${3:a1}
+      break;
+    }
+    case ${4:c2}: {
+      ${5:a2}
+      break;
+    }
+    case ${6:c3}: {
+      ${7:a3}
+      break;
+    }
+    default: {
+      ${8:ad}
+      break;
+    }
+  }

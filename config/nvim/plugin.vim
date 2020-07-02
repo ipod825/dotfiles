@@ -412,6 +412,7 @@ let g:neosnippet#snippets_directory=[g:vim_dir.'NeoSnips']
 imap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
 smap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
 xmap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_target)" : "\<Tab>"
+cnoreabbrev NeoSnippetEdit NeoSnippetEdit -split -vertical
 "}}}
 
 Plug 'rhysd/vim-grammarous', {'on': 'GrammarousCheck'}
