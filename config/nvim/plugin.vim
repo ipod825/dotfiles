@@ -54,7 +54,7 @@ Plug 'rhysd/git-messenger.vim' "{{{
 
 Plug 'lambdalisue/gina.vim' "{{{
 cnoreabbrev G Gina status -s
-cnoreabbrev gbr Gina branch
+cnoreabbrev gbr Gina branch +tabmove\ -1
 cnoreabbrev glg Gina log --branches --graph
 cnoreabbrev gps Gina push
 cnoreabbrev gpl Gina pull
@@ -62,9 +62,10 @@ augroup GINA
     autocmd!
     autocmd USER PLUG_END call s:SetupGina()
 augroup END
+
 function! s:SetupGina()
-	call gina#custom#command#option('/\%(status\|branch\|commit\)', '--opener', 'botright split')
-	call gina#custom#command#option('/\%(log\)', '--opener', 'tabedit')
+	call gina#custom#command#option('/\%(status\|commit\)', '--opener', 'belowright split')
+	call gina#custom#command#option('/\%(branch\|log\)', '--opener', 'tabedit')
 	call gina#custom#command#option('/\%(changes\)', '--opener', 'vsplit')
 	call gina#custom#mapping#nmap('/.*', '<F1>','<Plug>(gina-builtin-help)')
     call gina#custom#mapping#nmap('/.*', '?','<Plug>MSAddBySearchForward')
@@ -78,7 +79,7 @@ function! s:SetupGina()
 	call gina#custom#mapping#nmap('status', 'L','<Plug>(gina-index-unstage)j')
 	call gina#custom#mapping#vmap('status', 'L','<Plug>(gina-index-unstage)')
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
-	call gina#custom#mapping#nmap('status', 'sd','<Plug>(gina-compare-vsplit)')
+	call gina#custom#mapping#nmap('status', 'DD','<Plug>(gina-compare-vsplit)')
 	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit<CR>')
 	call gina#custom#mapping#nmap('status', 'ca',':quit<cr>:Gina commit --amend --allow-empty<CR>')
     call gina#custom#mapping#nmap('log', 'dd','<Plug>(gina-changes-of)')
@@ -91,11 +92,12 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('log', 'R',':call GinaLogRebase()<cr>')
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-vsplit)')
-    call gina#custom#mapping#nmap('branch', 'o','<Plug>(gina-branch-new)')
-    call gina#custom#mapping#nmap('branch', '<leader>d','<Plug>(gina-branch-delete)')
-    call gina#custom#mapping#nmap('branch', '<leader>D','<Plug>(gina-branch-delete-force)')
-    call gina#custom#mapping#nmap('branch', '<leader>r','<Plug>(gina-branch-move)')
-    call gina#custom#mapping#nmap('branch', '<leader>t','<Plug>(gina-branch-set-upstream-to)')
+    call gina#custom#mapping#nmap('changes', 'DD','<Plug>(gina-compare-vsplit)')
+    call gina#custom#mapping#nmap('branch', '<m-n>','<Plug>(gina-branch-new)')
+    call gina#custom#mapping#nmap('branch', '<m-d>','<Plug>(gina-branch-delete)')
+    call gina#custom#mapping#nmap('branch', '<m-s-d>','<Plug>(gina-branch-delete-force)')
+    call gina#custom#mapping#nmap('branch', '<m-m>','<Plug>(gina-branch-move)')
+    call gina#custom#mapping#nmap('branch', '<m-t>','<Plug>(gina-branch-set-upstream-to)')
     call gina#custom#mapping#nmap('branch', 'dd','<Plug>(gina-changes-of)')
     call gina#custom#mapping#nmap('branch', 'DD','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('branch', 'R','<Plug>(gina-commit-rebase)')
