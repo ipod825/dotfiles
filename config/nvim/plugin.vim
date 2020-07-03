@@ -80,7 +80,7 @@ augroup GINA
 augroup END
 
 function! s:SetupGina()
-	call gina#custom#command#option('/\%(status\|commit\)', '--opener', 'belowright split')
+	call gina#custom#command#option('/\%(status\|commit\)', '--opener', 'botright split')
 	call gina#custom#command#option('/\%(branch\|log\)', '--opener', 'tabedit')
 	call gina#custom#command#option('/\%(changes\)', '--opener', 'vsplit')
 	call gina#custom#mapping#nmap('/.*', '<F1>','<Plug>(gina-builtin-help)')
