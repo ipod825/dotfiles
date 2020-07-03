@@ -22,6 +22,17 @@ augroup MUNDO
 augroup END
 ""}}}
 
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim' "{{{
+autocmd VimEnter * command! -bang -nargs=? Files call fzf#vim#files(<q-args>, {'options': '--no-preview'}, <bang>0)
+autocmd VimEnter * command! -bang -nargs=? Buffers call fzf#vim#buffers(<q-args>, {'options': '--no-preview'}, <bang>0)
+let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.95 } }
+let $FZF_DEFAULT_COMMAND = 'find .'
+let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'ctrl-v': 'vsplit' }
+"}}}
+
+Plug 'git@github.com:ipod825/vim-tabdrop'
+
 Plug 'rakr/vim-one' "{{{
 augrou ONE
     autocmd!
@@ -31,10 +42,6 @@ augrou ONE
 augrou END
 "}}}
 
-Plug 'tpope/vim-scriptease'
-Plug 'vim-scripts/gtags.vim'
-Plug 'wsdjeg/vim-fetch'
-
 Plug 'tpope/vim-commentary' "{{{
 nmap <c-_> gcc
 vmap <c-_> gc
@@ -42,6 +49,15 @@ augroup COMMENTARY
     autocmd Filetype c,cpp setlocal commentstring=//\ %s
 augroup END
 "}}}
+
+
+Plug 'Yggdroot/indentLine' "{{{
+let g:indentLine_concealcursor='nvc'
+"}}}
+
+Plug 'tpope/vim-scriptease'
+Plug 'vim-scripts/gtags.vim'
+Plug 'wsdjeg/vim-fetch'
 
 Plug 'jreybert/vimagit', {'on_cmd': 'Magit'} "{{{
 augroup MAGIT
@@ -199,11 +215,6 @@ let g:lightline.tab = {
 		    \ 'inactive': [ 'modified', 'filename' ] }
 "}}}
 
-"Plug 'ipod825/taboverflow.vim' "{{{
-"nmap <c-m-h> <Plug>TabMovePrev
-"nmap <c-m-l> <Plug>TabMoveNext
-""}}}
-
 Plug 'git@github.com:ipod825/msearch.vim'
 nmap 8 <Plug>MSToggleAddCword
 vmap 8 <Plug>MSToggleAddVisual
@@ -249,10 +260,6 @@ function! s:AutoPairsJump()
     call feedkeys('pi')
 endfunction
 " }}}
-
-Plug 'majutsushi/tagbar' "{{{
-cnoreabbrev BB TagbarOpenAutoClose
-"}}}
 
 Plug 'skywind3000/asyncrun.vim' "{{{
 augroup ASYNCRUN
@@ -320,7 +327,7 @@ nmap ga <Plug>(EasyAlign)
 "}}}
 
 
-Plug 'w0rp/ale' " (only used as formatter) {{{
+Plug 'w0rp/ale' " {{{ (only used as formatter)
 let g:ale_sign_error = 'E'
 let g:ale_sign_warning = 'W'
 let g:ale_lint_on_save = 0
@@ -405,8 +412,9 @@ Plug 'airblade/vim-rooter' "{{{
 let g:rooter_manual_only = 1
 "}}}
 
-Plug 'sheerun/vim-polyglot'
-Plug 'mboughaba/i3config.vim', {'for': 'i3'}
+Plug 'sheerun/vim-polyglot' "{{{
+let g:polyglot_disabled=['markdown']
+"}}}
 
 Plug 'Shougo/neosnippet.vim' "{{{
 let g:neosnippet#disable_runtime_snippets = {'_' : 1}
@@ -608,16 +616,7 @@ let g:expand_region_text_objects = {
             \ }
 "}}}
 
-Plug 'tpope/vim-abolish'
-
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim' "{{{
-autocmd VimEnter * command! -bang -nargs=? Files call fzf#vim#files(<q-args>, {'options': '--no-preview'}, <bang>0)
-autocmd VimEnter * command! -bang -nargs=? Buffers call fzf#vim#buffers(<q-args>, {'options': '--no-preview'}, <bang>0)
-let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.95 } }
-let $FZF_DEFAULT_COMMAND = 'find .'
-let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'ctrl-v': 'vsplit' }
-"}}}
+" Plug 'tpope/vim-abolish'
 
 Plug 'git@github.com:ipod825/vim-bookmark' "{{{
 nnoremap m :BookmarkAddPos<cr>
@@ -702,11 +701,7 @@ nnoremap <m-i> :ContextPeek<cr>
 Plug 'embear/vim-localvimrc' "{{{
 let g:localvimrc_ask = 0
 "}}}
-Plug 'git@github.com:ipod825/vim-tabdrop'
 Plug 'rbtnn/vim-vimscript_lasterror', {'on_cmd': 'VimscriptLastError'}
-Plug 'Yggdroot/indentLine' "{{{
-let g:indentLine_concealcursor='nvc'
-"}}}
 Plug 'mipmip/vim-scimark' "{{{
 "}}}
 Plug 'andymass/vim-matchup'

@@ -1,3 +1,10 @@
+"Plug 'majutsushi/tagbar' "{{{
+"cnoreabbrev BB TagbarOpenAutoClose
+""}}}
+"Plug 'ipod825/taboverflow.vim' "{{{
+"nmap <c-m-h> <Plug>TabMovePrev
+"nmap <c-m-l> <Plug>TabMoveNext
+""}}}
 "Plug 'SirVer/ultisnips' "{{{
 "let g:UltiSnipsExpandTrigger='<tab>'
 "let g:UltiSnipsJumpForwardTrigger='<tab>'
