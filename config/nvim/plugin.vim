@@ -114,7 +114,7 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('branch', '<m-s-d>','<Plug>(gina-branch-delete-force)')
     call gina#custom#mapping#nmap('branch', '<m-m>','<Plug>(gina-branch-move)')
     call gina#custom#mapping#nmap('branch', '<m-t>','<Plug>(gina-branch-set-upstream-to)')
-    call gina#custom#mapping#nmap('branch', 'dd','<Plug>(gina-changes-of)')
+    call gina#custom#mapping#nmap('branch', 'dd','<Plug>(gina-show-commit-vsplit)')
     call gina#custom#mapping#nmap('branch', 'DD','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('branch', 'R','<Plug>(gina-commit-rebase)')
 endfunction
