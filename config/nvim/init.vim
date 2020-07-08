@@ -118,10 +118,18 @@ augroup GENERAL "{{{
     autocmd BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd
     autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
 
-    autocmd Filetype qf nnoremap <buffer> <cr> <c-w>o<cr>
+    autocmd Filetype qf nnoremap <buffer> <cr> :call QfCr()<cr>
     autocmd Filetype help map q :close<cr>
 augroup END
 " }}}
+
+function! QfCr()
+    if winnr('$') > 2
+        exec "normal! \<c-w>w"
+    else
+        execute "normal! \<c-w>o\<cr>"
+    endif
+endfunction
 
 " functions {{{
 function! SetColorScheme(...)
