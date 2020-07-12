@@ -50,6 +50,7 @@ augroup COMMENTARY
 augroup END
 "}}}
 
+Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
 Plug 'Yggdroot/indentLine' "{{{
 let g:indentLine_concealcursor='nvc'

@@ -4,6 +4,12 @@ ctrl + h
 ctrl + l
     sxhkdbind ctrl l ctrl Page_Down
 
+ctrl + tab
+    sxhkdbind ctrl h ctrl Page_Up
+
+ctrl + shift + tab
+    sxhkdbind ctrl shift+tab ctrl Page_Down
+
 ctrl + alt + h
     sxhkdbind ctrl+alt h ctrl+shift Page_Up
 
