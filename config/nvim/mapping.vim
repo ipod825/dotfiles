@@ -59,8 +59,8 @@ nnoremap <c-h> gT
 nnoremap <c-l> gt
 nnoremap <c-m-h> :tabmove -1<cr>
 nnoremap <c-m-l> :tabmove +1<cr>
-tnoremap <c-h> <c-\><c-n>gT
-tnoremap <c-l> <c-\><c-n>gt
+tmap <c-h> jkgT
+tmap <c-l> jkgt
 nnoremap <c-m-j> <c-\><c-n>:call MoveToPrevTab()<cr>
 nnoremap <c-m-k> <c-\><c-n>:call MoveToNextTab()<cr>
 " }}}
