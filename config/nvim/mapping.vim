@@ -101,13 +101,18 @@ cnoremap <m-p> <c-r>"
 cnoremap <m-f> <c-r>%<c-f>
 "yank to system clipboard
 vnoremap <m-y> "+y
+"reselect last paste
+nmap <m-v> V']
 "wrap long comment that is not automatically done by ale
 nnoremap U :call CommentUnwrap()<cr>
 " pressing dw is easier but de is more natural
 onoremap w :call EndOfWord()<cr>
 " folding
 nmap <leader><space> za
+nmap <leader>z zMzvzz
 vnoremap <space> zf
+" simple calculator
+inoremap <c-c> <c-o>yiW<end>=<c-r>=<c-r>0<cr>
 " }}}
 
 " Diff {{{
