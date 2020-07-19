@@ -50,7 +50,9 @@ augroup COMMENTARY
 augroup END
 "}}}
 
-Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+if has('nvim')
+    Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+endif
 
 Plug 'Yggdroot/indentLine' "{{{
 let g:indentLine_concealcursor='nvc'

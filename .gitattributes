@@ -5,3 +5,4 @@
 /partial_config/.ssh/config filter=git-crypt diff=git-crypt
 /config/qutebrowser/bookmarks/urls filter=git-crypt diff=git-crypt
 /misc/pass.csv filter=git-crypt diff=git-crypt
+/misc/ff.csv filter=git-crypt diff=git-crypt
