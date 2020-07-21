@@ -106,6 +106,7 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('log', 'DD','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('log', '<leader>w',':set wrap!<cr>')
     call gina#custom#mapping#nmap('log', 'cc',':call GinaLogCheckout()<cr>')
+    call gina#custom#mapping#nmap('log', 'cb',':call GinaLogCheckoutNewBranch()<cr>')
     call gina#custom#mapping#nmap('log', 'rs',':call GinaLogReset(''--soft'')<cr>')
     call gina#custom#mapping#nmap('log', 'rm',':call GinaLogReset(''--mixed'')<cr>')
     call gina#custom#mapping#nmap('log', 'rh',':call GinaLogReset(''--hard'')<cr>')
@@ -158,9 +159,10 @@ function! s:GinaLogCandidate()
     return l:cand
 endfunction
 
-function! s:GinaLogCheckoutPost(branch)
-    exec '!git checkout '.a:branch
-    Gina log --branches --opener=edit
+function! s:GinaLogCheckoutPost(branch, ...)
+    let l:args=a:0>0?a:1:''
+    exec '!git checkout '.a:branch.' '.l:args
+    Gina log --branches  --graph --opener=edit
 endfunction
 
 function! GinaLogCheckout()
@@ -176,10 +178,15 @@ function! GinaLogCheckout()
     endif
 endfunction
 
+function! GinaLogCheckoutNewBranch()
+    let l:cand = s:GinaLogCandidate()
+    let l:nb = input('New branch name: ')
+    call s:GinaLogCheckoutPost(l:cand[0], '-b '.l:nb)
+endfunction
+
 function! GinaLogRebase()
-    let l:cand = s:GinaLogCandidate()[0]
-    echom l:cand
-    exec 'Gina!! rebase -i '.l:cand
+    let l:cand = s:GinaLogCandidate()
+    exec 'Gina!! rebase -i '.l:cand[0]
 endfunction
 
 function! GinaLogReset(opt)
@@ -420,13 +427,12 @@ Plug 'sheerun/vim-polyglot' "{{{
 let g:polyglot_disabled=['markdown']
 "}}}
 
-Plug 'Shougo/neosnippet.vim' "{{{
-let g:neosnippet#disable_runtime_snippets = {'_' : 1}
-let g:neosnippet#snippets_directory=[g:vim_dir.'NeoSnips']
-imap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
-smap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<Tab>"
-xmap <expr><Tab> neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_target)" : "\<Tab>"
-cnoreabbrev NeoSnippetEdit NeoSnippetEdit -split -vertical
+Plug 'SirVer/ultisnips' "{{{
+let g:UltiSnipsExpandTrigger='<tab>'
+let g:UltiSnipsJumpForwardTrigger='<tab>'
+let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
+let g:UltiSnipsEditSplit = 'vertical'
+let g:UltiSnipsSnippetDirectories=[g:vim_dir.'UltiSnips']
 "}}}
 
 Plug 'rhysd/vim-grammarous', {'on': 'GrammarousCheck'}
