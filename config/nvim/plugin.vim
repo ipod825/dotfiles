@@ -623,12 +623,9 @@ let g:expand_region_text_objects = {
 " Plug 'tpope/vim-abolish'
 
 Plug 'git@github.com:ipod825/vim-bookmark' "{{{
-nnoremap m :BookmarkAddPos<cr>
-nnoremap <a-m> :BookmarkDelPos<cr>
-cnoreabbrev bma BookmarkAdd netranger
-cnoreabbrev bmd BookmarkDel netranger
-cnoreabbrev bmg BookmarkGo netranger
-nnoremap ' :BookmarkGo<cr>
+nnoremap ' :BookmarkGo netranger<cr>
+nnoremap <leader>m :BookmarkAddPos<cr>
+nnoremap <leader>' :BookmarkGo<cr>
 let g:bookmark_opencmd='Tabdrop'
 function! s:Bookmark_pos_context_fn()
     return [tagbar#currenttag("%s", "", "f"), getline('.')]

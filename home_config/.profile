@@ -91,8 +91,13 @@ nvre(){
         nvr --remote-send "<c-\><c-n>:edit `pwd`/$1<cr> | :bw! $cur_buf_num<cr>"
     fi
 }
+
+nvrf(){
+    nvr --remote-send "<c-\><c-n>:f<cr>"
+}
 alias te='nvrte'
 alias e='nvre'
+alias f='nvrf'
 # dtach
 dt(){
 dtach -A /tmp/$1 -r winch nvim .
