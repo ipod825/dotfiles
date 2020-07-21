@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 
 import re
-import urllib.request
+from urllib.request import Request, urlopen
 
-with urllib.request.urlopen(
-        'https://www.citibank.com.tw/TWGCB/apba/fxrts/InitializeSubApp.do?TTC=29&selectedBCC=TWD'
-) as response:
-    html = response.read().decode('utf8')
-    i = 0
-    for m in re.finditer(r'>([0-9]+.[0-9]+)<', html):
-        res = m.group(1)
-        i += 1
-        if i == 2:
-            break
+url = 'https://www.citibank.com.tw/TWGCB/apba/fxrts/InitializeSubApp.do?TTC=29&selectedBCC=TWD'
 
-    print(res[:5])
+req = Request(url, headers={'User-Agent': 'XYZ/3.0'})
+html = urlopen(req, timeout=20).read().decode('utf-8')
+
+i = 0
+for m in re.finditer(r'>([0-9]+.[0-9]+)<', html):
+    res = m.group(1)
+    i += 1
+    if i == 2:
+        break
+
+print(res[:5])
