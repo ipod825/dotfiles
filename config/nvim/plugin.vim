@@ -374,7 +374,7 @@ function! s:Gotodef()
     TabdropPushTag
     try
         TagTabdrop
-    catch /E433:/
+    catch /E433:\|E426:/
         call LanguageClient_textDocument_definition({'gotoCmd': 'Tabdrop'})
     endtry
 endfunction
