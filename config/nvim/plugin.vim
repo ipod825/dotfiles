@@ -358,7 +358,7 @@ let g:ale_fixers = {
 "}}}
 
 Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh;'} "{{{
-let g:LanguageClient_diagnosticsList = "Disabled"
+let g:LanguageClient_diagnosticsList = "Quickfix"
 let g:LanguageClient_selectionUI="quickfix"
 let g:LanguageClient_hasSnippetSupport = 0
 let g:LanguageClient_hoverPreview="Always"
@@ -380,7 +380,9 @@ function! s:Gotodef()
 endfunction
 nnoremap <m-d> :call <sid>Gotodef()<cr>
 nmap <m-s> :TabdropPopTag<cr><esc>
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<cr>
+nnoremap <silent> LH :call LanguageClient#textDocument_hover()<cr>
+nnoremap <silent> LC :call LanguageClient_contextMenu()<cr>
+let g:LanguageClient_selectionUI='fzf'
 "}}}
 
 if has('nvim')
