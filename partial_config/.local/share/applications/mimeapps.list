@@ -1,5 +1,5 @@
 [Default Applications]
-text/html=firefox-esr.desktop;google-chrome.desktop;
-text/xml=firefox-esr.desktop;google-chrome.desktop;
-x-scheme-handler/http=firefox-esr.desktop;google-chrome.desktop;
-x-scheme-handler/https=firefox-esr.desktop;google-chrome.desktop;
+text/html=google-chrome.desktop;firefox-esr.desktop;
+text/xml=google-chrome.desktop;firefox-esr.desktop;
+x-scheme-handler/http=google-chrome.desktop;firefox-esr.desktop;
+x-scheme-handler/https=google-chrome.desktop;firefox-esr.desktop;
