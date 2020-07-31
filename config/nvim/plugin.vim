@@ -358,7 +358,7 @@ let g:ale_fixers = {
 "}}}
 
 Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh;'} "{{{
-let g:LanguageClient_diagnosticsList = "Quickfix"
+let g:LanguageClient_diagnosticsList = "Location"
 let g:LanguageClient_selectionUI="quickfix"
 let g:LanguageClient_hasSnippetSupport = 0
 let g:LanguageClient_hoverPreview="Always"
@@ -634,7 +634,7 @@ Plug 'git@github.com:ipod825/vim-bookmark' "{{{
 nnoremap ' :BookmarkGo netranger<cr>
 nnoremap <leader>m :BookmarkAddPos<cr>
 nnoremap <leader>' :BookmarkGo<cr>
-let g:bookmark_opencmd='Tabdrop'
+let g:bookmark_opencmd='NewTabdrop'
 function! s:Bookmark_pos_context_fn()
     return [tagbar#currenttag("%s", "", "f"), getline('.')]
 endfunction
