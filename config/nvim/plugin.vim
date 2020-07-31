@@ -75,6 +75,7 @@ Plug 'lambdalisue/gina.vim' "{{{
 cnoreabbrev G Gina status -s
 cnoreabbrev gbr Gina branch +tabmove\ -1
 cnoreabbrev glg Gina log --branches --graph
+cnoreabbrev glc exec "Gina log --branches --graph -- ".expand("%:p")
 cnoreabbrev gps Gina push
 cnoreabbrev gpl Gina pull
 augroup GINA
