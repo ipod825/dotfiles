@@ -52,3 +52,16 @@ endsnippet
 snippet reinp "reinterpret_cast"
 reinterpret_cast<${1:type}>(${2:val})
 endsnippet
+
+snippet switch
+switch (${1:variable}) {
+	case ${2:case1}: {
+		${3:handle1}
+		break;
+	}
+	default: {
+	$0
+	break;
+	}
+}
+endsnippet
