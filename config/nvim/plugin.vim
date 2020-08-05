@@ -405,9 +405,9 @@ let g:vimtex_view_general_viewer = 'zathura'
 augroup VIMTEX
     autocmd!
     if &rtp =~ 'deoplete.nvim'
-        call deoplete#custom#var('omni', 'input_patterns', {
-                    \ 'tex': g:vimtex#re#deoplete
-                    \})
+        " call deoplete#custom#var('omni', 'input_patterns', {
+        "             \ 'tex': g:vimtex#re#deoplete
+        "             \})
         augroup VIMTEX
             autocmd!
             autocmd Filetype tex call deoplete#custom#var('omni', 'input_patterns', {'tex': g:vimtex#re#deoplete})
