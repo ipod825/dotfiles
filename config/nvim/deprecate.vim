@@ -1,3 +1,8 @@
+"Plug 'maxbrunsfeld/vim-yankstack' " clipboard stack  {{{
+"let g:yankstack_yank_keys = ['y', 'd', 'x', 'c']
+"nmap <M-p> <Plug>yankstack_substitute_older_paste
+"nmap <M-n> <Plug>yankstack_substitute_newer_paste
+""}}}
 "Plug 'majutsushi/tagbar' "{{{
 "cnoreabbrev BB TagbarOpenAutoClose
 ""}}}
