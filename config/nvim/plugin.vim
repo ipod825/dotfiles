@@ -660,11 +660,10 @@ let g:sneak#absolute_dir=1
 "}}}
 
 Plug 'machakann/vim-swap'
-Plug 'bfredl/nvim-miniyank' "{{{
-map p <Plug>(miniyank-autoput)
-map P <Plug>(miniyank-autoPut)
-map <m-p> <Plug>(miniyank-cycle)
-map <m-n> <Plug>(miniyank-cycleback)
+Plug 'maxbrunsfeld/vim-yankstack' " {{{
+let g:yankstack_yank_keys = ['y', 'd', 'x', 'c']
+nmap <M-p> <Plug>yankstack_substitute_older_paste
+nmap <M-n> <Plug>yankstack_substitute_newer_paste
 "}}}
 
 Plug 'eugen0329/vim-esearch', {'branch': 'development'} "{{{
