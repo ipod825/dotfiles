@@ -49,6 +49,7 @@ iv(){
 }
 
 export EDITOR="nvim"
+export GIT_EDITOR='nvr -cc tabe --remote-wait +"setlocal bufhidden=wipe"'
 export TERMINAL="xterm"
 export BROWSER='qday'
 export GOPATH=$HOME/opt/go

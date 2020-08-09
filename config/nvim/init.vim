@@ -85,6 +85,9 @@ augroup GENERAL "{{{
         autocmd TerminalOpen * setlocal wrap
     endif
 
+    " Default autoformat
+    autocmd BufWritePre * call DefaultFormat()
+
     " Automatically change directory (avoid vim-fugitive)
     autocmd BufEnter * if &ft != 'gitcommit' | silent! lcd %:p:h | endif
 
@@ -141,6 +144,12 @@ function! VimRcWrite()
     call timer_start(10, function('SetColorScheme'))
 endfunction
 call SetColorScheme()
+
+function! DefaultFormat()
+    let g:save_pos = getpos(".")
+    silent! 1,$ substitute/\s\+$//g
+    call setpos('.', g:save_pos)
+endfunction
 
 function! MyFoldText()
     let nucolwidth = &fdc + &number*&numberwidth

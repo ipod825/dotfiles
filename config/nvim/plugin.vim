@@ -78,6 +78,7 @@ cnoreabbrev glg Gina log --branches --graph
 cnoreabbrev glc exec "Gina log --branches --graph -- ".expand("%:p")
 cnoreabbrev gps Gina push
 cnoreabbrev gpl Gina pull
+cnoreabbrev grc Gina rebase --continue
 augroup GINA
     autocmd!
     autocmd USER PLUG_END call s:SetupGina()
@@ -338,26 +339,6 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 "}}}
 
-
-Plug 'w0rp/ale' " {{{ (only used as formatter)
-let g:ale_sign_error = 'E'
-let g:ale_sign_warning = 'W'
-let g:ale_lint_on_save = 0
-let g:ale_lint_on_text_changed = 1
-let g:ale_completion_enabled = 0
-let g:ale_linters_explicit = 1
-let g:ale_enabled = 0
-let g:ale_virtualtext_cursor=1
-let g:ale_completion_enabled=0
-let g:ale_fix_on_save = 1
-let g:ale_linters = {'python': ['flake8', 'pylint']}
-let g:ale_fixers = {
-            \'*': ['remove_trailing_lines', 'trim_whitespace'],
-            \'python': ['yapf', 'isort'],
-            \'cpp': ['clang-format']
-            \}
-"}}}
-
 Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh;'} "{{{
 let g:LanguageClient_diagnosticsList = "Location"
 let g:LanguageClient_selectionUI="quickfix"
@@ -384,6 +365,11 @@ nmap <m-s> :TabdropPopTag<cr><esc>
 nnoremap <silent> LH :call LanguageClient#textDocument_hover()<cr>
 nnoremap <silent> LC :call LanguageClient_contextMenu()<cr>
 let g:LanguageClient_selectionUI='fzf'
+augroup LANGUAGECLIENTNEOVIM
+    autocmd!
+    autocmd BufWritePre *  :call LanguageClient#textDocument_formatting_sync()
+augroup END
+
 "}}}
 
 if has('nvim')
@@ -664,6 +650,9 @@ Plug 'maxbrunsfeld/vim-yankstack' " {{{
 let g:yankstack_yank_keys = ['y', 'd', 'x', 'c']
 nmap <M-p> <Plug>yankstack_substitute_older_paste
 nmap <M-n> <Plug>yankstack_substitute_newer_paste
+"}}}
+
+Plug 'Shougo/deol.nvim', { 'do': ':UpdateRemotePlugins' } "{{{
 "}}}
 
 Plug 'eugen0329/vim-esearch', {'branch': 'development'} "{{{
