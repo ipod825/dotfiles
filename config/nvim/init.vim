@@ -146,9 +146,11 @@ endfunction
 call SetColorScheme()
 
 function! DefaultFormat()
-    let g:save_pos = getpos(".")
-    silent! 1,$ substitute/\s\+$//g
-    call setpos('.', g:save_pos)
+    if search('\s\+$', 'wnc')!=0
+        let g:save_pos = getpos(".")
+        1,$ substitute/\s\+$//g
+        call setpos('.', g:save_pos)
+    endif
 endfunction
 
 function! MyFoldText()

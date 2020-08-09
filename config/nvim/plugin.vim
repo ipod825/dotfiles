@@ -365,9 +365,17 @@ nmap <m-s> :TabdropPopTag<cr><esc>
 nnoremap <silent> LH :call LanguageClient#textDocument_hover()<cr>
 nnoremap <silent> LC :call LanguageClient_contextMenu()<cr>
 let g:LanguageClient_selectionUI='fzf'
+function! s:AsyncFormat()
+    let g:lsp_is_formatting = get(g:, 'lsp_is_formatting', v:false)
+    if g:lsp_is_formatting
+        return
+    endif
+    let g:lsp_is_formatting = v:true
+    call LanguageClient#textDocument_formatting({}, {-> execute('write | let g:lsp_is_formatting=v:false', "")})
+endfunction
 augroup LANGUAGECLIENTNEOVIM
     autocmd!
-    autocmd BufWritePre *  :call LanguageClient#textDocument_formatting_sync()
+    autocmd BufWritePre * call s:AsyncFormat()
 augroup END
 
 "}}}
