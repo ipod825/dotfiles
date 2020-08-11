@@ -3,9 +3,6 @@
         "plugins": {
             "jedi_completion": {
                 "include_params": true
-            },
-            "pydocstyle": {
-                "enabled": true
             }
         }
     }

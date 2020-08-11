@@ -59,7 +59,7 @@ if has('nvim')
     endif
 
     set inccommand=split
-    let $GIT_EDITOR = 'nvr -cc tabe --remote-wait +"setlocal bufhidden=wipe"'
+    let $GIT_EDITOR = 'nvr --remote-tab-wait +"setlocal bufhidden=wipe"'
     set shada=!,'1000,<50,s10,h
 endif
 " }}}
@@ -76,23 +76,20 @@ augroup GENERAL "{{{
 
     " Terminal
     let s:auto_term_insert=1
-    autocmd BufEnter * if &buftype == "terminal" && s:auto_term_insert | startinsert | endif
     command! ToggleTermInsert execute "let s:auto_term_insert=1-s:auto_term_insert"
     if has('nvim')
         autocmd TermOpen * setlocal wrap
         autocmd TermOpen * setlocal nobuflisted
+        autocmd TermOpen * autocmd BufEnter <buffer> if s:auto_term_insert | startinsert | endif
     else
         autocmd TerminalOpen * setlocal wrap
     endif
-
-    " Default autoformat
-    autocmd BufWritePre * call DefaultFormat()
 
     " Automatically change directory (avoid vim-fugitive)
     autocmd BufEnter * if &ft != 'gitcommit' | silent! lcd %:p:h | endif
 
     " Man in new tab
-    autocmd BufWinEnter * if @% =~ "^man://" | wincmd T | endif
+    autocmd FileType man wincmd T
 
     " Disables automatic commenting on newline:
     autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -144,14 +141,6 @@ function! VimRcWrite()
     call timer_start(10, function('SetColorScheme'))
 endfunction
 call SetColorScheme()
-
-function! DefaultFormat()
-    if search('\s\+$', 'wnc')!=0
-        let g:save_pos = getpos(".")
-        1,$ substitute/\s\+$//g
-        call setpos('.', g:save_pos)
-    endif
-endfunction
 
 function! MyFoldText()
     let nucolwidth = &fdc + &number*&numberwidth
