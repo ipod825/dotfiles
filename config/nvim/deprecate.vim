@@ -8,9 +8,6 @@
 "nmap <M-p> <Plug>yankstack_substitute_older_paste
 "nmap <M-n> <Plug>yankstack_substitute_newer_paste
 ""}}}
-"Plug 'majutsushi/tagbar' "{{{
-"cnoreabbrev BB TagbarOpenAutoClose
-""}}}
 "Plug 'ipod825/taboverflow.vim' "{{{
 "nmap <c-m-h> <Plug>TabMovePrev
 "nmap <c-m-l> <Plug>TabMoveNext

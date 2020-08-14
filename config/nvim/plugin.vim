@@ -217,7 +217,6 @@ let g:lightline = {
             \              ['percent'],
             \               ]},
             \ 'component': {
-            \         'tagbar': '⚓'.'%{tagbar#currenttag("%s", "", "f")}',
             \         'gitinfo': '%{GitInfo()}',
             \         'asyncrun': '%{g:asyncrun_status=="running"?g:asyncrun_status:""}',
             \         'fugitiveobj': '%{FugitiveObj()}'
@@ -643,6 +642,8 @@ let g:expand_region_text_objects = {
 "}}}
 
 " Plug 'tpope/vim-abolish'
+Plug 'majutsushi/tagbar' "{{{
+"}}}
 
 Plug 'git@github.com:ipod825/vim-bookmark' "{{{
 nnoremap ' :BookmarkGo netranger<cr>
