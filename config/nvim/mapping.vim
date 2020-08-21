@@ -122,7 +122,7 @@ vnoremap <leader>h :'<,'>call DiffGet()<cr>
 vnoremap <leader>l :'<,'>call DiffPut()<cr>
 function! DiffGet()
     if len(tabpagebuflist()) == 3
-        diffget //3
+        diffget /:3
         return
     endif
 
@@ -135,7 +135,7 @@ endfunction
 
 function! DiffPut()
     if len(tabpagebuflist()) == 3
-        diffget //2
+        diffget /:2
         return
     endif
 
