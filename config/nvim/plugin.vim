@@ -246,6 +246,8 @@ endfunction
 nmap <leader>r :call <sid>SelectAllMark()<cr>
 
 Plug 'fatih/vim-go', {'for': 'go'}
+Plug 'voldikss/vim-translator', {'on': 'TranslateW'} "{{{
+"}}}
 
 Plug 'jiangmiao/auto-pairs' "{{{
 inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
