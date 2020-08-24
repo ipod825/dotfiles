@@ -21,5 +21,5 @@ exec --no-startup-id alttab
 
 # Ibus doesn't play well with sxhkd if the following snippet is put in ~/.xinitrc. So it must be put here.
 exec sxhkd -c "${XDG_CONFIG_HOME}/sxhkd/sxhkdrc" "${XDG_CONFIG_HOME}/sxhkd/sxhkdrc-common" &
-exec xdotool search --class ".*" behave %@ focus exec 'sxhkdswitch' &
+# exec xdotool search --class ".*" behave %@ focus exec 'sxhkdswitch' &
 exec --no-startup-id PYENV_VERSION=system ibus-daemon --xim -d -r
