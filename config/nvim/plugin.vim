@@ -685,7 +685,7 @@ nmap <M-n> <Plug>yankstack_substitute_newer_paste
 Plug 'Shougo/deol.nvim', { 'do': ':UpdateRemotePlugins' } "{{{
 "}}}
 
-Plug 'eugen0329/vim-esearch', {'branch': 'development'} "{{{
+Plug 'eugen0329/vim-esearch' "{{{
 let g:esearch = {
             \ 'adapter':          'ag',
             \ 'bckend':          'nvim',
@@ -695,7 +695,6 @@ let g:esearch = {
             \}
 nmap <leader>f <Plug>(operator-esearch-prefill)iw
 vmap <leader>f <Plug>(esearch)
-let g:esearch.filemanager_integration=v:false
 let g:esearch.default_mappings = 0
 let g:esearch.win_map = [
             \ [ 'n', '<cr>', ':call b:esearch.open("NewTabdrop")<cr>'],
