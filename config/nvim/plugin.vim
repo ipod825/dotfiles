@@ -239,11 +239,6 @@ omap N <Plug>MSPrev
 nmap <leader>n <Plug>MSToggleJump
 nmap <leader>/ <Plug>MSClear
 nmap ? <Plug>MSAddBySearchForward
-function! s:SelectAllMark()
-    call feedkeys("\<Plug>(VM-Start-Regex-Search)".join(msearch#joint_pattern())."\<cr>")
-    call feedkeys("\<Plug>(VM-Select-All)")
-endfunction
-nmap <leader>r :call <sid>SelectAllMark()<cr>
 
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'voldikss/vim-translator', {'on': 'TranslateW'} "{{{
@@ -294,33 +289,48 @@ let g:VM_maps['Skip Region'] = '<C-x>'
 let g:VM_maps['Remove Region'] = '<C-p>'
 let g:VM_maps['Goto Prev'] = '<c-k>'
 let g:VM_maps['Goto Next'] = '<c-j>'
-let g:VM_maps["Undo"] = 'u'
-let g:VM_maps["Redo"] = '<c-r>'
-let g:VM_maps["Numbers"] = '<leader>n'
-let g:VM_maps["Visual Add"] = '<C-n>'
-let g:VM_maps["Visual Find"] = '<C-n>'
-let g:VM_maps["Visual Regex"] = '<leader>/'
-let g:VM_maps["Visual Cursors"] = '<C-c>'
-let g:VM_custom_noremaps  = {'])': '])', ']]': ']]', ']}':']}',
-            \'<M-l>': 'g$', '<M-h>': 'g^'}
+let g:VM_maps['Undo'] = 'u'
+let g:VM_maps['Redo'] = '<c-r>'
+let g:VM_maps['Numbers'] = '<leader>n'
+let g:VM_maps['Visual Add'] = '<c-n>'
+let g:VM_maps['Visual Find'] = '<c-n>'
+let g:VM_maps['Visual Regex'] = '<leader>/'
+let g:VM_maps['Visual Cursors'] = '<c-c>'
+let g:VM_maps["Visual Reduce"] = '<leader>r'
+let g:VM_maps['Increase'] = '+'
+let g:VM_maps['Decrease'] = '-'
+
+let g:VM_custom_motions  = {'<m-h>': '^', '<m-l>': '$'}
+let g:VM_custom_noremaps  = {'])': '])', ']]': ']]', ']}':']}'}
+
 fun! VM_Start()
-    autocmd! VIM-MARK
     imap <buffer> jk <Esc>
-    imap <buffer> <c-h> <Left>
-    imap <buffer> <c-l> <Right>
-    imap <buffer> <c-j> <Down>
-    imap <buffer> <c-k> <Up>
-    imap <buffer> <m-h> <Esc>g^i
-    imap <buffer> <m-l> <Esc>g_i
+    imap <buffer> <c-h> <left>
+    imap <buffer> <c-l> <right>
+    imap <buffer> <c-j> <down>
+    imap <buffer> <c-k> <up>
+    imap <buffer> <m-h> <esc><m-h>i
+    imap <buffer> <m-l> <esc><m-l>i
     nmap <buffer> <c-c> <esc>
-    vmap <buffer> <m-l> $
-    vmap <buffer> <m-h> 0
 endfun
+
+function! VM_Exit()
+    iunmap <buffer> jk
+    iunmap <buffer> <c-h>
+    iunmap <buffer> <c-l>
+    iunmap <buffer> <c-j>
+    iunmap <buffer> <c-k>
+    iunmap <buffer> <m-h>
+    iunmap <buffer> <m-l>
+    nunmap <buffer> <c-c>
+endfunction
+
 function! s:SelectAllMark()
     call feedkeys("\<Plug>(VM-Start-Regex-Search)".msearch#joint_pattern()."\<cr>")
     call feedkeys("\<Plug>(VM-Select-All)")
 endfunction
-nmap <leader>r :call <sid>SelectAllMark()<cr>
+nnoremap <leader>r :call <sid>SelectAllMark()<cr>
+
 
 Plug 't9md/vim-textmanip' "{{{
 xmap <c-m-k> <Plug>(textmanip-move-up)

@@ -110,7 +110,6 @@ onoremap w :call EndOfWord()<cr>
 " folding
 nmap <leader><space> za
 nmap <leader>z zMzvzz
-vnoremap <space> zf
 " simple calculator
 inoremap <c-c> <c-o>yiW<end>=<c-r>=<c-r>0<cr>
 " }}}
