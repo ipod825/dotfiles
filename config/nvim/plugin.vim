@@ -331,7 +331,7 @@ augroup ASYNCRUN
 augroup END
 "}}}
 Plug 'tpope/vim-endwise'
-Plug 'mg979/vim-visual-multi' "{{{
+Plug 'mg979/vim-visual-multi', {'branch': 'test'} "{{{
 let g:VM_default_mappings = 0
 let g:VM_reselect_first = 1
 let g:VM_notify_previously_selected = 1
@@ -380,11 +380,23 @@ function! VM_Exit()
 endfunction
 
 function! s:SelectAllMark()
-    call feedkeys("\<Plug>(VM-Start-Regex-Search)".msearch#joint_pattern()."\<cr>")
+    exec 'VMSearch'.msearch#joint_pattern()
     call feedkeys("\<Plug>(VM-Select-All)")
+    call feedkeys("\<Plug>(VM-Goto-Prev)")
 endfunction
-nnoremap <leader>r :call <sid>SelectAllMark()<cr>
+function! s:VSelectAllMark()
+    let [line_start, column_start] = getpos("'<")[1:2]
+    let [line_end, column_end] = getpos("'>")[1:2]
+    exec line_start.','.line_end-1.' VMSearch '.msearch#joint_pattern()
+endfunction
+function! s:VSelectAllMark()
+    let [line_start, column_start] = getpos("'<")[1:2]
+    let [line_end, column_end] = getpos("'>")[1:2]
+    exec line_start.','.line_end.' VMSearch '.msearch#joint_pattern()
+endfunction
 
+nnoremap <leader>r :call <sid>SelectAllMark()<cr>
+vnoremap <leader>r :<c-u>call <sid>VSelectAllMark()<cr>
 
 Plug 't9md/vim-textmanip' "{{{
 xmap <c-m-k> <Plug>(textmanip-move-up)
