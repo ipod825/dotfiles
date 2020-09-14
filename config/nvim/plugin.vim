@@ -109,10 +109,9 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('log', '<m-w>',':set wrap!<cr>')
     call gina#custom#mapping#nmap('log', 'cc',':call GinaLogCheckout()<cr>')
     call gina#custom#mapping#nmap('log', 'cb',':call GinaLogCheckoutNewBranch()<cr>')
-    call gina#custom#mapping#nmap('log', 'rs',':call GinaLogReset(''--soft'')<cr>')
-    call gina#custom#mapping#nmap('log', 'rm',':call GinaLogReset(''--mixed'')<cr>')
-    call gina#custom#mapping#nmap('log', 'rh',':call GinaLogReset(''--hard'')<cr>')
-    call gina#custom#mapping#nmap('log', 'R',':call GinaLogRebase()<cr>')
+    call gina#custom#mapping#nmap('log', 'r',':call GinaLogRebase()<cr>')
+    call gina#custom#mapping#nmap('log', 'R',':call GinaLogRebaseOnto()<cr>')
+    call gina#custom#mapping#nmap('log', 'm',':call GinaLogMarkTargetBranch()<cr>')
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-vsplit)')
     call gina#custom#mapping#nmap('changes', 'DD','<Plug>(gina-compare-vsplit)')
@@ -143,6 +142,8 @@ endfunction
 function! s:BranchFilter(k, v)
     if a:v=='HEAD'
         return
+    elseif a:v=~ 'refs/'
+        return
     elseif a:v=~ 'HEAD ->'
         return a:v[8:]
     else
@@ -150,15 +151,69 @@ function! s:BranchFilter(k, v)
     endif
 endfunction
 
-function! s:GinaLogCandidate()
-    let l:cand = [matchstr(getline('.'), '[0-9a-f]\{6,9\}')]
-    let l:branches = matchstr(getline('.'), '([^)]*)')
-    if !empty(l:branches)
-        let l:branches = l:branches[1:len(l:branches)-2]
-        call extend(l:cand, split(l:branches, ','))
-        let l:cand = map(l:cand, function('<sid>BranchFilter'))
+function! s:GinaLogGetBranches(line_nr)
+    let l:branch_str = matchstr(getline(a:line_nr), '([^)]*)')
+    if !empty(l:branch_str)
+        let l:branches = split(l:branch_str[1:len(l:branch_str)-2], ', ')
+        return filter(map(l:branches, function('<sid>BranchFilter')), '!empty(v:val)')
     endif
-    return l:cand
+    return []
+endfunction
+
+function! s:GinaLogCandidate()
+    return s:GinaLogGetBranches(line('.')) + [matchstr(getline('.'), '[0-9a-f]\{6,9\}')]
+endfunction
+
+function! GinaLogMarkTargetBranch()
+    let s:target_branch = s:GinaLogCandidate()[-1]
+    call clearmatches()
+    call matchadd('RedrawDebugRecompose', s:target_branch)
+endfunction
+
+let s:rebase_onto_branches = get(s:, 'rebase_onto_branches', [])
+function! GinaLogRebaseOnto()
+    if empty(s:rebase_onto_branches)
+        let l:target_branch = get(s:, 'target_branch', '')
+        if empty(l:target_branch)
+            echoerr "No target branch!"
+            return
+        endif
+
+        let l:star_pos = matchstrpos(getline('.'), '\*')[1]
+        if l:star_pos == -1
+            echoerr "No * branch indicator found!"
+            return
+        endif
+
+        let l:line_nr = line('.')
+        let l:branches = []
+        while getline(l:line_nr)[l:star_pos] == '*'
+            let l:brs = s:GinaLogGetBranches(l:line_nr)
+            if len(l:brs)==0
+                echoerr "No branch found on line ".l:line_nr
+                return
+            elseif len(l:brs)!=1
+                echoerr "No unique branch on line".l:line_nr
+                return
+            endif
+            call add(l:branches, l:brs[0])
+            let l:line_nr += 1
+        endwhile
+        let s:rebase_onto_branches = [l:target_branch] + reverse(l:branches)
+    endif
+
+    echom s:rebase_onto_branches
+    for l:i in range(len(s:rebase_onto_branches)-1)
+        let l:target = s:rebase_onto_branches[0]
+        let l:source = s:rebase_onto_branches[1]
+        call remove(s:rebase_onto_branches, 0)
+        exec 'silent !git checkout '.l:source
+        if system('git rebase --onto '.l:target.' HEAD~1') =~ 'CONFLICT'
+            echoerr 'Conflict when rebasing '.l:source.' to '.l:target.'. Fix it before continue.'
+            return
+        endif
+    endfor
+    call remove(s:rebase_onto_branches, 0)
 endfunction
 
 function! s:GinaLogCheckoutPost(branch, ...)
@@ -172,8 +227,9 @@ function! GinaLogCheckout()
     echom l:cand
     if len(l:cand)>1
         call fzf#run(fzf#wrap({
-                \ 'source': sort(l:cand),
+                \ 'source': l:cand,
                 \ 'sink': function('s:GinaLogCheckoutPost'),
+                \ 'options': '+s',
             \}))
     else
         call s:GinaLogCheckoutPost(l:cand[0])
