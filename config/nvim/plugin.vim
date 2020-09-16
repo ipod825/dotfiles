@@ -169,13 +169,13 @@ function! s:GinaLogCandidate()
 endfunction
 
 function! GinaLogMarkTargetBranch()
-    let s:target_branch = s:GinaLogCandidate()[-1]
+    let w:target_branch = s:GinaLogCandidate()[-1]
     call clearmatches()
-    call matchadd('RedrawDebugRecompose', s:target_branch)
+    call matchadd('RedrawDebugRecompose', w:target_branch)
 endfunction
 
 function! GinaLogVisualRebase()
-    let l:target_branch = get(s:, 'target_branch', '')
+    let l:target_branch = get(w:, 'target_branch', '')
     if empty(l:target_branch)
         echoerr "No target branch!"
         return
@@ -203,10 +203,11 @@ function! GinaLogVisualRebase()
         exec 'silent !git checkout '.l:source
         if system('git rebase --onto '.l:target.' HEAD~1') =~ 'CONFLICT'
             echoerr 'Conflict when rebasing '.l:source.' to '.l:target.'. Fix it before continue.'
+            call s:GinaLogRefresh()
             return
         endif
-        call s:GinaLogRefresh()
     endfor
+    call s:GinaLogRefresh()
 endfunction
 
 function! s:GinaLogCheckoutPost(branch, ...)
