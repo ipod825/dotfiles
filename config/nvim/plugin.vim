@@ -110,7 +110,7 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('log', 'cc',':call GinaLogCheckout()<cr>')
     call gina#custom#mapping#nmap('log', 'cb',':call GinaLogCheckoutNewBranch()<cr>')
     call gina#custom#mapping#nmap('log', 'r',':call GinaLogRebase()<cr>')
-    call gina#custom#mapping#nmap('log', 'R',':call GinaLogRebaseOnto()<cr>')
+    call gina#custom#mapping#vmap('log', 'r',':<c-u>call GinaLogVisualRebase()<cr>')
     call gina#custom#mapping#nmap('log', 'm',':call GinaLogMarkTargetBranch()<cr>')
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-vsplit)')
@@ -151,6 +151,10 @@ function! s:BranchFilter(k, v)
     endif
 endfunction
 
+function! s:GinaLogRefresh()
+    edit
+endfunction
+
 function! s:GinaLogGetBranches(line_nr)
     let l:branch_str = matchstr(getline(a:line_nr), '([^)]*)')
     if !empty(l:branch_str)
@@ -170,50 +174,39 @@ function! GinaLogMarkTargetBranch()
     call matchadd('RedrawDebugRecompose', s:target_branch)
 endfunction
 
-let s:rebase_onto_branches = get(s:, 'rebase_onto_branches', [])
-function! GinaLogRebaseOnto()
-    if empty(s:rebase_onto_branches)
-        let l:target_branch = get(s:, 'target_branch', '')
-        if empty(l:target_branch)
-            echoerr "No target branch!"
-            return
-        endif
-
-        let l:star_pos = matchstrpos(getline('.'), '\*')[1]
-        if l:star_pos == -1
-            echoerr "No * branch indicator found!"
-            return
-        endif
-
-        let l:line_nr = line('.')
-        let l:branches = []
-        while getline(l:line_nr)[l:star_pos] == '*'
-            let l:brs = s:GinaLogGetBranches(l:line_nr)
-            if len(l:brs)==0
-                echoerr "No branch found on line ".l:line_nr
-                return
-            elseif len(l:brs)!=1
-                echoerr "No unique branch on line".l:line_nr
-                return
-            endif
-            call add(l:branches, l:brs[0])
-            let l:line_nr += 1
-        endwhile
-        let s:rebase_onto_branches = [l:target_branch] + reverse(l:branches)
+function! GinaLogVisualRebase()
+    let l:target_branch = get(s:, 'target_branch', '')
+    if empty(l:target_branch)
+        echoerr "No target branch!"
+        return
     endif
 
-    echom s:rebase_onto_branches
-    for l:i in range(len(s:rebase_onto_branches)-1)
-        let l:target = s:rebase_onto_branches[0]
-        let l:source = s:rebase_onto_branches[1]
-        call remove(s:rebase_onto_branches, 0)
+    let [line_start,line_end] = [getpos("'<")[1], getpos("'>")[1]]
+    let l:branches = []
+    for l:line_nr in range(line_start,line_end)
+        let l:brs = s:GinaLogGetBranches(l:line_nr)
+        if len(l:brs)==0
+            echoerr "No branches on line".l:line_nr
+            return
+        elseif len(l:brs)!=1
+            echoerr "No unique branch on line".l:line_nr
+            return
+        endif
+        call add(l:branches, l:brs[0])
+    endfor
+
+    let l:branches = [l:target_branch] + reverse(l:branches)
+    for l:i in range(len(l:branches)-1)
+        let l:target = l:branches[0]
+        let l:source = l:branches[1]
+        call remove(l:branches, 0)
         exec 'silent !git checkout '.l:source
         if system('git rebase --onto '.l:target.' HEAD~1') =~ 'CONFLICT'
             echoerr 'Conflict when rebasing '.l:source.' to '.l:target.'. Fix it before continue.'
             return
         endif
+        call s:GinaLogRefresh()
     endfor
-    call remove(s:rebase_onto_branches, 0)
 endfunction
 
 function! s:GinaLogCheckoutPost(branch, ...)
@@ -234,22 +227,26 @@ function! GinaLogCheckout()
     else
         call s:GinaLogCheckoutPost(l:cand[0])
     endif
+    call s:GinaLogRefresh()
 endfunction
 
 function! GinaLogCheckoutNewBranch()
     let l:cand = s:GinaLogCandidate()
     let l:nb = input('New branch name: ')
     call s:GinaLogCheckoutPost(l:cand[0], '-b '.l:nb)
+    call s:GinaLogRefresh()
 endfunction
 
 function! GinaLogRebase()
     let l:cand = s:GinaLogCandidate()
     exec 'Gina!! rebase -i '.l:cand[0]
+    call s:GinaLogRefresh()
 endfunction
 
 function! GinaLogReset(opt)
     let l:cand = s:GinaLogCandidate()
     exec 'Gina reset 'a:opt.' '.l:cand[0]
+    call s:GinaLogRefresh()
 endfunction
 "}}}
 
@@ -724,7 +721,7 @@ endfunction
 let g:Bookmark_pos_context_fn = function('s:Bookmark_pos_context_fn')
 augroup BOOKMARK
     autocmd!
-    autocmd Filetype bookmark nmap <buffer> pp :call bookmark#preview('vsplit')<cr>
+    autocmd Filetype bookmark nmap <buffer> <c-e> :call bookmark#goimpl('NewTabdrop')<cr>
 augroup END
 " }}}
 
