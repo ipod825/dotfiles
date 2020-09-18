@@ -84,6 +84,24 @@ augroup GINA
     autocmd USER PLUG_END call s:SetupGina()
 augroup END
 
+augroup GIT
+    autocmd!
+    autocmd Filetype git nnoremap cc :call <sid>GitCheckOutFile()<cr><cr>
+    autocmd Filetype git exec 'lcd '.system('git rev-parse --show-toplevel')
+augroup END
+
+function! s:GitCheckOutFile()
+    let l:file_name_line = search('^diff', 'bnc')
+    if l:file_name_line ==0
+        echoerr "No file found!"
+        return
+    endif
+    let l:hash = expand('%:t')
+    let l:fname = split(getline(l:file_name_line)[13:])[0]
+    let l:basename = fnamemodify(l:fname, ':p:t')
+    exec '!git show '.l:hash.':'.l:fname.' > ~/'.l:basename.'-'.l:hash
+endfunction
+
 function! s:SetupGina()
 	call gina#custom#command#option('/\%(status\|commit\)', '--opener', 'botright split')
 	call gina#custom#command#option('/\%(branch\|log\)', '--opener', 'tabedit')
@@ -210,43 +228,37 @@ function! GinaLogVisualRebase()
     call s:GinaLogRefresh()
 endfunction
 
-function! s:GinaLogCheckoutPost(branch, ...)
-    let l:args=a:0>0?a:1:''
-    exec '!git checkout '.a:branch.' '.l:args
-    Gina log --branches  --graph --opener=edit
-endfunction
-
 function! GinaLogCheckout()
     let l:cand = s:GinaLogCandidate()
-    echom l:cand
-    if len(l:cand)>1
-        call fzf#run(fzf#wrap({
-                \ 'source': l:cand,
-                \ 'sink': function('s:GinaLogCheckoutPost'),
-                \ 'options': '+s',
-            \}))
-    else
-        call s:GinaLogCheckoutPost(l:cand[0])
-    endif
+    call fzf#run(fzf#wrap({
+            \ 'source': l:cand,
+            \ 'sink': 'Gina checkout',
+            \ 'options': '+s -1',
+        \}))
     call s:GinaLogRefresh()
 endfunction
 
 function! GinaLogCheckoutNewBranch()
-    let l:cand = s:GinaLogCandidate()
     let l:nb = input('New branch name: ')
-    call s:GinaLogCheckoutPost(l:cand[0], '-b '.l:nb)
+    call fzf#run(fzf#wrap({
+            \ 'source': s:GinaLogCandidate(),
+            \ 'sink': 'Gina checkout -b '.l:nb,
+            \ 'options': '+s -1',
+        \}))
     call s:GinaLogRefresh()
 endfunction
 
 function! GinaLogRebase()
-    let l:cand = s:GinaLogCandidate()
-    exec 'Gina!! rebase -i '.l:cand[0]
+    call fzf#run(fzf#wrap({
+            \ 'source': s:GinaLogCandidate(),
+            \ 'sink': 'Gina!! rebase -i ',
+            \ 'options': '+s -1',
+        \}))
     call s:GinaLogRefresh()
 endfunction
 
 function! GinaLogReset(opt)
-    let l:cand = s:GinaLogCandidate()
-    exec 'Gina reset 'a:opt.' '.l:cand[0]
+    exec 'Gina reset 'a:opt.' '.s:GinaLogCandidate()[0]
     call s:GinaLogRefresh()
 endfunction
 "}}}
