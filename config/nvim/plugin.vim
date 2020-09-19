@@ -78,7 +78,7 @@ cnoreabbrev glg Gina log --branches --graph
 cnoreabbrev glc exec "Gina log --branches --graph -- ".expand("%:p")
 cnoreabbrev gps Gina push
 cnoreabbrev gpl Gina pull
-cnoreabbrev grc Gina rebase --continue
+cnoreabbrev grc Gina!! rebase --continue
 augroup GINA
     autocmd!
     autocmd USER PLUG_END call s:SetupGina()
@@ -121,7 +121,7 @@ function! s:SetupGina()
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
 	call gina#custom#mapping#nmap('status', 'DD','<Plug>(gina-compare-vsplit)')
 	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit<CR>')
-	call gina#custom#mapping#nmap('status', 'ca',':quit<cr>:Gina commit --amend --allow-empty<cr>:edit<cr>')
+	call gina#custom#mapping#nmap('status', 'ca',':quit<cr>:Gina commit --amend --allow-empty<cr>')
     call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-show-vsplit)')
     call gina#custom#mapping#nmap('log', 'dd','<Plug>(gina-show-vsplit)')
     call gina#custom#mapping#nmap('log', 'DD','<Plug>(gina-changes-between)')
