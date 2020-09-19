@@ -82,6 +82,7 @@ cnoreabbrev grc Gina rebase --continue
 augroup GINA
     autocmd!
     autocmd USER PLUG_END call s:SetupGina()
+    autocmd Filetype gina-log let @/='.*HEAD ->' | call msearch#end_add_by_search()
 augroup END
 
 augroup GIT
@@ -120,7 +121,7 @@ function! s:SetupGina()
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
 	call gina#custom#mapping#nmap('status', 'DD','<Plug>(gina-compare-vsplit)')
 	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit<CR>')
-	call gina#custom#mapping#nmap('status', 'ca',':quit<cr>:Gina commit --amend --allow-empty<CR>')
+	call gina#custom#mapping#nmap('status', 'ca',':quit<cr>:Gina commit --amend --allow-empty<cr>:edit<cr>')
     call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-show-vsplit)')
     call gina#custom#mapping#nmap('log', 'dd','<Plug>(gina-show-vsplit)')
     call gina#custom#mapping#nmap('log', 'DD','<Plug>(gina-changes-between)')
@@ -169,6 +170,10 @@ function! s:BranchFilter(k, v)
     endif
 endfunction
 
+function! s:GinaLogRefreshFzfCmd(cmd)
+    return {arg-> execute(a:cmd.' '.arg) || timer_start(100, {_->execute('edit')})}
+endfunction
+
 function! s:GinaLogRefresh()
     edit
 endfunction
@@ -214,6 +219,7 @@ function! GinaLogVisualRebase()
     endfor
 
     let l:branches = [l:target_branch] + reverse(l:branches)
+    let l:ori_branch = system('git branch --show-current')
     for l:i in range(len(l:branches)-1)
         let l:target = l:branches[0]
         let l:source = l:branches[1]
@@ -225,6 +231,7 @@ function! GinaLogVisualRebase()
             return
         endif
     endfor
+    exec 'silent !git checkout '.l:ori_branch
     call s:GinaLogRefresh()
 endfunction
 
@@ -232,17 +239,16 @@ function! GinaLogCheckout()
     let l:cand = s:GinaLogCandidate()
     call fzf#run(fzf#wrap({
             \ 'source': l:cand,
-            \ 'sink': 'Gina checkout',
+            \ 'sink': s:GinaLogRefreshFzfCmd('Gina checkout'),
             \ 'options': '+s -1',
         \}))
-    call s:GinaLogRefresh()
 endfunction
 
 function! GinaLogCheckoutNewBranch()
     let l:nb = input('New branch name: ')
     call fzf#run(fzf#wrap({
             \ 'source': s:GinaLogCandidate(),
-            \ 'sink': 'Gina checkout -b '.l:nb,
+            \ 'sink': s:GinaLogRefreshFzfCmd('Gina checkout -b '.l:nb),
             \ 'options': '+s -1',
         \}))
     call s:GinaLogRefresh()
@@ -251,10 +257,9 @@ endfunction
 function! GinaLogRebase()
     call fzf#run(fzf#wrap({
             \ 'source': s:GinaLogCandidate(),
-            \ 'sink': 'Gina!! rebase -i ',
+            \ 'sink': s:GinaLogRefreshFzfCmd('Gina!! rebase -i '),,
             \ 'options': '+s -1',
         \}))
-    call s:GinaLogRefresh()
 endfunction
 
 function! GinaLogReset(opt)
