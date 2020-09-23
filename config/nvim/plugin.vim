@@ -82,12 +82,13 @@ cnoreabbrev grc Gina!! rebase --continue
 augroup GINA
     autocmd!
     autocmd USER PLUG_END call s:SetupGina()
-    autocmd Filetype gina-log let @/='.*HEAD ->' | call msearch#end_add_by_search()
+    autocmd Filetype gina-log let @/='.*HEAD.*' | call msearch#end_add_by_search()
 augroup END
 
 augroup GIT
     autocmd!
-    autocmd Filetype git nnoremap cc :call <sid>GitCheckOutFile()<cr><cr>
+    autocmd Filetype git nnoremap <buffer> cc :call <sid>GitCheckOutFile()<cr><cr>
+    autocmd Filetype git nnoremap <buffer> <cr> <c-w>v:call gina#core#diffjump#jump()<cr>
     autocmd Filetype git exec 'lcd '.system('git rev-parse --show-toplevel')
 augroup END
 
@@ -160,6 +161,8 @@ endfunction
 
 function! s:BranchFilter(k, v)
     if a:v=='HEAD'
+        return
+    elseif a:v=='grafted'
         return
     elseif a:v=~ 'refs/'
         return
