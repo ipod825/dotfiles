@@ -82,7 +82,7 @@ cnoreabbrev grc Gina!! rebase --continue
 augroup GINA
     autocmd!
     autocmd USER PLUG_END call s:SetupGina()
-    autocmd Filetype gina-log let @/='.*HEAD.*' | call msearch#end_add_by_search()
+    autocmd Filetype gina-log call matchadd('ErrorMsg', '.*HEAD.*')
 augroup END
 
 augroup GIT
@@ -174,7 +174,7 @@ function! s:BranchFilter(k, v)
 endfunction
 
 function! s:GinaLogRefreshFzfCmd(cmd)
-    return {arg-> execute(a:cmd.' '.arg) || timer_start(100, {_->execute('edit')})}
+    return {arg-> execute(a:cmd.' '.arg) || timer_start(150, {_->execute('edit')})}
 endfunction
 
 function! s:GinaLogRefresh()
@@ -196,8 +196,10 @@ endfunction
 
 function! GinaLogMarkTargetBranch()
     let w:target_branch = s:GinaLogCandidate()[-1]
-    call clearmatches()
-    call matchadd('RedrawDebugRecompose', w:target_branch)
+    if get(w:, 'mark_id', -1) >=0
+        call matchdelete(w:mark_id)
+    endif
+    let w:mark_id = call matchadd('RedrawDebugRecompose', w:target_branch)
 endfunction
 
 function! GinaLogVisualRebase()
