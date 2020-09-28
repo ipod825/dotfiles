@@ -121,7 +121,8 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('log', 'cb',':call GinaLogCheckoutNewBranch()<cr>')
     call gina#custom#mapping#nmap('log', 'r',':call GinaLogRebase()<cr>')
     call gina#custom#mapping#vmap('log', 'r',':<c-u>call GinaLogVisualRebase()<cr>')
-    call gina#custom#mapping#nmap('log', 'm',':call GinaLogMarkTargetBranch()<cr>')
+    call gina#custom#mapping#nmap('log', 'm',':call GinaLogMarkTargetHash()<cr>')
+    call gina#custom#mapping#nmap('log', '<m-s-d>',':call GinaLogDeleteBranch()<cr>', {'silent': 1})
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-vsplit)')
     call gina#custom#mapping#nmap('changes', 'DD','<Plug>(gina-compare-vsplit)')
@@ -184,12 +185,21 @@ function! s:GinaLogCandidate()
     return s:GinaLogGetBranches(line('.')) + [matchstr(getline('.'), '[0-9a-f]\{6,9\}')]
 endfunction
 
-function! GinaLogMarkTargetBranch()
+function! GinaLogMarkTargetHash()
     let w:target_branch = s:GinaLogCandidate()[-1]
     if get(w:, 'mark_id', -1) >=0
         call matchdelete(w:mark_id)
     endif
-    let w:mark_id = call matchadd('RedrawDebugRecompose', w:target_branch)
+    let w:mark_id = matchadd('RedrawDebugRecompose', w:target_branch)
+endfunction
+
+
+function! GinaLogDeleteBranch()
+    call fzf#run(fzf#wrap({
+            \ 'source': s:GinaLogGetBranches(line('.')),
+            \ 'sink': s:GinaLogRefreshFzfCmd('Gina!! branch -D'),
+            \ 'options': '+s -1',
+        \}))
 endfunction
 
 function! GinaLogVisualRebase()
@@ -231,9 +241,8 @@ function! GinaLogVisualRebase()
 endfunction
 
 function! GinaLogCheckout()
-    let l:cand = s:GinaLogCandidate()
     call fzf#run(fzf#wrap({
-            \ 'source': l:cand,
+            \ 'source': s:GinaLogCandidate(),
             \ 'sink': s:GinaLogRefreshFzfCmd('Gina checkout'),
             \ 'options': '+s -1',
         \}))
@@ -252,7 +261,7 @@ endfunction
 function! GinaLogRebase()
     call fzf#run(fzf#wrap({
             \ 'source': s:GinaLogCandidate(),
-            \ 'sink': s:GinaLogRefreshFzfCmd('Gina!! rebase -i '),,
+            \ 'sink': s:GinaLogRefreshFzfCmd('Gina!! rebase -i '),
             \ 'options': '+s -1',
         \}))
 endfunction
