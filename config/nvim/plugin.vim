@@ -62,6 +62,7 @@ augrou END
 "}}}
 
 Plug 'lambdalisue/gina.vim' "{{{
+let g:gina#action#index#discard_directories=1
 cnoreabbrev G Gina status -s
 cnoreabbrev gbr Gina branch +tabmove\ -1
 cnoreabbrev glg Gina log --branches --graph
@@ -126,6 +127,7 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-vsplit)')
     call gina#custom#mapping#nmap('changes', 'DD','<Plug>(gina-compare-vsplit)')
+    call gina#custom#mapping#nmap('log', 'r',':call GinaBranchRebase()<cr>')
     call gina#custom#mapping#nmap('branch', '<m-n>','<Plug>(gina-branch-new)')
     call gina#custom#mapping#nmap('branch', '<m-d>','<Plug>(gina-branch-delete)')
     call gina#custom#mapping#nmap('branch', '<m-s-d>','<Plug>(gina-branch-delete-force)')
@@ -133,7 +135,7 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('branch', 'T','<Plug>(gina-branch-set-upstream-to)')
     call gina#custom#mapping#nmap('branch', 'dd','<Plug>(gina-show-commit-vsplit)')
     call gina#custom#mapping#nmap('branch', 'DD','<Plug>(gina-changes-between)')
-    call gina#custom#mapping#nmap('branch', 'R','<Plug>(gina-commit-rebase)')
+    call gina#custom#mapping#nmap('branch', 'r','<Plug>(gina-commit-rebase)')
 endfunction
 
 function! GitInfo() abort
@@ -692,7 +694,7 @@ Plug 'git@github.com:ipod825/vim-bookmark' "{{{
 nnoremap ' :BookmarkGo netranger<cr>
 nnoremap <leader>m :BookmarkAddPos<cr>
 nnoremap <leader>' :BookmarkGo<cr>
-let g:bookmark_opencmd='NewTabdrop'
+let g:bookmark_opencmd='Tabdrop'
 function! s:Bookmark_pos_context_fn()
     return [tagbar#currenttag("%s", "", "f"), getline('.')]
 endfunction
