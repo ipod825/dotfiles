@@ -694,14 +694,14 @@ Plug 'git@github.com:ipod825/vim-bookmark' "{{{
 nnoremap ' :BookmarkGo netranger<cr>
 nnoremap <leader>m :BookmarkAddPos<cr>
 nnoremap <leader>' :BookmarkGo<cr>
-let g:bookmark_opencmd='Tabdrop'
+let g:bookmark_opencmd='NewTabdrop'
 function! s:Bookmark_pos_context_fn()
     return [tagbar#currenttag("%s", "", "f"), getline('.')]
 endfunction
 let g:Bookmark_pos_context_fn = function('s:Bookmark_pos_context_fn')
 augroup BOOKMARK
     autocmd!
-    autocmd Filetype bookmark nmap <buffer> <c-e> :call bookmark#goimpl('NewTabdrop')<cr>
+    autocmd Filetype bookmark nmap <buffer> <c-t> :call bookmark#goimpl('Tabdrop')<cr>
 augroup END
 " }}}
 
