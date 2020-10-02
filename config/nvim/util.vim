@@ -157,3 +157,11 @@ function! RemoveRedundantWhiteSpace()     "{{{
 endfunction
 "}}}
 call AddUtilComand('RemoveRedundantWhiteSpace')
+
+
+function! LanguageClientRefresh()     "{{{
+    LanguageClientStop
+    LanguageClientStart
+endfunction
+"}}}
+call AddUtilComand('LanguageClientRefresh')
