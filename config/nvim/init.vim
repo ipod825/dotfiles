@@ -5,6 +5,7 @@ syntax on
 set background=dark
 
 let g:vim_dir=fnamemodify($MYVIMRC, ":h")."/"
+exec 'source '.g:vim_dir.'common_functions.vim'
 exec 'source '.g:vim_dir.'mapping.vim'
 exec 'source '.g:vim_dir.'util.vim'
 exec 'source '.g:vim_dir.'plugin.vim'

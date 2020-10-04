@@ -81,7 +81,7 @@ cnoreabbrev gpl Gina pull
 cnoreabbrev grc Gina!! rebase --continue
 augroup GINA
     autocmd!
-    autocmd USER PLUG_END call s:SetupGina()
+    autocmd USER PLUGEND call s:SetupGina()
     autocmd Filetype gina-log call matchadd('ErrorMsg', '.*HEAD.*')
 augroup END
 
@@ -322,11 +322,11 @@ Plug 'voldikss/vim-translator', {'on': 'TranslateW'} "{{{
 
 Plug 'jiangmiao/auto-pairs' "{{{
 inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
-let g:AutoPairsShortcutFastWrap = '<nop>'
-let g:AutoPairsMapCh = '<nop>'
-let g:AutoPairsShortcutToggle = '<nop>'
-let g:AutoPairsShortcutJump = '<nop>'
-let g:AutoPairsDelete = '<nop>'
+let g:AutoPairsShortcutFastWrap = ''
+let g:AutoPairsMapCh = ''
+let g:AutoPairsShortcutToggle = ''
+let g:AutoPairsShortcutJump = ''
+let g:AutoPairsDelete = ''
 let g:AutoPairsMultilineClose = 0
 augroup AUTO_PAIRS
     autocmd!
@@ -419,18 +419,6 @@ endfunction
 
 nnoremap <leader>r :call <sid>SelectAllMark()<cr>
 vnoremap <leader>r :<c-u>call <sid>VSelectAllMark()<cr>
-
-Plug 't9md/vim-textmanip' "{{{
-xmap <c-m-k> <Plug>(textmanip-move-up)
-xmap <c-m-h> <Plug>(textmanip-move-left)
-xmap <c-m-l> <Plug>(textmanip-move-right)
-xmap <c-m-j> <Plug>(textmanip-move-down)
-" shift in visual mode
-nmap <nowait> < V<Plug>(textmanip-move-left)<esc>
-nmap <nowait> > V<Plug>(textmanip-move-right)<esc>
-vmap <nowait> < <Plug>(textmanip-move-left)
-vmap <nowait> > <Plug>(textmanip-move-right)
-"}}}
 
 Plug 'git@github.com:ipod825/julia-unicode.vim', {'for': 'julia'}
 Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] } " align code - helpful for latex table  {{{
@@ -558,64 +546,6 @@ command!  -nargs=* DebugGo call <sid>DebugGo(<f-args>)
 command!  -nargs=* DebugGoStop call <sid>DebugGoStop()
 command!  -nargs=* Test echo <q-args>
 
-function! Save_mappings(keys, mode, is_global) abort
-    let mappings = {}
-    if a:is_global
-        for l:key in a:keys
-            let buf_local_map = maparg(l:key, a:mode, 0, 1)
-            sil! exe a:mode.'unmap <buffer> '.l:key
-            let map_info        = maparg(l:key, a:mode, 0, 1)
-            let mappings[l:key] = !empty(map_info)
-                                \     ? map_info
-                                \     : {
-                                        \ 'unmapped' : 1,
-                                        \ 'buffer'   : 0,
-                                        \ 'lhs'      : l:key,
-                                        \ 'mode'     : a:mode,
-                                        \ }
-            call Restore_mappings({l:key : buf_local_map})
-        endfor
-    else
-        for l:key in a:keys
-            let map_info        = maparg(l:key, a:mode, 0, 1)
-            let mappings[l:key] = !empty(map_info)
-                                \     ? map_info
-                                \     : {
-                                        \ 'unmapped' : 1,
-                                        \ 'buffer'   : 1,
-                                        \ 'lhs'      : l:key,
-                                        \ 'mode'     : a:mode,
-                                        \ }
-        endfor
-    endif
-    return mappings
-endfu
-
-function! Restore_mappings(mappings) abort
-    for [lhs, mapping] in items(a:mappings)
-        if empty(mapping)
-            continue
-        endif
-        if has_key(mapping, 'unmapped')
-            sil! exe mapping.mode.'unmap '
-                                \ .(mapping.buffer ? ' <buffer> ' : '')
-                                \ . mapping.lhs
-        else
-            let rhs = mapping.rhs
-            if has_key(mapping, 'sid')
-                let rhs = substitute(rhs, '<SID>', '<SNR>'.mapping.sid.'_', 'g')
-            endif
-            exe     mapping.mode
-               \ . (mapping.noremap ? 'noremap   ' : 'map ')
-               \ . (mapping.buffer  ? ' <buffer> ' : '')
-               \ . (mapping.expr    ? ' <expr>   ' : '')
-               \ . (mapping.nowait  ? ' <nowait> ' : '')
-               \ . (mapping.silent  ? ' <silent> ' : '')
-               \ . lhs.' '.rhs
-        endif
-    endfor
-endfu
-
 function! s:MapDebug()
     let g:saved_normal_mappings = Save_mappings(['n','s','c','B','C','e','f','U','D','t'], 'n', 1)
     let g:saved_visual_mappings = Save_mappings(['e'], 'x', 1)
@@ -706,6 +636,37 @@ augroup WAR
     autocmd Filetype bookmark :call war#enter(-1)
 augroup END
 " }}}
+
+Plug 'nvim-treesitter/nvim-treesitter' "{{{
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+function! s:setup_treesitter()
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+    ensure_installed = {'bash','cpp','css','go',
+        \'html','javascript','lua','markdown',
+        \'python','yaml'},
+    highlight = {
+        enable = true,
+    },
+    incremental_selection = {
+        enable = true,
+        keymaps = {
+            init_selection = "gnn",
+            node_incremental = "grn",
+            scope_incremental = "grc",
+            node_decremental = "grm",
+        },
+    },
+}
+EOF
+endfunction
+
+augroup NVIMTREESITTER
+    autocmd!
+    autocmd USER PLUGEND call <sid>setup_treesitter()
+augroup END
+"}}}
 
 Plug 'vim-test/vim-test' "{{{
 function! YankNearestTest() "{{{
@@ -882,4 +843,4 @@ autocmd! USER NETRInit call NETRInit()
 
 call plug#end()
 
-silent doautocmd USER PLUG_END
+silent doautocmd USER PLUGEND

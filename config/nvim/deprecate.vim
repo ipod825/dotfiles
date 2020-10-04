@@ -1,3 +1,14 @@
+"Plug 't9md/vim-textmanip' "{{{
+"xmap <c-m-k> <Plug>(textmanip-move-up)
+"xmap <c-m-h> <Plug>(textmanip-move-left)
+"xmap <c-m-l> <Plug>(textmanip-move-right)
+"xmap <c-m-j> <Plug>(textmanip-move-down)
+"" shift in visual mode
+"nmap <nowait> < V<Plug>(textmanip-move-left)<esc>
+"nmap <nowait> > V<Plug>(textmanip-move-right)<esc>
+"vmap <nowait> < <Plug>(textmanip-move-left)
+"vmap <nowait> > <Plug>(textmanip-move-right)
+""}}}
 "Plug 'bfredl/nvim-miniyank' "{{{
 "nnoremap p <Plug>(miniyank-autoput)
 "nnoremap P <Plug>(miniyank-autoPut)

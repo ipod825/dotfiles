@@ -112,6 +112,11 @@ nmap <leader><space> za
 nmap <leader>z zMzvzz
 " simple calculator
 inoremap <c-c> <c-o>yiW<end>=<c-r>=<c-r>0<cr>
+" shift
+nnoremap <nowait> > >>
+nnoremap <nowait> < <<
+vnoremap <nowait> > >>
+vnoremap <nowait> < <<
 " }}}
 
 " Diff {{{
