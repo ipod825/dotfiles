@@ -623,6 +623,7 @@ Plug 'nvim-treesitter/nvim-treesitter' "{{{
 set foldmethod=expr
 set foldexpr=nvim_treesitter#foldexpr()
 function! s:setup_treesitter()
+try
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
     ensure_installed = {'bash','cpp','css','go',
@@ -633,6 +634,8 @@ require'nvim-treesitter.configs'.setup {
     },
 }
 EOF
+catch
+endtry
 endfunction
 
 augroup NVIMTREESITTER
@@ -709,12 +712,14 @@ Plug 'machakann/vim-sandwich'
 Plug 'justinmk/vim-sneak' "{{{
 nmap h :echoerr "Learn to use sneak!!!"<cr>
 nmap l :echoerr "Learn to use sneak!!!"<cr>
+nmap j :echoerr "Learn to use sneak!!!"<cr>
+nmap k :echoerr "Learn to use sneak!!!"<cr>
 nmap gl <Plug>Sneak_s
 nmap gh <Plug>Sneak_S
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
-nmap H <Plug>Sneak_,
-nmap L <Plug>Sneak_;
+nmap <nowait> H <Plug>Sneak_,
+nmap <nowait> L <Plug>Sneak_;
 vmap H <Plug>Sneak_,
 vmap L <Plug>Sneak_;
 let g:sneak#absolute_dir=1
@@ -768,6 +773,7 @@ let g:cmdline_vsplit = 1      " Split the window vertically
 "}}}
 
 Plug 'wellle/context.vim', {'on_cmd': 'ContextPeek'} "{{{
+let g:context_add_mappings=0
 let g:context_enabled=0
 nnoremap <m-i> :ContextPeek<cr>
 "}}}
