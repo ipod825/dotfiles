@@ -147,6 +147,7 @@ call AddUtilComand('YankBaseName')
 function! VRemoveRedundantWhiteSpace()     "{{{
     exec "'<,'>s/\(\S\)\s\+\(\S\)/\1 \2/g"
 endfunction
+"}}}
 call AddUtilComand('VRemoveRedundantWhiteSpace')
 
 function! RemoveRedundantWhiteSpace()     "{{{

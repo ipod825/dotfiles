@@ -707,6 +707,18 @@ augroup WAR
 augroup END
 " }}}
 
+Plug 'vim-test/vim-test' "{{{
+function! YankNearestTest() "{{{
+    let position = {
+                \'file': fnamemodify(expand('%:p'), ':.'),
+                \'line': line('.'),
+                \'col':   col('.')}
+    let runner = test#determine_runner(position['file'])
+
+    let @"=test#{runner}#build_position('nearest', position)[0]
+endfunction
+call AddUtilComand('YankNearestTest')
+"}}}
 Plug 'kana/vim-textobj-user'
 Plug 'Julian/vim-textobj-variable-segment'
 Plug 'sgur/vim-textobj-parameter'
