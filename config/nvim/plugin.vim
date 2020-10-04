@@ -620,15 +620,6 @@ require'nvim-treesitter.configs'.setup {
     highlight = {
         enable = true,
     },
-    incremental_selection = {
-        enable = true,
-        keymaps = {
-            init_selection = "gnn",
-            node_incremental = "grn",
-            scope_incremental = "grc",
-            node_decremental = "grm",
-        },
-    },
 }
 EOF
 endfunction
@@ -705,8 +696,10 @@ augroup END
 
 Plug 'machakann/vim-sandwich'
 Plug 'justinmk/vim-sneak' "{{{
-nmap S <Plug>Sneak_s
-nmap gS <Plug>Sneak_S
+nmap h :echoerr "Learn to use sneak!!!"<cr>
+nmap l :echoerr "Learn to use sneak!!!"<cr>
+nmap gl <Plug>Sneak_s
+nmap gh <Plug>Sneak_S
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
 nmap H <Plug>Sneak_,
