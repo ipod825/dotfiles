@@ -55,3 +55,28 @@ function! Restore_mappings(mappings) abort
         endif
     endfor
 endfu
+
+let s:dirctory_register = {}
+function! FindDirectory(anchor, ...)
+    if a:0 == 2
+        let l:name = a:1
+        let l:res = get(s:dirctory_register, l:name, '')
+    else
+        let l:res = ""
+    endif
+
+    if !l:res
+        let l:dir = getcwd()
+        while len(l:dir)>1
+            if filereadable('/'.l:dir.'/'.a:anchor) || isdirectory('/'.l:dir.'/'.a:anchor)
+                let l:res = l:dir
+                break
+            endif
+            let l:dir = fnamemodify(l:dir, ':h')
+        endwhile
+        if a:0 == 2
+            let s:dirctory_register[l:name] = l:res
+        endif
+    endif
+    return l:res
+endfunction

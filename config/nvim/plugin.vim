@@ -9,6 +9,7 @@ endif
 
 call plug#begin(g:vim_dir . 'bundle')
 Plug 'junegunn/vim-plug'
+Plug 'rbtnn/vim-vimscript_lasterror', {'on_cmd': 'VimscriptLastError'}
 Plug 'simnalamburt/vim-mundo' "{{{
 execute "set undodir=".g:vim_dir."undo/"
 let g:mundo_width = float2nr(0.2 * &columns)
@@ -22,16 +23,13 @@ augroup MUNDO
 augroup END
 ""}}}
 
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim' "{{{
-autocmd VimEnter * command! -bang -nargs=? Files call fzf#vim#files(<q-args>, {'options': '--no-preview'}, <bang>0)
-autocmd VimEnter * command! -bang -nargs=? Buffers call fzf#vim#buffers(<q-args>, {'options': '--no-preview'}, <bang>0)
-let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.95 } }
-let $FZF_DEFAULT_COMMAND = 'find .'
-let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'ctrl-v': 'vsplit' }
+Plug 'tpope/vim-commentary' "{{{
+nmap <c-_> gcc
+vmap <c-_> gc
+augroup COMMENTARY
+    autocmd Filetype c,cpp setlocal commentstring=//\ %s
+augroup END
 "}}}
-
-Plug 'git@github.com:ipod825/vim-tabdrop'
 
 Plug 'rakr/vim-one' "{{{
 augrou ONE
@@ -42,33 +40,25 @@ augrou ONE
 augrou END
 "}}}
 
-Plug 'tpope/vim-commentary' "{{{
-nmap <c-_> gcc
-vmap <c-_> gc
-augroup COMMENTARY
-    autocmd Filetype c,cpp setlocal commentstring=//\ %s
-augroup END
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim' "{{{
+autocmd VimEnter * command! -bang -nargs=? Files call fzf#vim#files(<q-args>, {'options': '--no-preview'}, <bang>0)
+autocmd VimEnter * command! -bang -nargs=? Buffers call fzf#vim#buffers(<q-args>, {'options': '--no-preview'}, <bang>0)
+let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.95 } }
+let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'ctrl-v': 'vsplit' }
 "}}}
 
-if has('nvim')
-    Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
-endif
-
+Plug 'wsdjeg/vim-fetch'
+Plug 'git@github.com:ipod825/vim-tabdrop'
 Plug 'Yggdroot/indentLine' "{{{
 let g:indentLine_concealcursor='nvc'
 "}}}
-
-Plug 'tpope/vim-scriptease'
-Plug 'vim-scripts/gtags.vim'
-Plug 'wsdjeg/vim-fetch'
 
 Plug 'jreybert/vimagit', {'on_cmd': 'Magit'} "{{{
 augroup MAGIT
     autocmd!
     autocmd Filetype magit wincmd T
 augrou END
-"}}}
-Plug 'rhysd/git-messenger.vim' "{{{
 "}}}
 
 Plug 'lambdalisue/gina.vim' "{{{
@@ -273,7 +263,6 @@ function! GinaLogReset(opt)
 endfunction
 "}}}
 
-
 Plug 'itchyny/lightline.vim' "{{{
 let g:asyncrun_status=get(g:,'asyncrun_status',"success")
 let g:lightline = {
@@ -303,7 +292,7 @@ let g:lightline.tab = {
 		    \ 'inactive': [ 'modified', 'filename' ] }
 "}}}
 
-Plug 'git@github.com:ipod825/msearch.vim'
+Plug 'git@github.com:ipod825/msearch.vim' "{{{
 nmap 8 <Plug>MSToggleAddCword
 vmap 8 <Plug>MSToggleAddVisual
 nmap * <Plug>MSExclusiveAddCword
@@ -315,26 +304,14 @@ omap N <Plug>MSPrev
 nmap <leader>n <Plug>MSToggleJump
 nmap <leader>/ <Plug>MSClear
 nmap ? <Plug>MSAddBySearchForward
+"}}}
 
 Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'voldikss/vim-translator', {'on': 'TranslateW'} "{{{
 "}}}
 
-Plug 'jiangmiao/auto-pairs' "{{{
+Plug 'cohama/lexima.vim' "{{{
 inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
-let g:AutoPairsShortcutFastWrap = ''
-let g:AutoPairsMapCh = ''
-let g:AutoPairsShortcutToggle = ''
-let g:AutoPairsShortcutJump = ''
-let g:AutoPairsDelete = ''
-let g:AutoPairsMultilineClose = 0
-augroup AUTO_PAIRS
-    autocmd!
-    autocmd BufEnter *.tex,*.md,*.adoc let g:AutoPairs["$"] = "$"
-    autocmd BufLeave *.tex,*.md,*.adoc unlet g:AutoPairs["$"]
-    autocmd BufEnter *.scm unlet g:AutoPairs["'"]
-    autocmd BufLeave *.scm let g:AutoPairs["'"] = "'"
-augroup End
 function! s:AutoPairsJump()
     call feedkeys('l')
     let l:b = getline('.')[col('.')+1]
@@ -344,7 +321,7 @@ function! s:AutoPairsJump()
     endif
     call feedkeys('pi')
 endfunction
-" }}}
+"}}}
 
 Plug 'skywind3000/asyncrun.vim' "{{{
 augroup ASYNCRUN
@@ -352,6 +329,7 @@ augroup ASYNCRUN
     autocmd User AsyncRunStop if g:asyncrun_code!=0 | copen | wincmd T | endif
 augroup END
 "}}}
+
 Plug 'tpope/vim-endwise'
 Plug 'mg979/vim-visual-multi', {'branch': 'test'} "{{{
 let g:VM_default_mappings = 0
@@ -419,6 +397,7 @@ endfunction
 
 nnoremap <leader>r :call <sid>SelectAllMark()<cr>
 vnoremap <leader>r :<c-u>call <sid>VSelectAllMark()<cr>
+"}}}
 
 Plug 'git@github.com:ipod825/julia-unicode.vim', {'for': 'julia'}
 Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] } " align code - helpful for latex table  {{{
@@ -485,10 +464,9 @@ let g:ale_fixers = {
             \}
 "}}}
 
-
-if has('nvim')
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-endif "{{{
+if has('nvim') "{{{
+    Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins' }
+endif
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_ignore_case = 0
 if !exists('g:deoplete#omni_patterns')
@@ -504,14 +482,8 @@ let g:vimtex_log_ignore=['25']
 let g:vimtex_view_general_viewer = 'zathura'
 augroup VIMTEX
     autocmd!
-    if &rtp =~ 'deoplete.nvim'
-        " call deoplete#custom#var('omni', 'input_patterns', {
-        "             \ 'tex': g:vimtex#re#deoplete
-        "             \})
-        augroup VIMTEX
-            autocmd!
-            autocmd Filetype tex call deoplete#custom#var('omni', 'input_patterns', {'tex': g:vimtex#re#deoplete})
-        augroup END
+    if has("*deoplete#custom#var")
+        autocmd Filetype tex call deoplete#custom#var('omni', 'input_patterns', {'tex': g:vimtex#re#deoplete})
     endif
 augroup END
 
@@ -613,7 +585,6 @@ function! s:DebugGoStop()
     call <sid>GoUnmapDebug()
     exe 'GoDebugStop'
 endfunction
-
 "}}}
 
 Plug 'chrisbra/Recover.vim' "{{{
@@ -669,7 +640,7 @@ augroup END
 "}}}
 
 Plug 'vim-test/vim-test' "{{{
-function! YankNearestTest() "{{{
+function! YankNearestTest()
     let position = {
                 \'file': fnamemodify(expand('%:p'), ':.'),
                 \'line': line('.'),
@@ -714,7 +685,6 @@ let g:expand_region_text_objects = {
             \ }
 "}}}
 
-" Plug 'tpope/vim-abolish'
 Plug 'majutsushi/tagbar' "{{{
 "}}}
 
@@ -746,7 +716,7 @@ vmap L <Plug>Sneak_;
 let g:sneak#absolute_dir=1
 "}}}
 
-Plug 'machakann/vim-swap'
+Plug 'machakann/vim-swap' " swap parameters
 Plug 'maxbrunsfeld/vim-yankstack' " {{{
 let g:yankstack_yank_keys = ['y', 'd', 'x', 'c']
 nmap <M-p> <Plug>yankstack_substitute_older_paste
@@ -800,13 +770,12 @@ nnoremap <m-i> :ContextPeek<cr>
 Plug 'embear/vim-localvimrc' "{{{
 let g:localvimrc_ask = 0
 "}}}
-Plug 'rbtnn/vim-vimscript_lasterror', {'on_cmd': 'VimscriptLastError'}
 Plug 'mipmip/vim-scimark' "{{{
 "}}}
 Plug 'andymass/vim-matchup'
 Plug 'AndrewRadev/linediff.vim'
 Plug 'zhimsel/vim-stay' " vim-stay {{{
-set viewoptions=cursor,folds,slash,unix
+set viewoptions=cursor,slash,unix
 "}}}
 
 Plug 'git@github.com:ipod825/vim-netranger' "{{{

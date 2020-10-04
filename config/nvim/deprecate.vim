@@ -1,3 +1,30 @@
+" Plug 'jiangmiao/auto-pairs' "{{{
+" inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
+" let g:AutoPairsShortcutFastWrap = ''
+" let g:AutoPairsMapCh = ''
+" let g:AutoPairsShortcutToggle = ''
+" let g:AutoPairsShortcutJump = ''
+" let g:AutoPairsDelete = ''
+" let g:AutoPairsShortcutBackInsert = ''
+" let g:AutoPairsMultilineClose = 0
+" augroup AUTO_PAIRS
+"     autocmd!
+"     autocmd BufEnter *.tex,*.md,*.adoc let g:AutoPairs["$"] = "$"
+"     autocmd BufLeave *.tex,*.md,*.adoc unlet g:AutoPairs["$"]
+"     autocmd BufEnter *.scm unlet g:AutoPairs["'"]
+"     autocmd BufLeave *.scm let g:AutoPairs["'"] = "'"
+" augroup End
+" function! s:AutoPairsJump()
+"     call feedkeys('l')
+"     let l:b = getline('.')[col('.')+1]
+"     call feedkeys('dl')
+"     if match(l:b, "[\"' ]")  == -1
+"         call feedkeys('e')
+"     endif
+"     call feedkeys('pi')
+" endfunction
+" " }}}
+
 "Plug 't9md/vim-textmanip' "{{{
 "xmap <c-m-k> <Plug>(textmanip-move-up)
 "xmap <c-m-h> <Plug>(textmanip-move-left)
