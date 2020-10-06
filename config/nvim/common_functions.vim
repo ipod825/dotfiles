@@ -29,7 +29,7 @@ function! Save_mappings(keys, mode, is_global) abort
         endfor
     endif
     return mappings
-endfu
+endfunction
 
 function! Restore_mappings(mappings) abort
     for [lhs, mapping] in items(a:mappings)
@@ -54,7 +54,7 @@ function! Restore_mappings(mappings) abort
                \ . lhs.' '.rhs
         endif
     endfor
-endfu
+endfunction
 
 let s:dirctory_register = {}
 function! FindDirectory(anchor, ...)

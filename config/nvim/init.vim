@@ -28,7 +28,6 @@ set smartindent
 set ignorecase          " Ignore case when searching
 set smartcase           " Ignore case when searching only if searching pattern contains only lower letters
 set noautoread          " Do not automatically refresh file after modified (use :e instead)
-" set foldmethod=syntax   " Folding with indent
 set foldnestmax=3       " Maximum folding
 set foldtext=MyFoldText() " Show first line when folding
 set wildignore=*/.git/*,*.o,*.class,*.pyc,*.aux,*.fls,*.pdf,*.fdb_latexmk "ignore these files while expanding wild chars

@@ -81,6 +81,7 @@ augroup GIT
     autocmd Filetype git nnoremap <buffer> cc :call <sid>GitCheckOutFile()<cr><cr>
     autocmd Filetype git nnoremap <buffer> <cr> <c-w>v:call gina#core#diffjump#jump()<cr>
     autocmd Filetype git exec 'lcd '.system('git rev-parse --show-toplevel')
+    autocmd Filetype git setlocal foldmethod=syntax
 augroup END
 
 function! s:GitCheckOutFile()
@@ -509,9 +510,9 @@ Plug 'airblade/vim-rooter' "{{{
 let g:rooter_manual_only = 1
 "}}}
 
-Plug 'sheerun/vim-polyglot' "{{{
-let g:polyglot_disabled=['markdown']
-"}}}
+"Plug 'sheerun/vim-polyglot' "{{{
+"let g:polyglot_disabled=['markdown']
+""}}}
 
 Plug 'SirVer/ultisnips' "{{{
 let g:UltiSnipsExpandTrigger='<tab>'
@@ -714,8 +715,8 @@ nmap h :echoerr "Learn to use sneak!!!"<cr>
 nmap l :echoerr "Learn to use sneak!!!"<cr>
 nmap j :echoerr "Learn to use sneak!!!"<cr>
 nmap k :echoerr "Learn to use sneak!!!"<cr>
-nmap gl <Plug>Sneak_s
-nmap gh <Plug>Sneak_S
+nmap sl <Plug>Sneak_s
+nmap sh <Plug>Sneak_S
 nmap f <Plug>Sneak_f
 nmap F <Plug>Sneak_F
 nmap <nowait> H <Plug>Sneak_,
@@ -735,7 +736,7 @@ nmap <M-n> <Plug>yankstack_substitute_newer_paste
 Plug 'Shougo/deol.nvim', { 'do': ':UpdateRemotePlugins' } "{{{
 "}}}
 
-Plug 'eugen0329/vim-esearch' "{{{
+Plug 'eugen0329/vim-esearch', {'branch': 'development'} "{{{
 let g:esearch = {
             \ 'adapter':          'ag',
             \ 'bckend':          'nvim',
@@ -793,7 +794,8 @@ let g:NETRRifleFile = $HOME."/dotfiles/config/nvim/settings/rifle.conf"
 let g:NETRIgnore = ['__pycache__', '*.pyc', '*.o', 'egg-info', 'tags']
 let g:NETRColors = {'dir': 39, 'footer': 35, 'exe': 35}
 let g:NETRGuiColors = {'dir': '#00afff', 'footer': '#00af5f', 'exe': '#00af5f'}
-let g:NETRDefaultMapSkip = ["<cr>"]
+let g:NETRDefaultMapSkip = ["L"]
+let g:NETRVimCD = ["cd"]
 let g:NETRRifleDisplayError = v:false
 function! DuplicateNode()
     let path = netranger#api#cur_node_path()
