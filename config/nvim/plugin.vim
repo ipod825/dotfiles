@@ -515,9 +515,9 @@ Plug 'airblade/vim-rooter' "{{{
 let g:rooter_manual_only = 1
 "}}}
 
-"Plug 'sheerun/vim-polyglot' "{{{
-"let g:polyglot_disabled=['markdown']
-""}}}
+Plug 'sheerun/vim-polyglot' "{{{
+let g:polyglot_disabled=['markdown']
+"}}}
 
 Plug 'SirVer/ultisnips' "{{{
 let g:UltiSnipsExpandTrigger='<tab>'
