@@ -786,7 +786,7 @@ Plug 'mipmip/vim-scimark' "{{{
 Plug 'andymass/vim-matchup'
 Plug 'AndrewRadev/linediff.vim'
 Plug 'zhimsel/vim-stay' " vim-stay {{{
-set viewoptions=cursor,slash,unix
+set viewoptions=folds,cursor,slash,unix
 "}}}
 
 Plug 'git@github.com:ipod825/vim-netranger' "{{{
