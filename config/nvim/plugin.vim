@@ -46,6 +46,11 @@ autocmd VimEnter * command! -bang -nargs=? Files call fzf#vim#files(<q-args>, {'
 autocmd VimEnter * command! -bang -nargs=? Buffers call fzf#vim#buffers(<q-args>, {'options': '--no-preview'}, <bang>0)
 let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.95 } }
 let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'ctrl-v': 'vsplit' }
+let g:fzf_ft=''
+augroup FZF
+    autocmd!
+    autocmd! FileType fzf if strlen(g:fzf_ft) | silent! let &ft=g:fzf_ft | endif
+augroup END
 "}}}
 
 Plug 'wsdjeg/vim-fetch'
@@ -713,12 +718,8 @@ Plug 'machakann/vim-sandwich'
 Plug 'justinmk/vim-sneak' "{{{
 nmap h :echoerr "Learn to use sneak!!!"<cr>
 nmap l :echoerr "Learn to use sneak!!!"<cr>
-nmap j :echoerr "Learn to use sneak!!!"<cr>
-nmap k :echoerr "Learn to use sneak!!!"<cr>
-nmap sl <Plug>Sneak_s
-nmap sh <Plug>Sneak_S
-nmap f <Plug>Sneak_f
-nmap F <Plug>Sneak_F
+nmap f <Plug>Sneak_s
+nmap F <Plug>Sneak_S
 nmap <nowait> H <Plug>Sneak_,
 nmap <nowait> L <Plug>Sneak_;
 vmap H <Plug>Sneak_,
@@ -729,8 +730,20 @@ let g:sneak#absolute_dir=1
 Plug 'machakann/vim-swap' " swap parameters
 Plug 'maxbrunsfeld/vim-yankstack' " {{{
 let g:yankstack_yank_keys = ['y', 'd', 'x', 'c']
-nmap <M-p> <Plug>yankstack_substitute_older_paste
-nmap <M-n> <Plug>yankstack_substitute_newer_paste
+let g:yankstack_map_keys = 0
+function! s:SelectYankHandler(text)
+    let @"=a:text
+    normal! p
+endfunction
+function! SelectYank()
+    let g:fzf_ft = &ft
+    silent call fzf#run(fzf#wrap({
+                \ 'source': filter(map(g:Yankstack(),"v:val.text"), "len(v:val)>1"),
+                \ 'sink': function('<sid>SelectYankHandler'),
+                \}))
+    let g:fzf_ft=''
+endfunction
+call AddUtilComand('SelectYank')
 "}}}
 
 Plug 'Shougo/deol.nvim', { 'do': ':UpdateRemotePlugins' } "{{{

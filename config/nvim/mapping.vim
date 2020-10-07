@@ -102,7 +102,7 @@ cnoremap <m-f> <c-r>%<c-f>
 "yank to system clipboard
 vnoremap <m-y> "+y
 "reselect last paste
-nmap <m-v> V']
+nmap <m-p> V']
 "wrap long comment that is not automatically done by ale
 nnoremap U :call CommentUnwrap()<cr>
 " pressing dw is easier but de is more natural
