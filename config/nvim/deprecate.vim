@@ -1,3 +1,20 @@
+"Plug 'maxbrunsfeld/vim-yankstack' " {{{
+"let g:yankstack_yank_keys = ['y', 'd', 'x', 'c']
+"let g:yankstack_map_keys = 0
+"function! s:SelectYankHandler(text)
+"    let @"=a:text
+"    normal! p
+"endfunction
+"function! SelectYank()
+"    let g:fzf_ft = &ft
+"    silent call fzf#run(fzf#wrap({
+"                \ 'source': filter(map(g:Yankstack(),"v:val.text"), "len(v:val)>1"),
+"                \ 'sink': function('<sid>SelectYankHandler'),
+"                \}))
+"    let g:fzf_ft=''
+"endfunction
+"call AddUtilComand('SelectYank')
+""}}}
 " Plug 'jiangmiao/auto-pairs' "{{{
 " inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
 " let g:AutoPairsShortcutFastWrap = ''
@@ -353,12 +370,6 @@
 "     autocmd!
 "     au FileType tex let b:delimitMate_quotes = "\" $"
 " augroup End
-" " }}}
-
-" Plug 'Shougo/echodoc.vim'
-" " echodoc {{{
-" set noshowmode
-" let g:echodoc_enable_at_startup = 1
 " " }}}
 
 " Plug 'Shougo/vimproc.vim', {'do' : 'make'}

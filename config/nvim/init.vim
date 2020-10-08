@@ -33,6 +33,7 @@ set foldtext=MyFoldText() " Show first line when folding
 set wildignore=*/.git/*,*.o,*.class,*.pyc,*.aux,*.fls,*.pdf,*.fdb_latexmk "ignore these files while expanding wild chars
 set splitright          " vertical split creates new buffer at right
 set splitbelow          " horizontal split creates new buffer at bottom
+set autoread
 set timeoutlen=500
 set ttimeoutlen=0
 set diffopt+=vertical
@@ -46,9 +47,11 @@ set expandtab
 set completeopt=menuone,noinsert
 set termguicolors
 set scrolloff=2
+set lazyredraw
 
 let g:terminal_scrollback_buffer_size=100000
 if has('nvim')
+    set winblend=20
     let s:pyenv_neovim2_dir=expand('~/.pyenv/versions/neovim2/bin/python')
     let s:pyenv_neovim3_dir=expand('~/.pyenv/versions/neovim3/bin/python')
     if filereadable(s:pyenv_neovim2_dir)
@@ -81,6 +84,7 @@ augroup GENERAL "{{{
         autocmd TermOpen * setlocal wrap
         autocmd TermOpen * setlocal nobuflisted
         autocmd TermOpen * autocmd BufEnter <buffer> if s:auto_term_insert | startinsert | endif
+        autocmd TextYankPost * lua vim.highlight.on_yank {higroup='IncSearch', timeout=200}
     else
         autocmd TerminalOpen * setlocal wrap
     endif

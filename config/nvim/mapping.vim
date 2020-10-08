@@ -81,7 +81,7 @@ cnoreabbrev help tab help
 cnoreabbrev te Tabdrop
 cnoreabbrev tc tabclose
 let $SUDO_ASKPASS="/usr/bin/ssh-askpass"
-cnoreabbrev sudow w !sudo -A tee %
+cnoreabbrev sudow w !sudo -A tee % > /dev/null
 cnoreabbrev man Man
 cnoremap qq :bwipeout<cr>
 
@@ -101,22 +101,25 @@ cnoremap <m-p> <c-r>"
 cnoremap <m-f> <c-r>%<c-f>
 "yank to system clipboard
 vnoremap <m-y> "+y
-"reselect last paste
-nmap <m-p> V']
+" stay at the end after copy/paste
+vnoremap y y`]
+nnoremap p p`]
+" select last paste
+nmap <m-p> V'[
 "wrap long comment that is not automatically done by ale
 nnoremap U :call CommentUnwrap()<cr>
 " pressing dw is easier but de is more natural
-onoremap w :call EndOfWord()<cr>
+onoremap <silent> w :call EndOfWord()<cr>
 " folding
 nmap <leader><space> za
 nmap <leader>z zMzvzz
 " simple calculator
 inoremap <c-c> <c-o>yiW<end>=<c-r>=<c-r>0<cr>
 " shift
-nnoremap <nowait> > >>
-nnoremap <nowait> < <<
-vnoremap <nowait> > >>
-vnoremap <nowait> < <<
+nnoremap > >>
+nnoremap < <<
+vnoremap > >gv
+vnoremap < <gv
 " }}}
 
 " Diff {{{

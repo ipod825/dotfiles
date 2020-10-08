@@ -533,6 +533,12 @@ Plug 'rhysd/vim-grammarous', {'on': 'GrammarousCheck'}
 Plug 'puremourning/vimspector' "{{{
 "}}}
 
+Plug 'Shougo/echodoc.vim'
+" echodoc {{{
+let g:echodoc_enable_at_startup = 1
+let g:echodoc#type = 'floating'
+" }}}
+
 packadd termdebug "{{{
 command! Debug execute 'call <sid>Debug()'
 command!  -nargs=* DebugGo call <sid>DebugGo(<f-args>)
@@ -629,6 +635,7 @@ augroup WAR
 augroup END
 " }}}
 
+if has("nvim")
 Plug 'nvim-treesitter/nvim-treesitter' "{{{
 set foldmethod=expr
 set foldexpr=nvim_treesitter#foldexpr()
@@ -653,6 +660,9 @@ augroup NVIMTREESITTER
     autocmd USER PLUGEND call <sid>setup_treesitter()
 augroup END
 "}}}
+else
+    set foldmethod=syntax
+endif
 
 Plug 'vim-test/vim-test' "{{{
 function! YankNearestTest()
@@ -724,26 +734,25 @@ nmap h :echoerr "Learn to use sneak!!!"<cr>
 nmap l :echoerr "Learn to use sneak!!!"<cr>
 nmap f <Plug>Sneak_s
 nmap F <Plug>Sneak_S
-nmap <nowait> H <Plug>Sneak_,
-nmap <nowait> L <Plug>Sneak_;
-vmap H <Plug>Sneak_,
-vmap L <Plug>Sneak_;
-let g:sneak#absolute_dir=1
+let g:sneak#label = 1
+" let g:sneak#absolute_dir=1
+" nmap <nowait> H <Plug>Sneak_,
+" nmap <nowait> L <Plug>Sneak_;
 "}}}
 
 Plug 'machakann/vim-swap' " swap parameters
-Plug 'maxbrunsfeld/vim-yankstack' " {{{
-let g:yankstack_yank_keys = ['y', 'd', 'x', 'c']
-let g:yankstack_map_keys = 0
-function! s:SelectYankHandler(text)
+
+Plug 'svermeulen/vim-yoink' "{{{
+let g:yoinkIncludeDeleteOperations=1
+function! SelectYankHandler(text)
     let @"=a:text
     normal! p
 endfunction
 function! SelectYank()
     let g:fzf_ft = &ft
     silent call fzf#run(fzf#wrap({
-                \ 'source': filter(map(g:Yankstack(),"v:val.text"), "len(v:val)>1"),
-                \ 'sink': function('<sid>SelectYankHandler'),
+                \ 'source': filter(map(yoink#getYankHistory(),"v:val.text"), "len(v:val)>1"),
+                \ 'sink': function('SelectYankHandler'),
                 \}))
     let g:fzf_ft=''
 endfunction

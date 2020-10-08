@@ -1,0 +1,1 @@
+../../config/nvim/common_functions.vim
