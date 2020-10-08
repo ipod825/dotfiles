@@ -178,6 +178,7 @@ endfunction
 
 function! s:GinaLogRefresh()
     edit
+    call matchadd('RedrawDebugRecompose', w:target_branch)
 endfunction
 
 function! s:GinaLogGetBranches(line_nr)
@@ -528,6 +529,9 @@ let g:UltiSnipsSnippetDirectories=[g:vim_dir.'UltiSnips']
 "}}}
 
 Plug 'rhysd/vim-grammarous', {'on': 'GrammarousCheck'}
+
+Plug 'puremourning/vimspector' "{{{
+"}}}
 
 packadd termdebug "{{{
 command! Debug execute 'call <sid>Debug()'

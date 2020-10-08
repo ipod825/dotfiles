@@ -110,19 +110,6 @@ endfunction
 "}}}
 cnoreabbrev f call <sid>OpenRecentFile()
 
-function! s:ToggleSaveWithoutFix() "{{{
-    let b:ale_fix_on_save = 1 - get(b:, "ale_fix_on_save", 1)
-    write
-endfunction
-"}}}
-call AddUtilComand('ToggleSaveWithoutFix')
-
-function! s:ClearSign() "{{{
-    exe 'sign unplace * buffer='.bufnr()
-endfunction
-"}}}
-call AddUtilComand('ClearSign')
-
 function! s:OpenRelatedFile() "{{{
     let name=expand('%:t:r')
     exec "Files " . FindRootDirectory()
