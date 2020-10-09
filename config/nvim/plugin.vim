@@ -356,9 +356,9 @@ let g:VM_notify_previously_selected = 1
 let g:VM_theme = 'iceblue'
 let g:VM_maps = {}
 let g:VM_maps["Switch Mode"] = 'v'
-let g:VM_maps['Find Word'] = '<C-n>'
-let g:VM_maps['Skip Region'] = '<C-x>'
-let g:VM_maps['Remove Region'] = '<C-p>'
+let g:VM_maps['Find Word'] = '<c-n>'
+let g:VM_maps['Skip Region'] = '<c-x>'
+let g:VM_maps['Remove Region'] = '<c-p>'
 let g:VM_maps['Goto Prev'] = '<c-k>'
 let g:VM_maps['Goto Next'] = '<c-j>'
 let g:VM_maps['Undo'] = 'u'
@@ -369,6 +369,7 @@ let g:VM_maps['Visual Find'] = '<c-n>'
 let g:VM_maps['Visual Regex'] = '<leader>/'
 let g:VM_maps['Visual Cursors'] = '<c-c>'
 let g:VM_maps["Visual Reduce"] = '<leader>r'
+let g:VM_maps["Add Cursor At Pos"] = '<c-c>'
 let g:VM_maps['Increase'] = '+'
 let g:VM_maps['Decrease'] = '-'
 
@@ -383,7 +384,10 @@ fun! VM_Start()
     imap <buffer> <c-k> <up>
     imap <buffer> <m-h> <esc><m-h>i
     imap <buffer> <m-l> <esc><m-l>i
-    nmap <buffer> <c-c> <esc>
+    nmap <buffer> J <down>
+    nmap <buffer> K <up>
+    nmap <buffer> H <Left>
+    nmap <buffer> L <Right>
 endfun
 
 function! VM_Exit()
@@ -394,7 +398,10 @@ function! VM_Exit()
     iunmap <buffer> <c-k>
     iunmap <buffer> <m-h>
     iunmap <buffer> <m-l>
-    nunmap <buffer> <c-c>
+    nunmap <buffer> J
+    nunmap <buffer> K
+    nunmap <buffer> H
+    nunmap <buffer> L
 endfunction
 
 function! s:SelectAllMark()

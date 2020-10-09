@@ -51,7 +51,6 @@ set lazyredraw
 
 let g:terminal_scrollback_buffer_size=100000
 if has('nvim')
-    set winblend=20
     let s:pyenv_neovim2_dir=expand('~/.pyenv/versions/neovim2/bin/python')
     let s:pyenv_neovim3_dir=expand('~/.pyenv/versions/neovim3/bin/python')
     if filereadable(s:pyenv_neovim2_dir)
