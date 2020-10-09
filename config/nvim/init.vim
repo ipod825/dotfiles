@@ -1,6 +1,7 @@
 " .nvimrc of ipod825
 
 " These setting needs to be in front of colorscheme command.
+" syntax on
 syntax on
 set background=dark
 
@@ -28,6 +29,7 @@ set smartindent
 set ignorecase          " Ignore case when searching
 set smartcase           " Ignore case when searching only if searching pattern contains only lower letters
 set noautoread          " Do not automatically refresh file after modified (use :e instead)
+set foldmethod=syntax
 set foldnestmax=3       " Maximum folding
 set foldtext=MyFoldText() " Show first line when folding
 set wildignore=*/.git/*,*.o,*.class,*.pyc,*.aux,*.fls,*.pdf,*.fdb_latexmk "ignore these files while expanding wild chars
@@ -96,6 +98,9 @@ augroup GENERAL "{{{
 
     " Disables automatic commenting on newline:
     autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
+    " Move to last position and unfold when openning a file
+    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | exe "normal! zi" | endif
 
     " Writing
     autocmd BufEnter *.tex,*.md,*.adoc setlocal spell
