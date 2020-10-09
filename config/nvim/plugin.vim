@@ -642,6 +642,37 @@ augroup WAR
 augroup END
 " }}}
 
+if has("nvim")
+Plug 'nvim-treesitter/nvim-treesitter' "{{{
+Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+function! s:setup_treesitter()
+" try
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+    ensure_installed = {'bash','cpp','css','go',
+                \'html','javascript','lua','markdown',
+                \'python','yaml'},
+    highlight = {
+        enable = true,
+        disable = {'txt'}
+    },
+}
+EOF
+" catch
+" endtry
+endfunction
+
+augroup NVIMTREESITTER
+    autocmd!
+    autocmd USER PLUGEND call <sid>setup_treesitter()
+augroup END
+"}}}
+else
+    set foldmethod=syntax
+endif
+
 Plug 'vim-test/vim-test' "{{{
 function! YankNearestTest()
     let position = {
