@@ -181,7 +181,7 @@ function! s:GinaLogRefresh()
 endfunction
 
 function! s:GinaLogGetBranches(line_nr)
-    let l:branch_str = matchstr(getline(a:line_nr), '([^)]*)')
+    let l:branch_str = matchstr(getline(line('.')), ';1m ([^)]*)')[4:]
     if !empty(l:branch_str)
         let l:branches = split(l:branch_str[1:len(l:branch_str)-2], ', ')
         return filter(map(l:branches, function('<sid>BranchFilter')), '!empty(v:val)')
