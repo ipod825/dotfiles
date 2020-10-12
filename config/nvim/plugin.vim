@@ -328,6 +328,18 @@ Plug 'fatih/vim-go', {'for': 'go'}
 Plug 'voldikss/vim-translator', {'on': 'TranslateW'} "{{{
 "}}}
 
+Plug 'chaoren/vim-wordmotion' "{{{
+let g:wordmotion_nomap = 1
+omap w <Plug>WordMotion_e
+nmap w <Plug>WordMotion_w
+nmap e <Plug>WordMotion_e
+nmap b <Plug>WordMotion_b
+vmap w <Plug>WordMotion_e
+vmap e <Plug>WordMotion_e
+vmap b <Plug>WordMotion_b
+nmap iv <Plug>WordMotion_iw
+"}}}
+
 Plug 'cohama/lexima.vim' "{{{
 inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
 function! s:AutoPairsJump()
@@ -373,8 +385,8 @@ let g:VM_maps["Add Cursor At Pos"] = '<c-c>'
 let g:VM_maps['Increase'] = '+'
 let g:VM_maps['Decrease'] = '-'
 
-let g:VM_custom_motions  = {'<m-h>': '^', '<m-l>': '$'}
-let g:VM_custom_noremaps  = {'])': '])', ']]': ']]', ']}':']}'}
+let g:VM_custom_motions  = {'<m-h>': '^', '<m-l>': '$', 'w':'<Plug>WordMotion_w'}
+let g:VM_custom_noremaps  = {'])': '])', ']]': ']]', ']}':']}', 'w':'e'}
 
 fun! VM_Start()
     imap <buffer> jk <Esc>
@@ -388,6 +400,15 @@ fun! VM_Start()
     nmap <buffer> K <up>
     nmap <buffer> H <Left>
     nmap <buffer> L <Right>
+
+    " omap <buffer> w <Plug>WordMotion_e
+    " nmap <buffer> w <Plug>WordMotion_w
+    " nmap <buffer> e <Plug>WordMotion_e
+    " nmap <buffer> b <Plug>WordMotion_b
+    " vmap <buffer> w <Plug>WordMotion_e
+    " vmap <buffer> e <Plug>WordMotion_e
+    " vmap <buffer> b <Plug>WordMotion_b
+    " nmap <buffer> iv <Plug>WordMotion_iw
 endfun
 
 function! VM_Exit()
@@ -402,6 +423,15 @@ function! VM_Exit()
     nunmap <buffer> K
     nunmap <buffer> H
     nunmap <buffer> L
+
+    " ounmap <buffer> w
+    " nunmap <buffer> w
+    " nunmap <buffer> e
+    " nunmap <buffer> b
+    " vunmap <buffer> w
+    " vunmap <buffer> e
+    " vunmap <buffer> b
+    " nunmap <buffer> iv
 endfunction
 
 function! s:SelectAllMark()
@@ -686,8 +716,6 @@ endfunction
 call AddUtilComand('YankNearestTest')
 "}}}
 Plug 'kana/vim-textobj-user'
-Plug 'Julian/vim-textobj-variable-segment'
-Plug 'sgur/vim-textobj-parameter'
 Plug 'rhysd/vim-textobj-anyblock'
 Plug 'kana/vim-textobj-line'
 Plug 'terryma/vim-expand-region'
@@ -779,7 +807,7 @@ let g:esearch = {
             \ 'batch_size':       1000,
             \ 'default_mappings': 1,
             \}
-nmap <leader>f <Plug>(operator-esearch-prefill)iw
+nmap <leader>f <Plug>(operator-esearch-prefill)iW
 vmap <leader>f <Plug>(esearch)
 let g:esearch.default_mappings = 0
 let g:esearch.win_map = [

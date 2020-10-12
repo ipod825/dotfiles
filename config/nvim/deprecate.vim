@@ -1,3 +1,5 @@
+" Plug 'sgur/vim-textobj-parameter'
+" Plug 'Julian/vim-textobj-variable-segment'
 "Plug 'zhimsel/vim-stay' " vim-stay {{{
 "set viewoptions=folds,cursor,slash,unix
 ""}}}
@@ -511,3 +513,12 @@
 "         \ 'completor': function('asyncomplete#sources#neoinclude#completor'),
 "         \ }))
 " augroup end
+" onoremap <silent> w :call EndOfWord()<cr>
+" function! EndOfWord()
+"     let cur_line = getline('.')
+"     if match(cur_line[col('.')-1], ' ') > -1
+"         normal! w
+"     else
+"         normal! el
+"     endif
+" endfunction

@@ -109,7 +109,6 @@ nmap <m-p> V'[
 "wrap long comment that is not automatically done by ale
 nnoremap U :call CommentUnwrap()<cr>
 " pressing dw is easier but de is more natural
-onoremap <silent> w :call EndOfWord()<cr>
 " folding
 nmap <leader><space> za
 nmap <leader>z zMzvzz
@@ -154,15 +153,6 @@ function! DiffPut()
 endfunction
 
 " }}}
-
-function! EndOfWord()
-    let cur_line = getline('.')
-    if match(cur_line[col('.')-1], ' ') > -1
-        normal! w
-    else
-        normal! el
-    endif
-endfunction
 
 function! MoveToPrevTab()
   "there is only one window
