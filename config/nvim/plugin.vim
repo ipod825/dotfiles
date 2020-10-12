@@ -133,7 +133,6 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-vsplit)')
     call gina#custom#mapping#nmap('changes', 'DD','<Plug>(gina-compare-vsplit)')
-    call gina#custom#mapping#nmap('log', 'r',':call GinaBranchRebase()<cr>')
     call gina#custom#mapping#nmap('branch', '<m-n>','<Plug>(gina-branch-new)')
     call gina#custom#mapping#nmap('branch', '<m-d>','<Plug>(gina-branch-delete)')
     call gina#custom#mapping#nmap('branch', '<m-s-d>','<Plug>(gina-branch-delete-force)')
@@ -343,9 +342,9 @@ nmap iv <Plug>WordMotion_iw
 Plug 'cohama/lexima.vim' "{{{
 inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
 function! s:AutoPairsJump()
-    call feedkeys('l')
+    normal! l
     let l:b = getline('.')[col('.')+1]
-    call feedkeys('dl')
+    normal! dl
     if match(l:b, "[\"' ]")  == -1
         call feedkeys('e')
     endif
@@ -435,7 +434,7 @@ function! VM_Exit()
 endfunction
 
 function! s:SelectAllMark()
-    exec 'VMSearch'.msearch#joint_pattern()
+    exec 'VMSearch '.msearch#joint_pattern()
     call feedkeys("\<Plug>(VM-Select-All)")
     call feedkeys("\<Plug>(VM-Goto-Prev)")
 endfunction
@@ -806,6 +805,7 @@ let g:esearch = {
             \ 'out':              'win',
             \ 'batch_size':       1000,
             \ 'default_mappings': 1,
+            \ 'live_update': 0,
             \}
 nmap <leader>f <Plug>(operator-esearch-prefill)iW
 vmap <leader>f <Plug>(esearch)
