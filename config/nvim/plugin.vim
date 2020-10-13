@@ -671,8 +671,8 @@ augroup WAR
 augroup END
 " }}}
 
-if has("nvim")
-Plug 'nvim-treesitter/nvim-treesitter' "{{{
+if has("nvim") "{{{
+Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 set foldmethod=expr
 set foldexpr=nvim_treesitter#foldexpr()
@@ -697,10 +697,10 @@ augroup NVIMTREESITTER
     autocmd!
     autocmd USER PLUGEND call <sid>setup_treesitter()
 augroup END
-"}}}
 else
     set foldmethod=syntax
 endif
+"}}}
 
 Plug 'vim-test/vim-test' "{{{
 function! YankNearestTest()
@@ -807,7 +807,7 @@ let g:esearch = {
             \ 'default_mappings': 1,
             \ 'live_update': 0,
             \}
-nmap <leader>f <Plug>(operator-esearch-prefill)iW
+nmap <leader>f <Plug>(operator-esearch-prefill)iw
 vmap <leader>f <Plug>(esearch)
 let g:esearch.default_mappings = 0
 let g:esearch.win_map = [
