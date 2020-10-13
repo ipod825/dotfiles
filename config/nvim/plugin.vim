@@ -329,9 +329,9 @@ Plug 'voldikss/vim-translator', {'on': 'TranslateW'} "{{{
 
 Plug 'chaoren/vim-wordmotion' "{{{
 let g:wordmotion_nomap = 1
-omap w <Plug>WordMotion_e
+omap w <Plug>Motion_e
 nmap w <Plug>WordMotion_w
-nmap e <Plug>WordMotion_e
+nmap e <Plug>Motion_e
 nmap b <Plug>WordMotion_b
 vmap w <Plug>WordMotion_e
 vmap e <Plug>WordMotion_e
@@ -384,7 +384,7 @@ let g:VM_maps["Add Cursor At Pos"] = '<c-c>'
 let g:VM_maps['Increase'] = '+'
 let g:VM_maps['Decrease'] = '-'
 
-let g:VM_custom_motions  = {'<m-h>': '^', '<m-l>': '$', 'w':'<Plug>WordMotion_w'}
+let g:VM_custom_motions  = {'<m-h>': '^', '<m-l>': '$'}
 let g:VM_custom_noremaps  = {'])': '])', ']]': ']]', ']}':']}', 'w':'e'}
 
 fun! VM_Start()
@@ -399,15 +399,6 @@ fun! VM_Start()
     nmap <buffer> K <up>
     nmap <buffer> H <Left>
     nmap <buffer> L <Right>
-
-    " omap <buffer> w <Plug>WordMotion_e
-    " nmap <buffer> w <Plug>WordMotion_w
-    " nmap <buffer> e <Plug>WordMotion_e
-    " nmap <buffer> b <Plug>WordMotion_b
-    " vmap <buffer> w <Plug>WordMotion_e
-    " vmap <buffer> e <Plug>WordMotion_e
-    " vmap <buffer> b <Plug>WordMotion_b
-    " nmap <buffer> iv <Plug>WordMotion_iw
 endfun
 
 function! VM_Exit()
@@ -422,15 +413,6 @@ function! VM_Exit()
     nunmap <buffer> K
     nunmap <buffer> H
     nunmap <buffer> L
-
-    " ounmap <buffer> w
-    " nunmap <buffer> w
-    " nunmap <buffer> e
-    " nunmap <buffer> b
-    " vunmap <buffer> w
-    " vunmap <buffer> e
-    " vunmap <buffer> b
-    " nunmap <buffer> iv
 endfunction
 
 function! s:SelectAllMark()
@@ -725,8 +707,6 @@ vmap <m-j> <Plug>(expand_region_shrink)
 nmap <m-k> <Plug>(expand_region_expand)
 nmap <m-j> <Plug>(expand_region_shrink)
 let g:expand_region_text_objects = {
-            \ 'iv' :0,
-            \ 'av'  :0,
             \ 'iw'  :0,
             \ 'i"'  :0,
             \ 'a"'  :0,
@@ -766,14 +746,10 @@ augroup END
 
 Plug 'machakann/vim-sandwich'
 Plug 'justinmk/vim-sneak' "{{{
-nmap h :echoerr "Learn to use sneak!!!"<cr>
-nmap l :echoerr "Learn to use sneak!!!"<cr>
 nmap f <Plug>Sneak_s
 nmap F <Plug>Sneak_S
 let g:sneak#label = 1
-" let g:sneak#absolute_dir=1
-" nmap <nowait> H <Plug>Sneak_,
-" nmap <nowait> L <Plug>Sneak_;
+let g:sneak#absolute_dir=1
 "}}}
 
 Plug 'machakann/vim-swap' " swap parameters
