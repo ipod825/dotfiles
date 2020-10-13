@@ -788,10 +788,10 @@ nmap <leader>f <Plug>(operator-esearch-prefill)iw
 vmap <leader>f <Plug>(esearch)
 let g:esearch.default_mappings = 0
 let g:esearch.win_map = [
-            \ [ 'n', '<cr>', ':call b:esearch.open("NewTabdrop")<cr>'],
-            \ [ 'n', 't',  ':call b:esearch.open("NETRTabdrop")<cr>'],
-            \ [ 'n', 'pp', ':call b:esearch.split_preview_open() | wincmd W<cr>'],
-            \ [ 'n', 'q',  ':tabclose<cr>'],
+            \ ['n', '<cr>', '<cmd>call b:esearch.open("NewTabdrop")<cr>'],
+            \ ['n', 't',  '<cmd>call b:esearch.open("NETRTabdrop")<cr>'],
+            \ ['n', 'pp', '<cmd>call b:esearch.split_preview_open() | wincmd W<cr>'],
+            \ ['n', 'R', '<cmd>call b:esearch.reload({"backend": "system"})<cr>'],
             \]
 augroup ESEARCH
     autocmd!
