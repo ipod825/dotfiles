@@ -329,14 +329,15 @@ Plug 'voldikss/vim-translator', {'on': 'TranslateW'} "{{{
 
 Plug 'chaoren/vim-wordmotion' "{{{
 let g:wordmotion_nomap = 1
-omap w <Plug>Motion_e
 nmap w <Plug>WordMotion_w
-nmap e <Plug>Motion_e
-nmap b <Plug>WordMotion_b
 vmap w <Plug>WordMotion_e
+omap w <Plug>WordMotion_e
+nmap e <Plug>Motion_e
 vmap e <Plug>WordMotion_e
+nmap b <Plug>WordMotion_b
 vmap b <Plug>WordMotion_b
-nmap iv <Plug>WordMotion_iw
+vmap iv <Plug>WordMotion_iw
+omap iv <Plug>WordMotion_iw
 "}}}
 
 Plug 'cohama/lexima.vim' "{{{
