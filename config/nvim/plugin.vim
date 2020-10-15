@@ -332,7 +332,7 @@ let g:wordmotion_nomap = 1
 nmap w <Plug>WordMotion_w
 vmap w <Plug>WordMotion_e
 omap w <Plug>WordMotion_e
-nmap e <Plug>Motion_e
+nmap e <Plug>WordMotion_e
 vmap e <Plug>WordMotion_e
 nmap b <Plug>WordMotion_b
 vmap b <Plug>WordMotion_b
