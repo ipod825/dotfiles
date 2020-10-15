@@ -104,6 +104,7 @@ vnoremap <m-y> "+y
 " stay at the end after copy/paste
 vnoremap y y`]
 nnoremap p p`]
+vnoremap p "_dP`]
 " select last paste
 nmap <m-p> V'[
 "wrap long comment that is not automatically done by ale
