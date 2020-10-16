@@ -375,6 +375,7 @@ let g:VM_maps['Goto Prev'] = '<c-k>'
 let g:VM_maps['Goto Next'] = '<c-j>'
 let g:VM_maps['Undo'] = 'u'
 let g:VM_maps['Redo'] = '<c-r>'
+let g:VM_maps['Case Conversion Menu'] = '<leader>c'
 let g:VM_maps['Numbers'] = '<leader>n'
 let g:VM_maps['Visual Add'] = '<c-n>'
 let g:VM_maps['Visual Find'] = '<c-n>'
@@ -389,6 +390,7 @@ let g:VM_custom_motions  = {'<m-h>': '^', '<m-l>': '$'}
 let g:VM_custom_noremaps  = {'])': '])', ']]': ']]', ']}':']}', 'w':'e'}
 
 fun! VM_Start()
+    let @"=''
     imap <buffer> jk <Esc>
     imap <buffer> <c-h> <left>
     imap <buffer> <c-l> <right>
@@ -654,36 +656,36 @@ augroup WAR
 augroup END
 " }}}
 
-if has("nvim") "{{{
-Plug 'nvim-treesitter/nvim-treesitter'
-Plug 'nvim-treesitter/nvim-treesitter-textobjects'
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
-function! s:setup_treesitter()
-" try
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-    ensure_installed = {'bash','cpp','css','go',
-                \'html','javascript','lua','markdown',
-                \'python','yaml'},
-    highlight = {
-        enable = true,
-        disable = {'txt'}
-    },
-}
-EOF
-" catch
-" endtry
-endfunction
+"if has("nvim") "{{{
+"Plug 'nvim-treesitter/nvim-treesitter'
+"Plug 'nvim-treesitter/nvim-treesitter-textobjects'
+"set foldmethod=expr
+"set foldexpr=nvim_treesitter#foldexpr()
+"function! s:setup_treesitter()
+"" try
+"lua <<EOF
+"require'nvim-treesitter.configs'.setup {
+"    ensure_installed = {'bash','cpp','css','go',
+"                \'html','javascript','lua','markdown',
+"                \'python','yaml'},
+"    highlight = {
+"        enable = true,
+"        disable = {'txt'}
+"    },
+"}
+"EOF
+"" catch
+"" endtry
+"endfunction
 
-augroup NVIMTREESITTER
-    autocmd!
-    autocmd USER PLUGEND call <sid>setup_treesitter()
-augroup END
-else
-    set foldmethod=syntax
-endif
-"}}}
+"augroup NVIMTREESITTER
+"    autocmd!
+"    autocmd USER PLUGEND call <sid>setup_treesitter()
+"augroup END
+"else
+"    set foldmethod=syntax
+"endif
+""}}}
 
 Plug 'vim-test/vim-test' "{{{
 function! YankNearestTest()
