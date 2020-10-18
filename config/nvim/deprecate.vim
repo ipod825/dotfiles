@@ -1,3 +1,7 @@
+"Plug 'liuchengxu/vim-clap', { 'do': { -> clap#installer#force_download() } } "{{{
+"let g:clap_layout = {'width': '100%', 'height': '95%', 'row': '5%', 'col':'0%'}
+"nnoremap / <cmd>Clap blines<cr>
+""}}}
 " Plug 'kana/vim-submode'
 " Plug 'sgur/vim-textobj-parameter'
 " Plug 'Julian/vim-textobj-variable-segment'

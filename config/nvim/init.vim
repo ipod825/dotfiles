@@ -50,6 +50,8 @@ set completeopt=menuone,noinsert
 set termguicolors
 set scrolloff=2
 set lazyredraw
+set noswapfile
+set nobackup
 
 let g:terminal_scrollback_buffer_size=100000
 if has('nvim')
