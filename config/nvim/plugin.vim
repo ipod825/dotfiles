@@ -55,9 +55,6 @@ augroup END
 
 Plug 'wsdjeg/vim-fetch'
 Plug 'git@github.com:ipod825/vim-tabdrop'
-Plug 'Yggdroot/indentLine' "{{{
-let g:indentLine_concealcursor='nvc'
-"}}}
 
 Plug 'jreybert/vimagit', {'on_cmd': 'Magit'} "{{{
 augroup MAGIT
@@ -537,7 +534,7 @@ Plug 'airblade/vim-rooter' "{{{
 let g:rooter_manual_only = 1
 "}}}
 
-" Plug 'sheerun/vim-polyglot' "{{{
+Plug 'sheerun/vim-polyglot' "{{{
 let g:polyglot_disabled=['markdown']
 "}}}
 
@@ -685,6 +682,10 @@ augroup END
 "else
 "    set foldmethod=syntax
 "endif
+augroup NVIMTREESITTER
+    autocmd!
+    autocmd Filetype python setlocal foldmethod=indent
+augroup END
 ""}}}
 
 Plug 'vim-test/vim-test' "{{{
@@ -857,6 +858,7 @@ function! NETRInit()
 endfunction
 
 let g:NETRCustomNopreview={->winnr()==2 && winnr('$')==2}
+let g:NETRPreviewDefaultOn = v:false
 
 autocmd! USER NETRInit call NETRInit()
 "}}}
