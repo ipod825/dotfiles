@@ -141,7 +141,11 @@ endfunction
 
 " functions {{{
 function! SetColorScheme(...)
-    colorscheme one
+try
+    set termguicolors
+    execute 'colorscheme '.g:my_colorscheme
+catch
+endtry
 endfunction
 function! VimRcWrite()
     setlocal foldmethod=marker

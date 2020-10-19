@@ -1,3 +1,5 @@
+"Plug 'chrisbra/Recover.vim' "{{{
+""}}}
 " Plug 'Yggdroot/indentLine' "{{{
 "let g:indentLine_concealcursor='nvc'
 ""}}}
@@ -530,3 +532,77 @@
 "         normal! el
 "     endif
 " endfunction
+"packadd termdebug "{{{
+"command! Debug execute 'call <sid>Debug()'
+"command!  -nargs=* DebugGo call <sid>DebugGo(<f-args>)
+"command!  -nargs=* DebugGoStop call <sid>DebugGoStop()
+"command!  -nargs=* Test echo <q-args>
+
+"function! s:MapDebug()
+"    let g:saved_normal_mappings = Save_mappings(['n','s','c','B','C','e','f','U','D','t'], 'n', 1)
+"    let g:saved_visual_mappings = Save_mappings(['e'], 'x', 1)
+"    nnoremap n :call TermDebugSendCommand('next')<cr>
+"    nnoremap s :call TermDebugSendCommand('step')<cr>
+"    nnoremap c :call TermDebugSendCommand('continue')<cr>
+"    nnoremap B :Break<cr>
+"    nnoremap C :Clear<cr>
+"    nnoremap e :Evaluate<cr>
+"    nnoremap f :Finish<cr>
+"    nnoremap U :call TermDebugSendCommand('up')<cr>
+"    nnoremap D :call TermDebugSendCommand('down')<cr>
+"    nnoremap t :call TermDebugSendCommand('until '.line('.'))<cr>
+"    xmap e :Evaluate<cr>
+"endfunction
+
+"function! s:UnmapDebug()
+"    call Restore_mappings(g:saved_normal_mappings)
+"    let g:saved_normal_mappings = {}
+"    call Restore_mappings(g:saved_visual_mappings)
+"    let g:saved_visual_mappings = {}
+"endfunction
+
+"function! s:Debug()
+"    let bin=expand('%:r')
+"    wincmd H
+"    Program
+"    wincmd J
+"    resize 10
+"    call <sid>MapDebug()
+"    Gdb
+"    execute 'autocmd BufUnload <buffer> call <sid>UnmapDebug()'
+"    call feedkeys('file '.bin."\<cr>")
+"endfunction
+
+"function! s:GoMapDebug()
+"    let g:saved_normal_mappings = <sid>Save_mappings(['n','s','c','B','C','e','f','U','D','t'], 'n', 1)
+"    " let g:saved_visual_mappings = <sid>Save_mappings(['e'], 'x')
+"    nnoremap n :GoDebugNext<cr>
+"    nnoremap s :GoDebugStep<cr>
+"    nnoremap c :GoDebugContinue<cr>
+"    nnoremap B :GoDebugBreakpoint<cr>
+"    nnoremap e :GoDebugPrint<cr>
+"    nnoremap f :GoDebugStepOut<cr>
+"    " nnoremap U :call TermDebugSendCommand('up')<cr>
+"    " nnoremap D :call TermDebugSendCommand('down')<cr>
+"    " nnoremap t :call TermDebugSendCommand('until '.line('.'))<cr>
+"    " xmap e :Evaluate<cr>
+"endfunction
+
+"function! s:GoUnmapDebug()
+"    call Restore_mappings(g:saved_normal_mappings)
+"    let g:saved_normal_mappings = {}
+"    " call estore_mappings(g:saved_visual_mappings)
+"    " let g:saved_visual_mappings = {}
+"endfunction
+
+
+"function! s:DebugGo(...)
+"    call <sid>GoMapDebug()
+"    exe 'GoDebugStart '.join(a:000)
+"endfunction
+
+"function! s:DebugGoStop()
+"    call <sid>GoUnmapDebug()
+"    exe 'GoDebugStop'
+"endfunction
+""}}}
