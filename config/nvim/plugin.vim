@@ -536,6 +536,8 @@ let g:rooter_manual_only = 1
 
 Plug 'sheerun/vim-polyglot' "{{{
 let g:polyglot_disabled=['markdown']
+let g:polyglot_disabled = ['sensible']
+let g:polyglot_disabled = ['autoindent']
 "}}}
 
 Plug 'SirVer/ultisnips' "{{{
@@ -858,7 +860,6 @@ function! NETRInit()
 endfunction
 
 let g:NETRCustomNopreview={->winnr()==2 && winnr('$')==2}
-let g:NETRPreviewDefaultOn = v:false
 
 autocmd! USER NETRInit call NETRInit()
 "}}}
