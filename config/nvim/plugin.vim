@@ -176,7 +176,10 @@ endfunction
 
 function! s:GinaLogRefresh()
     edit
-    call matchadd('RedrawDebugRecompose', w:target_branch)
+    if get(w:, 'mark_id', -1) >=0
+        call matchdelete(w:mark_id)
+        let w:mark_id = call matchadd('RedrawDebugRecompose', w:target_branch)
+    endif
 endfunction
 
 function! s:GinaLogGetBranches(line_nr)
