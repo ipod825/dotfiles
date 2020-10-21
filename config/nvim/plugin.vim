@@ -59,9 +59,15 @@ Plug 'wsdjeg/vim-fetch'
 Plug 'git@github.com:ipod825/vim-tabdrop'
 
 Plug 'jreybert/vimagit', {'on_cmd': 'Magit'} "{{{
+function s:MagitSetup()
+    wincmd T
+    nmap <buffer> X DDD
+    nmap <buffer> r R
+    nmap <buffer> s S
+endfunction
 augroup MAGIT
     autocmd!
-    autocmd Filetype magit wincmd T
+    autocmd Filetype magit call <sid>MagitSetup()
 augrou END
 "}}}
 
@@ -126,8 +132,8 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('log', 'cc',':call GinaLogCheckout()<cr>')
     call gina#custom#mapping#nmap('log', 'cb',':call GinaLogCheckoutNewBranch()<cr>')
     call gina#custom#mapping#nmap('log', 'r',':call GinaLogRebase()<cr>')
-    call gina#custom#mapping#vmap('log', 'r',':<c-u>call GinaLogVisualRebase()<cr>')
-    call gina#custom#mapping#nmap('log', 'm',':call GinaLogMarkTargetHash()<cr>')
+    call gina#custom#mapping#vmap('log', 'r',':<c-u>call GinaLogRebaseReplay()<cr>')
+    call gina#custom#mapping#nmap('log', 'm',':call GinaLogMarkTarget()<cr>')
     call gina#custom#mapping#nmap('log', '<m-s-d>',':call GinaLogDeleteBranch()<cr>', {'silent': 1})
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-vsplit)')
@@ -140,6 +146,8 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('branch', 'dd','<Plug>(gina-show-commit-vsplit)')
     call gina#custom#mapping#nmap('branch', 'DD','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('branch', 'r','<Plug>(gina-commit-rebase)')
+    call gina#custom#mapping#nmap('branch', 'm',':call GinaBranchMarkTarget()<cr>')
+    call gina#custom#mapping#vmap('branch', 'r',':<c-u>call GinaBranchRebaseReplay()<cr>')
 endfunction
 
 function! GitInfo() abort
@@ -170,6 +178,34 @@ function! s:BranchFilter(k, v)
     endif
 endfunction
 
+function GinaBranchRebaseReplay()
+    let l:target_branch = get(w:, 'target_branch', '')
+    if empty(l:target_branch)
+        echoerr "No target branch"
+    endif
+
+    let [line_start,line_end] = [getpos("'<")[1], getpos("'>")[1]]
+    let l:branches = []
+    for l:line_nr in range(line_start,line_end)
+        call add(l:branches, GinaBranchGetBranch(l:line_nr))
+    endfor
+
+    let l:branches = [l:target_branch] + l:branches
+    let l:ori_branch = system('git branch --show-current')
+    for l:i in range(len(l:branches)-1)
+        let l:target = l:branches[0]
+        let l:source = l:branches[1]
+        call remove(l:branches, 0)
+        exec 'silent !git checkout '.l:source
+        if system('git rebase --onto '.l:target.' HEAD~1') =~ 'CONFLICT'
+            echoerr 'Conflict when rebasing '.l:source.' to '.l:target.'. Fix it before continue.'
+            edit
+            return
+        endif
+    endfor
+    exec 'silent !git checkout '.l:ori_branch
+endfunction
+
 function! s:GinaLogRefreshFzfCmd(cmd)
     return {arg-> execute(a:cmd.' '.arg) || timer_start(150, {_->execute('edit')})}
 endfunction
@@ -178,12 +214,29 @@ function! s:GinaLogRefresh()
     edit
     if get(w:, 'mark_id', -1) >=0
         call matchdelete(w:mark_id)
-        let w:mark_id = call matchadd('RedrawDebugRecompose', w:target_branch)
+        let w:mark_id = matchadd('RedrawDebugRecompose', w:target_branch)
+    endif
+endfunction
+
+function! GinaBranchGetBranch(line_nr)
+    let l:line_nr = a:line_nr
+    if l:line_nr == '.'
+        let l:line_nr = line(a:line_nr)
+    endif
+    let l:line = getline(l:line_nr)
+    if l:line =~ '[32m'
+        return l:line[7:-4]
+    else
+        return l:line[2:-4]
     endif
 endfunction
 
 function! s:GinaLogGetBranches(line_nr)
-    let l:branch_str = matchstr(getline(line('.')), ';1m ([^)]*)')[4:]
+    let l:line_nr = a:line_nr
+    if l:line_nr == '.'
+        let l:line_nr = line(a:line_nr)
+    endif
+    let l:branch_str = matchstr(getline(l:line_nr), ';1m ([^)]*)')[4:]
     if !empty(l:branch_str)
         let l:branches = split(l:branch_str[1:len(l:branch_str)-2], ', ')
         return filter(map(l:branches, function('<sid>BranchFilter')), '!empty(v:val)')
@@ -191,18 +244,25 @@ function! s:GinaLogGetBranches(line_nr)
     return []
 endfunction
 
-function! s:GinaLogCandidate()
+function! GinaLogCandidate()
     return s:GinaLogGetBranches(line('.')) + [matchstr(getline('.'), '[0-9a-f]\{6,9\}')]
 endfunction
 
-function! GinaLogMarkTargetHash()
-    let w:target_branch = s:GinaLogCandidate()[-1]
+function! s:GinaBranchMarkTarget()
+    let w:target_branch = GinaBranchGetBranch(".")
+    if get(w:, 'mark_id', -1) >=0
+        call matchdelete(w:mark_id)
+    endif
+    let w:mark_id = matchaddpos('RedrawDebugRecompose', [line('.')])
+endfunction
+
+function! GinaLogMarkTarget()
+    let w:target_branch =GinaLogCandidate()[-1]
     if get(w:, 'mark_id', -1) >=0
         call matchdelete(w:mark_id)
     endif
     let w:mark_id = matchadd('RedrawDebugRecompose', w:target_branch)
 endfunction
-
 
 function! GinaLogDeleteBranch()
     call fzf#run(fzf#wrap({
@@ -212,7 +272,7 @@ function! GinaLogDeleteBranch()
         \}))
 endfunction
 
-function! GinaLogVisualRebase()
+function! GinaLogRebaseReplay()
     let l:target_branch = get(w:, 'target_branch', '')
     if empty(l:target_branch)
         echoerr "No target branch!"
@@ -252,7 +312,7 @@ endfunction
 
 function! GinaLogCheckout()
     call fzf#run(fzf#wrap({
-            \ 'source': s:GinaLogCandidate(),
+            \ 'source': GinaLogCandidate(),
             \ 'sink': s:GinaLogRefreshFzfCmd('Gina checkout'),
             \ 'options': '+s -1',
         \}))
@@ -261,7 +321,7 @@ endfunction
 function! GinaLogCheckoutNewBranch()
     let l:nb = input('New branch name: ')
     call fzf#run(fzf#wrap({
-            \ 'source': s:GinaLogCandidate(),
+            \ 'source': GinaLogCandidate(),
             \ 'sink': s:GinaLogRefreshFzfCmd('Gina checkout -b '.l:nb),
             \ 'options': '+s -1',
         \}))
@@ -270,14 +330,14 @@ endfunction
 
 function! GinaLogRebase()
     call fzf#run(fzf#wrap({
-            \ 'source': s:GinaLogCandidate(),
+            \ 'source': GinaLogCandidate(),
             \ 'sink': s:GinaLogRefreshFzfCmd('Gina!! rebase -i '),
             \ 'options': '+s -1',
         \}))
 endfunction
 
 function! GinaLogReset(opt)
-    exec 'Gina reset 'a:opt.' '.s:GinaLogCandidate()[0]
+    exec 'Gina reset 'a:opt.' '.GinaLogCandidate()[0]
     call s:GinaLogRefresh()
 endfunction
 "}}}
