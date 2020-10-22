@@ -248,7 +248,7 @@ function! GinaLogCandidate()
     return s:GinaLogGetBranches(line('.')) + [matchstr(getline('.'), '[0-9a-f]\{6,9\}')]
 endfunction
 
-function! s:GinaBranchMarkTarget()
+function! GinaBranchMarkTarget()
     let w:target_branch = GinaBranchGetBranch(".")
     if get(w:, 'mark_id', -1) >=0
         call matchdelete(w:mark_id)
