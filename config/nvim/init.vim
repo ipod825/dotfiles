@@ -77,7 +77,7 @@ augroup GENERAL "{{{
 
     " Diff setting
     autocmd BufWritePost * if &diff == 1 | diffupdate | endif
-    autocmd BufAdd * if &diff | setlocal wrap< | setlocal foldmethod=diff | endif
+    autocmd OptionSet diff setlocal wrap
 
     " Terminal
     let s:auto_term_insert=1

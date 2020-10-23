@@ -67,6 +67,7 @@ cnoreabbrev glc exec "Gina log --branches --graph -- ".expand("%:p")
 cnoreabbrev gps Gina push
 cnoreabbrev gpl Gina pull
 cnoreabbrev grc Gina!! rebase --continue
+cnoreabbrev gra Gina!! rebase --abort
 augroup GINA
     autocmd!
     autocmd USER PLUGEND call s:SetupGina()
@@ -109,7 +110,7 @@ function! s:SetupGina()
 	call gina#custom#mapping#nmap('status', 'L','<Plug>(gina-index-unstage)j')
 	call gina#custom#mapping#vmap('status', 'L','<Plug>(gina-index-unstage)')
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
-	call gina#custom#mapping#nmap('status', 'DD','<Plug>(gina-compare-vsplit)')
+	call gina#custom#mapping#nmap('status', 'DD','<cmd>call GinaStatusCompareOrPatch()<cr>')
 	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit<CR>')
 	call gina#custom#mapping#nmap('status', 'ca',':quit<cr>:Gina commit --amend --allow-empty<cr>')
     call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-show-vsplit)')
@@ -162,6 +163,15 @@ function! s:BranchFilter(k, v)
         return a:v[8:]
     else
         return a:v
+    endif
+endfunction
+
+function GinaStatusCompareOrPatch()
+    let l:line = substitute(getline('.'), '[\d*m', '', 'g')
+    if l:line[:1] == "MM"
+        call gina#action#call('patch:tab')
+    else
+        call gina#action#call('compare:vsplit')
     endif
 endfunction
 
@@ -762,6 +772,7 @@ let g:esearch = {
             \ 'batch_size':       1000,
             \ 'default_mappings': 1,
             \ 'live_update': 0,
+            \ 'win_ui_nvim_syntax': 1,
             \}
 nmap <leader>f <Plug>(operator-esearch-prefill)iw
 vmap <leader>f <Plug>(esearch)
