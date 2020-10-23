@@ -1,3 +1,15 @@
+"Plug 'jreybert/vimagit', {'on_cmd': 'Magit'} "{{{
+"function s:MagitSetup()
+"    wincmd T
+"    nmap <buffer> X DDD
+"    nmap <buffer> r R
+"    nmap <buffer> s S
+"endfunction
+"augroup MAGIT
+"    autocmd!
+"    autocmd Filetype magit call <sid>MagitSetup()
+"augrou END
+""}}}
 "Plug 'chrisbra/Recover.vim' "{{{
 ""}}}
 " Plug 'Yggdroot/indentLine' "{{{

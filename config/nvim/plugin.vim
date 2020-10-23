@@ -58,19 +58,7 @@ augroup END
 Plug 'wsdjeg/vim-fetch'
 Plug 'git@github.com:ipod825/vim-tabdrop'
 
-Plug 'jreybert/vimagit', {'on_cmd': 'Magit'} "{{{
-function s:MagitSetup()
-    wincmd T
-    nmap <buffer> X DDD
-    nmap <buffer> r R
-    nmap <buffer> s S
-endfunction
-augroup MAGIT
-    autocmd!
-    autocmd Filetype magit call <sid>MagitSetup()
-augrou END
-"}}}
-
+Plug 'tpope/vim-fugitive', {'on_cmd': 'Gdiff'}
 Plug 'lambdalisue/gina.vim' "{{{
 let g:gina#action#index#discard_directories=1
 cnoreabbrev G Gina status -s
