@@ -58,7 +58,6 @@ augroup END
 Plug 'wsdjeg/vim-fetch'
 Plug 'git@github.com:ipod825/vim-tabdrop'
 
-Plug 'tpope/vim-fugitive', {'on_cmd': 'Gdiff'}
 Plug 'lambdalisue/gina.vim' "{{{
 let g:gina#action#index#discard_directories=1
 cnoreabbrev G Gina status -s
