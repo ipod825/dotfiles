@@ -1,8 +1,8 @@
 #!/bin/sh
-# Profile file. Runs on shell login. We also source this file in ~/.xsession and ~/.xsesionrc to have the same environment when logging in with X.
+# Profile file. Runs on shell login. We also source this file in ~/.xsession and
+# ~/.xsesionrc to have the same environment when logging in with X.
 
 stty -ixon # free C-q for other binding
-
 
 # path
 function addToPATH {
@@ -18,7 +18,7 @@ done
 
 addToPATH $HOME/dotfiles/bin
 
-source $HOME/.z.sh
+# source $HOME/.z.sh
 
 # alias
 alias ls='ls --color'
@@ -38,12 +38,12 @@ alias gad='git add -u'
 alias gcm='git commit -m'
 alias gca='git commit -a -m'
 alias gro='git rebase --onto'
+alias gprun='cuthon --'
+alias cprun='cuthon -n 0 --'
 
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
     alias ls='ls -G'
 fi
-alias gprun='cuthon --'
-alias cprun='cuthon -n 0 --'
 alias nsh='nvim +terminal +startinsert'
 iv(){
     ls "$@" | sort -V | sxiv -i
@@ -52,10 +52,8 @@ iv(){
 export EDITOR="nvim"
 export GIT_EDITOR='nvr --remote-tab-wait +"setlocal bufhidden=wipe"'
 export TERMINAL="xterm"
-export BROWSER='qday'
 export GOPATH=$HOME/opt/go
 export XDG_CONFIG_HOME=$HOME/.config
-
 
 # pyenv
 if [ -d $HOME/.pyenv ];then
@@ -63,7 +61,6 @@ if [ -d $HOME/.pyenv ];then
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
     export PYENV_VIRTUALENV_DISABLE_PROMPT=0
-    # alias pudb='python -m pudb'
 fi
 
 setupvirtualenv(){
@@ -111,12 +108,6 @@ MANPAGER="nvim -c 'set ft=man' -"
 export FZF_DEFAULT_OPTS="--color hl:1,hl+:1,bg+:239 --reverse --bind 'ctrl-s:jump,ctrl-f:page-down,ctrl-b:page-up,ctrl-y:execute-silent(echo {} | xclip -sel clip)+abort'"
 unalias z 2> /dev/null
 
-z() {
-  [ $# -gt 0 ] && _z "$*" && return
-  cd "$(_z -l 2>&1 | fzf --height 40% --nth 2.. --reverse --inline-info +s --tac --query "${*##-* }" | sed 's/^[0-9,.]* *//')"
-}
-
-
 # tmux
 tm() {
   [[ -n "$TMUX" ]] && change="switch-client" || change="attach-session"
@@ -124,33 +115,4 @@ tm() {
     tmux $change -t "$1" 2>/dev/null || (tmux new-session -d -s $1 && tmux $change -t "$1"); return
   fi
   session=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | fzf --exit-0) &&  tmux $change -t "$session" || echo "No sessions found."
-}
-
-# rclone
-rpush() {
-    HOME=$HOME
-    PWD=$PWD
-    AFFIX=${PWD:${#HOME}}
-    rclone -P sync . gdrive:$AFFIX $@
-}
-
-rpull() {
-    HOME=$HOME
-    PWD=$PWD
-    AFFIX=${PWD:${#HOME}}
-    rclone -P sync gdrive:$AFFIX . $@
-}
-
-rdownload() {
-    HOME=$HOME
-    PWD=$PWD
-    AFFIX=${PWD:${#HOME}}
-    rclone -P copy gdrive:$AFFIX/$1 ./$1
-}
-
-rupload() {
-    HOME=$HOME
-    PWD=$PWD
-    AFFIX=${PWD:${#HOME}}
-    rclone -P copy ./$1 gdrive:$AFFIX/$1
 }
