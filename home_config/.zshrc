@@ -22,7 +22,12 @@ source ~/.profile
 ## Completion
 # use input as query string when completing zlua
 zstyle ':fzf-tab:complete:_zlua:*' query-string input
-compinit
+autoload -Uz compinit
+if test `find ~/.zcompdump -mtime 1 2> /dev/null`; then
+    compinit
+else
+    compinit -C
+fi;
 
 ## OPTIONS
 # General
