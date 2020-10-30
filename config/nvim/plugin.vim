@@ -51,7 +51,7 @@ let g:fzf_action = { 'ctrl-e': 'edit', 'Enter': 'Tabdrop', 'ctrl-s': 'split', 'c
 let g:fzf_ft=''
 augroup FZF
     autocmd!
-    autocmd! FileType fzf if strlen(g:fzf_ft) | silent! let &ft=g:fzf_ft | endif
+    autocmd! FileType fzf if strlen(g:fzf_ft)  && g:fzf_ft!= "man" | silent! let &ft=g:fzf_ft | endif
 augroup END
 "}}}
 

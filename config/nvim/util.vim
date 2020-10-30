@@ -74,11 +74,13 @@ cnoreabbrev gcb call <sid>GitCheckBranch()
 
 
 function! s:SearchWord() "{{{
+    let g:fzf_ft=&ft
     silent call fzf#run(fzf#wrap({
                 \ 'source': map(getline(1, '$'), '(v:key + 1) . ": " . v:val '),
                 \ 'sink': function('s:Line_handler'),
-                \ 'options': '+s -e --ansi',
+                \ 'options': '+s -e --ansi --color hl:reverse:-1,hl+:reverse:-1',
                 \}))
+    let g:fzf_ft=''
 endfunction
 function! s:Line_handler(l)
     let keys = split(a:l, ':')

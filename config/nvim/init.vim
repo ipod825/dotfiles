@@ -51,6 +51,7 @@ set scrolloff=2
 set lazyredraw
 set noswapfile
 set nobackup
+set noshowmode
 
 let g:terminal_scrollback_buffer_size=100000
 if has('nvim')
