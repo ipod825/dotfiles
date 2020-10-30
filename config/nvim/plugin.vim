@@ -170,6 +170,8 @@ function GinaStatusCompareOrPatch()
     let l:line = substitute(getline('.'), '[\d*m', '', 'g')
     if l:line[:1] == "MM"
         call gina#action#call('patch:tab')
+    elseif l:line[:1] == "UU"
+        call gina#action#call('chaperon:tab')
     else
         call gina#action#call('compare:vsplit')
     endif
@@ -634,7 +636,7 @@ augroup WAR
     autocmd Filetype gina-changes :call war#fire(1, 1, 0, 0)
     autocmd Filetype git :call war#fire(-1, 0.8, -1, 0.1)
     autocmd Filetype esearch :call war#fire(0.8, -1, 0.2, -1)
-    autocmd Filetype bookmark :call war#fire(-1, 1, 0.2, -1)
+    autocmd Filetype bookmark :call war#fire(-1, 1, -1, 0.2)
     autocmd Filetype bookmark :call war#enter(-1)
 augroup END
 " }}}
