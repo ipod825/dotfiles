@@ -78,7 +78,7 @@ function! s:SearchWord() "{{{
     silent call fzf#run(fzf#wrap({
                 \ 'source': map(getline(1, '$'), '(v:key + 1) . ": " . v:val '),
                 \ 'sink': function('s:Line_handler'),
-                \ 'options': '+s -e --ansi --color hl:reverse:-1,hl+:reverse:-1',
+                \ 'options': '+s -e --ansi --color hl:reverse:underline:-1,hl+:reverse:underline:-1',
                 \}))
     let g:fzf_ft=''
 endfunction
