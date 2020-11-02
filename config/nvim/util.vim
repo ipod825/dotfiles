@@ -154,3 +154,18 @@ function! LanguageClientRefresh()     "{{{
 endfunction
 "}}}
 call AddUtilComand('LanguageClientRefresh')
+
+
+function! HexEdit()     "{{{
+  let &bin=1
+
+  autocmd BufReadPost <buffer> if &bin | %!xxd
+  autocmd BufReadPost <buffer> set ft=xxd | endif
+  autocmd BufWritePre <buffer> if &bin | let b:cursorpos=getcurpos() | %!xxd -r
+  autocmd BufWritePre <buffer> endif
+  autocmd BufWritePost <buffer> if &bin | undojoin | silent keepjumps %!xxd
+  autocmd BufWritePost <buffer> set nomod | call setpos('.', b:cursorpos) | endif
+  edit
+endfunction
+"}}}
+call AddUtilComand('HexEdit')
