@@ -22,12 +22,12 @@ function! s:ExecFnOrCmd(name) "{{{
     call timer_start(0, function('s:ExecFnOrCmdImpl'))
 endfunction
 function! s:ExecFnOrCmdImpl(t) "{{{
-    if exists(":".s:execname)
-        execute s:execname
-    elseif exists('*<sid>'.s:execname)
+    if exists('*<sid>'.s:execname)
         execute 'call <sid>'.s:execname.'()'
     elseif exists('*'.s:execname)
         execute 'call '.s:execname.'()'
+    elseif exists(":".s:execname)
+        execute s:execname
     endif
 endfunction
 "}}}

@@ -401,6 +401,22 @@ vmap iv <Plug>WordMotion_iw
 omap iv <Plug>WordMotion_iw
 "}}}
 
+Plug 'drmikehenry/vim-headerguard' "{{{
+"}}}
+
+Plug 'tpope/vim-abolish' "{{{
+function! s:AbolishHandle(l)
+    call timer_start(0, {_->execute('normal cr'.split(a:l, ':')[1])})
+endfunction
+function! Abolish()     "{{{
+    call fzf#run(fzf#wrap({
+                \ 'source': ['camelCase:c','MixedCase:m','snake_case:s','SNAKE_UPPERCASE:u'],
+                \ 'sink': function('s:AbolishHandle')
+                \}))
+endfunction
+call AddUtilComand('Abolish')
+"}}}
+
 Plug 'cohama/lexima.vim' "{{{
 inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
 function! s:AutoPairsJump()
