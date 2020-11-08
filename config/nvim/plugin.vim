@@ -74,12 +74,26 @@ augroup GINA
     autocmd Filetype gina-log call matchadd('ErrorMsg', '.*HEAD.*')
 augroup END
 
+function! GitNavigate(back)
+    if a:back
+        call search('^diff', 'b')
+    else
+        call search('^diff')
+    endif
+    normal zt
+    if foldclosed(line('.'))>0
+        normal za
+    endif
+endfunction
+
 augroup GIT
     autocmd!
-    autocmd Filetype git nnoremap <buffer> cc :call <sid>GitCheckOutFile()<cr><cr>
+    autocmd Filetype git nnoremap <buffer> cc <cmd>call <sid>GitCheckOutFile()<cr><cr>
     autocmd Filetype git nnoremap <buffer> <cr> <c-w>v:call gina#core#diffjump#jump()<cr>
     autocmd Filetype git exec 'lcd '.system('git rev-parse --show-toplevel')
     autocmd Filetype git setlocal foldmethod=syntax
+    autocmd Filetype git nnoremap <buffer> <c-j> <cmd>call GitNavigate(v:false)<cr>
+    autocmd Filetype git nnoremap <buffer> <c-k> <cmd>call GitNavigate(v:true)<cr>
 augroup END
 
 function! s:GitCheckOutFile()
@@ -408,13 +422,13 @@ Plug 'tpope/vim-abolish' "{{{
 function! s:AbolishHandle(l)
     call timer_start(0, {_->execute('normal cr'.split(a:l, ':')[1])})
 endfunction
-function! Abolish()     "{{{
+function! DoAbolish()     "{{{
     call fzf#run(fzf#wrap({
                 \ 'source': ['camelCase:c','MixedCase:m','snake_case:s','SNAKE_UPPERCASE:u'],
                 \ 'sink': function('s:AbolishHandle')
                 \}))
 endfunction
-call AddUtilComand('Abolish')
+call AddUtilComand('DoAbolish')
 "}}}
 
 Plug 'cohama/lexima.vim' "{{{
@@ -839,8 +853,6 @@ let g:NETRRifleFile = $HOME."/dotfiles/config/nvim/settings/rifle.conf"
 let g:NETRIgnore = ['__pycache__', '*.pyc', '*.o', 'egg-info', 'tags']
 let g:NETRColors = {'dir': 39, 'footer': 35, 'exe': 35}
 let g:NETRGuiColors = {'dir': '#00afff', 'footer': '#00af5f', 'exe': '#00af5f'}
-let g:NETRDefaultMapSkip = ["L", "<cr>"]
-let g:NETRVimCD = ["cd"]
 let g:NETRRifleDisplayError = v:false
 function! DuplicateNode()
     let path = netranger#api#cur_node_path()
