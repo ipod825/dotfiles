@@ -854,6 +854,7 @@ let g:NETRIgnore = ['__pycache__', '*.pyc', '*.o', 'egg-info', 'tags']
 let g:NETRColors = {'dir': 39, 'footer': 35, 'exe': 35}
 let g:NETRGuiColors = {'dir': '#00afff', 'footer': '#00af5f', 'exe': '#00af5f'}
 let g:NETRRifleDisplayError = v:false
+let g:NETRDefaultMapSkip = ['<cr>']
 function! DuplicateNode()
     let path = netranger#api#cur_node_path()
     let dir = fnamemodify(path, ':p:h').'/'
