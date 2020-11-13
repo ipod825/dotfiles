@@ -785,7 +785,7 @@ endfunction
 function! SelectYank()
     let g:fzf_ft = &ft
     silent call fzf#run(fzf#wrap({
-                \ 'source': filter(map(yoink#getYankHistory(),"v:val.text"), "len(v:val)>1"),
+                \ 'source': filter(map(copy(yoink#getYankHistory()),"v:val.text"), "len(v:val)>1"),
                 \ 'sink': function('SelectYankHandler'),
                 \}))
     let g:fzf_ft=''
