@@ -49,8 +49,8 @@ iv(){
     ls "$@" | sort -V | sxiv -i
 }
 
-export EDITOR="nvim"
-export GIT_EDITOR='nvr --remote-tab-wait +"setlocal bufhidden=wipe"'
+export EDITOR='nvr -s --remote-tab-wait +"setlocal bufhidden=wipe"'
+export GIT_EDITOR='nvr -s --remote-tab-wait +"setlocal bufhidden=wipe"'
 export TERMINAL="xterm"
 export GOPATH=$HOME/opt/go
 export XDG_CONFIG_HOME=$HOME/.config
@@ -73,30 +73,29 @@ MANPAGER="nvim -c 'set ft=man' -"
 
 # nvim remote
 nvrte(){
-    if [[ $1 == /* ]];
-    then
-        nvr --remote-send "<c-\><c-n>:Tabdrop $1<cr>"
+    nvr --nostart --remote-expr "bufnr('%')"
+    if [[ $? -eq 1 ]]; then
+        nvim $@
+    elif [[ $1 == /* ]]; then
+        nvr -s --remote-send "<c-\><c-n>:Tabdrop $1<cr>"
     else
-        nvr --remote-send "<c-\><c-n>:Tabdrop `pwd`/$1<cr>"
+        nvr -s --remote-send "<c-\><c-n>:Tabdrop `pwd`/$1<cr>"
     fi
 }
 
 nvre(){
-    cur_buf_num=`nvr --remote-expr "bufnr('%')"`
-    if [[ $1 == /* ]];
-    then
-        nvr --remote-send "<c-\><c-n>:edit $1<cr> | :bw! $cur_buf_num<cr>"
+    cur_buf_num=`nvr --nostart --remote-expr "bufnr('%')"`
+    if [[ $? -eq 1 ]]; then
+        nvim $@
+    elif [[ $1 == /* ]]; then
+        nvr -s --remote-send "<c-\><c-n>:edit $1<cr> | :bw! $cur_buf_num<cr>"
     else
-        nvr --remote-send "<c-\><c-n>:edit `pwd`/$1<cr> | :bw! $cur_buf_num<cr>"
+        nvr -s --remote-send "<c-\><c-n>:edit `pwd`/$1<cr> | :bw! $cur_buf_num<cr>"
     fi
 }
 
-nvrf(){
-    nvr --remote-send "<c-\><c-n>:f<cr>"
-}
 alias te='nvrte'
 alias e='nvre'
-alias f='nvrf'
 # dtach
 dt(){
 dtach -A /tmp/$1 -r winch nvim .
