@@ -110,8 +110,7 @@ function! s:GitCheckOutFile()
 endfunction
 
 function! s:SetupGina()
-	call gina#custom#command#option('/\%(status\|branch\|log\)', '--opener', 'tabedit')
-	call gina#custom#command#option('/\%(commit\)', '--opener', 'edit')
+	call gina#custom#command#option('/\%(commit\|status\|branch\|log\)', '--opener', 'tabedit')
 	call gina#custom#command#option('/\%(changes\)', '--opener', 'vsplit')
 	call gina#custom#mapping#nmap('/.*', '<F1>','<Plug>(gina-builtin-help)')
     call gina#custom#mapping#nmap('/.*', '?','<Plug>MSAddBySearchForward')
@@ -126,8 +125,8 @@ function! s:SetupGina()
 	call gina#custom#mapping#vmap('status', 'L','<Plug>(gina-index-unstage)')
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
 	call gina#custom#mapping#nmap('status', 'DD','<cmd>call GinaStatusCompareOrPatch()<cr>')
-	call gina#custom#mapping#nmap('status', 'cc',':Gina commit +tabmove\ -1<CR>')
-	call gina#custom#mapping#nmap('status', 'ca',':Gina commit +tabmove\ -1 --amend --allow-empty<cr>')
+	call gina#custom#mapping#nmap('status', 'cc',':call GinaCommit()<cr>')
+	call gina#custom#mapping#nmap('status', 'ca',':call GinaCommit("--amend --allow-empty")<cr>')
     call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-show-vsplit)')
     call gina#custom#mapping#nmap('log', 'dd','<Plug>(gina-show-vsplit)')
     call gina#custom#mapping#nmap('log', 'DD','<Plug>(gina-changes-between)')
@@ -165,6 +164,12 @@ function! GitInfo() abort
     " let ah = ah!=0?'↑'.ah:''
     " let bh = bh!=0?'↓'.bh:''
     " return br.ah.bh
+endfunction
+
+function! GinaCommit(...)
+    quit
+    execute 'Gina commit '.join(a:000,'')
+    silent! tabmove -1
 endfunction
 
 function! s:BranchFilter(k, v)
