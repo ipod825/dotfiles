@@ -61,7 +61,7 @@ Plug 'git@github.com:ipod825/vim-tabdrop'
 Plug 'lambdalisue/gina.vim' "{{{
 let g:gina#action#index#discard_directories=1
 cnoreabbrev G Gina status -s
-cnoreabbrev gbr Gina branch +tabmove\ -1
+cnoreabbrev gbr Gina branch
 cnoreabbrev glg Gina log --branches --graph
 cnoreabbrev glc exec "Gina log --branches --graph -- ".expand("%:p")
 cnoreabbrev gps Gina push
@@ -72,6 +72,7 @@ augroup GINA
     autocmd!
     autocmd USER PLUGEND call s:SetupGina()
     autocmd Filetype gina-log call matchadd('ErrorMsg', '.*HEAD.*')
+    autocmd Filetype gina-status,gina-log,gina-branch silent! tabmove -1
 augroup END
 
 function! GitNavigate(back)
@@ -109,8 +110,8 @@ function! s:GitCheckOutFile()
 endfunction
 
 function! s:SetupGina()
-	call gina#custom#command#option('/\%(status\|commit\)', '--opener', 'botright split')
-	call gina#custom#command#option('/\%(branch\|log\)', '--opener', 'tabedit')
+	call gina#custom#command#option('/\%(status\|branch\|log\)', '--opener', 'tabedit')
+	call gina#custom#command#option('/\%(commit\)', '--opener', 'edit')
 	call gina#custom#command#option('/\%(changes\)', '--opener', 'vsplit')
 	call gina#custom#mapping#nmap('/.*', '<F1>','<Plug>(gina-builtin-help)')
     call gina#custom#mapping#nmap('/.*', '?','<Plug>MSAddBySearchForward')
@@ -125,8 +126,8 @@ function! s:SetupGina()
 	call gina#custom#mapping#vmap('status', 'L','<Plug>(gina-index-unstage)')
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
 	call gina#custom#mapping#nmap('status', 'DD','<cmd>call GinaStatusCompareOrPatch()<cr>')
-	call gina#custom#mapping#nmap('status', 'cc',':quit<cr>:Gina commit<CR>')
-	call gina#custom#mapping#nmap('status', 'ca',':quit<cr>:Gina commit --amend --allow-empty<cr>')
+	call gina#custom#mapping#nmap('status', 'cc',':Gina commit +tabmove\ -1<CR>')
+	call gina#custom#mapping#nmap('status', 'ca',':Gina commit +tabmove\ -1 --amend --allow-empty<cr>')
     call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-show-vsplit)')
     call gina#custom#mapping#nmap('log', 'dd','<Plug>(gina-show-vsplit)')
     call gina#custom#mapping#nmap('log', 'DD','<Plug>(gina-changes-between)')

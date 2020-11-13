@@ -49,7 +49,7 @@ iv(){
     ls "$@" | sort -V | sxiv -i
 }
 
-export EDITOR='nvr -s --remote-tab-wait +"setlocal bufhidden=wipe"'
+export EDITOR='nvr -s --remote-tab-wait +"setlocal bufhidden=wipe | tabmove -1"'
 export GIT_EDITOR='nvr -s --remote-tab-wait +"setlocal bufhidden=wipe"'
 export TERMINAL="xterm"
 export GOPATH=$HOME/opt/go
