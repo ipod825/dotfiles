@@ -149,7 +149,7 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('branch', 'DD','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('branch', 'r','<Plug>(gina-commit-rebase)')
     call gina#custom#mapping#nmap('branch', 'm',':call GinaBranchMarkTarget()<cr>')
-    call gina#custom#mapping#vmap('branch', 'r',':<c-u>call GinaBranchRebaseReplay()<cr>')
+    call gina#custom#mapping#vmap('branch', 'r','<cmd>call GinaBranchRebaseReplay()<cr>')
 endfunction
 
 function! GitInfo() abort
@@ -186,7 +186,7 @@ function! s:BranchFilter(k, v)
     endif
 endfunction
 
-function GinaStatusCompareOrPatch()
+function! GinaStatusCompareOrPatch()
     let l:line = substitute(getline('.'), '[\d*m', '', 'g')
     if l:line[:1] == "MM"
         call gina#action#call('patch:tab')
@@ -197,13 +197,14 @@ function GinaStatusCompareOrPatch()
     endif
 endfunction
 
-function GinaBranchRebaseReplay()
+function! GinaBranchRebaseReplay()
     let l:target_branch = get(w:, 'target_branch', '')
     if empty(l:target_branch)
         echoerr "No target branch"
     endif
 
-    let [line_start,line_end] = [getpos("'<")[1], getpos("'>")[1]]
+    let line_start = getpos("v")[1]
+    let line_end = getpos(".")[1]
     let l:branches = []
     for l:line_nr in range(line_start,line_end)
         call add(l:branches, GinaBranchGetBranch(l:line_nr))
@@ -824,6 +825,7 @@ let g:esearch.win_map = [
 augroup ESEARCH
     autocmd!
     autocmd ColorScheme * highlight! link esearchMatch Cursor
+    autocmd Filetype esearch silent! tabmove -1
 augroup END
 "}}}
 

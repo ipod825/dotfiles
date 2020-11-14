@@ -165,4 +165,10 @@ function! MyFoldText()
     let fillcharcount = winwd - len(line) - len(fdnfo)
     return line . repeat(" ",fillcharcount) . fdnfo
 endfunction
+
+function! LeftTabTermopen(cmd)
+    tabedit
+    tabmove -1
+    call termopen(a:cmd, {'on_exit': {j,d,e->execute('quit')}})
+endfunction
 " }}}
