@@ -45,7 +45,6 @@ setopt HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
 setopt EXTENDED_HISTORY # Save the time and how long a command ran
 
 # Key bindings
-bindkey -v
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 bindkey "^[[D" backward-char
