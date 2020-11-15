@@ -1,10 +1,5 @@
 " .nvimrc of ipod825
 
-" These setting needs to be in front of colorscheme command.
-" syntax on
-syntax on
-set background=dark
-
 let g:vim_dir=fnamemodify($MYVIMRC, ":h")."/"
 exec 'source '.g:vim_dir.'common_functions.vim'
 exec 'source '.g:vim_dir.'mapping.vim'
@@ -47,13 +42,15 @@ set tabstop=4
 set expandtab
 set completeopt=menuone,noinsert
 set termguicolors
+set background=dark
 set scrolloff=2
 set lazyredraw
 set noswapfile
 set nobackup
 set noshowmode
+syntax on
 
-let g:terminal_scrollback_buffer_size=100000
+
 if has('nvim')
     let s:pyenv_neovim2_dir=expand('~/.pyenv/versions/neovim2/bin/python')
     let s:pyenv_neovim3_dir=expand('~/.pyenv/versions/neovim3/bin/python')
@@ -65,7 +62,6 @@ if has('nvim')
     endif
 
     set inccommand=split
-    let $GIT_EDITOR = 'nvr --remote-tab-wait +"setlocal bufhidden=wipe"'
     set shada=!,'1000,<50,s10,h
 endif
 " }}}
