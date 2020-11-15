@@ -80,3 +80,10 @@ function! FindDirectory(anchor, ...)
     endif
     return l:res
 endfunction
+
+
+function! LeftTabTermopen(cmd)
+    tabedit
+    tabmove -1
+    call termopen(a:cmd, {'on_exit': {j,d,e->execute('quit')}})
+endfunction

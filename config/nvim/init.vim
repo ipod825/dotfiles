@@ -124,7 +124,6 @@ augroup GENERAL "{{{
     autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
 
     autocmd Filetype qf nnoremap <buffer> <cr> :call QfCr()<cr>
-    autocmd Filetype help map q :close<cr>
 augroup END
 " }}}
 
@@ -160,11 +159,5 @@ function! MyFoldText()
     let line =  strpart(getline(v:foldstart), 0 , winwd - len(fdnfo))
     let fillcharcount = winwd - len(line) - len(fdnfo)
     return line . repeat(" ",fillcharcount) . fdnfo
-endfunction
-
-function! LeftTabTermopen(cmd)
-    tabedit
-    tabmove -1
-    call termopen(a:cmd, {'on_exit': {j,d,e->execute('quit')}})
 endfunction
 " }}}

@@ -11,10 +11,10 @@ inoremap <c-a> <esc><c-w>
 " Moving Around {{{
 nnoremap j gj
 nnoremap k gk
-nmap <c-j> }
-nmap <c-k> {
-vnoremap <c-j> }
-vnoremap <c-k> {
+nmap <c-j> <cmd>call <sid>NextBlock()<cr>
+nmap <c-k> <cmd>call <sid>PreviousBlock()<cr>
+vnoremap <c-j> <cmd>call <sid>NextBlock()<cr>
+vnoremap <c-k> <cmd>call <sid>PreviousBlock()<cr>
 noremap! <c-h> <Left>
 noremap! <c-l> <Right>
 noremap! <c-j> <Down>
@@ -100,7 +100,7 @@ cnoremap <m-p> <c-r>"
 "paste current file name in command line
 cnoremap <m-f> <c-r>%<c-f>
 "yank to system clipboard
-vnoremap <m-y> "+y
+vmap <m-y> <cmd>call <sid>YankToSystemClipboard()<cr>
 " stay at the end after copy/paste
 vnoremap y y`]
 nnoremap p p`]
@@ -262,4 +262,49 @@ endfunction
 
 function! s:ShowInfo()
     echo '⚓'.tagbar#currenttag("%s", "", "f")
+endfunction
+
+function! s:YankToSystemClipboard()
+    let l:should_strip = &bt=='terminal' && mode() == 'V'
+    normal! "+y
+    if l:should_strip
+        let w = winwidth(0)
+        let res = split(@+, '\n')
+        for i in range(len(res))
+            if res[i]=~'^'.$USER || len(res[i])<w
+                let res[i].=''
+            endif
+        endfor
+        let @+=join(res, '')
+    endif
+endfunction
+
+function! s:NextBlock()
+    if &bt!='terminal'
+        let ori_line = line('.')
+        normal! }
+        if line('.') == ori_line+1
+            normal! }
+        endif
+        if line('.') != line('$')
+            normal! k
+        endif
+    else
+        call search('^'.$USER, 'Wz')
+    endif
+endfunction
+
+function! s:PreviousBlock()
+    if &bt!='terminal'
+        let ori_line = line('.')
+        normal! {
+        if line('.') == ori_line-1
+            normal! {
+        endif
+        if line('.') != 1
+            normal! j
+        endif
+    else
+        call search('^'.$USER, 'Wbz')
+    endif
 endfunction

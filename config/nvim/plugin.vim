@@ -77,9 +77,9 @@ augroup END
 
 function! GitNavigate(back)
     if a:back
-        call search('^diff', 'b')
+        call search('^diff', 'Wb')
     else
-        call search('^diff')
+        call search('^diff', 'W')
     endif
     normal zt
     if foldclosed(line('.'))>0
