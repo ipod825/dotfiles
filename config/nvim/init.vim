@@ -9,7 +9,7 @@ try
     exec 'source '.g:vim_dir.'gwork.vim'
     exec 'source '.g:vim_dir.'android.vim'
     exec 'source '.g:vim_dir.'g4.vim'
-catch
+catch E14:
 endtry
 
 " settings {{{
