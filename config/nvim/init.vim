@@ -91,8 +91,9 @@ augroup GENERAL "{{{
     " Automatically change directory (avoid vim-fugitive)
     autocmd BufEnter * if &ft != 'gitcommit' | silent! lcd %:p:h | endif
 
-    " Man in new tab
-    autocmd FileType man wincmd T
+    " Man/help in left new tab
+    autocmd FileType man wincmd T | silent! tabmove -1
+    autocmd FileType help silent! tabmove -1
 
     " Disables automatic commenting on newline:
     autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
