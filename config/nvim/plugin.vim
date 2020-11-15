@@ -108,6 +108,7 @@ function! s:GitCheckOutFile()
 endfunction
 
 function! s:SetupGina()
+try
 	call gina#custom#command#option('/\%(commit\|status\|branch\|log\)', '--opener', 'tabedit')
 	call gina#custom#command#option('/\%(changes\)', '--opener', 'vsplit')
 	call gina#custom#mapping#nmap('/.*', '<F1>','<Plug>(gina-builtin-help)')
@@ -148,9 +149,12 @@ function! s:SetupGina()
     call gina#custom#mapping#nmap('branch', 'r','<Plug>(gina-commit-rebase)')
     call gina#custom#mapping#nmap('branch', 'm',':call GinaBranchMarkTarget()<cr>')
     call gina#custom#mapping#vmap('branch', 'r','<cmd>call GinaBranchRebaseReplay()<cr>')
+catch E117:
+endtry
 endfunction
 
 function! GitInfo() abort
+try
     let br = gina#component#repo#branch()
     if br=~ '[0-9a-f]\{40\}'
         let br = br[:5]
@@ -162,6 +166,8 @@ function! GitInfo() abort
     " let ah = ah!=0?'↑'.ah:''
     " let bh = bh!=0?'↓'.bh:''
     " return br.ah.bh
+catch E117:
+endtry
 endfunction
 
 function! GinaCommit(...)
