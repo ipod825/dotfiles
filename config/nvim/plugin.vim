@@ -81,10 +81,7 @@ function! GitNavigate(back)
     else
         call search('^diff', 'W')
     endif
-    normal zt
-    if foldclosed(line('.'))>0
-        normal za
-    endif
+    normal! zMzvzt
 endfunction
 
 augroup GIT
@@ -95,6 +92,7 @@ augroup GIT
     autocmd Filetype git setlocal foldmethod=syntax
     autocmd Filetype git nnoremap <buffer> <c-j> <cmd>call GitNavigate(v:false)<cr>
     autocmd Filetype git nnoremap <buffer> <c-k> <cmd>call GitNavigate(v:true)<cr>
+    autocmd Filetype git setlocal scrolloff=0
 augroup END
 
 function! s:GitCheckOutFile()
