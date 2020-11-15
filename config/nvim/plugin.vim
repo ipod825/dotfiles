@@ -72,7 +72,7 @@ augroup GINA
     autocmd!
     autocmd USER PLUGEND call s:SetupGina()
     autocmd Filetype gina-log call matchadd('ErrorMsg', '.*HEAD.*')
-    autocmd Filetype gina-status,gina-log,gina-branch silent! tabmove -1
+    autocmd Filetype gina-status,gina-log,gina-branch,diff silent! tabmove -1
 augroup END
 
 function! GitNavigate(back)
@@ -109,7 +109,7 @@ endfunction
 
 function! s:SetupGina()
 try
-	call gina#custom#command#option('/\%(commit\|status\|branch\|log\)', '--opener', 'tabedit')
+	call gina#custom#command#option('/\%(diff\|commit\|status\|branch\|log\)', '--opener', 'tabedit')
 	call gina#custom#command#option('/\%(changes\)', '--opener', 'vsplit')
 	call gina#custom#mapping#nmap('/.*', '<F1>','<Plug>(gina-builtin-help)')
     call gina#custom#mapping#nmap('/.*', '?','<Plug>MSAddBySearchForward')
@@ -122,12 +122,12 @@ try
 	call gina#custom#mapping#vmap('status', 'H','<Plug>(gina-index-stage)')
 	call gina#custom#mapping#nmap('status', 'L','<Plug>(gina-index-unstage)j')
 	call gina#custom#mapping#vmap('status', 'L','<Plug>(gina-index-unstage)')
-	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
-	call gina#custom#mapping#nmap('status', 'DD','<cmd>call GinaStatusCompareOrPatch()<cr>')
+	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-tab)')
+	call gina#custom#mapping#nmap('status', 'DD','<cmd>call GinaStatusPatch()<cr>')
 	call gina#custom#mapping#nmap('status', 'cc','<cmd>call GinaCommit()<cr>')
 	call gina#custom#mapping#nmap('status', 'ca','<cmd>call GinaCommit("--amend --allow-empty")<cr>')
     call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-show-vsplit)')
-    call gina#custom#mapping#nmap('log', 'dd','<Plug>(gina-show-vsplit)')
+    call gina#custom#mapping#nmap('log', 'dd','<Plug>(gina-show-tab)')
     call gina#custom#mapping#nmap('log', 'DD','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('log', '<m-w>',':set wrap!<cr>')
     call gina#custom#mapping#nmap('log', 'cc','<cmd>call GinaLogCheckout()<cr>')
@@ -137,7 +137,7 @@ try
     call gina#custom#mapping#nmap('log', 'm','<cmd>call GinaLogMarkTarget()<cr>')
     call gina#custom#mapping#nmap('log', '<m-s-d>','<cmd>call GinaLogDeleteBranch()<cr>', {'silent': 1})
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
-    call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-vsplit)')
+    call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'DD','<Plug>(gina-compare-vsplit)')
     call gina#custom#mapping#nmap('branch', '<m-n>','<Plug>(gina-branch-new)')
     call gina#custom#mapping#nmap('branch', '<m-d>','<Plug>(gina-branch-delete)')
@@ -190,15 +190,18 @@ function! s:BranchFilter(k, v)
     endif
 endfunction
 
-function! GinaStatusCompareOrPatch()
-    let l:line = substitute(getline('.'), '[\d*m', '', 'g')
-    if l:line[:1] == "MM"
-        call gina#action#call('patch:tab')
-    elseif l:line[:1] == "UU"
-        call gina#action#call('chaperon:tab')
-    else
-        call gina#action#call('compare:vsplit')
-    endif
+function! GinaStatusPatch()
+    call gina#action#call('patch:tab')
+    silent! tabmove -1
+    wincmd K
+    " let l:line = substitute(getline('.'), '[\d*m', '', 'g')
+    " if l:line[:1] == "MM"
+    "     call gina#action#call('patch:tab')
+    " elseif l:line[:1] == "UU"
+    "     call gina#action#call('chaperon:tab')
+    " else
+    "     call gina#action#call('compare:tab')
+    " endif
 endfunction
 
 function! GinaBranchRebaseReplay()
@@ -813,6 +816,7 @@ let g:esearch = {
             \ 'default_mappings': 1,
             \ 'live_update': 0,
             \ 'win_ui_nvim_syntax': 1,
+            \ 'remember':  ['case', 'regex', 'filetypes', 'before', 'after', 'context'],
             \}
 nmap <leader>f <Plug>(operator-esearch-prefill)iw
 vmap <leader>f <Plug>(esearch)

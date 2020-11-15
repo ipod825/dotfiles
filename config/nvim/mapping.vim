@@ -129,27 +129,30 @@ vnoremap <leader>h :'<,'>call DiffGet()<cr>
 vnoremap <leader>l :'<,'>call DiffPut()<cr>
 function! DiffGet()
     if len(tabpagebuflist()) == 3
-        diffget /:3
-        return
-    endif
-
-    if winnr() == 1
-        diffget
+        for l:buf in tabpagebuflist()
+           let l:bufname = bufname(l:buf)
+           if l:bufname !~ "gina:"
+               exec 'diffget '.l:bufname
+           endif
+        endfor
     else
-        diffput
+        if winnr() == 1
+            diffget
+        else
+            diffput
+        endif
     endif
 endfunction
 
 function! DiffPut()
     if len(tabpagebuflist()) == 3
-        diffget /:2
-        return
-    endif
-
-    if winnr() == 2
-        diffget
+           diffget HEAD:
     else
-        diffput
+        if winnr() == 2
+            diffget
+        else
+            diffput
+        endif
     endif
 endfunction
 

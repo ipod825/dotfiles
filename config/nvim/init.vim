@@ -74,7 +74,7 @@ augroup GENERAL "{{{
 
     " Diff setting
     autocmd BufWritePost * if &diff == 1 | diffupdate | endif
-    autocmd OptionSet diff setlocal wrap
+    autocmd OptionSet diff setlocal wrap | nmap <buffer> <c-j> ]c | nmap <buffer> <c-k> [c | nmap <buffer> q <cmd>tabclose<cr>
 
     " Terminal
     let s:auto_term_insert=1
