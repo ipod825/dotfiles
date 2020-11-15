@@ -43,7 +43,7 @@
 "call AddUtilComand('SelectYank')
 ""}}}
 " Plug 'jiangmiao/auto-pairs' "{{{
-" inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
+" inoremap <m-e> <esc><cmd>call <sid>AutoPairsJump()<cr>
 " let g:AutoPairsShortcutFastWrap = ''
 " let g:AutoPairsMapCh = ''
 " let g:AutoPairsShortcutToggle = ''
@@ -116,8 +116,8 @@
 " augroup END
 
 " function! s:CustomizeGV()
-"     nnoremap <buffer> cc :call <sid>GVCheckout()<cr>
-"     nnoremap <buffer> dd :call <sid>GVDiff()<cr>
+"     nnoremap <buffer> cc <cmd>call <sid>GVCheckout()<cr>
+"     nnoremap <buffer> dd <cmd>call <sid>GVDiff()<cr>
 " endfunction
 
 " function! s:GVCheckout()
@@ -212,8 +212,8 @@
 "Plug 'inkarkat/vim-mark' "{{{
 "let g:mw_no_mappings = 1
 "let g:mwDefaultHighlightingPalette = 'maximum'
-"nnoremap <silent> 8 :let @/=""<cr>:call feedkeys("\<Plug>MarkSet")<cr>
-"nmap * :let @/=""<cr>:silent MarkClear<cr>:call feedkeys("\<Plug>MarkSet")<cr>
+"nnoremap <silent> 8 :let @/=""<cr><cmd>call feedkeys("\<Plug>MarkSet")<cr>
+"nmap * :let @/=""<cr>:silent MarkClear<cr><cmd>call feedkeys("\<Plug>MarkSet")<cr>
 "vnoremap <silent> 8 :<c-u>let @/=""<cr>:<C-u>if ! mark#DoMark(v:count, mark#GetVisualSelectionAsLiteralPattern())[0]<Bar>execute "normal! \<lt>C-\>\<lt>C-n>\<lt>Esc>"<Bar>endif<CR>
 "vnoremap <silent> * :<c-u>let @/=""<cr>:silent MarkClear<cr>:<C-u>if ! mark#DoMark(v:count, mark#GetVisualSelectionAsLiteralPattern())[0]<Bar>execute "normal! \<lt>C-\>\<lt>C-n>\<lt>Esc>"<Bar>endif<CR>
 "nnoremap <silent><leader>/ :let @/=""<cr>:silent MarkClear<cr>
@@ -247,9 +247,9 @@
 "    call feedkeys("\<Plug>(VM-Select-All)")
 "endfunction
 
-"nmap <leader>r :call <sid>SelectAllMark()<cr>
+"nmap <leader>r <cmd>call <sid>SelectAllMark()<cr>
 "vmap <leader>r :<c-u>call <sid>VSelectAllMark()<cr>
-"nnoremap ? :call StartMarkSearch()<cr>/
+"nnoremap ? <cmd>call StartMarkSearch()<cr>/
 
 "augroup VIM-MARK
 "    autocmd!
@@ -471,7 +471,7 @@
 " nnoremap <silent><M-d> :LspDefinition<cr>
 " nnoremap <silent><M-s> :TabdropPopTag<cr>
 " nnoremap <silent><M-j> :LspHover<cr>
-" nnoremap <silent><M-k> :call fzf#run(fzf#wrap({
+" nnoremap <silent><M-k> <cmd>call fzf#run(fzf#wrap({
 "         \   'source':  ['LspHover', 'LspReferences', 'LspRename', 'LspStatus'],
 "         \   'sink': {cmd->execute(cmd)}
 "         \}))<cr>
@@ -535,7 +535,7 @@
 "         \ 'completor': function('asyncomplete#sources#neoinclude#completor'),
 "         \ }))
 " augroup end
-" onoremap <silent> w :call EndOfWord()<cr>
+" onoremap <silent> w <cmd>call EndOfWord()<cr>
 " function! EndOfWord()
 "     let cur_line = getline('.')
 "     if match(cur_line[col('.')-1], ' ') > -1
@@ -553,16 +553,16 @@
 "function! s:MapDebug()
 "    let g:saved_normal_mappings = Save_mappings(['n','s','c','B','C','e','f','U','D','t'], 'n', 1)
 "    let g:saved_visual_mappings = Save_mappings(['e'], 'x', 1)
-"    nnoremap n :call TermDebugSendCommand('next')<cr>
-"    nnoremap s :call TermDebugSendCommand('step')<cr>
-"    nnoremap c :call TermDebugSendCommand('continue')<cr>
+"    nnoremap n <cmd>call TermDebugSendCommand('next')<cr>
+"    nnoremap s <cmd>call TermDebugSendCommand('step')<cr>
+"    nnoremap c <cmd>call TermDebugSendCommand('continue')<cr>
 "    nnoremap B :Break<cr>
 "    nnoremap C :Clear<cr>
 "    nnoremap e :Evaluate<cr>
 "    nnoremap f :Finish<cr>
-"    nnoremap U :call TermDebugSendCommand('up')<cr>
-"    nnoremap D :call TermDebugSendCommand('down')<cr>
-"    nnoremap t :call TermDebugSendCommand('until '.line('.'))<cr>
+"    nnoremap U <cmd>call TermDebugSendCommand('up')<cr>
+"    nnoremap D <cmd>call TermDebugSendCommand('down')<cr>
+"    nnoremap t <cmd>call TermDebugSendCommand('until '.line('.'))<cr>
 "    xmap e :Evaluate<cr>
 "endfunction
 
@@ -594,9 +594,9 @@
 "    nnoremap B :GoDebugBreakpoint<cr>
 "    nnoremap e :GoDebugPrint<cr>
 "    nnoremap f :GoDebugStepOut<cr>
-"    " nnoremap U :call TermDebugSendCommand('up')<cr>
-"    " nnoremap D :call TermDebugSendCommand('down')<cr>
-"    " nnoremap t :call TermDebugSendCommand('until '.line('.'))<cr>
+"    " nnoremap U <cmd>call TermDebugSendCommand('up')<cr>
+"    " nnoremap D <cmd>call TermDebugSendCommand('down')<cr>
+"    " nnoremap t <cmd>call TermDebugSendCommand('until '.line('.'))<cr>
 "    " xmap e :Evaluate<cr>
 "endfunction
 

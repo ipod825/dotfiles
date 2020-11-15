@@ -123,7 +123,7 @@ augroup GENERAL "{{{
     autocmd BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd
     autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
 
-    autocmd Filetype qf nnoremap <buffer> <cr> :call QfCr()<cr>
+    autocmd Filetype qf nnoremap <buffer> <cr> <cmd>call QfCr()<cr>
 augroup END
 " }}}
 

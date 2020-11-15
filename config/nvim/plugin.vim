@@ -87,7 +87,7 @@ endfunction
 augroup GIT
     autocmd!
     autocmd Filetype git nnoremap <buffer> cc <cmd>call <sid>GitCheckOutFile()<cr><cr>
-    autocmd Filetype git nnoremap <buffer> <cr> <c-w>v:call gina#core#diffjump#jump()<cr>
+    autocmd Filetype git nnoremap <buffer> <cr> <c-w>v<cmd>call gina#core#diffjump#jump()<cr>
     autocmd Filetype git exec 'lcd '.system('git rev-parse --show-toplevel')
     autocmd Filetype git setlocal foldmethod=syntax
     autocmd Filetype git nnoremap <buffer> <c-j> <cmd>call GitNavigate(v:false)<cr>
@@ -124,18 +124,18 @@ try
 	call gina#custom#mapping#vmap('status', 'L','<Plug>(gina-index-unstage)')
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-vsplit)')
 	call gina#custom#mapping#nmap('status', 'DD','<cmd>call GinaStatusCompareOrPatch()<cr>')
-	call gina#custom#mapping#nmap('status', 'cc',':call GinaCommit()<cr>')
-	call gina#custom#mapping#nmap('status', 'ca',':call GinaCommit("--amend --allow-empty")<cr>')
+	call gina#custom#mapping#nmap('status', 'cc','<cmd>call GinaCommit()<cr>')
+	call gina#custom#mapping#nmap('status', 'ca','<cmd>call GinaCommit("--amend --allow-empty")<cr>')
     call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-show-vsplit)')
     call gina#custom#mapping#nmap('log', 'dd','<Plug>(gina-show-vsplit)')
     call gina#custom#mapping#nmap('log', 'DD','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('log', '<m-w>',':set wrap!<cr>')
-    call gina#custom#mapping#nmap('log', 'cc',':call GinaLogCheckout()<cr>')
-    call gina#custom#mapping#nmap('log', 'cb',':call GinaLogCheckoutNewBranch()<cr>')
-    call gina#custom#mapping#nmap('log', 'r',':call GinaLogRebase()<cr>')
+    call gina#custom#mapping#nmap('log', 'cc','<cmd>call GinaLogCheckout()<cr>')
+    call gina#custom#mapping#nmap('log', 'cb','<cmd>call GinaLogCheckoutNewBranch()<cr>')
+    call gina#custom#mapping#nmap('log', 'r','<cmd>call GinaLogRebase()<cr>')
     call gina#custom#mapping#vmap('log', 'r',':<c-u>call GinaLogRebaseReplay()<cr>')
-    call gina#custom#mapping#nmap('log', 'm',':call GinaLogMarkTarget()<cr>')
-    call gina#custom#mapping#nmap('log', '<m-s-d>',':call GinaLogDeleteBranch()<cr>', {'silent': 1})
+    call gina#custom#mapping#nmap('log', 'm','<cmd>call GinaLogMarkTarget()<cr>')
+    call gina#custom#mapping#nmap('log', '<m-s-d>','<cmd>call GinaLogDeleteBranch()<cr>', {'silent': 1})
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
     call gina#custom#mapping#nmap('changes', 'dd','<Plug>(gina-diff-vsplit)')
     call gina#custom#mapping#nmap('changes', 'DD','<Plug>(gina-compare-vsplit)')
@@ -147,7 +147,7 @@ try
     call gina#custom#mapping#nmap('branch', 'dd','<Plug>(gina-show-commit-vsplit)')
     call gina#custom#mapping#nmap('branch', 'DD','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('branch', 'r','<Plug>(gina-commit-rebase)')
-    call gina#custom#mapping#nmap('branch', 'm',':call GinaBranchMarkTarget()<cr>')
+    call gina#custom#mapping#nmap('branch', 'm','<cmd>call GinaBranchMarkTarget()<cr>')
     call gina#custom#mapping#vmap('branch', 'r','<cmd>call GinaBranchRebaseReplay()<cr>')
 catch E117:
 endtry
@@ -443,7 +443,7 @@ call AddUtilComand('DoAbolish')
 "}}}
 
 Plug 'cohama/lexima.vim' "{{{
-inoremap <m-e> <esc>:call <sid>AutoPairsJump()<cr>
+inoremap <m-e> <esc><cmd>call <sid>AutoPairsJump()<cr>
 function! s:AutoPairsJump()
     normal! l
     let l:b = getline('.')[col('.')+1]
@@ -536,7 +536,7 @@ function! s:VSelectAllMark()
     exec line_start.','.line_end.' VMSearch '.msearch#joint_pattern()
 endfunction
 
-nnoremap <leader>r :call <sid>SelectAllMark()<cr>
+nnoremap <leader>r <cmd>call <sid>SelectAllMark()<cr>
 vnoremap <leader>r :<c-u>call <sid>VSelectAllMark()<cr>
 "}}}
 
@@ -567,10 +567,10 @@ function! s:Gotodef()
         call LanguageClient_textDocument_definition({'gotoCmd': 'Tabdrop'})
     endtry
 endfunction
-nnoremap <m-d> :call <sid>Gotodef()<cr>
+nnoremap <m-d> <cmd>call <sid>Gotodef()<cr>
 nmap <m-s> :TabdropPopTag<cr><esc>
-nnoremap <silent> LH :call LanguageClient#textDocument_hover()<cr>
-nnoremap <silent> LC :call LanguageClient_contextMenu()<cr>
+nnoremap <silent> LH <cmd>call LanguageClient#textDocument_hover()<cr>
+nnoremap <silent> LC <cmd>call LanguageClient_contextMenu()<cr>
 let g:LanguageClient_selectionUI='fzf'
 " function! s:AsyncFormat()
 "     let g:lsp_is_formatting = get(g:, 'lsp_is_formatting', v:false)
@@ -667,18 +667,18 @@ let g:echodoc#type = 'floating'
 Plug 'git@github.com:ipod825/war.vim' "{{{
 augroup WAR
     autocmd!
-    autocmd Filetype qf :call war#fire(-1, 0.7, -1, 0.3)
-    autocmd Filetype fugitive :call war#fire(-1, 1, -1, 0)
-    autocmd Filetype gina-status :call war#fire(-1, 1, -1, 0)
-    autocmd Filetype gina-commit :call war#fire(-1, 1, -1, 0)
-    autocmd Filetype gina-stash-show :call war#fire(-1, 1, -1, 0)
-    autocmd Filetype gina-log :call war#fire(-1, 1, -1, 0)
-    autocmd Filetype gina-branch :call war#fire(-1, 1, -1, 0)
-    autocmd Filetype gina-changes :call war#fire(1, 1, 0, 0)
-    autocmd Filetype git :call war#fire(-1, 0.8, -1, 0.1)
-    autocmd Filetype esearch :call war#fire(0.8, -1, 0.2, -1)
-    autocmd Filetype bookmark :call war#fire(-1, 1, -1, 0.2)
-    autocmd Filetype bookmark :call war#enter(-1)
+    autocmd Filetype qf call war#fire(-1, 0.7, -1, 0.3)
+    autocmd Filetype fugitive call war#fire(-1, 1, -1, 0)
+    autocmd Filetype gina-status call war#fire(-1, 1, -1, 0)
+    autocmd Filetype gina-commit call war#fire(-1, 1, -1, 0)
+    autocmd Filetype gina-stash-show call war#fire(-1, 1, -1, 0)
+    autocmd Filetype gina-log call war#fire(-1, 1, -1, 0)
+    autocmd Filetype gina-branch call war#fire(-1, 1, -1, 0)
+    autocmd Filetype gina-changes call war#fire(1, 1, 0, 0)
+    autocmd Filetype git call war#fire(-1, 0.8, -1, 0.1)
+    autocmd Filetype esearch call war#fire(0.8, -1, 0.2, -1)
+    autocmd Filetype bookmark call war#fire(-1, 1, -1, 0.2)
+    autocmd Filetype bookmark call war#enter(-1)
 augroup END
 " }}}
 
@@ -773,7 +773,7 @@ endfunction
 let g:Bookmark_pos_context_fn = function('s:Bookmark_pos_context_fn')
 augroup BOOKMARK
     autocmd!
-    autocmd Filetype bookmark nmap <buffer> <c-t> :call bookmark#goimpl('Tabdrop')<cr>
+    autocmd Filetype bookmark nmap <buffer> <c-t> <cmd>call bookmark#goimpl('Tabdrop')<cr>
 augroup END
 " }}}
 
@@ -802,9 +802,6 @@ function! SelectYank()
     let g:fzf_ft=''
 endfunction
 call AddUtilComand('SelectYank')
-"}}}
-
-Plug 'Shougo/deol.nvim', { 'do': ':UpdateRemotePlugins' } "{{{
 "}}}
 
 Plug 'eugen0329/vim-esearch', {'branch': 'development'} "{{{

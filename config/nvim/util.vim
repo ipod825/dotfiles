@@ -5,7 +5,7 @@ function! AddUtilComand(cmd)
     endif
 endfunction
 
-nnoremap <silent><leader><cr> :call fzf#run(fzf#wrap({
+nnoremap <silent><leader><cr> <cmd>call fzf#run(fzf#wrap({
             \ 'source': sort(g:util_commands),
             \ 'sink': function('<sid>ExecFnOrCmd'),
             \}))<cr>
@@ -34,7 +34,7 @@ endfunction
 
 function! s:MapUtil(mapping, cmd) "{{{
     if exists('*<sid>'.a:cmd)
-        let cmd = ':call <sid>'.a:cmd.'()<cr>'
+        let cmd = '<cmd>call <sid>'.a:cmd.'()<cr>'
     else
         let cmd = a:cmd
     endif

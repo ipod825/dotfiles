@@ -39,14 +39,14 @@ tnoremap <m-l> <end>
 
 
 " Terminal {{{
-nnoremap <m-t> :call ReuseTerm('Tabdrop', getcwd())<cr>
-nnoremap <m-o> :call ReuseTerm('split', getcwd())<cr>
-nnoremap <m-e> :call ReuseTerm('vsplit', getcwd())<cr>
-nnoremap <m-s-t> :call OpenTerm('Tabdrop')<cr>
-nnoremap <m-s-o> :call OpenTerm('split')<cr>
-nnoremap <m-s-e> :call OpenTerm('vsplit')<cr>
+nnoremap <m-t> <cmd>call ReuseTerm('Tabdrop', getcwd())<cr>
+nnoremap <m-o> <cmd>call ReuseTerm('split', getcwd())<cr>
+nnoremap <m-e> <cmd>call ReuseTerm('vsplit', getcwd())<cr>
+nnoremap <m-s-t> <cmd>call OpenTerm('Tabdrop')<cr>
+nnoremap <m-s-o> <cmd>call OpenTerm('split')<cr>
+nnoremap <m-s-e> <cmd>call OpenTerm('vsplit')<cr>
 tnoremap jk <c-\><c-n>
-tnoremap <m-j> <c-\><c-n>:call ToggleTermNojk()<cr>i
+tnoremap <m-j> <c-\><c-n><cmd>call ToggleTermNojk()<cr>i
 tnoremap <m-k> <c-\><c-n>:ToggleTermInsert<cr>
 tnoremap <c-a> <c-\><c-n><c-w>
 tnoremap <c-z> <c-v><c-z>
@@ -61,8 +61,8 @@ nnoremap <c-m-h> :tabmove -1<cr>
 nnoremap <c-m-l> :tabmove +1<cr>
 tmap <c-h> jkgT
 tmap <c-l> jkgt
-nnoremap <c-m-j> <c-\><c-n>:call MoveToPrevTab()<cr>
-nnoremap <c-m-k> <c-\><c-n>:call MoveToNextTab()<cr>
+nnoremap <c-m-j> <c-\><c-n><cmd>call MoveToPrevTab()<cr>
+nnoremap <c-m-k> <c-\><c-n><cmd>call MoveToNextTab()<cr>
 " }}}
 
 " Window {{{
@@ -108,7 +108,7 @@ vnoremap p "_dP`]
 " select last paste
 nmap <m-p> V'[
 "wrap long comment that is not automatically done by ale
-nnoremap U :call CommentUnwrap()<cr>
+nnoremap U <cmd>call CommentUnwrap()<cr>
 " pressing dw is easier but de is more natural
 " folding
 nmap <leader><space> za
@@ -123,8 +123,8 @@ vnoremap < <gv
 " }}}
 
 " Diff {{{
-nnoremap <leader>h :call DiffGet()<cr>
-nnoremap <leader>l :call DiffPut()<cr>
+nnoremap <leader>h <cmd>call DiffGet()<cr>
+nnoremap <leader>l <cmd>call DiffPut()<cr>
 vnoremap <leader>h :'<,'>call DiffGet()<cr>
 vnoremap <leader>l :'<,'>call DiffPut()<cr>
 function! DiffGet()
