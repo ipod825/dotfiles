@@ -6,10 +6,10 @@ exec 'source '.g:vim_dir.'mapping.vim'
 exec 'source '.g:vim_dir.'util.vim'
 exec 'source '.g:vim_dir.'plugin.vim'
 try
-    exec 'source '.g:vim_dir.'gwork.vim'
     exec 'source '.g:vim_dir.'android.vim'
     exec 'source '.g:vim_dir.'g4.vim'
-catch
+    exec 'source '.g:vim_dir.'gwork.vim'
+catch E492:
 endtry
 
 " settings {{{
