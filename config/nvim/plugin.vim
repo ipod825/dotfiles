@@ -113,7 +113,7 @@ try
 	call gina#custom#command#option('/\%(changes\)', '--opener', 'vsplit')
 	call gina#custom#mapping#nmap('/.*', '<F1>','<Plug>(gina-builtin-help)')
     call gina#custom#mapping#nmap('/.*', '?','<Plug>MSAddBySearchForward')
-	call gina#custom#mapping#nmap('status', '<cr>','<Plug>(gina-edit-tab)')
+	call gina#custom#mapping#nmap('status', '<cr>','<Plug>(gina-edit)')
 	call gina#custom#mapping#nmap('status', '-','<Plug>(gina-index-toggle)j', {'nowait': v:true})
 	call gina#custom#mapping#vmap('status', '-','<Plug>(gina-index-toggle)', {'nowait': v:true})
 	call gina#custom#mapping#nmap('status', 'X','<Plug>(gina-index-discard-force)')
