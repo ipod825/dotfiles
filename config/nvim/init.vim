@@ -93,7 +93,6 @@ augroup GENERAL "{{{
 
     " Man/help in left new tab
     autocmd FileType man wincmd T | silent! tabmove -1
-    autocmd FileType help silent! tabmove -1
 
     " Disables automatic commenting on newline:
     autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
