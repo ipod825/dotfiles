@@ -50,7 +50,7 @@ iv(){
 }
 
 export EDITOR='nvr -s --remote-tab-wait +"setlocal bufhidden=wipe | tabmove -1"'
-export GIT_EDITOR='nvr -s --remote-tab-wait +"setlocal bufhidden=wipe | tabmove -1"'=
+export GIT_EDITOR='nvr -s --remote-tab-wait +"setlocal bufhidden=wipe | tabmove -1"'
 export TERMINAL="xterm"
 export GOPATH=$HOME/opt/go
 export XDG_CONFIG_HOME=$HOME/.config
