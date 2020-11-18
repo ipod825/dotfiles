@@ -820,6 +820,8 @@ let g:esearch = {
             \}
 nmap <leader>f <Plug>(operator-esearch-prefill)iw
 vmap <leader>f <Plug>(esearch)
+nmap <leader>F <cmd>call esearch#init({'prefill':['cword'], 'paths': expand('%:p')})<cr>
+vmap <expr><leader>F esearch#prefill({'paths': expand('%:p')})
 let g:esearch.default_mappings = 0
 let g:esearch.win_map = [
             \ ['n', '<cr>', '<cmd>call b:esearch.open("NewTabdrop")<cr>'],
