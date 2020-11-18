@@ -1,5 +1,7 @@
 " .nvimrc of ipod825
 
+syntax on " needs to be in front of colorscheme command.
+
 let g:vim_dir=fnamemodify($MYVIMRC, ":h")."/"
 exec 'source '.g:vim_dir.'common_functions.vim'
 exec 'source '.g:vim_dir.'mapping.vim'
@@ -13,28 +15,29 @@ catch E14:
 endtry
 
 " settings {{{
-filetype on             " Enable filetype detection
-filetype indent on      " Enable filetype-specific indenting
-filetype plugin on      " Enable filetype-specific plugins
-set hidden              " Enable you to edit other buffer without saving current buffer
-set mouse=              " Disable mouse (for using mouse to copy text from to system clipboard)
+filetype on
+filetype indent on
+filetype plugin on
+set hidden
+set mouse=
 set incsearch
-set copyindent          " Copy the previous indentation on autoindenting
+set copyindent
 set smartindent
-set ignorecase          " Ignore case when searching
-set smartcase           " Ignore case when searching only if searching pattern contains only lower letters
+set ignorecase
+set smartcase
 set foldmethod=syntax
-set foldnestmax=3       " Maximum folding
-set foldtext=MyFoldText() " Show first line when folding
-set wildignore=*/.git/*,*.o,*.class,*.pyc,*.aux,*.fls,*.pdf,*.fdb_latexmk "ignore these files while expanding wild chars
-set splitright          " vertical split creates new buffer at right
-set splitbelow          " horizontal split creates new buffer at bottom
+set foldnestmax=3
+set foldtext=MyFoldText()
+set wildignore=*/.git/*,*.o,*.class,*.pyc,*.aux,*.fls,*.pdf,*.fdb_latexmk
+set splitright
+set splitbelow
+set background=dark
 set autoread
 set timeoutlen=500
 set ttimeoutlen=0
 set diffopt+=vertical
 set virtualedit=block
-set showmatch           " Highlight matching ) and }
+set showmatch
 set cursorline
 set winminwidth=0
 set shiftwidth=4
@@ -42,13 +45,11 @@ set tabstop=4
 set expandtab
 set completeopt=menuone,noinsert
 set termguicolors
-set background=dark
 set scrolloff=2
 set lazyredraw
 set noswapfile
 set nobackup
 set noshowmode
-syntax on
 
 
 if has('nvim')
