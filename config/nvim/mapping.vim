@@ -1,7 +1,8 @@
 let mapleader=' '
 " Mode Changing {{{
 nnoremap ; :
-noremap! jk <Esc>
+inoremap jk <Esc>l
+cnoremap jk <Esc>
 cnoremap <m-d> <c-f>dwi
 onoremap jk <Esc>
 vnoremap <cr> <Esc>
