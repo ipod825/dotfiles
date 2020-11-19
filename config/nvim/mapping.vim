@@ -88,13 +88,6 @@ cnoremap qq :bwipeout<cr>
 
 " }}}
 
-" searching {{{
-"clear search highlight
-nnoremap <silent><leader>/ :let @/=""<cr>
-" centerized after jump
-nnoremap * *Nm'zz
-" }}}
-
 " misc {{{
 "paste yanked text in command line
 cnoremap <m-p> <c-r>"
