@@ -70,7 +70,7 @@ cnoreabbrev grc Gina!! rebase --continue
 cnoreabbrev gra Gina!! rebase --abort
 augroup GINA
     autocmd!
-    autocmd USER PLUGEND call s:SetupGina()
+    autocmd VimEnter * call s:SetupGina()
     autocmd Filetype gina-log call matchadd('ErrorMsg', '.*HEAD.*')
     autocmd Filetype gina-status,gina-log,gina-branch,diff silent! tabmove -1
 augroup END
@@ -709,7 +709,7 @@ endfunction
 
 augroup NVIMTREESITTER
     autocmd!
-    autocmd USER PLUGEND call <sid>setup_treesitter()
+    autocmd VimEnter * call <sid>setup_treesitter()
 augroup END
 else
     set foldmethod=syntax
@@ -896,5 +896,3 @@ autocmd! USER NETRInit call NETRInit()
 "}}}
 
 call plug#end()
-
-silent doautocmd USER PLUGEND
