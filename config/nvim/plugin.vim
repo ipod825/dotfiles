@@ -37,7 +37,7 @@ let g:one_allow_italics = 1
 augrou ONE
     autocmd!
     autocmd ColorScheme * call one#highlight("CursorLine", '', '2e5057', 'bold')
-    autocmd ColorScheme * call one#highlight("Visual", '', '2e5057', '')
+    autocmd ColorScheme * call one#highlight("Visual", '', '054d5c', '')
     autocmd ColorScheme * call one#highlight("Comment", '7c7d7d', '', '')
 augrou END
 "}}}
