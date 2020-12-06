@@ -17,8 +17,7 @@ for p in `find $HOME/opt -type d | grep bin`; do
 done
 
 addToPATH $HOME/dotfiles/bin
-
-# source $HOME/.z.sh
+addToPATH $HOME/.cargo/bin
 
 # alias
 alias ls='ls --color'

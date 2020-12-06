@@ -685,7 +685,8 @@ augroup WAR
 augroup END
 " }}}
 
-if has("nvim") "{{{
+" if has("nvim") "{{{
+if v:false "{{{
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 set foldmethod=expr
@@ -872,7 +873,8 @@ let g:NETRRifleDisplayError = v:false
 let g:NETRDefaultMapSkip = ['<cr>']
 function! DuplicateNode()
     let path = netranger#api#cur_node_path()
-    let dir = fnamemodify(path, ':p:h').'/'
+    " let dir = fnamemodify(path, ':p:h').'/'
+    let dir = fnamemodify(path, ':p:h')
     let newname = 'DUP'.fnamemodify(path, ':p:t')
     call netranger#api#cp(path, dir.newname)
 endfunction
@@ -893,6 +895,8 @@ endfunction
 let g:NETRCustomNopreview={->winnr()==2 && winnr('$')==2}
 
 autocmd! USER NETRInit call NETRInit()
+"}}}
+" Plug 'git@github.com:ipod825/netranger-git' "{{{
 "}}}
 
 call plug#end()
