@@ -191,17 +191,16 @@ function! s:BranchFilter(k, v)
 endfunction
 
 function! GinaStatusPatch()
-    call gina#action#call('patch:tab')
+    let l:line = substitute(getline('.'), '[\d*m', '', 'g')
+    if l:line[:1] == "MM"
+        call gina#action#call('patch:tab')
+    elseif l:line[:1] == "UU"
+        call gina#action#call('chaperon:tab')
+    else
+        call gina#action#call('patch:tab')
+    endif
     silent! tabmove -1
     wincmd K
-    " let l:line = substitute(getline('.'), '[\d*m', '', 'g')
-    " if l:line[:1] == "MM"
-    "     call gina#action#call('patch:tab')
-    " elseif l:line[:1] == "UU"
-    "     call gina#action#call('chaperon:tab')
-    " else
-    "     call gina#action#call('compare:tab')
-    " endif
 endfunction
 
 function! GinaBranchRebaseReplay()
@@ -692,7 +691,7 @@ Plug 'nvim-treesitter/nvim-treesitter-textobjects'
 set foldmethod=expr
 set foldexpr=nvim_treesitter#foldexpr()
 function! s:setup_treesitter()
-" try
+try
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
     ensure_installed = {'bash','cpp','css','go',
@@ -704,8 +703,8 @@ require'nvim-treesitter.configs'.setup {
     },
 }
 EOF
-" catch
-" endtry
+catch
+endtry
 endfunction
 
 augroup NVIMTREESITTER
