@@ -566,7 +566,8 @@ let g:LanguageClient_serverCommands = {
             \ 'zsh': ['shellcheck'],
             \ 'cpp': ['clangd'],
             \ 'c': ['clangd'],
-            \ 'go': ['gopls']
+            \ 'go': ['gopls'],
+            \ 'rust': ['rls'],
             \ }
 function! s:Gotodef()
     TabdropPushTag
@@ -667,6 +668,10 @@ Plug 'rhysd/vim-grammarous', {'on': 'GrammarousCheck'}
 Plug 'puremourning/vimspector' "{{{
 "}}}
 
+Plug 'luochen1990/rainbow', {'for': 'rust'} "{{{
+let g:rainbow_active = 1
+let g:rainbow_conf = {'ctermfgs': ['1', '2', '3', '6']}
+"}}}
 Plug 'Shougo/echodoc.vim'
 " echodoc {{{
 let g:echodoc_enable_at_startup = 1
