@@ -72,7 +72,7 @@ augroup GINA
     autocmd!
     autocmd VimEnter * call s:SetupGina()
     autocmd Filetype gina-log call matchadd('ErrorMsg', '.*HEAD.*')
-    autocmd Filetype gina-status,gina-log,gina-branch,diff silent! tabmove -1
+    autocmd Filetype gina-status,gina-log,gina-branch,diff silent! tabmove -1 | exec 'lcd '.system('git rev-parse --show-toplevel')
 augroup END
 
 function! GitNavigate(back)
@@ -123,6 +123,7 @@ try
 	call gina#custom#mapping#nmap('status', 'L','<Plug>(gina-index-unstage)j')
 	call gina#custom#mapping#vmap('status', 'L','<Plug>(gina-index-unstage)')
 	call gina#custom#mapping#nmap('status', 'dd','<Plug>(gina-diff-tab)')
+	call gina#custom#mapping#nmap('status', 'ds','<cmd>call GinaCompare()<cr>')
 	call gina#custom#mapping#nmap('status', 'DD','<cmd>call GinaStatusPatch()<cr>')
 	call gina#custom#mapping#nmap('status', 'cc','<cmd>call GinaCommit()<cr>')
 	call gina#custom#mapping#nmap('status', 'ca','<cmd>call GinaCommit("--amend --allow-empty")<cr>')
@@ -168,6 +169,12 @@ try
     " return br.ah.bh
 catch E117:
 endtry
+endfunction
+
+
+function! GinaCompare()
+    call gina#action#call('compare:tab')
+    silent! tabmove -1
 endfunction
 
 function! GinaCommit(...)
