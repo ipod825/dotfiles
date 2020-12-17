@@ -134,7 +134,7 @@ try
     call gina#custom#mapping#nmap('log', 'cc','<cmd>call GinaLogCheckout()<cr>')
     call gina#custom#mapping#nmap('log', 'cb','<cmd>call GinaLogCheckoutNewBranch()<cr>')
     call gina#custom#mapping#nmap('log', 'r','<cmd>call GinaLogRebase()<cr>')
-    call gina#custom#mapping#vmap('log', 'r',':<c-u>call GinaLogRebaseReplay()<cr>')
+    call gina#custom#mapping#vmap('log', 'r',':<c-u>call GinaLogRebaseOnto()<cr>')
     call gina#custom#mapping#nmap('log', 'm','<cmd>call GinaLogMarkTarget()<cr>')
     call gina#custom#mapping#nmap('log', '<m-s-d>','<cmd>call GinaLogDeleteBranch()<cr>', {'silent': 1})
     call gina#custom#mapping#nmap('changes', '<cr>','<Plug>(gina-diff-tab)')
@@ -149,7 +149,7 @@ try
     call gina#custom#mapping#nmap('branch', 'DD','<Plug>(gina-changes-between)')
     call gina#custom#mapping#nmap('branch', 'r','<Plug>(gina-commit-rebase)')
     call gina#custom#mapping#nmap('branch', 'm','<cmd>call GinaBranchMarkTarget()<cr>')
-    call gina#custom#mapping#vmap('branch', 'r','<cmd>call GinaBranchRebaseReplay()<cr>')
+    call gina#custom#mapping#vmap('branch', 'r','<cmd>call GinaBranchRebaseOnto()<cr>')
 catch E117:
 endtry
 endfunction
@@ -210,7 +210,7 @@ function! GinaStatusPatch()
     wincmd K
 endfunction
 
-function! GinaBranchRebaseReplay()
+function! GinaBranchRebaseOnto()
     let l:target_branch = get(w:, 'target_branch', '')
     if empty(l:target_branch)
         echoerr "No target branch"
@@ -278,7 +278,11 @@ function! s:GinaLogGetBranches(line_nr)
 endfunction
 
 function! GinaLogCandidate()
-    return s:GinaLogGetBranches(line('.')) + [matchstr(getline('.'), '[0-9a-f]\{6,9\}')]
+    return s:GinaLogGetBranches(line('.')) + [GinaLogHash('.')]
+endfunction
+
+function! GinaLogHash(lineno)
+    return matchstr(getline(a:lineno), '[0-9a-f]\{6,9\}')
 endfunction
 
 function! GinaBranchMarkTarget()
@@ -305,40 +309,31 @@ function! GinaLogDeleteBranch()
         \}))
 endfunction
 
-function! GinaLogRebaseReplay()
+function! GinaLogRebaseOnto()
     let l:target_branch = get(w:, 'target_branch', '')
     if empty(l:target_branch)
         echoerr "No target branch!"
         return
     endif
 
-    let [line_start,line_end] = [getpos("'<")[1], getpos("'>")[1]]
-    let l:branches = []
-    for l:line_nr in range(line_start,line_end)
-        let l:brs = s:GinaLogGetBranches(l:line_nr)
-        if len(l:brs)==0
-            echoerr "No branches on line".l:line_nr
-            return
-        elseif len(l:brs)!=1
-            echoerr "No unique branch on line".l:line_nr
-            return
-        endif
-        call add(l:branches, l:brs[0])
-    endfor
+    let [l:line_start,l:line_end] = [getpos("'<")[1], getpos("'>")[1]]
+    let l:line_end = l:line_end+1
+    let l:brs = s:GinaLogGetBranches(l:line_start)
+    if len(l:brs)==0
+        echoerr "No branches on line".l:line_start
+        return
+    elseif len(l:brs) > 1
+        echoerr "More than one branch on line".l:line_start
+    endif
+    echom 'git rebase --onto '.l:target_branch.' '.GinaLogHash(l:line_end)
 
-    let l:branches = [l:target_branch] + reverse(l:branches)
     let l:ori_branch = system('git branch --show-current')
-    for l:i in range(len(l:branches)-1)
-        let l:target = l:branches[0]
-        let l:source = l:branches[1]
-        call remove(l:branches, 0)
-        exec 'silent !git checkout '.l:source
-        if system('git rebase --onto '.l:target.' HEAD~1') =~ 'CONFLICT'
-            echoerr 'Conflict when rebasing '.l:source.' to '.l:target.'. Fix it before continue.'
-            call s:GinaLogRefresh()
-            return
-        endif
-    endfor
+    exec 'silent !git checkout '.l:brs[0]
+    if system('git rebase --onto '.l:target_branch.' '.GinaLogHash(l:line_end)) =~ 'CONFLICT'
+        echoerr 'Conflict when rebasing.'
+        call s:GinaLogRefresh()
+        return
+    endif
     exec 'silent !git checkout '.l:ori_branch
     call s:GinaLogRefresh()
 endfunction
