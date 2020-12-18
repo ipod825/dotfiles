@@ -818,7 +818,7 @@ call AddUtilComand('SelectYank')
 
 Plug 'eugen0329/vim-esearch', {'branch': 'development'} "{{{
 let g:esearch = {
-            \ 'adapter':          'ag',
+            \ 'adapter':          'rg',
             \ 'bckend':          'nvim',
             \ 'out':              'win',
             \ 'batch_size':       1000,
