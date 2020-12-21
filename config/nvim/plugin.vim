@@ -39,6 +39,7 @@ augrou ONE
     autocmd ColorScheme * call one#highlight("CursorLine", '', '2e5057', 'bold')
     autocmd ColorScheme * call one#highlight("Visual", '', '054d5c', '')
     autocmd ColorScheme * call one#highlight("Comment", '7c7d7d', '', '')
+    autocmd ColorScheme * hi VertSplit ctermbg=NONE guibg=NONE
 augrou END
 "}}}
 
@@ -550,6 +551,7 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 "}}}
 
+Plug 'farmergreg/vim-lastplace'
 Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh;'} "{{{
 let g:LanguageClient_diagnosticsList = "Location"
 let g:LanguageClient_selectionUI="quickfix"
@@ -574,8 +576,8 @@ function! s:Gotodef()
 endfunction
 nnoremap <m-d> <cmd>call <sid>Gotodef()<cr>
 nmap <m-s> :TabdropPopTag<cr><esc>
-nnoremap <silent> LH <cmd>call LanguageClient#textDocument_hover()<cr>
-nnoremap <silent> LC <cmd>call LanguageClient_contextMenu()<cr>
+nmap <silent>LH <Plug>(lcn-hover)
+nmap <silent>LC <Plug>(lcn-menu)
 let g:LanguageClient_selectionUI='fzf'
 " function! s:AsyncFormat()
 "     let g:lsp_is_formatting = get(g:, 'lsp_is_formatting', v:false)
