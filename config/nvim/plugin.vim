@@ -238,6 +238,7 @@ function! GinaBranchRebaseOnto()
         endif
     endfor
     exec 'silent !git checkout '.l:ori_branch
+    edit
 endfunction
 
 function! s:GinaLogRefreshFzfCmd(cmd)
@@ -321,12 +322,13 @@ function! GinaLogRebaseOnto()
     let l:line_end = l:line_end+1
     let l:brs = s:GinaLogGetBranches(l:line_start)
     if len(l:brs)==0
-        echoerr "No branches on line".l:line_start
-        return
-    elseif len(l:brs) > 1
-        echoerr "More than one branch on line".l:line_start
+        let l:beg_hash = GinaLogHash(l:line_start)
+        call insert(l:brs, input("No branches for ".l:beg_hash.". Please specify new branch:"))
+        if len(l:brs) == 0
+            return
+        endif
+        exec 'silent !git checkout -b '.l:brs[0].' '.l:beg_hash
     endif
-    echom 'git rebase --onto '.l:target_branch.' '.GinaLogHash(l:line_end)
 
     let l:ori_branch = system('git branch --show-current')
     exec 'silent !git checkout '.l:brs[0]
