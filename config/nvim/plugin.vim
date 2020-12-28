@@ -319,7 +319,6 @@ function! GinaLogRebaseOnto()
     endif
 
     let [l:line_start,l:line_end] = [getpos("'<")[1], getpos("'>")[1]]
-    let l:line_end = l:line_end+1
     let l:brs = s:GinaLogGetBranches(l:line_start)
     if len(l:brs)==0
         let l:beg_hash = GinaLogHash(l:line_start)
@@ -327,12 +326,12 @@ function! GinaLogRebaseOnto()
         if len(l:brs) == 0
             return
         endif
-        exec 'silent !git checkout -b '.l:brs[0].' '.l:beg_hash
     endif
 
     let l:ori_branch = system('git branch --show-current')
     exec 'silent !git checkout '.l:brs[0]
-    if system('git rebase --onto '.l:target_branch.' '.GinaLogHash(l:line_end)) =~ 'CONFLICT'
+    let l:chain_start = system('git log --pretty=%P -n 1 '.GinaLogHash(l:line_end))
+    if system('git rebase --onto '.l:target_branch.' '.l:chain_start) =~ 'CONFLICT'
         echoerr 'Conflict when rebasing.'
         call s:GinaLogRefresh()
         return
