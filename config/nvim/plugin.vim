@@ -786,7 +786,7 @@ endfunction
 let g:Bookmark_pos_context_fn = function('s:Bookmark_pos_context_fn')
 augroup BOOKMARK
     autocmd!
-    autocmd Filetype bookmark nmap <buffer> <c-t> <cmd>call bookmark#goimpl('Tabdrop')<cr>
+    autocmd Filetype bookmark nmap <buffer> <c-t> <cmd>call bookmark#open('Tabdrop')<cr>
 augroup END
 " }}}
 
@@ -882,10 +882,15 @@ let g:NETRRifleDisplayError = v:false
 let g:NETRDefaultMapSkip = ['<cr>']
 function! DuplicateNode()
     let path = netranger#api#cur_node_path()
-    " let dir = fnamemodify(path, ':p:h').'/'
-    let dir = fnamemodify(path, ':p:h')
-    let newname = 'DUP'.fnamemodify(path, ':p:t')
-    call netranger#api#cp(path, dir.newname)
+    if isdirectory(path)
+        let dir = fnamemodify(path, ':p:h:h')
+        let newname = 'DUP'.fnamemodify(path[:-1], ':t')
+    else
+        let dir = fnamemodify(path, ':p:h')
+        let newname = 'DUP'.fnamemodify(path, ':p:t')
+    endif
+    echom dir
+    call netranger#api#cp(path, dir.'/'.newname)
 endfunction
 function! NETRBookMark()
     BookmarkAdd netranger
