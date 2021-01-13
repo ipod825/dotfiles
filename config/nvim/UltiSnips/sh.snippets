@@ -1,0 +1,28 @@
+snippet #!
+#!/usr/bin/env bash
+endsnippet
+snippet if
+if [[ ${1:cond} ]]; then
+	${1}
+fi
+${0}
+endsnippet
+
+snippet while
+while [[ ${1:cond} ]]; do
+	${1}
+done
+${0}
+endsnippet
+
+snippet map
+declare -A ${1:name}_map
+`!p snip.rv = t[1]`_map=(["${2:key}"]="${3:value}"${4}) ${0}
+endsnippet
+
+snippet fn
+function ${1:fname}(${2}) {
+	${3}
+}
+${0}
+endsnippet
