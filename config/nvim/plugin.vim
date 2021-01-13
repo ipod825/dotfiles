@@ -488,11 +488,12 @@ let g:VM_maps['Numbers'] = '<leader>n'
 let g:VM_maps['Visual Add'] = '<c-n>'
 let g:VM_maps['Visual Find'] = '<c-n>'
 let g:VM_maps['Visual Regex'] = '<leader>/'
-let g:VM_maps['Visual Cursors'] = '<c-c>'
+let g:VM_maps['Visual Cursors'] = '<c-i>'
 let g:VM_maps["Visual Reduce"] = '<leader>r'
-let g:VM_maps["Add Cursor At Pos"] = '<c-c>'
+let g:VM_maps["Add Cursor At Pos"] = '<c-i>'
 let g:VM_maps['Increase'] = '+'
 let g:VM_maps['Decrease'] = '-'
+let g:VM_maps['Exit'] = '<c-c>'
 
 let g:VM_custom_motions  = {'<m-h>': '^', '<m-l>': '$'}
 let g:VM_custom_noremaps  = {'])': '])', ']]': ']]', ']}':']}', 'w':'e'}
