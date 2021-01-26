@@ -260,10 +260,14 @@ function! GinaBranchGetBranch(line_nr)
     endif
     let l:line = getline(l:line_nr)
     if l:line =~ '[32m'
-        return l:line[7:-4]
+        let l:line = l:line[7:-4]
     else
-        return l:line[2:-4]
+        let l:line = l:line[2:-4]
     endif
+    if !empty(matchstr(l:line, '[0-9a-f]\{6,9\}'))
+        let l:line = matchstr(l:line, '[0-9a-f]\{6,9\}')
+    endif
+    return l:line
 endfunction
 
 function! s:GinaLogGetBranches(line_nr)
@@ -493,7 +497,7 @@ let g:VM_maps["Visual Reduce"] = '<leader>r'
 let g:VM_maps["Add Cursor At Pos"] = '<c-i>'
 let g:VM_maps['Increase'] = '+'
 let g:VM_maps['Decrease'] = '-'
-let g:VM_maps['Exit'] = '<c-c>'
+let g:VM_maps['Exit'] = '<Esc>'
 
 let g:VM_custom_motions  = {'<m-h>': '^', '<m-l>': '$'}
 let g:VM_custom_noremaps  = {'])': '])', ']]': ']]', ']}':']}', 'w':'e'}
@@ -511,6 +515,7 @@ fun! VM_Start()
     nmap <buffer> K <up>
     nmap <buffer> H <Left>
     nmap <buffer> L <Right>
+    nmap <buffer> <c-c> <Esc>
 endfun
 
 function! VM_Exit()
@@ -525,6 +530,7 @@ function! VM_Exit()
     nunmap <buffer> K
     nunmap <buffer> H
     nunmap <buffer> L
+    nunmap <buffer> <c-c>
 endfunction
 
 function! s:SelectAllMark()
