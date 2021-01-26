@@ -322,7 +322,7 @@ function! GinaLogRebaseOnto()
         return
     endif
 
-    let [l:line_start,l:line_end] = [getpos("'<")[1], getpos("'>")[1]]
+    let [line_start,line_end] = [getpos("'<")[1], getpos("'>")[1]]
     let l:brs = s:GinaLogGetBranches(l:line_start)
     if len(l:brs)==0
         let l:beg_hash = GinaLogHash(l:line_start)
@@ -332,14 +332,38 @@ function! GinaLogRebaseOnto()
         endif
     endif
 
+    let l:branches = [l:brs[0]]
+    for l:line_nr in range(line_start+1,line_end)
+        let l:brs = s:GinaLogGetBranches(l:line_nr)
+        let l:hash = GinaLogHash(l:line_nr)
+        if empty(l:hash)
+            continue
+        endif
+        if len(l:brs)==0
+            let l:tmp_branch_name = 'rebase-'.l:hash
+            exec 'silent !git branch '.l:tmp_branch_name.' '.l:hash
+            call add(l:branches, l:tmp_branch_name)
+        else
+            call add(l:branches, l:brs[0])
+        endif
+    endfor
+
+    let l:branches = [l:target_branch] + reverse(l:branches)
     let l:ori_branch = system('git branch --show-current')
-    exec 'silent !git checkout '.l:brs[0]
-    let l:chain_start = system('git log --pretty=%P -n 1 '.GinaLogHash(l:line_end))
-    if system('git rebase --onto '.l:target_branch.' '.l:chain_start) =~ 'CONFLICT'
-        echoerr 'Conflict when rebasing.'
-        call s:GinaLogRefresh()
-        return
-    endif
+    for l:i in range(len(l:branches)-1)
+        let l:target = l:branches[0]
+        let l:source = l:branches[1]
+        call remove(l:branches, 0)
+        exec 'silent !git checkout '.l:source
+        if system('git rebase --onto '.l:target.' HEAD~1') =~ 'CONFLICT'
+            echoerr 'Conflict when rebasing '.l:source.' to '.l:target.'. Fix it before continue.'
+            call s:GinaLogRefresh()
+            return
+        endif
+        if l:target=~'rebase-'
+            exec 'silent !git branch -d '.l:target
+        endif
+    endfor
     exec 'silent !git checkout '.l:ori_branch
     call s:GinaLogRefresh()
 endfunction
