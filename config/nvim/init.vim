@@ -78,12 +78,12 @@ augroup GENERAL "{{{
     autocmd OptionSet diff setlocal wrap | nmap <buffer> <c-j> ]c | nmap <buffer> <c-k> [c | nmap <buffer> q <cmd>tabclose<cr>
 
     " Terminal
-    let s:auto_term_insert=1
-    command! ToggleTermInsert execute "let s:auto_term_insert=1-s:auto_term_insert"
+    command! ToggleTermInsert let b:auto_term_insert=1-b:auto_term_insert | if b:auto_term_insert | startinsert | endif
+
     if has('nvim')
         autocmd TermOpen * setlocal wrap
         autocmd TermOpen * setlocal nobuflisted
-        autocmd TermOpen * autocmd BufEnter <buffer> if s:auto_term_insert | startinsert | endif
+        autocmd TermOpen * let b:auto_term_insert=1 | autocmd BufEnter <buffer> if b:auto_term_insert | startinsert | endif
         autocmd TextYankPost * lua vim.highlight.on_yank {higroup='IncSearch', timeout=200}
     else
         autocmd TerminalOpen * setlocal wrap
