@@ -20,7 +20,6 @@
 "nnoremap / <cmd>Clap blines<cr>
 ""}}}
 " Plug 'kana/vim-submode'
-" Plug 'sgur/vim-textobj-parameter'
 " Plug 'Julian/vim-textobj-variable-segment'
 "Plug 'zhimsel/vim-stay' " vim-stay {{{
 "set viewoptions=folds,cursor,slash,unix

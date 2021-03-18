@@ -74,7 +74,7 @@ cnoreabbrev gcb call <sid>GitCheckBranch()
 
 
 function! s:SearchWord() "{{{
-    if &ft!~'gina'
+    if &ft!~'gina' && &ft!~'esearch'
         let g:fzf_ft=&ft
     endif
     silent call fzf#run(fzf#wrap({

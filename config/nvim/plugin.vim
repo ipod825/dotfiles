@@ -775,6 +775,7 @@ call AddUtilComand('YankNearestTest')
 "}}}
 Plug 'kana/vim-textobj-user'
 Plug 'rhysd/vim-textobj-anyblock'
+Plug 'sgur/vim-textobj-parameter'
 Plug 'kana/vim-textobj-line'
 Plug 'terryma/vim-expand-region'
 Plug 'machakann/vim-textobj-functioncall'

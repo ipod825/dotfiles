@@ -43,8 +43,14 @@ snippet ifndef "#ifndef"
 #endif /* `!p snip.rv = t[1]` */
 endsnippet
 
-snippet for "for loop (for)"
+snippet fori "for i"
 for (size_t ${1:i} = ${2:0}; $1 < ${3:count}; ++$1) {
+	$0
+}
+endsnippet
+
+snippet for "for loop"
+for (${1:const} auto${2:&} ${3:e} : ${4:container}) {
 	$0
 }
 endsnippet
@@ -64,4 +70,8 @@ switch (${1:variable}) {
 	break;
 	}
 }
+endsnippet
+
+snippet fmt
+fmt::format("${1}",${2});
 endsnippet
