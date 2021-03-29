@@ -1,0 +1,98 @@
+{
+  "cout": {
+    "prefix": ["cout"],
+    "body": ["std::cout << $1 << std::endl;"   
+    ]
+  },
+
+  "LOG": {
+    "prefix": ["LOG"],
+    "body": ["LOG(${1:ERROR}) << fmt::format(\"$2\", $0);"
+    ]
+  },
+
+  "main": {
+    "prefix": ["main"],
+    "body": [
+        "int main (int argc, char** argv){",
+        "   $0",
+        "   return 0",
+        "}"
+    ]
+  },
+
+  "if": {
+    "prefix": ["if"],
+    "body": [
+        "if (${1:cond}) {",
+        "   $0",
+        "}"
+    ]
+  },
+
+  "todo": {
+    "prefix": ["todo"],
+    "body": [ "// TODO(${1:${VIM:environ()['USER']}}): ${0:todo}" ]
+  },
+
+
+  "include_system": {
+    "prefix": ["inc"],
+    "body": [ "#include <${1:iostream}>" ]
+  },
+
+
+  "include_user": {
+    "prefix": ["inu"],
+    "body": [ "#include \"${1:util.h}\"" ]
+  },
+
+  "namespace": {
+    "prefix": ["namespace"],
+    "body": [
+        "namespace ${1:name} {",
+        "${0}",
+        "} // namespace $1"
+    ]
+  },
+
+
+  "header_guard": {
+    "prefix": ["ifndef"],
+    "body": [
+        "#ifndef ${1:HEADER}",
+        "#define $1",
+        "#endif $1"
+    ]
+  },
+
+  "forint": {
+    "prefix": ["fori"],
+    "body": [
+        "for (int32_t ${1:i} = ${2:0}; $1 < ${3:count}; ++$1) {",
+        "   $0",
+        "}"
+    ]
+  },
+
+  "forobject": {
+    "prefix": ["for"],
+    "body": [
+        "for (${1:const} auto${2:&} ${3:e} : ${4:container}) {",
+        "   $0",
+        "}"
+    ]
+  },
+
+  "reinterpret_cast": {
+    "prefix": ["reinp"],
+    "body": [
+        "std::reinterpret_cast<${1:type}>(${2:val})"
+    ]
+  },
+
+  "fmt": {
+    "prefix": ["fmt"],
+    "body": ["fmt::format(\"$1\", $2);"]
+  }
+}

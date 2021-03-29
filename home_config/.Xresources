@@ -4,7 +4,7 @@ xterm*eightBitInput:    false
 xterm.termName: xterm-256color
 Xcursor.size: 20
 
-xterm*faceName: Monospace
+xterm*faceName: Hack Nerd Font Mono:style=Regular
 xterm*faceSize: 16
 
 ! double-click to select whole URLs :D

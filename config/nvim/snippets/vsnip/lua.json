@@ -1,0 +1,19 @@
+{
+  "function": {
+    "prefix": ["fn"],
+    "body": [
+        "function ${1:fn}($2)",
+        "   $0",
+        "end"
+    ]
+  },
+
+  "for": {
+    "prefix": ["for"],
+    "body": [
+        "for ${1:k}, ${2:v} in pairs(${3:dict}) do",
+        "   $0",
+        "end"
+    ]
+  }
+}

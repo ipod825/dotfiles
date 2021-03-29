@@ -20,6 +20,6 @@ common="$D/setup.sh \
 if [ "$1" == "vim" ]; then
     vimfiles="$HC/.vim/*.vim $HC/.vim/vimrc"
 else
-    vimfiles=$C/nvim/*.vim
+    vimfiles="$C/nvim/init.lua $C/nvim/lua/*"
 fi
 ls $common $vimfiles; ls -d $D $HC $C $A $M $D/bin;

@@ -476,18 +476,18 @@ endfunction
 call AddUtilComand('DoAbolish')
 "}}}
 
-Plug 'cohama/lexima.vim' "{{{
-inoremap <m-e> <esc><cmd>call <sid>AutoPairsJump()<cr>
-function! s:AutoPairsJump()
-    normal! l
-    let l:b = getline('.')[col('.')+1]
-    normal! dl
-    if match(l:b, "[\"' ]")  == -1
-        call feedkeys('e')
-    endif
-    call feedkeys('pi')
-endfunction
-"}}}
+" Plug 'cohama/lexima.vim' "{{{
+" inoremap <m-e> <esc><cmd>call <sid>AutoPairsJump()<cr>
+" function! s:AutoPairsJump()
+"     normal! l
+"     let l:b = getline('.')[col('.')+1]
+"     normal! dl
+"     if match(l:b, "[\"' ]")  == -1
+"         call feedkeys('e')
+"     endif
+"     call feedkeys('pi')
+" endfunction
+" "}}}
 
 Plug 'skywind3000/asyncrun.vim' "{{{
 augroup ASYNCRUN
@@ -677,15 +677,15 @@ endfunction
 " }}}
 
 
-if has('nvim') "{{{
-    Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins' }
-endif
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_ignore_case = 0
-if !exists('g:deoplete#omni_patterns')
-    let g:deoplete#omni_patterns = {}
-endif
-"}}}
+" if has('nvim') "{{{
+"     Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins' }
+" endif
+" let g:deoplete#enable_at_startup = 1
+" let g:deoplete#enable_ignore_case = 0
+" if !exists('g:deoplete#omni_patterns')
+"     let g:deoplete#omni_patterns = {}
+" endif
+" "}}}
 
 Plug 'lervag/vimtex', {'for': 'tex'} "{{{
 let g:tex_flavor = 'latex'
@@ -722,8 +722,9 @@ let g:UltiSnipsExpandTrigger='<tab>'
 let g:UltiSnipsJumpForwardTrigger='<tab>'
 let g:UltiSnipsJumpBackwardTrigger='<s-tab>'
 let g:UltiSnipsEditSplit = 'vertical'
-let g:UltiSnipsSnippetDirectories=[g:vim_dir.'UltiSnips']
+let g:UltiSnipsSnippetDirectories=[g:vim_dir.'snippets/UltiSnips']
 "}}}
+
 
 Plug 'rhysd/vim-grammarous', {'on': 'GrammarousCheck'}
 

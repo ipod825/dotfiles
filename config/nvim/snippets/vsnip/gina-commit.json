@@ -1,0 +1,11 @@
+{
+  "head": {
+    "prefix": ["hd"],
+    "body": [
+        "${1:topic}:${2:header}",
+        "",
+        "Test: ${3:Manually test}",
+        "Bug: ${4:budid}"
+    ]
+  }
+}
