@@ -625,24 +625,57 @@ let g:LanguageClient_selectionUI='fzf'
 " augroup END
 "}}}
 
-Plug 'w0rp/ale' " {{{ (only used for the more flexxible formatter)
-let g:ale_sign_error = 'E'
-let g:ale_sign_warning = 'W'
-let g:ale_lint_on_save = 0
-let g:ale_lint_on_text_changed = 1
-let g:ale_completion_enabled = 0
-let g:ale_linters_explicit = 1
-let g:ale_enabled = 0
-let g:ale_virtualtext_cursor=1
-let g:ale_completion_enabled=0
-let g:ale_fix_on_save = 1
-let g:ale_linters = {'python': ['flake8', 'pylint']}
-let g:ale_fixers = {
-            \'*': ['remove_trailing_lines', 'trim_whitespace'],
-            \'python': ['yapf', 'isort'],
-            \'cpp': ['clang-format']
-            \}
-"}}}
+Plug 'mhartington/formatter.nvim' "{{{
+augroup FORMATTER
+    autocmd!
+    autocmd BufwritePre * FormatWrite
+    autocmd USER PlugEnd call SetupFormatter()
+augroup END
+function! SetupFormatter()
+lua << EOF
+local prettier=function()
+  return {
+    exe = 'prettier',
+    args = {'--stdin-filepath', vim.api.nvim_buf_get_name(0), '--single-quote'},
+    stdin = true
+  }
+end
+local isort = function()
+    return {exe = 'isort', args = {'-', '--quiet'}, stdin = true}
+end
+local yapf = function()
+    return {exe = 'yapf', stdin = true}
+end
+local rustfmt = function()
+    return {exe = 'rustfmt', args = {'--emit=stdout'}, stdin = true}
+end
+local latexindent = function ()
+  return {exe = 'latexindent', args = {'-sl', '-g /dev/stderr', '2>/dev/null'}, stdin = true}
+end
+local clang_format=function ()
+  return {exe = 'clang-format', args = {'-assume-filename=' .. vim.fn.expand('%:t')}, stdin = true}
+end
+local lua_format = function ()
+    return {exe = 'lua-format', stdin = true}
+end
+require('formatter').setup{
+  logging = false,
+  filetype = {
+    javascript = {prettier},
+    json = {prettier},
+    html = {prettier},
+    rust = {rustfmt},
+    python = {isort, yapf},
+    tex = {latexindent},
+    c = {clang_format},
+    cpp = {clang_format},
+    lua = {lua_format}
+  }
+}
+EOF
+endfunction
+" }}}
+
 
 if has('nvim') "{{{
     Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins' }
@@ -946,3 +979,5 @@ autocmd! USER NETRInit call NETRInit()
 "}}}
 
 call plug#end()
+
+doautocmd User PlugEnd
