@@ -55,28 +55,31 @@ if [ ! -d $HOME/.pyenv ];then
 fi
 
 echo "==Setting neovim=="
-if [ ! -x $HOME/opt/bin/nvim ]; then
-    mkdir -p $HOME/opt/bin
+if [ ! -x $HOME/.local/share/fonts ]; then
+    mkdir -p $HOME/.local/share/fonts
+    cd $HOME/.local/share/fonts &&curl -fLo "Hack Regular Nerd Font Complete.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Hack/Regular/complete/Hack%20Regular%20Nerd%20Font%20Complete%20Mono.ttf
+
+
+fi
+if [ ! -x $HOME/.local/bin/nvim ]; then
+    mkdir -p $HOME/.local/bin
     if [[ "$OSTYPE" == "darwin"* ]]; then
         wget -O /tmp/nvim-macos.tar.gz https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
         mkdir -p $HOME/opt/nvim
         tar -xf /tmp/nvim-macos.tar.gz -C $HOME/opt/nvim --strip-components 1
-        ln -s $HOME/opt/nvim/bin/nvim $HOME/opt/bin
+        ln -s $HOME/opt/nvim/bin/nvim $HOME/.local/bin
     else
-        wget -O $HOME/opt/bin/nvim https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
+        wget -O $HOME/.local/bin/nvim https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
     fi
-    chmod u+x $HOME/opt/bin/nvim
+    chmod u+x $HOME/.local/bin/nvim
     pip install pynvim --upgrade
-fi
-if [ ! -d config/nvim/bundle ];then
-     $HOME/opt/bin/nvim +PlugInstall +qall
 fi
 
 if [ ! -z $gpg_key ]; then
     gpg-connect-agent KILLAGENT
     gpg --import $gpg_key
     echo "==Setting git-crypt=="
-    if [ ! -x $HOME/opt/bin/git-crypt ]; then
+    if [ ! -x $HOME/.local/bin/git-crypt ]; then
           git clone --depth 1 https://github.com/AGWA/git-crypt.git /tmp/git-crypt
           pushd /tmp/git-crypt
           make -j 9

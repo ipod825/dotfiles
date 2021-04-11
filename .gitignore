@@ -5,6 +5,7 @@
 /config/nvim/bundle
 /config/nvim/undo
 /config/nvim/sessions
+/config/nvim/plugin
 /config/pudb/saved-breakpoints*
 /config/nvim/.netrwhist
 /config/qutebrowser/autoconfig.yml
