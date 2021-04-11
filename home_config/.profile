@@ -12,7 +12,7 @@ function addToPATH {
   esac
 }
 
-for p in `find $HOME/opt -type d | grep bin`; do
+for p in `find $HOME/.local -type d -not -path "$HOME/.local/share/*" | grep bin`; do
     addToPATH $p
 done
 
