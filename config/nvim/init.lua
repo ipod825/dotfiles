@@ -1,5 +1,6 @@
 require('utils')
 require('mapping')
+require('tabline')
 require('plugin')
 require('gwork')
 require('android')

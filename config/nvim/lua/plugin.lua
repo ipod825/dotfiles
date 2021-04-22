@@ -109,19 +109,6 @@ require'packer'.startup(function()
         config = function() require 'statusline' end
     }
 
-    use {
-        'itchyny/lightline.vim',
-        setup = function()
-            vim.g.lightline = {
-                enable = {statusline = 0, tabline = 1},
-                tab = {
-                    active = {'devicon', 'filename', 'modified'},
-                    inactive = {'filename', 'modified'}
-                }
-            }
-        end
-    }
-
     use {'git@github.com:ipod825/msearch.vim', config = function() end}
     map('n', '8', '<Plug>MSToggleAddCword', {noremap = false})
     map('v', '8', '<Plug>MSToggleAddVisual', {noremap = false})

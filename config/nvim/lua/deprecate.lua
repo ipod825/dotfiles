@@ -1,0 +1,12 @@
+-- use {
+--     'itchyny/lightline.vim',
+--     setup = function()
+--         vim.g.lightline = {
+--             enable = {statusline = 0, tabline = 1},
+--             tab = {
+--                 active = {'devicon', 'filename', 'modified'},
+--                 inactive = {'filename', 'modified'}
+--             }
+--         }
+--     end
+-- }
