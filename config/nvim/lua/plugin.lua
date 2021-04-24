@@ -375,6 +375,33 @@ require'packer'.startup(function()
             require'lspconfig'.clangd.setup {}
             require'lspconfig'.gopls.setup {}
             require'lspconfig'.rls.setup {}
+            local sumneko_root_path = vim.env.XDG_DATA_HOME ..
+                                          '/lua-language-server'
+            local sumneko_binary = sumneko_root_path ..
+                                       '/bin/Linux/lua-language-server'
+            require'lspconfig'.sumneko_lua.setup {
+                cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"},
+                settings = {
+                    Lua = {
+                        runtime = {
+                            version = 'LuaJIT',
+                            -- Setup your lua path
+                            path = vim.split(package.path, ';')
+                        },
+                        diagnostics = {
+                            -- Get the language server to recognize the `vim` global
+                            globals = {'vim'}
+                        },
+                        workspace = {
+                            -- Make the server aware of Neovim runtime files
+                            library = {
+                                [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+                                [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true
+                            }
+                        }
+                    }
+                }
+            }
         end
     }
 
