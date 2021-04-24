@@ -36,7 +36,6 @@ function M.tab_label(tab_id)
     local win_id = api.nvim_tabpage_get_win(tab_id)
     local buf_id = api.nvim_win_get_buf(win_id)
     local name = utils.basename(api.nvim_buf_get_name(buf_id))
-    local label = nil
 
     -- local content = string.format(' %s ', name)
     local content = string.format('%s%s ', M.unicode_num(
@@ -135,7 +134,7 @@ function M.gen_tab_line(labels, total_length, left_has_more, right_has_more)
     end
 
     local res = ''
-    for i, label in pairs(labels) do
+    for _, label in pairs(labels) do
         for _, element in pairs(label.elements) do
             res = res ..
                       string.format('%%#%s#%s',
@@ -148,9 +147,8 @@ function M.gen_tab_line(labels, total_length, left_has_more, right_has_more)
 end
 
 function M.tabline()
-    local res = ''
     local labels = {}
-    local total_length
+    local total_length, left_has_more, right_has_more
 
     for _, tab_id in pairs(api.nvim_list_tabpages()) do
         table.insert(labels, M.tab_label(tab_id))

@@ -27,7 +27,7 @@ function M.save_keymap(keys, mode, is_global)
     mode = mode or 'n'
     if is_global == nil then is_global = true end
 
-    -- normalize keys 
+    -- normalize keys
     keys = vim.tbl_map(function(e)
         local res = vim.fn.maparg(e, mode, false, true).lhs
         return string.gsub(res, '<Space>', ' ')
@@ -46,12 +46,6 @@ end
 
 function M.restore_keymap(mappings)
     for _, v in pairs(mappings) do
-        opts = {
-            noremap = (v.noremap or v.noremap == 1),
-            nowait = (v.nowait or v.nowait == 1),
-            nowait = v.nowait == 1
-        }
-
         vim.api.nvim_set_keymap(v.mode, v.lhs, v.rhs, {
             noremap = (v.noremap and v.noremap ~= 0),
             nowait = (v.nowait and v.nowait ~= 0),

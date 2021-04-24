@@ -31,9 +31,9 @@ function M.fzf(source, sink, options)
         -- fzf's default handler is written in vim script (an s: function),
         -- currently it's translated into nil. This is a WAR by calling fzf#wrap
         -- in vimscript in vim.
-        source_str = string.format('["%s"]', table.concat(source, '","'))
+        local source_str = string.format('["%s"]', table.concat(source, '","'))
         if options ~= nil then
-            options_str = table.concat(options, ',')
+            local options_str = table.concat(options, ',')
             vim.cmd(string.format(
                         [[call fzf#run(fzf#wrap({'source':%s, 'options':%s}))]],
                         source_str, options_str))
@@ -49,6 +49,7 @@ function M.search_word()
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
     for k, v in pairs(lines) do lines[k] = string.format(' %4d %s', k, v) end
     M.fzf(lines, function(l)
+        local lineno
         _, _, lineno = string.find(l[2], "(%d+)%s*")
         vim.cmd(lineno)
     end, {
@@ -83,14 +84,14 @@ end
 map('n', '<leader><cr>', '<cmd>lua fzf_cfg.select_from_util_menu()<cr>')
 
 function M.copy_abs_path()
-    path = vim.fn.expand('%:p')
+    local path = vim.fn.expand('%:p')
     vim.fn.setreg('+', path)
     vim.fn.setreg('"', path)
 end
 add_util_menu('CopyAbsPath', M.copy_abs_path)
 
 function M.copy_base_name()
-    path = vim.fn.expand('%:p:t')
+    local path = vim.fn.expand('%:p:t')
     vim.fn.setreg('+', path)
     vim.fn.setreg('"', path)
 end
@@ -110,6 +111,7 @@ add_util_menu('SelectYank', M.select_yank)
 function M.abolish()
     M.fzf({'camelCase:c', 'MixedCase:m', 'snake_case:s', 'SNAKE_UPPERCASE:u'},
           function(l)
+        local cmd
         _, _, cmd = string.find(l[2], ':(.+)')
         vim.defer_fn(function()
             vim.cmd(string.format('normal cr%s', cmd))
@@ -149,7 +151,6 @@ end
 map('n', 'LC', '<cmd>lua fzf_cfg.select_from_lsp_util_menu()<cr>')
 -- function M.lsp_diagnostic_prev() vim.lsp.diagnostic.goto_prev() end
 -- add_util_menu('DiagnosticPrev', M.lsp_diagnostic_prev, 'lsp')
--- 
 -- function M.lsp_diagnostic_next() vim.lsp.diagnostic.goto_next() end
 -- add_util_menu('DiagnosticNext', M.lsp_diagnostic_next, 'lsp')
 

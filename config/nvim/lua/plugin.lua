@@ -475,9 +475,10 @@ require'packer'.startup(function()
             return nil
         end
         vim.cmd('TabdropPushTag')
-        vim.fn['tabdrop#tabdrop'](vim.uri_to_fname(res[1].uri),
-                                  res[1].range.start.line + 1,
-                                  res[1].range.start.character + 1)
+        local uri = res[1].uri or res[1].targetUri
+        local range = res[1].range or res[1].targetRange
+        vim.fn['tabdrop#tabdrop'](vim.uri_to_fname(uri), range.start.line + 1,
+                                  range.start.character + 1)
         if #res > 1 then
             vim.lsp.util.set_qflist(vim.lsp.util.locations_to_items(res))
             vim.api.nvim_command("copen")
@@ -629,6 +630,7 @@ require'packer'.startup(function()
 
     use {
         'git@github.com:ipod825/vim-netranger',
+        disable = false,
         setup = function()
             vim.g.NETRRifleFile = vim.env.HOME ..
                                       "/dotfiles/config/nvim/settings/rifle.conf"
