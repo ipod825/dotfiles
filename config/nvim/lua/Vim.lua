@@ -27,33 +27,64 @@ function M.save_keymap(keys, mode, is_global)
     mode = mode or 'n'
     if is_global == nil then is_global = true end
 
+    local not_mapped_keys = {}
     -- normalize keys
     keys = vim.tbl_map(function(e)
         local res = vim.fn.maparg(e, mode, false, true).lhs
-        return string.gsub(res, '<Space>', ' ')
+        if res == nil then
+            table.insert(not_mapped_keys, {lhs = e, mode = mode})
+        else
+            res = string.gsub(res, '<Space>', ' ')
+        end
+        return res
     end, keys)
 
+    local res = nil
     if is_global then
-        return vim.tbl_filter(function(e)
-            return vim.tbl_contains(keys, e.lhs)
-        end, vim.api.nvim_get_keymap(mode))
+        res = vim.list_extend(not_mapped_keys,
+                              vim.tbl_filter(
+                                  function(e)
+                return vim.tbl_contains(keys, e.lhs)
+            end, vim.api.nvim_get_keymap(mode)))
     else
-        return vim.tbl_filter(function(e)
-            return vim.tbl_contains(keys, e.lhs)
-        end, vim.api.nvim_buf_get_keymap(mode))
+        res = vim.list_extend(not_mapped_keys,
+                              vim.tbl_filter(
+                                  function(e)
+                return vim.tbl_contains(keys, e.lhs)
+            end, vim.api.nvim_buf_get_keymap(mode)))
     end
+    local buffer_nr = is_global and -1 or vim.api.nvim_get_current_buf()
+    res = vim.tbl_map(function(e)
+        e.buffer = buffer_nr
+        return e
+    end, res)
+    return res
 end
 
 function M.restore_keymap(mappings)
     for _, v in pairs(mappings) do
-        vim.api.nvim_set_keymap(v.mode, v.lhs, v.rhs, {
+        local options = {
             noremap = (v.noremap and v.noremap ~= 0),
             nowait = (v.nowait and v.nowait ~= 0),
             silent = (v.silent and v.silent ~= 0),
             script = (v.script and v.script ~= 0),
             expr = (v.expr and v.expr ~= 0),
             unique = (v.unique and v.unique ~= 0)
-        })
+        }
+        if v.buffer > 0 then
+            if v.rhs then
+                vim.api.nvim_buf_set_keymap(v.buffer, v.mode, v.lhs, v.rhs,
+                                            options)
+            else
+                vim.api.nvim_buff_del_keymap(v.buffer, v.mode, v.lhs)
+            end
+        else
+            if v.rhs then
+                vim.api.nvim_set_keymap(v.mode, v.lhs, v.rhs, options)
+            else
+                vim.api.nvim_del_keymap(v.mode, v.lhs)
+            end
+        end
     end
 end
 

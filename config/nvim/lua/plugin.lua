@@ -371,15 +371,30 @@ require'packer'.startup(function()
     use {
         'neovim/nvim-lspconfig',
         config = function()
-            require'lspconfig'.pyls.setup {}
-            require'lspconfig'.clangd.setup {}
-            require'lspconfig'.gopls.setup {}
-            require'lspconfig'.rls.setup {}
+            SkipLspFns = SkipLspFns or {}
+            local set_lsp = function(name, options)
+                options = options or {}
+                local lspconfig = require 'lspconfig'
+                local client = lspconfig[name]
+                client.setup(options)
+                client.manager.orig_try_add = client.manager.try_add
+                client.manager.try_add =
+                    function(bufnr)
+                        for _, skip_lsp in pairs(SkipLspFns) do
+                            if skip_lsp() then return end
+                        end
+                        return client.manager.orig_try_add(bufnr)
+                    end
+            end
+            set_lsp('pyls')
+            set_lsp('clangd')
+            set_lsp('gopls')
+            set_lsp('rls')
             local sumneko_root_path = vim.env.XDG_DATA_HOME ..
                                           '/lua-language-server'
             local sumneko_binary = sumneko_root_path ..
                                        '/bin/Linux/lua-language-server'
-            require'lspconfig'.sumneko_lua.setup {
+            set_lsp('sumneko_lua', {
                 cmd = {sumneko_binary, "-E", sumneko_root_path .. "/main.lua"},
                 settings = {
                     Lua = {
@@ -401,7 +416,7 @@ require'packer'.startup(function()
                         }
                     }
                 }
-            }
+            })
         end
     }
 
@@ -419,25 +434,31 @@ require'packer'.startup(function()
                 }
             end
             local isort = function()
-                return {exe = 'isort', args = {'-', '--quiet'}}
+                return {exe = 'isort', args = {'-', '--quiet'}, stdin = true}
             end
-            local yapf = function() return {exe = 'yapf'} end
+            local yapf = function()
+                return {exe = 'yapf', stdin = true}
+            end
             local rustfmt = function()
-                return {exe = 'rustfmt', args = {'--emit=stdout'}}
+                return {exe = 'rustfmt', args = {'--emit=stdout'}, stdin = true}
             end
             local latexindent = function()
                 return {
                     exe = 'latexindent',
-                    args = {'-sl', '-g /dev/stderr', '2>/dev/null'}
+                    args = {'-sl', '-g /dev/stderr', '2>/dev/null'},
+                    stdin = true
                 }
             end
             local clang_format = function()
                 return {
                     exe = 'clang-format',
-                    args = {'-assume-filename=' .. vim.fn.expand('%:t')}
+                    args = {'-assume-filename=' .. vim.fn.expand('%:t')},
+                    stdin = true
                 }
             end
-            local lua_format = function() return {exe = 'lua-format'} end
+            local lua_format = function()
+                return {exe = 'lua-format', stdin = true}
+            end
             require('formatter').setup {
                 logging = false,
                 filetype = {

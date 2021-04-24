@@ -74,12 +74,16 @@ function M.open_recent_files()
                          vim.v.oldfiles))
 end
 
-function M.select_from_util_menu(id)
-    id = id or 'default'
-    local util_fns = require'utils'.util_fns
-    local names = vim.tbl_keys(util_fns[id])
+function M.select_from_util_menu(ids)
+    ids = ids or {'default'}
+    local util_fns = {}
+    for _, id in pairs(ids) do
+        util_fns =
+            vim.tbl_extend('force', util_fns, require'utils'.util_fns[id])
+    end
+    local names = vim.tbl_keys(util_fns)
     table.sort(names)
-    M.fzf(names, function(e) util_fns[id][e[2]]() end)
+    M.fzf(names, function(e) util_fns[e[2]]() end)
 end
 map('n', '<leader><cr>', '<cmd>lua fzf_cfg.select_from_util_menu()<cr>')
 
@@ -140,6 +144,20 @@ function M.related_file()
     vim.api.nvim_input(name)
 end
 add_util_menu('RelatedFile', M.related_file)
+
+function M.switch_source_header(bufnr)
+    local params = {uri = vim.uri_from_bufnr(0)}
+    vim.lsp.buf_request(0, 'textDocument/switchSourceHeader', params,
+                        function(err, _, result)
+        if err then error(tostring(err)) end
+        if not result then
+            print("Corresponding file can’t be determined")
+            return
+        end
+        vim.api.nvim_command('Tabdrop ' .. vim.uri_to_fname(result))
+    end)
+end
+add_util_menu('OpenSourceHeader', M.switch_source_header)
 
 M.lsp_context = M.lsp_context or {}
 function M.select_from_lsp_util_menu()
