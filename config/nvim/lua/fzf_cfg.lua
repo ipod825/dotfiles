@@ -25,7 +25,7 @@ function M.fzf(source, sink, options)
         local fzf_opts_wrap = vim.fn['fzf#wrap'](
                                   {source = source, options = options})
         -- 'sink*' needs to be defined outside wrap()
-        fzf_opts_wrap['sink*'] = sink
+        fzf_opts_wrap['sink*'] = function(l) sink(l[2]) end
         vim.fn['fzf#run'](fzf_opts_wrap)
     else
         -- fzf's default handler is written in vim script (an s: function),
@@ -50,7 +50,7 @@ function M.search_word()
     for k, v in pairs(lines) do lines[k] = string.format(' %4d %s', k, v) end
     M.fzf(lines, function(l)
         local lineno
-        _, _, lineno = string.find(l[2], "(%d+)%s*")
+        _, _, lineno = string.find(l, "(%d+)%s*")
         vim.cmd(lineno)
     end, {
         '--ansi', '--multi', '--no-sort', '--exact', '--nth', '2..', '--color',
@@ -78,12 +78,12 @@ function M.select_from_util_menu(ids)
     ids = ids or {'default'}
     local util_fns = {}
     for _, id in pairs(ids) do
-        util_fns =
-            vim.tbl_extend('force', util_fns, require'utils'.util_fns[id])
+        util_fns = vim.tbl_extend('force', util_fns,
+                                  require'utils'.util_fns[id] or {})
     end
     local names = vim.tbl_keys(util_fns)
     table.sort(names)
-    M.fzf(names, function(e) util_fns[e[2]]() end)
+    M.fzf(names, function(e) util_fns[e]() end)
 end
 map('n', '<leader><cr>', '<cmd>lua fzf_cfg.select_from_util_menu()<cr>')
 
@@ -106,7 +106,7 @@ function M.select_yank()
                                      vim.fn['yoink#getYankHistory']())
     yank_history = vim.tbl_filter(function(e) return #e > 1 end, yank_history)
     M.fzf(yank_history, function(l)
-        vim.fn.setreg('"', l[2])
+        vim.fn.setreg('"', l)
         vim.cmd('normal! p')
     end)
 end
@@ -116,7 +116,7 @@ function M.abolish()
     M.fzf({'camelCase:c', 'MixedCase:m', 'snake_case:s', 'SNAKE_UPPERCASE:u'},
           function(l)
         local cmd
-        _, _, cmd = string.find(l[2], ':(.+)')
+        _, _, cmd = string.find(l, ':(.+)')
         vim.defer_fn(function()
             vim.cmd(string.format('normal cr%s', cmd))
         end, 0)
@@ -180,3 +180,5 @@ function M.lsp_diagnostic_open()
     end, 10)
 end
 add_util_menu('DiagnosticOpen', M.lsp_diagnostic_open, 'lsp')
+
+return M

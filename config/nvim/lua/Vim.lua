@@ -19,9 +19,14 @@ function M.current.col_number() return vim.api.nvim_win_get_cursor(0)[2] end
 
 function M.current.filename() return vim.fn.expand('%:p') end
 
-function M.current.line() return vim.fn.getline('.') end
+function M.current.line() return vim.api.nvim_get_current_line() end
 
 function M.current.word() return vim.fn.expand('<cword>') end
+
+function M.current.textobject(mark)
+    vim.cmd('noautocmd normal! "ayi' .. mark)
+    return vim.fn.getreg('a')
+end
 
 function M.save_keymap(keys, mode, is_global)
     mode = mode or 'n'
