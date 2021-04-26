@@ -76,7 +76,10 @@ require'packer'.startup(function()
         end
     }
 
-    use {'glepnir/zephyr-nvim', config = function() require 'zephyr' end}
+    use {
+        'glepnir/zephyr-nvim',
+        config = function() vim.cmd('colorscheme zephyr') end
+    }
 
     use {
         'svermeulen/vim-yoink',
@@ -247,6 +250,7 @@ require'packer'.startup(function()
 
     use {
         'hrsh7th/nvim-compe',
+        disable = false,
         config = function()
             vim.g.loaded_compe_treesitter = true
             vim.g.loaded_compe_snippets_nvim = true
@@ -492,7 +496,7 @@ require'packer'.startup(function()
     end
     function M.lsp_goto(_, method, res)
         if res == nil or vim.tbl_isempty(res) then
-            local _ = print('No location found')
+            print('No location found')
             return nil
         end
         vim.cmd('TabdropPushTag')

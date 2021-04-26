@@ -76,6 +76,7 @@ end
 
 function M.select_from_util_menu(ids)
     ids = ids or {'default'}
+    if type(ids) == 'string' then ids = {ids} end
     local util_fns = {}
     for _, id in pairs(ids) do
         util_fns = vim.tbl_extend('force', util_fns,
@@ -167,14 +168,11 @@ function M.select_from_lsp_util_menu()
 end
 
 map('n', 'LC', '<cmd>lua fzf_cfg.select_from_lsp_util_menu()<cr>')
--- function M.lsp_diagnostic_prev() vim.lsp.diagnostic.goto_prev() end
--- add_util_menu('DiagnosticPrev', M.lsp_diagnostic_prev, 'lsp')
--- function M.lsp_diagnostic_next() vim.lsp.diagnostic.goto_next() end
--- add_util_menu('DiagnosticNext', M.lsp_diagnostic_next, 'lsp')
+map('n', 'LH', '<cmd>lua vim.lsp.buf.hover()<cr>')
+add_util_menu('References', vim.lsp.buf.references, 'lsp')
 
 function M.lsp_diagnostic_open()
     vim.lsp.diagnostic.set_loclist()
-    print(string.format('|%d col', M.lsp_context.line_number))
     vim.defer_fn(function()
         vim.fn.search(string.format('|%d col', M.lsp_context.line_number), 'cw')
     end, 10)

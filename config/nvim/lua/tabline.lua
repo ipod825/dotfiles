@@ -32,18 +32,28 @@ function M.unicode_num(number)
     return res
 end
 
-function M.tab_label(tab_id)
+function M.tab_label(tab_id, current_tab_id)
     local win_id = api.nvim_tabpage_get_win(tab_id)
     local buf_id = api.nvim_win_get_buf(win_id)
     local name = utils.basename(api.nvim_buf_get_name(buf_id))
+    local filetype = api.nvim_buf_get_option(buf_id, 'ft')
 
     -- local content = string.format(' %s ', name)
-    local content = string.format('%s%s ', M.unicode_num(
-                                      api.nvim_tabpage_get_number(tab_id)), name)
+    local content = string.format('%s', name)
+    local current_tab_nr = api.nvim_tabpage_get_number(current_tab_id)
+    local tab_nr = api.nvim_tabpage_get_number(tab_id)
+    local is_current = (tab_id == current_tab_id)
+    local is_left_to_current = (tab_nr == current_tab_nr - 1)
     return {
-        highlight = tab_id == api.nvim_get_current_tabpage() and 'TabLineSel' or
-            'TabLine',
-        elements = {{content = content}}
+        highlight = is_current and 'TabLineSel' or 'TabLine',
+        elements = {
+            {highlight = 'Directory', content = is_current and '|' or ''},
+            {
+                highlight = 'Directory',
+                content = filetype == 'netranger' and '' or ''
+            }, {content = content},
+            {highlight = 'NonText', content = is_left_to_current and '' or '|'}
+        }
     }
 end
 
@@ -108,11 +118,9 @@ function M.reduce_from_left(total_length, width, labels)
 
         while i <= #first_label.elements do
             local c = first_label.elements[i].content
-            print(c, target_reduce)
             -- todo: handle unicode substr
             first_label.elements[i].content = c:sub(target_reduce + 1)
             target_reduce = target_reduce - math.min(#c, target_reduce)
-            print(first_label.elements[i].content, target_reduce)
             i = i + 1
         end
         l = l + 1
@@ -150,8 +158,9 @@ function M.tabline()
     local labels = {}
     local total_length, left_has_more, right_has_more
 
+    local current_tab_id = api.nvim_get_current_tabpage()
     for _, tab_id in pairs(api.nvim_list_tabpages()) do
-        table.insert(labels, M.tab_label(tab_id))
+        table.insert(labels, M.tab_label(tab_id, current_tab_id))
     end
 
     labels, total_length, left_has_more, right_has_more = M.filter(labels)
