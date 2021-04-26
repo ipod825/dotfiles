@@ -114,7 +114,13 @@ gls.left = {
     }, {
         GitBranch = {
             provider = 'GitBranch',
-            condition = M.buffer_not_empty,
+            condition = function()
+                SkipStatusHeavyFns = SkipStatusHeavyFns or {}
+                for _, skip in pairs(SkipStatusHeavyFns) do
+                    if skip() then return false end
+                end
+                return M.buffer_not_empty()
+            end,
             highlight = {M.colors.grey, M.colors.purple},
             separator = '',
             separator_highlight = {M.colors.purple, M.colors.bg}
