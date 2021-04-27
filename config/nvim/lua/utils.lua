@@ -51,6 +51,8 @@ function M.basename(str)
     return name
 end
 
+function M.extension(str) return str:match('%.(.*)$') end
+
 M.dirctory_register = M.dirctory_register or {}
 function M.find_directory(anchor, name)
     local res = name and M.dirctory_register[name] or nil

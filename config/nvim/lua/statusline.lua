@@ -83,19 +83,10 @@ gls.left = {
             end
         }
     }, {
-        FileIconPad = {
+        FileNamePad = {
             provider = function() return ' ' end,
             condition = M.buffer_not_empty,
             highlight = {M.colors.darkblue, M.colors.darkblue}
-        }
-    }, {
-        FileIcon = {
-            provider = 'FileIcon',
-            condition = M.buffer_not_empty,
-            highlight = {
-                require('galaxyline.provider_fileinfo').get_file_icon_color,
-                M.colors.darkblue
-            }
         }
     }, {
         FileName = {

@@ -2,55 +2,45 @@ local M = _G.tabline or {}
 _G.tabline = M
 local api = vim.api
 local utils = require 'utils'
+local devicons = require 'nvim-web-devicons'
 
 api.nvim_exec([[
 augroup TABLINE
     autocmd!
-    autocmd ColorScheme * hi TabLineSel gui=bold,italic guifg=#bbc2cf guibg=#282a36
+    autocmd ColorScheme * hi TabLineSel gui=bold,italic guifg=#bbc2cf guibg=#282a36 
     autocmd ColorScheme * hi TabLine guifg=#73797e guibg=#1e1f28 
+    autocmd ColorScheme * hi TabLineSelMod gui=bold,italic guifg=#a33018 guibg=#282a36
+    autocmd ColorScheme * hi TabLineMod guifg=#822310 guibg=#1e1f28 
 augroup END
 ]], false)
 
-M.small_numbers = {
-    ["0"] = "⁰",
-    ["1"] = "¹",
-    ["2"] = "²",
-    ["3"] = "³",
-    ["4"] = "⁴",
-    ["5"] = "⁵",
-    ["6"] = "⁶",
-    ["7"] = "⁷",
-    ["8"] = "⁸",
-    ["9"] = "⁹"
-}
-function M.unicode_num(number)
-    local res = ""
-    local number_str = string.format('%d', number)
-    for i = 1, #number_str do
-        res = res .. M.small_numbers[number_str:sub(i, i)]
-    end
-    return res
+function M.get_file_icon(path)
+    local f_name = utils.basename(path)
+    local f_extension = utils.extension(path)
+    local icon = devicons.get_icon(f_name, f_extension)
+    if icon == nil then icon = '' end
+    return icon .. ' '
 end
 
 function M.tab_label(tab_id, current_tab_id)
     local win_id = api.nvim_tabpage_get_win(tab_id)
     local buf_id = api.nvim_win_get_buf(win_id)
-    local name = utils.basename(api.nvim_buf_get_name(buf_id))
+    local bufname = api.nvim_buf_get_name(buf_id)
     local filetype = api.nvim_buf_get_option(buf_id, 'ft')
 
-    -- local content = string.format(' %s ', name)
-    local content = string.format('%s', name)
+    local content = string.format('%s', utils.basename(bufname))
     local current_tab_nr = api.nvim_tabpage_get_number(current_tab_id)
     local tab_nr = api.nvim_tabpage_get_number(tab_id)
     local is_current = (tab_id == current_tab_id)
     local is_left_to_current = (tab_nr == current_tab_nr - 1)
+    local mod = api.nvim_buf_get_option(buf_id, 'mod') and 'Mod' or ''
     return {
-        highlight = is_current and 'TabLineSel' or 'TabLine',
+        highlight = (is_current and 'TabLineSel' or 'TabLine') .. mod,
         elements = {
-            {highlight = 'Directory', content = is_current and '|' or ''},
-            {
+            {highlight = 'Directory', content = is_current and '|' or ''}, {
                 highlight = 'Directory',
-                content = filetype == 'netranger' and '' or ''
+                content = filetype == 'netranger' and '' or
+                    M.get_file_icon(bufname)
             }, {content = content},
             {highlight = 'NonText', content = is_left_to_current and '' or '|'}
         }
