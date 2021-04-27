@@ -53,9 +53,8 @@ require'packer'.startup(function()
         disable = false,
         run = ':TSUpdate',
         requires = {
-            'nvim-treesitter/nvim-treesitter-refactor',
+            'nvim-treesitter/nvim-treesitter-refactor'
             -- 'nvim-treesitter/nvim-treesitter-textobjects',
-            'romgrk/nvim-treesitter-context'
         },
         config = function()
             vim.api.nvim_exec([[
@@ -75,6 +74,16 @@ require'packer'.startup(function()
             }
         end
     }
+    -- use {'romgrk/nvim-treesitter-context', disable = true}
+    use {
+        'wellle/context.vim',
+        cmd = 'ContextPeek',
+        setup = function()
+            vim.g.context_add_mappings = 0
+            vim.g.context_enabled = 0
+        end
+    }
+    map('n', '<m-i>', '<cmd>ContextPeek<cr>')
 
     use {
         'glepnir/zephyr-nvim',
