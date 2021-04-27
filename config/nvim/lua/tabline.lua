@@ -14,10 +14,18 @@ augroup TABLINE
 augroup END
 ]], false)
 
-function M.get_file_icon(path)
-    local f_name = utils.basename(path)
-    local f_extension = utils.extension(path)
-    local icon = devicons.get_icon(f_name, f_extension)
+function M.get_file_icon(buf_id)
+    local filetype = api.nvim_buf_get_option(buf_id, 'ft')
+    local icon
+    if filetype == 'netranger' then
+        icon = ''
+    else
+        local path = api.nvim_buf_get_name(buf_id)
+        local f_name = utils.basename(path)
+        local f_extension = utils.extension(path)
+        icon = devicons.get_icon(f_name, f_extension)
+    end
+
     if icon == nil then icon = '' end
     return icon .. ' '
 end
@@ -25,23 +33,19 @@ end
 function M.tab_label(tab_id, current_tab_id)
     local win_id = api.nvim_tabpage_get_win(tab_id)
     local buf_id = api.nvim_win_get_buf(win_id)
-    local bufname = api.nvim_buf_get_name(buf_id)
-    local filetype = api.nvim_buf_get_option(buf_id, 'ft')
-
-    local content = string.format('%s', utils.basename(bufname))
+    local content = string.format('%s',
+                                  utils.basename(api.nvim_buf_get_name(buf_id)))
     local current_tab_nr = api.nvim_tabpage_get_number(current_tab_id)
     local tab_nr = api.nvim_tabpage_get_number(tab_id)
     local is_current = (tab_id == current_tab_id)
     local is_left_to_current = (tab_nr == current_tab_nr - 1)
     local mod = api.nvim_buf_get_option(buf_id, 'mod') and 'Mod' or ''
+    local basnem_hl = (is_current and 'TabLineSel' or 'TabLine') .. mod
     return {
-        highlight = (is_current and 'TabLineSel' or 'TabLine') .. mod,
         elements = {
-            {highlight = 'Directory', content = is_current and '|' or ''}, {
-                highlight = 'Directory',
-                content = filetype == 'netranger' and '' or
-                    M.get_file_icon(bufname)
-            }, {content = content},
+            {highlight = 'Directory', content = is_current and '|' or ''},
+            {highlight = 'Directory', content = M.get_file_icon(buf_id)},
+            {highlight = basnem_hl, content = content},
             {highlight = 'NonText', content = is_left_to_current and '' or '|'}
         }
     }
