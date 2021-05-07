@@ -42,6 +42,7 @@ vim.o.swapfile = false
 vim.o.backup = false
 vim.o.showmode = false
 vim.o.undofile = true
+vim.o.undodir = vim.fn.stdpath('data') .. '/undo'
 vim.api.nvim_exec([[
     set copyindent
     set smartindent
@@ -97,6 +98,9 @@ augroup GENERAL "{{{
     autocmd BufEnter *.md,*.tex inoremap <buffer> <M-j> _
     autocmd BufEnter *.md,*.tex inoremap <buffer> <M-k> ^
     autocmd BufEnter *.md,*.tex inoremap <buffer> <M-q> {}<Left>
+
+    " Comment
+    autocmd Filetype c,cpp setlocal commentstring=//\ %s
 
     " Set correct filetype.
     autocmd BufEnter *sxhkdrc* setlocal ft=sxhkdrc | setlocal commentstring=#%s | setlocal foldmethod=marker

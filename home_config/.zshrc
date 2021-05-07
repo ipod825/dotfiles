@@ -61,7 +61,6 @@ bindkey "^[w" backward-kill-word
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
 bindkey 'JK' vi-cmd-mode
-bindkey "^[c" cheat
 
 # PS1
 host_prompt="%F{39}%m"

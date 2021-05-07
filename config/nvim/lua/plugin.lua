@@ -23,21 +23,6 @@ require'packer'.startup(function()
     use {'wbthomason/packer.nvim', opt = true}
 
     use {'rbtnn/vim-vimscript_lasterror', cmd = 'VimscriptLastError'}
-    use {
-        'simnalamburt/vim-mundo',
-        cmd = 'MundoToggle',
-        config = function()
-            vim.o.undodir = vim.fn.stdpath('data') .. '/undo'
-            vim.o.undofile = true
-            vim.g.mnudo_width = math.floor(0.2 * vim.o.columns)
-            vim.g.mundo_preview_height = math.floor(0.5 * vim.o.lines)
-            vim.g.mundo_right = 1
-            vim.cmd('augroup MUNDO')
-            vim.cmd('autocmd!')
-            vim.cmd('autocmd Filetype MundoDiff set wrap')
-            vim.cmd('augroup END')
-        end
-    }
 
     use {
         'terrortylor/nvim-comment',

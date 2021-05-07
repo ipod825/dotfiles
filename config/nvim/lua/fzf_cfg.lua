@@ -68,6 +68,7 @@ function M.open_config_files()
     M.fzf(vim.fn.systemlist('$HOME/dotfiles/misc/watchfiles.sh nvim'))
 end
 
+map('n', '<c-m-o>', '<cmd>lua fzf_cfg.open_recent_files()<cr>')
 vim.cmd('cnoreabbrev f lua fzf_cfg.open_recent_files()')
 function M.open_recent_files()
     M.fzf(vim.tbl_filter(function(val) return 0 ~= vim.fn.filereadable(val) end,
@@ -125,7 +126,7 @@ function M.abolish()
 end
 add_util_menu('DoAbolish', M.abolish)
 
-function M.hex_edit()
+function M.bin_edit()
     vim.bo.bin = true
     vim.api.nvim_exec([[
       autocmd BufReadPost <buffer> if &bin | %!xxd
@@ -137,7 +138,7 @@ function M.hex_edit()
       edit
   ]], false)
 end
-add_util_menu('HexEdit', M.hex_edit)
+add_util_menu('BinEdit', M.bin_edit)
 
 function M.related_file()
     local name = vim.fn.expand('%:t:r')
@@ -178,5 +179,21 @@ function M.lsp_diagnostic_open()
     end, 10)
 end
 add_util_menu('DiagnosticOpen', M.lsp_diagnostic_open, 'lsp')
+
+function M.cheat_sheet()
+    local id = vim.b.terminal_job_id
+    local cheats = vim.list_extend(vim.fn.systemlist(
+                                       string.format(
+                                           'cat %s/dotfiles/misc/cheatsheet',
+                                           vim.env.HOME)), vim.fn.systemlist(
+                                       string.format(
+                                           'cat %s/.local/share/cheatsheet',
+                                           vim.env.HOME)))
+    M.fzf(cheats, function(l)
+        vim.fn.chansend(id, l)
+        vim.defer_fn(function() vim.cmd('normal! i') end, 50)
+    end, {'--exact'})
+end
+map('t', '<m-c>', '<cmd>lua fzf_cfg.cheat_sheet()<cr>')
 
 return M
