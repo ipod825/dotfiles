@@ -647,6 +647,12 @@ require'packer'.startup(function()
     use {'andymass/vim-matchup'}
     use {'AndrewRadev/linediff.vim'}
 
+    use {'~/projects/nvim-ranger.lua', disable = true}
+    use {
+        '~/projects/nvim-multisearch.lua',
+        disable = true,
+        config = function() require'multisearch'.setup() end
+    }
     use {
         'git@github.com:ipod825/vim-netranger',
         disable = false,
