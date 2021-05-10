@@ -316,7 +316,11 @@ require'packer'.startup(function()
         end
     }
 
-    use {'norcalli/nvim-colorizer.lua', config = [[require'colorizer'.setup()]]}
+    use {
+        'norcalli/nvim-colorizer.lua',
+        disable = true,
+        config = [[require'colorizer'.setup()]]
+    }
 
     use {
         'lervag/vimtex',

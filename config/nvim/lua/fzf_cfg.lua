@@ -198,10 +198,15 @@ function M.cheat_sheet()
                                            'cat %s/.local/share/cheatsheet',
                                            vim.env.HOME)))
     M.fzf(cheats, function(l)
-        vim.fn.chansend(id, l)
-        vim.defer_fn(function() vim.cmd('normal! i') end, 50)
+        if id then
+            vim.fn.chansend(id, l)
+            vim.defer_fn(function() vim.cmd('normal! i') end, 50)
+        else
+            vim.fn.setreg('"', l)
+        end
     end, {'--exact'})
 end
 map('t', '<m-c>', '<cmd>lua fzf_cfg.cheat_sheet()<cr>')
+map('n', '<m-c>', '<cmd>lua fzf_cfg.cheat_sheet()<cr>')
 
 return M

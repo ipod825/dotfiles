@@ -68,7 +68,6 @@ try
     call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-show-vsplit)')
     call gina#custom#mapping#nmap('log', 'dd','<Plug>(gina-show-tab)')
     call gina#custom#mapping#nmap('log', 'DD','<Plug>(gina-changes-between)')
-    call gina#custom#mapping#nmap('log', '<m-w>',':set wrap!<cr>')
     call gina#custom#mapping#nmap('log', 'cc','<cmd>call GinaLogCheckout()<cr>')
     call gina#custom#mapping#nmap('log', 'cb','<cmd>call GinaLogCheckoutNewBranch()<cr>')
     call gina#custom#mapping#nmap('log', 'r','<cmd>call GinaLogRebase()<cr>')
