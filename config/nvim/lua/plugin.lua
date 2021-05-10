@@ -71,6 +71,24 @@ require'packer'.startup(function()
     map('n', '<m-i>', '<cmd>ContextPeek<cr>')
 
     use {
+        'nvim-lua/lsp_extensions.nvim',
+        config = function()
+            require'lsp_extensions'.inlay_hints {
+                highlight = "Comment",
+                prefix = " > ",
+                aligned = false,
+                only_current_line = false,
+                enabled = {"ChainingHint"}
+            }
+        end
+    }
+
+    use {
+        "folke/lsp-trouble.nvim",
+        config = function() require("trouble").setup {} end
+    }
+
+    use {
         'glepnir/zephyr-nvim',
         config = function() vim.cmd('colorscheme zephyr') end
     }
@@ -333,6 +351,8 @@ require'packer'.startup(function()
 
     use {'farmergreg/vim-lastplace'}
 
+    use {'michaelb/sniprun', run = 'bash ./install.sh'}
+
     use {
         'git@github.com:ipod825/war.vim',
         config = function()
@@ -352,10 +372,18 @@ require'packer'.startup(function()
 
     use {
         'jalvesaq/vimcmdline',
-        setup = function()
-            vim.g.cmdline_map_start = '<LocalLeader>s'
+        config = function()
+            vim.g.cmdline_vsplit = 1
+            vim.g.cmdline_map_start = '<leader>s'
             vim.g.cmdline_map_send = 'E'
             vim.g.cmdline_map_send_and_stay = '<LocalLeader>E'
+            vim.g.cmdline_app = {
+                matlab = 'matlab -nojvm -nodisplay -nosplash',
+                python = 'ipython',
+                sh = 'zsh',
+                zsh = 'zsh',
+                lua = 'ilua'
+            }
         end
     }
 

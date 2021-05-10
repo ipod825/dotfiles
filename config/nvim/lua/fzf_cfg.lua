@@ -171,6 +171,9 @@ end
 map('n', 'LC', '<cmd>lua fzf_cfg.select_from_lsp_util_menu()<cr>')
 map('n', 'LH', '<cmd>lua vim.lsp.buf.hover()<cr>')
 add_util_menu('References', vim.lsp.buf.references, 'lsp')
+add_util_menu('IncomingCalls', vim.lsp.buf.incoming_calls, 'lsp')
+add_util_menu('OutgoingCalls', vim.lsp.buf.outgoing_calls, 'lsp')
+add_util_menu('Rename', vim.lsp.buf.rename, 'lsp')
 
 function M.lsp_diagnostic_open()
     vim.lsp.diagnostic.set_loclist()
@@ -178,7 +181,11 @@ function M.lsp_diagnostic_open()
         vim.fn.search(string.format('|%d col', M.lsp_context.line_number), 'cw')
     end, 10)
 end
-add_util_menu('DiagnosticOpen', M.lsp_diagnostic_open, 'lsp')
+-- add_util_menu('DiagnosticOpen', M.lsp_diagnostic_open, 'lsp')
+add_util_menu('DiagnosticDocument',
+              function() require'trouble'.open('document') end, 'lsp')
+add_util_menu('DiagnosticWorkspace',
+              function() require'trouble'.open('workspace') end, 'lsp')
 
 function M.cheat_sheet()
     local id = vim.b.terminal_job_id
