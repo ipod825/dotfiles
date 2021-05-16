@@ -84,6 +84,22 @@ require'packer'.startup(function()
     }
 
     use {
+        "ray-x/lsp_signature.nvim",
+        config = function()
+            require"lsp_signature".on_attach(
+                {
+                    bind = true, -- This is mandatory, otherwise border config won't get registered.
+                    handler_opts = {border = "single"},
+                    hint_enable = false,
+                    handler_opts = {
+                        border = "double" -- double, single, shadow, none
+                    },
+                    decorator = {"`", "`"}
+                })
+        end
+    }
+
+    use {
         "folke/lsp-trouble.nvim",
         config = function() require("trouble").setup {} end
     }
@@ -91,6 +107,11 @@ require'packer'.startup(function()
     use {
         'glepnir/zephyr-nvim',
         config = function() vim.cmd('colorscheme zephyr') end
+    }
+
+    use {
+        'lewis6991/spellsitter.nvim',
+        config = function() require('spellsitter').setup() end
     }
 
     use {
@@ -368,7 +389,8 @@ require'packer'.startup(function()
         end
     }
 
-    use {'vim-test/vim-test'}
+    use {'vim-test/vim-test', opt = true}
+    use {'rcarriga/vim-ultest', opt = true}
 
     use {
         'jalvesaq/vimcmdline',
