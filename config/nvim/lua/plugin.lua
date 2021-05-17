@@ -77,7 +77,6 @@ require'packer'.startup(function()
             require"lsp_signature".on_attach(
                 {
                     bind = true, -- This is mandatory, otherwise border config won't get registered.
-                    handler_opts = {border = "single"},
                     hint_enable = false,
                     handler_opts = {
                         border = "double" -- double, single, shadow, none
@@ -516,38 +515,6 @@ require'packer'.startup(function()
         ]], false)
         end
     }
-
-    function M.goto_tag_or_lsp_def()
-        if #(vim.fn.taglist(vim.fn.expand('<cword>'))) > 0 then
-            vim.cmd('TabdropPushTag')
-            vim.api.nvim_exec('silent! TagTabdrop', true)
-        else
-            vim.lsp.buf.definition()
-        end
-    end
-    function M.lsp_goto(_, method, res)
-        if res == nil or vim.tbl_isempty(res) then
-            print('No location found')
-            return nil
-        end
-        vim.cmd('TabdropPushTag')
-        local uri = res[1].uri or res[1].targetUri
-        local range = res[1].range or res[1].targetRange
-        vim.fn['tabdrop#tabdrop'](vim.uri_to_fname(uri), range.start.line + 1,
-                                  range.start.character + 1)
-        if #res > 1 then
-            vim.lsp.util.set_qflist(vim.lsp.util.locations_to_items(res))
-            vim.api.nvim_command("copen")
-        end
-    end
-    map('n', '<m-d>', '<cmd>lua plugin.goto_tag_or_lsp_def()<cr>')
-    map('n', '<m-s>', '<cmd>TabdropPopTag<cr>')
-    map('n', 'LH', '<cmd>lua vim.lsp.buf.hover()<cr>')
-    map('n', 'LA', '<cmd>lua vim.lsp.buf.code_action()<cr>')
-    vim.lsp.handlers['textDocument/declaration'] = M.lsp_goto
-    vim.lsp.handlers['textDocument/definition'] = M.lsp_goto
-    vim.lsp.handlers['textDocument/typeDefinition'] = M.lsp_goto
-    vim.lsp.handlers['textDocument/implementation'] = M.lsp_goto
 
     use {
         'terryma/vim-expand-region',

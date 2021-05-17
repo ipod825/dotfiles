@@ -1,13 +1,6 @@
 local M = _G.utils or {}
 _G.utils = M
 
-M.util_fns = M.util_fns or {default = {}}
-function M.add_util_menu(name, fn, id)
-    id = id or 'default'
-    if M.util_fns[id] == nil then M.util_fns[id] = {} end
-    if M.util_fns[id][name] == nil then M.util_fns[id][name] = fn end
-end
-
 function M.zip(...)
     local arrays, ans = {...}, {}
     local index = 0

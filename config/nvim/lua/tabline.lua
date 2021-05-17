@@ -8,9 +8,9 @@ api.nvim_exec([[
 augroup TABLINE
     autocmd!
     autocmd ColorScheme * hi TabLineSel gui=bold,italic guifg=#bbc2cf guibg=#282a36 
-    autocmd ColorScheme * hi TabLine guifg=#73797e guibg=#1e1f28 
+    autocmd ColorScheme * hi TabLine guifg=#73797e guibg=#282a36 
     autocmd ColorScheme * hi TabLineSelMod gui=bold,italic guifg=#a33018 guibg=#282a36
-    autocmd ColorScheme * hi TabLineMod guifg=#822310 guibg=#1e1f28 
+    autocmd ColorScheme * hi TabLineMod guifg=#6e2710  guibg=#282a36 
 augroup END
 ]], false)
 

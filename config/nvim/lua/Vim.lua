@@ -95,4 +95,9 @@ end
 
 function M.term_feed(str) vim.fn.feedkeys(string.gsub(str, '%s+', ' ') .. '\r') end
 
+function M.feedkeys(key, mode)
+    key = vim.api.nvim_replace_termcodes(key, true, false, true)
+    vim.api.nvim_feedkeys(key, mode, true)
+end
+
 return M
