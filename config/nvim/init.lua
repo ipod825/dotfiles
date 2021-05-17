@@ -3,6 +3,7 @@ require('mapping')
 require('tabline')
 require('plugin')
 require('fzf_cfg')
+require('qf')
 require('gwork')
 require('android')
 require('g4')
@@ -77,6 +78,7 @@ augroup GENERAL "{{{
 
     " Man/help in left new tab
     autocmd FileType man wincmd T | silent! tabmove -1
+    autocmd FileType help silent! tabmove -1 | setlocal bufhidden=wipe 
 
     " Disables automatic commenting on newline:
     autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o

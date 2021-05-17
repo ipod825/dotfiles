@@ -174,10 +174,6 @@ add_util_menu('References', vim.lsp.buf.references, 'lsp')
 add_util_menu('IncomingCalls', vim.lsp.buf.incoming_calls, 'lsp')
 add_util_menu('OutgoingCalls', vim.lsp.buf.outgoing_calls, 'lsp')
 add_util_menu('Rename', vim.lsp.buf.rename, 'lsp')
-add_util_menu('DiagnosticDocument',
-              function() require'trouble'.open('document') end, 'lsp')
-add_util_menu('DiagnosticWorkspace',
-              function() require'trouble'.open('workspace') end, 'lsp')
 add_util_menu('CodeAction', vim.lsp.buf.code_action, 'lsp')
 
 function M.lsp_diagnostic_open()
@@ -186,7 +182,7 @@ function M.lsp_diagnostic_open()
         vim.fn.search(string.format('|%d col', M.lsp_context.line_number), 'cw')
     end, 10)
 end
--- add_util_menu('DiagnosticOpen', M.lsp_diagnostic_open, 'lsp')
+add_util_menu('DiagnosticOpen', M.lsp_diagnostic_open, 'lsp')
 
 function M.cheat_sheet()
     local id = vim.b.terminal_job_id

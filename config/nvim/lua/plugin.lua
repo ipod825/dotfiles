@@ -71,20 +71,8 @@ require'packer'.startup(function()
     map('n', '<m-i>', '<cmd>ContextPeek<cr>')
 
     use {
-        'nvim-lua/lsp_extensions.nvim',
-        config = function()
-            require'lsp_extensions'.inlay_hints {
-                highlight = "Comment",
-                prefix = " > ",
-                aligned = false,
-                only_current_line = false,
-                enabled = {"ChainingHint"}
-            }
-        end
-    }
-
-    use {
         "ray-x/lsp_signature.nvim",
+        disable = true,
         config = function()
             require"lsp_signature".on_attach(
                 {
@@ -97,11 +85,6 @@ require'packer'.startup(function()
                     decorator = {"`", "`"}
                 })
         end
-    }
-
-    use {
-        "folke/lsp-trouble.nvim",
-        config = function() require("trouble").setup {} end
     }
 
     use {
@@ -692,7 +675,6 @@ require'packer'.startup(function()
     use {'kkoomen/vim-doge'}
     use {'will133/vim-dirdiff'}
 
-    use {'kevinhwang91/nvim-bqf'}
     use {
         'embear/vim-localvimrc',
         config = function() vim.g.localvimrc_ask = 0 end

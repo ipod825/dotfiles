@@ -176,12 +176,7 @@ map('n', '<c-m-left>', '<c-w><')
 map('n', '<c-m-right>', '<c-w>>')
 map('n', 'q', '<cmd>quit<cr>')
 map('n', 'Q', 'q')
-function M.toggle_wrap()
-    vim.wo.wrap = not vim.wo.wrap
-    map('n', 'j', '<down>', {buffer = true})
-    map('n', 'k', '<up>', {buffer = true})
-end
-map('n', '<m-w>', '<cmd>lua mapping.toggle_wrap()<cr>')
+map('n', '<m-w>', '<cmd>lua vim.wo.wrap = not vim.wo.wrap<cr>')
 
 vim.env.SUDO_ASKPASS = "/usr/bin/ssh-askpass"
 vim.cmd('cnoreabbrev help tab help')
