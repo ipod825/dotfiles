@@ -32,6 +32,8 @@ function M.save_keymap(keys, mode, is_global)
     mode = mode or 'n'
     if is_global == nil then is_global = true end
 
+    if type(keys) ~= "table" then keys = {keys} end
+
     local not_mapped_keys = {}
     -- normalize keys
     keys = vim.tbl_map(function(e)
@@ -56,7 +58,7 @@ function M.save_keymap(keys, mode, is_global)
                               vim.tbl_filter(
                                   function(e)
                 return vim.tbl_contains(keys, e.lhs)
-            end, vim.api.nvim_buf_get_keymap(mode)))
+            end, vim.api.nvim_buf_get_keymap(0, mode)))
     end
     local buffer_nr = is_global and -1 or vim.api.nvim_get_current_buf()
     res = vim.tbl_map(function(e)

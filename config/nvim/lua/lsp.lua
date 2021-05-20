@@ -15,8 +15,6 @@ function M.goto_tag_or_lsp_def()
 end
 map('n', '<m-d>', '<cmd>lua lsp.goto_tag_or_lsp_def()<cr>')
 map('n', '<m-s>', '<cmd>TabdropPopTag<cr>')
-map('n', 'LH', '<cmd>lua vim.lsp.buf.hover()<cr>')
-map('n', 'LA', '<cmd>lua vim.lsp.buf.code_action()<cr>')
 
 function M.goto_handler(_, method, res)
     if res == nil or vim.tbl_isempty(res) then
@@ -47,15 +45,38 @@ function M.signature_help_handler(a, b, result)
 
         params = table.concat(vim.tbl_map(
                                   function(e)
-                return string.format('`%s`', e.label)
+                return string.format('%s', e.label)
             end, params), ', ')
         vim.api.nvim_buf_set_text(0, line_nr, col_nr, line_nr, col_nr, {params})
-        vim.cmd('normal va`')
-
+        require'nvim-treesitter.textobjects.select'.select_textobject(
+            '@parameter.inner', 'c')
         Vim.feedkeys('<c-g>', 'v', false)
+        M.bak_mapping = {
+            Vim.save_keymap({'<tab>', '<s-tab>'}, 's', false),
+            Vim.save_keymap({'<tab>', '<s-tab>'}, 'i', false)
+        }
+        map('s', '<tab>', '<cmd>lua lsp.signature_jump(1)<cr>', {buffer = true})
+        map('i', '<tab>', '<cmd>lua lsp.signature_jump(1)<cr>', {buffer = true})
+        map('s', '<s-tab>', '<cmd>lua lsp.signature_jump(-1)<cr>',
+            {buffer = true})
+        map('i', '<s-tab>', '<cmd>lua lsp.signature_jump(-1)<cr>',
+            {buffer = true})
     end
 end
 vim.lsp.handlers['textDocument/signatureHelp'] = M.signature_help_handler
+
+function M.signature_jump(direction)
+    vim.fn.search(',')
+    if direction > 0 then
+        require'nvim-treesitter.textobjects.move'.goto_next_start(
+            '@parameter.inner')
+    else
+        require'nvim-treesitter.textobjects.move'.goto_previous_start(
+            '@parameter.inner')
+    end
+    vim.cmd('normal vi,')
+    Vim.feedkeys('<c-g>', 'v', false)
+end
 
 function M.switch_source_header(bufnr)
     local params = {uri = vim.uri_from_bufnr(0)}
@@ -78,8 +99,8 @@ function M.select_from_lsp_util_menu()
     require'fuzzy_menu'.select("lsp")
 end
 
-map('n', 'LC', '<cmd>lua lsp.select_from_lsp_util_menu()<cr>')
-map('n', 'LH', '<cmd>lua vim.lsp.buf.hover()<cr>')
+map('n', '<leader>p', '<cmd>lua lsp.select_from_lsp_util_menu()<cr>')
+add_util_menu('Hover', vim.lsp.buf.hover, 'lsp')
 add_util_menu('References', vim.lsp.buf.references, 'lsp')
 add_util_menu('IncomingCalls', vim.lsp.buf.incoming_calls, 'lsp')
 add_util_menu('OutgoingCalls', vim.lsp.buf.outgoing_calls, 'lsp')

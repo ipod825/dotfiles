@@ -37,10 +37,6 @@ require'packer'.startup(function()
         'nvim-treesitter/nvim-treesitter',
         disable = false,
         run = ':TSUpdate',
-        requires = {
-            'nvim-treesitter/nvim-treesitter-refactor'
-            -- 'nvim-treesitter/nvim-treesitter-textobjects',
-        },
         config = function()
             vim.api.nvim_exec([[
         set foldmethod=expr
@@ -56,6 +52,44 @@ require'packer'.startup(function()
                 highlight = {enable = true},
                 incremental_selection = {enable = false},
                 indent = {enable = true}
+            }
+        end
+    }
+
+    use {
+        'nvim-treesitter/nvim-treesitter-textobjects',
+        disable = false,
+        config = function()
+            require'nvim-treesitter.configs'.setup {
+                textobjects = {
+                    select = {
+                        enable = true,
+                        keymaps = {
+                            ["a,"] = "@parameter.outer",
+                            ["i,"] = "@parameter.inner"
+                        }
+                    },
+                    move = {
+                        enable = true,
+                        goto_next_start = {["L"] = "@parameter.inner"},
+                        goto_previous_start = {["H"] = "@parameter.inner"}
+                    }
+                }
+            }
+        end
+    }
+
+    use {
+        'nvim-treesitter/playground',
+        disable = true,
+        config = function()
+            require"nvim-treesitter.configs".setup {
+                playground = {
+                    enable = true,
+                    disable = {},
+                    updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+                    persist_queries = false -- Whether the query persists across vim sessions
+                }
             }
         end
     }
@@ -519,8 +553,8 @@ require'packer'.startup(function()
     use {
         'terryma/vim-expand-region',
         requires = {
-            {'kana/vim-textobj-user'}, {'sgur/vim-textobj-parameter'},
-            {'kana/vim-textobj-line'}, {'machakann/vim-textobj-functioncall'},
+            {'kana/vim-textobj-user'}, {'kana/vim-textobj-line'},
+            {'machakann/vim-textobj-functioncall'},
             {'whatyouhide/vim-textobj-xmlattr', ft = {'html', 'xml'}}
         },
         setup = function()
