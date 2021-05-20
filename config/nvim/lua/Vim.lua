@@ -23,6 +23,11 @@ function M.current.line() return vim.api.nvim_get_current_line() end
 
 function M.current.word() return vim.fn.expand('<cword>') end
 
+function M.current.char()
+    return vim.fn.strcharpart(vim.fn.strpart(M.current.line(),
+                                             M.current.col_number()), 0, 1)
+end
+
 function M.current.textobject(mark)
     vim.cmd('noautocmd normal! "ayi' .. mark)
     return vim.fn.getreg('a')
