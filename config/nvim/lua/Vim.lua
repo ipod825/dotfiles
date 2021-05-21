@@ -42,8 +42,9 @@ function M.save_keymap(keys, mode, is_global)
     local not_mapped_keys = {}
     -- normalize keys
     keys = vim.tbl_map(function(e)
-        local res = vim.fn.maparg(e, mode, false, true).lhs
-        if res == nil then
+        local mapping = vim.fn.maparg(e, mode, false, true)
+        local res = mapping.lhs
+        if res == nil or (not is_global and mapping.buffer == 0) then
             table.insert(not_mapped_keys, {lhs = e, mode = mode})
         else
             res = string.gsub(res, '<Space>', ' ')
@@ -88,7 +89,7 @@ function M.restore_keymap(mappings)
                 vim.api.nvim_buf_set_keymap(v.buffer, v.mode, v.lhs, v.rhs,
                                             options)
             else
-                vim.api.nvim_buff_del_keymap(v.buffer, v.mode, v.lhs)
+                vim.api.nvim_buf_del_keymap(v.buffer, v.mode, v.lhs)
             end
         else
             if v.rhs then

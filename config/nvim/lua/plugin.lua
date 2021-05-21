@@ -63,7 +63,7 @@ require'packer'.startup(function()
             require'nvim-treesitter.configs'.setup {
                 textobjects = {
                     select = {
-                        enable = true,
+                        enable = false,
                         keymaps = {
                             ["a,"] = "@parameter.outer",
                             ["i,"] = "@parameter.inner"
@@ -163,9 +163,9 @@ require'packer'.startup(function()
 
     use {'git@github.com:ipod825/msearch.vim', config = function() end}
     map('n', '8', '<Plug>MSToggleAddCword', {noremap = false})
-    map('v', '8', '<Plug>MSToggleAddVisual', {noremap = false})
+    map('x', '8', '<Plug>MSToggleAddVisual', {noremap = false})
     map('n', '*', '<Plug>MSExclusiveAddCword', {noremap = false})
-    map('v', '*', '<Plug>MSExclusiveAddVisual', {noremap = false})
+    map('x', '*', '<Plug>MSExclusiveAddVisual', {noremap = false})
     map('n', 'n', '<Plug>MSNext', {noremap = false})
     map('n', 'N', '<Plug>MSPrev', {noremap = false})
     map('o', 'n', '<Plug>MSNext', {noremap = false})
@@ -179,13 +179,13 @@ require'packer'.startup(function()
 
     use {'chaoren/vim-wordmotion', setup = [[vim.g.wordmotion_nomap = 1]]}
     map('n', 'w', '<Plug>WordMotion_w', {noremap = false})
-    map('v', 'w', '<Plug>WordMotion_e', {noremap = false})
+    map('x', 'w', '<Plug>WordMotion_e', {noremap = false})
     map('o', 'w', '<Plug>WordMotion_e', {noremap = false})
     map('n', 'e', '<Plug>WordMotion_e', {noremap = false})
-    map('v', 'e', '<Plug>WordMotion_e', {noremap = false})
+    map('x', 'e', '<Plug>WordMotion_e', {noremap = false})
     map('n', 'b', '<Plug>WordMotion_b', {noremap = false})
-    map('v', 'b', '<Plug>WordMotion_b', {noremap = false})
-    map('v', 'iv', '<Plug>WordMotion_iw', {noremap = false})
+    map('x', 'b', '<Plug>WordMotion_b', {noremap = false})
+    map('x', 'iv', '<Plug>WordMotion_iw', {noremap = false})
     map('o', 'iv', '<Plug>WordMotion_iw', {noremap = false})
 
     use {'drmikehenry/vim-headerguard', cmd = 'HeaderguardAdd'}
@@ -264,7 +264,7 @@ require'packer'.startup(function()
         end
     }
     map('n', '<leader>r', '<cmd>call SelectAllMark()<cr>')
-    map('v', '<leader>r', ':<c-u>call VSelectAllMark()<cr>')
+    map('x', '<leader>r', ':<c-u>call VSelectAllMark()<cr>')
     vim.g.VM_maps = {
         ["Switch Mode"] = 'v',
         ['Find Word'] = '<c-n>',
@@ -555,6 +555,7 @@ require'packer'.startup(function()
         requires = {
             {'kana/vim-textobj-user'}, {'kana/vim-textobj-line'},
             {'machakann/vim-textobj-functioncall'},
+            {'sgur/vim-textobj-parameter'},
             {'whatyouhide/vim-textobj-xmlattr', ft = {'html', 'xml'}}
         },
         setup = function()
@@ -584,8 +585,8 @@ require'packer'.startup(function()
                 }
         end
     }
-    map('v', '<m-k>', '<Plug>(expand_region_expand)', {noremap = false})
-    map('v', '<m-j>', '<Plug>(expand_region_shrink)', {noremap = false})
+    map('x', '<m-k>', '<Plug>(expand_region_expand)', {noremap = false})
+    map('x', '<m-j>', '<Plug>(expand_region_shrink)', {noremap = false})
     map('n', '<m-k>', '<Plug>(expand_region_expand)', {noremap = false})
     map('n', '<m-j>', '<Plug>(expand_region_shrink)', {noremap = false})
 
@@ -667,10 +668,10 @@ require'packer'.startup(function()
     }
     map('n', '<leader>f', '<Plug>(operator-esearch-prefill)iw',
         {noremap = false})
-    map('v', '<leader>f', '<Plug>(esearch)', {noremap = false})
+    map('x', '<leader>f', '<Plug>(esearch)', {noremap = false})
     map('n', '<leader>F',
         '<cmd>call esearch#init({"prefill":["cword"], "paths": expand("%:p")})<cr>')
-    map('v', '<leader>F', 'esearch#prefill({"paths": expand("%:p")})',
+    map('x', '<leader>F', 'esearch#prefill({"paths": expand("%:p")})',
         {expr = true})
 
     use {'kkoomen/vim-doge'}

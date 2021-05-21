@@ -11,7 +11,7 @@ map('i', 'jk', '<esc>l')
 map('c', 'jk', '<esc>')
 map('o', 'jk', '<esc>')
 map('c', '<m-d>', '<c-f>dwi')
-map('v', '<cr>', '<esc>')
+map('x', '<cr>', '<esc>')
 map('i', '<c-a>', '<esc><c-w>')
 
 -- Moving Around
@@ -19,12 +19,12 @@ map('n', 'j', 'gj')
 map('n', 'k', 'gk')
 -- map('n', '<c-k>', '<cmd> lua mapping.previous_block()<cr>')
 -- map('n', '<c-j>', '<cmd> lua mapping.next_block()<cr>')
--- map('v', '<c-k>', '<cmd> lua mapping.previous_block()<cr>')
--- map('v', '<c-j>', '<cmd> lua mapping.next_block()<cr>')
+-- map('x', '<c-k>', '<cmd> lua mapping.previous_block()<cr>')
+-- map('x', '<c-j>', '<cmd> lua mapping.next_block()<cr>')
 map('n', '<c-k>', '{')
 map('n', '<c-j>', '}')
-map('v', '<c-k>', '{')
-map('v', '<c-j>', '}')
+map('x', '<c-k>', '{')
+map('x', '<c-j>', '}')
 map('i', '<c-h>', '<left>')
 map('i', '<c-l>', '<right>')
 map('i', '<c-j>', '<down>')
@@ -34,8 +34,8 @@ map('n', '<cr>', '<c-w>w')
 -- Moving Around (home,END)
 map('o', '<m-h>', 'g^')
 map('o', '<m-l>', 'g$')
-map('v', '<m-h>', 'g^')
-map('v', '<m-l>', 'g$<left>')
+map('x', '<m-h>', 'g^')
+map('x', '<m-l>', 'g$<left>')
 map('n', '<m-h>', 'g^')
 map('n', '<m-l>', 'g$')
 map('i', '<m-h>', '<Esc>g^i')
@@ -192,7 +192,7 @@ map('c', '<m-p>', '<c-r>"')
 -- paste current file name in command line
 map('c', '<m-f>', '<c-r>%<c-f>')
 -- yank to system clipboard
-map('v', '<m-y>', '<cmd>lua mapping.yank_to_system_clipboard()<cr>')
+map('x', '<m-y>', '<cmd>lua mapping.yank_to_system_clipboard()<cr>')
 function M.yank_to_system_clipboard()
     should_strip = vim.bo.buftype == 'terminal' and vim.fn.mode() == 'V'
     vim.cmd('silent! normal! "+y')
@@ -215,10 +215,10 @@ function M.paste_stay_last()
     local new_line = V.current.line_number
     if new_line ~= line then vim.cmd("normal! `]") end
 end
-map('v', 'y', 'y`]')
+map('x', 'y', 'y`]')
 -- map('n', 'p', '<cmd>lua mapping.paste_stay_last()<cr>')
 -- consistent paste for visual selection
-map('v', 'p', '"_dP`]')
+map('x', 'p', '"_dP`]')
 -- select last paste
 map('n', '<m-p>', "V'[")
 -- wrap long comment that is not automatically done by ale
@@ -240,14 +240,14 @@ map('i', '<c-c>', '<c-o>yiW<end>=<c-r>=<c-r>0<cr>')
 -- shift
 map('n', '>', '>>')
 map('n', '<', '<<')
-map('v', '>', '>gv')
-map('v', '<', '<gv')
+map('x', '>', '>gv')
+map('x', '<', '<gv')
 
 -- Diff
 map('n', '<leader>h', '<cmd>lua mapping.diff_get()<cr>')
 map('n', '<leader>l', '<cmd>lua mapping.diff_put()<cr>')
-map('v', '<leader>h', ':call v:lua.mapping.diff_get()<cr>')
-map('v', '<leader>l', ':call v:lua.mapping.diff_put()<cr>')
+map('x', '<leader>h', ':call v:lua.mapping.diff_get()<cr>')
+map('x', '<leader>l', ':call v:lua.mapping.diff_put()<cr>')
 function M.diff_get()
     if #vim.api.nvim_tabpage_list_wins(0) == 3 then
         vim.cmd('diffget 3:')

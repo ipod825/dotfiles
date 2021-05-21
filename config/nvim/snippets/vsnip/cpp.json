@@ -5,6 +5,11 @@
     ]
   },
 
+  "function": {
+    "prefix": ["fn"],
+    "body": ["${1:void} ${2:fn}($3)$0"]
+  },
+
   "LOG": {
     "prefix": ["LOG"],
     "body": ["LOG(${1:ERROR}) << fmt::format(\"$2\", $0);"

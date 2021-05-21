@@ -37,7 +37,7 @@ vim.lsp.handlers['textDocument/typeDefinition'] = M.goto_handler
 vim.lsp.handlers['textDocument/implementation'] = M.goto_handler
 
 M.is_editing_signature = false
-function M.signature_help_handler(a, b, result)
+function M.signature_help_handler(_, _, result)
     local params = result.parameters or result.signatures[1].parameters
     if params ~= nil then
         local line_nr = Vim.current.line_number() - 1
@@ -45,12 +45,17 @@ function M.signature_help_handler(a, b, result)
 
         params = table.concat(vim.tbl_map(
                                   function(e)
-                return string.format('%s', e.label)
+                return string.format('`%s`', e.label)
             end, params), ', ')
         vim.api.nvim_buf_set_text(0, line_nr, col_nr, line_nr, col_nr, {params})
-        require'nvim-treesitter.textobjects.select'.select_textobject(
-            '@parameter.inner', 'c')
+        vim.cmd('normal va`')
         Vim.feedkeys('<c-g>', 'v', false)
+        if M.bak_mapping ~= nil then
+            for _, mapping in ipairs(M.bak_mapping) do
+                Vim.restore_keymap(mapping)
+            end
+            M.bak_mapping = nil
+        end
         M.bak_mapping = {
             Vim.save_keymap({'<tab>', '<s-tab>'}, 's', false),
             Vim.save_keymap({'<tab>', '<s-tab>'}, 'i', false)
@@ -66,16 +71,21 @@ end
 vim.lsp.handlers['textDocument/signatureHelp'] = M.signature_help_handler
 
 function M.signature_jump(direction)
-    vim.fn.search(',')
+    local ori_col = Vim.current.col_number()
+    Vim.feedkeys('<esc>', 's', false)
     if direction > 0 then
-        require'nvim-treesitter.textobjects.move'.goto_next_start(
-            '@parameter.inner')
-    else
-        require'nvim-treesitter.textobjects.move'.goto_previous_start(
-            '@parameter.inner')
+        vim.fn.search('`')
+        vim.fn.search('`')
     end
-    vim.cmd('normal vi,')
-    Vim.feedkeys('<c-g>', 'v', false)
+    if ori_col == Vim.current.col_number() then
+        Vim.feedkeys('<esc>', 'v', false)
+        for _, mapping in ipairs(M.bak_mapping) do
+            Vim.restore_keymap(mapping)
+        end
+        M.bak_mapping = nil
+    else
+        Vim.feedkeys('va`<c-g>', 'n', false)
+    end
 end
 
 function M.switch_source_header(bufnr)
@@ -106,6 +116,7 @@ add_util_menu('IncomingCalls', vim.lsp.buf.incoming_calls, 'lsp')
 add_util_menu('OutgoingCalls', vim.lsp.buf.outgoing_calls, 'lsp')
 add_util_menu('Rename', vim.lsp.buf.rename, 'lsp')
 add_util_menu('CodeAction', vim.lsp.buf.code_action, 'lsp')
+add_util_menu('SignatureHelp', vim.lsp.buf.signature_help, 'lsp')
 
 function M.lsp_diagnostic_open()
     vim.lsp.diagnostic.set_loclist()
