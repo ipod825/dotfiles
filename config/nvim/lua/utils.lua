@@ -63,4 +63,9 @@ function M.find_directory(anchor, name)
     return res
 end
 
+function M.left_tab_termopen(cmd)
+    vim.cmd('tabedit | tabmove -1')
+    vim.fn.termopen(cmd, {on_exit = function(_, _, _) vim.cmd('quit') end})
+end
+
 return M
