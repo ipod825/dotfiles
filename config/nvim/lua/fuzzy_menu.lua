@@ -20,7 +20,13 @@ function M.select(ids)
     end
     local names = vim.tbl_keys(actions)
     table.sort(names)
-    fuzzy_run(names, function(e) actions[e]() end)
+    fuzzy_run(names, function(e)
+        if type(actions[e]) == 'table' then
+            actions[e].fn(actions[e].context_fn())
+        else
+            actions[e]()
+        end
+    end)
 end
 
 map('n', '/', '<cmd>lua fuzzy_menu.search_word()<cr>')

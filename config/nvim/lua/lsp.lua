@@ -100,28 +100,22 @@ function M.switch_source_header(bufnr)
         vim.api.nvim_command('Tabdrop ' .. vim.uri_to_fname(result))
     end)
 end
-add_util_menu('OpenSourceHeader', M.switch_source_header)
+add_util_menu('LspSourceHeader', M.switch_source_header)
+add_util_menu('LspHover', vim.lsp.buf.hover)
+add_util_menu('LspReferences', vim.lsp.buf.references)
+add_util_menu('LspIncomingCalls', vim.lsp.buf.incoming_calls)
+add_util_menu('LspOutgoingCalls', vim.lsp.buf.outgoing_calls)
+add_util_menu('LspRename', vim.lsp.buf.rename)
+add_util_menu('LspCodeAction', vim.lsp.buf.code_action)
+add_util_menu('LspSignatureHelp', vim.lsp.buf.signature_help)
 
-M.lsp_context = M.lsp_context or {}
-function M.select_from_lsp_util_menu()
-    M.lsp_context.line_number = require'Vim'.current.line_number()
-    M.lsp_context.col_number = require'Vim'.current.col_number()
-    require'fuzzy_menu'.select("lsp")
-end
-
-map('n', '<leader>p', '<cmd>lua lsp.select_from_lsp_util_menu()<cr>')
-add_util_menu('Hover', vim.lsp.buf.hover, 'lsp')
-add_util_menu('References', vim.lsp.buf.references, 'lsp')
-add_util_menu('IncomingCalls', vim.lsp.buf.incoming_calls, 'lsp')
-add_util_menu('OutgoingCalls', vim.lsp.buf.outgoing_calls, 'lsp')
-add_util_menu('Rename', vim.lsp.buf.rename, 'lsp')
-add_util_menu('CodeAction', vim.lsp.buf.code_action, 'lsp')
-add_util_menu('SignatureHelp', vim.lsp.buf.signature_help, 'lsp')
-
-function M.lsp_diagnostic_open()
+function M.lsp_diagnostic_open(line_number)
     vim.lsp.diagnostic.set_loclist()
     vim.defer_fn(function()
-        vim.fn.search(string.format('|%d col', M.lsp_context.line_number), 'cw')
+        vim.fn.search(string.format('|%d col', line_number), 'cw')
     end, 10)
 end
-add_util_menu('DiagnosticOpen', M.lsp_diagnostic_open, 'lsp')
+add_util_menu('LspDiagnosticOpen', {
+    fn = M.lsp_diagnostic_open,
+    context_fn = require'Vim'.current.line_number
+})
