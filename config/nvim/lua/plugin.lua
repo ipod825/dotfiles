@@ -21,7 +21,7 @@ vim.api.nvim_exec([[
 
 require'packer'.startup(function()
     use {'wbthomason/packer.nvim', opt = true}
-
+    use {'kyazdani42/nvim-web-devicons'}
     use {'rbtnn/vim-vimscript_lasterror', cmd = 'VimscriptLastError'}
 
     use {
@@ -39,9 +39,9 @@ require'packer'.startup(function()
         run = ':TSUpdate',
         config = function()
             vim.api.nvim_exec([[
-        set foldmethod=expr
-        set foldexpr=nvim_treesitter#foldexpr()
-        ]], false)
+           set foldmethod=expr
+           set foldexpr=nvim_treesitter#foldexpr()
+           ]], false)
             require'nvim-treesitter.configs'.setup {
                 ensure_installed = {
                     'bash', 'bibtex', 'c', 'comment', 'cpp', 'css', 'fennel',
@@ -51,7 +51,7 @@ require'packer'.startup(function()
                 },
                 highlight = {enable = true},
                 incremental_selection = {enable = false},
-                indent = {enable = true}
+                indent = {enable = false}
             }
         end
     }
@@ -152,8 +152,6 @@ require'packer'.startup(function()
                                   vim.fn.stdpath('config') .. '/ginasetup.vim'))
         end
     }
-
-    use {'kyazdani42/nvim-web-devicons'}
 
     use {
         'hoob3rt/lualine.nvim',
