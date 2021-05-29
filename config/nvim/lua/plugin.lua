@@ -156,9 +156,65 @@ require'packer'.startup(function()
     use {'kyazdani42/nvim-web-devicons'}
 
     use {
-        'glepnir/galaxyline.nvim',
-        branch = 'main',
-        config = function() require 'statusline' end
+        'hoob3rt/lualine.nvim',
+        config = function()
+            local my_extension = {
+                sections = {
+                    lualine_a = {'mode'},
+                    lualine_b = {{'filename', file_status = false}}
+                },
+                filetypes = {'netranger'}
+            }
+            require'lualine'.setup {
+                options = {
+                    icons_enabled = true,
+                    theme = 'onedark',
+                    component_separators = {'', ''},
+                    section_separators = {'', ''},
+                    disabled_filetypes = {}
+                },
+                sections = {
+                    lualine_a = {'mode'},
+                    lualine_b = {'branch'},
+                    lualine_c = {
+                        'filename', {
+                            'diagnostics',
+                            sources = {'nvim_lsp'},
+                            sections = {'error', 'warn', 'info', 'hint'},
+                            color_error = '#ec5f67',
+                            color_warn = '#fabd2f',
+                            color_info = '#203663',
+                            color_hint = '#203663',
+                            symbols = {
+                                error = '',
+                                warn = '',
+                                info = '',
+                                hint = ''
+                            }
+                        }, {
+                            'diff',
+                            colored = true,
+                            color_added = '#ec5f67',
+                            color_modified = '#fabd2f',
+                            color_removed = '#203663'
+                        }
+                    },
+                    lualine_x = {'filetype'},
+                    lualine_y = {'progress'},
+                    lualine_z = {'location'}
+                },
+                inactive_sections = {
+                    lualine_a = {},
+                    lualine_b = {},
+                    lualine_c = {'filename'},
+                    lualine_x = {'location'},
+                    lualine_y = {},
+                    lualine_z = {}
+                },
+                tabline = {},
+                extensions = {my_extension, 'quickfix'}
+            }
+        end
     }
 
     use {'git@github.com:ipod825/msearch.vim', config = function() end}
