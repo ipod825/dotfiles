@@ -158,10 +158,18 @@ require'packer'.startup(function()
     use {
         'hoob3rt/lualine.nvim',
         config = function()
+            SkipStatusHeavyFns = SkipStatusHeavyFns or {}
+            local enable_fn = function()
+                for _, skip in pairs(SkipStatusHeavyFns) do
+                    if skip() then return false end
+                end
+                return true
+            end
             local my_extension = {
                 sections = {
                     lualine_a = {'mode'},
-                    lualine_b = {{'filename', file_status = false}}
+                    lualine_b = {{'filename', file_status = false}},
+                    lualine_c = {{'branch', condition = enable_fn}}
                 },
                 filetypes = {'netranger'}
             }
@@ -175,9 +183,9 @@ require'packer'.startup(function()
                 },
                 sections = {
                     lualine_a = {'mode'},
-                    lualine_b = {'branch'},
+                    lualine_b = {'filename'},
                     lualine_c = {
-                        'filename', {
+                        {'branch', condition = enable_fn}, {
                             'diagnostics',
                             sources = {'nvim_lsp'},
                             sections = {'error', 'warn', 'info', 'hint'},
