@@ -4,16 +4,6 @@ local api = vim.api
 local utils = require 'utils'
 local devicons = require 'nvim-web-devicons'
 
-api.nvim_exec([[
-augroup TABLINE
-    autocmd!
-    autocmd ColorScheme * hi TabLineSel gui=bold,italic guifg=#bbc2cf guibg=#282a36 
-    autocmd ColorScheme * hi TabLine guifg=#73797e guibg=#282a36 
-    autocmd ColorScheme * hi TabLineSelMod gui=bold,italic guifg=#a33018 guibg=#282a36
-    autocmd ColorScheme * hi TabLineMod guifg=#6e2710  guibg=#282a36 
-augroup END
-]], false)
-
 function M.get_file_icon(buf_id)
     local filetype = api.nvim_buf_get_option(buf_id, 'ft')
     local icon

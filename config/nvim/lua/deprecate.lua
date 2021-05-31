@@ -1,4 +1,19 @@
 -- use {
+--     "ray-x/lsp_signature.nvim",
+--     disable = true,
+--     config = function()
+--         require"lsp_signature".on_attach(
+--             {
+--                 bind = true, -- This is mandatory, otherwise border config won't get registered.
+--                 hint_enable = false,
+--                 handler_opts = {
+--                     border = "double" -- double, single, shadow, none
+--                 },
+--                 decorator = {"`", "`"}
+--             })
+--     end
+-- }
+-- use {
 --     'itchyny/lightline.vim',
 --     setup = function()
 --         vim.g.lightline = {

@@ -1,3 +1,4 @@
+vim.cmd('colorscheme main')
 require('utils')
 require('mapping')
 require('tabline')

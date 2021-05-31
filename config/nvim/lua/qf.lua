@@ -38,8 +38,9 @@ function M.preview()
     end
 
     vim.api.nvim_buf_clear_namespace(M.target_buf_id, M.namespace, 0, -1)
-    vim.api.nvim_buf_add_highlight(M.target_buf_id, M.namespace, 'Underlined',
-                                   line - 1, col - 1, -1)
+    vim.api.nvim_buf_add_highlight(M.target_buf_id, M.namespace,
+                                   'LspDiagnosticsUnderlineError', line - 1,
+                                   col - 1, -1)
 end
 
 function M.on_leave()
@@ -49,6 +50,7 @@ end
 function M.setup()
     vim.cmd('autocmd CursorMoved <buffer> lua qf.preview()')
     vim.cmd('autocmd BufLeave <buffer> lua qf.on_leave()')
+    vim.api.nvim_win_set_height(0, math.min(5, vim.fn.line('$')))
     map('n', 'j', '<down>', {buffer = true})
     map('n', 'k', '<up>', {buffer = true})
 end

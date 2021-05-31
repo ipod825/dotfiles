@@ -105,27 +105,6 @@ require'packer'.startup(function()
     map('n', '<m-i>', '<cmd>ContextPeek<cr>')
 
     use {
-        "ray-x/lsp_signature.nvim",
-        disable = true,
-        config = function()
-            require"lsp_signature".on_attach(
-                {
-                    bind = true, -- This is mandatory, otherwise border config won't get registered.
-                    hint_enable = false,
-                    handler_opts = {
-                        border = "double" -- double, single, shadow, none
-                    },
-                    decorator = {"`", "`"}
-                })
-        end
-    }
-
-    use {
-        'glepnir/zephyr-nvim',
-        config = function() vim.cmd('colorscheme zephyr') end
-    }
-
-    use {
         'lewis6991/spellsitter.nvim',
         config = function() require('spellsitter').setup() end
     }
@@ -361,7 +340,6 @@ require'packer'.startup(function()
 
     use {
         'hrsh7th/nvim-compe',
-        disable = false,
         config = function()
             vim.g.loaded_compe_treesitter = true
             vim.g.loaded_compe_snippets_nvim = true
@@ -396,7 +374,7 @@ require'packer'.startup(function()
 
     use {
         'norcalli/nvim-colorizer.lua',
-        disable = true,
+        disable = false,
         config = [[require'colorizer'.setup()]]
     }
 
