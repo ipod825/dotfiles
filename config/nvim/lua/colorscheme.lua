@@ -115,7 +115,7 @@ M.syntax = {
     PmenuThumb = {fg = color.violet, bg = color.light_green},
     WildMenu = {fg = color.fg, bg = color.green},
     Question = {fg = color.yellow},
-    NormalFloat = {fg = color.none, bg = color.base5},
+    NormalFloat = {fg = color.none, bg = color.base4},
     Tabline = {fg = color.base5, bg = color.bg},
     TabLineSel = {fg = color.base8, bg = color.bg, style = 'bold,italic'},
     TabLineFill = {style = color.none},

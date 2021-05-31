@@ -50,7 +50,7 @@ end
 function M.setup()
     vim.cmd('autocmd CursorMoved <buffer> lua qf.preview()')
     vim.cmd('autocmd BufLeave <buffer> lua qf.on_leave()')
-    vim.api.nvim_win_set_height(0, math.min(5, vim.fn.line('$')))
+    vim.api.nvim_win_set_height(0, 5)
     map('n', 'j', '<down>', {buffer = true})
     map('n', 'k', '<up>', {buffer = true})
 end

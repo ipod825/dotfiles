@@ -5,15 +5,15 @@ local map = require'Vim'.map
 local add_util_menu = require'fuzzy_menu'.add_util_menu
 local Vim = require 'Vim'
 
-function M.goto_tag_or_lsp_def()
+function M.goto_tag_or_lsp_fn(target_fn)
     if #(vim.fn.taglist(vim.fn.expand('<cword>'))) > 0 then
         vim.cmd('TabdropPushTag')
         vim.api.nvim_exec('silent! TagTabdrop', true)
     else
-        vim.lsp.buf.definition()
+        target_fn()
     end
 end
-map('n', '<m-d>', '<cmd>lua lsp.goto_tag_or_lsp_def()<cr>')
+map('n', '<m-d>', '<cmd>lua lsp.goto_tag_or_lsp_fn(vim.lsp.buf.definition)<cr>')
 map('n', '<m-s>', '<cmd>TabdropPopTag<cr>')
 
 function M.goto_handler(_, method, res)
@@ -108,6 +108,10 @@ add_util_menu('LspOutgoingCalls', vim.lsp.buf.outgoing_calls)
 add_util_menu('LspRename', vim.lsp.buf.rename)
 add_util_menu('LspCodeAction', vim.lsp.buf.code_action)
 add_util_menu('LspSignatureHelp', vim.lsp.buf.signature_help)
+add_util_menu('LspGotoImplementation',
+              function() M.goto_tag_or_lsp_fn(vim.lsp.buf.implementation) end)
+add_util_menu('LspGotoDeclaration',
+              function() M.goto_tag_or_lsp_fn(vim.lsp.buf.declaration) end)
 
 function M.lsp_diagnostic_open(line_number)
     vim.lsp.diagnostic.set_loclist()
