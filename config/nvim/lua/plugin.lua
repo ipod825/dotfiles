@@ -106,6 +106,7 @@ require'packer'.startup(function()
 
     use {
         'lewis6991/spellsitter.nvim',
+        disable = true,
         config = function() require('spellsitter').setup() end
     }
 
