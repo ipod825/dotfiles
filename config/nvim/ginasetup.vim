@@ -65,6 +65,7 @@ try
 	call gina#custom#mapping#nmap('status', 'DD','<cmd>call GinaStatusPatch()<cr>')
 	call gina#custom#mapping#nmap('status', 'cc','<cmd>call GinaCommit()<cr>')
 	call gina#custom#mapping#nmap('status', 'ca','<cmd>call GinaCommit("--amend --allow-empty")<cr>')
+	call gina#custom#mapping#nmap('status', 'cr','<cmd>call GinaCommit("--reuse-message=HEAD@{1}")<cr>')
     call gina#custom#mapping#nmap('log', '<cr>','<Plug>(gina-show-vsplit)')
     call gina#custom#mapping#nmap('log', 'dd','<Plug>(gina-show-tab)')
     call gina#custom#mapping#nmap('log', 'DD','<Plug>(gina-changes-between)')
