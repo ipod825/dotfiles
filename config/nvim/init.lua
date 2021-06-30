@@ -44,6 +44,7 @@ vim.o.lazyredraw = true
 vim.o.swapfile = false
 vim.o.backup = false
 vim.o.showmode = false
+vim.o.shortmess = vim.o.shortmess .. 'c'
 vim.o.undofile = true
 vim.o.undodir = vim.fn.stdpath('data') .. '/undo'
 vim.api.nvim_exec([[
