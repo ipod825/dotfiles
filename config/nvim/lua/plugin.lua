@@ -331,7 +331,6 @@ require'packer'.startup(function()
 
     use {
         'lukas-reineke/indent-blankline.nvim',
-        branch = 'lua',
         config = function()
             vim.g.indent_blankline_use_treesitter = true
             vim.g.indentLine_fileTypeExclude =

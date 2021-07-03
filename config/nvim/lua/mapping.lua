@@ -17,14 +17,10 @@ map('i', '<c-a>', '<esc><c-w>')
 -- Moving Around
 map('n', 'j', 'gj')
 map('n', 'k', 'gk')
--- map('n', '<c-k>', '<cmd> lua mapping.previous_block()<cr>')
--- map('n', '<c-j>', '<cmd> lua mapping.next_block()<cr>')
--- map('x', '<c-k>', '<cmd> lua mapping.previous_block()<cr>')
--- map('x', '<c-j>', '<cmd> lua mapping.next_block()<cr>')
-map('n', '<c-k>', '{')
-map('n', '<c-j>', '}')
-map('x', '<c-k>', '{')
-map('x', '<c-j>', '}')
+map('n', '<c-k>', '<cmd> lua mapping.previous_block()<cr>')
+map('n', '<c-j>', '<cmd> lua mapping.next_block()<cr>')
+map('x', '<c-k>', '<cmd> lua mapping.previous_block()<cr>')
+map('x', '<c-j>', '<cmd> lua mapping.next_block()<cr>')
 map('i', '<c-h>', '<left>')
 map('i', '<c-l>', '<right>')
 map('i', '<c-j>', '<down>')
@@ -47,13 +43,11 @@ map('t', '<m-l>', '<end>')
 function M.previous_block()
     if vim.bo.buftype ~= 'terminal' then
         local ori_line = V.current.line_number()
-        vim.api.nvim_feedkeys('{', 'n', false)
+        vim.cmd('normal! {')
         if V.current.line_number() == ori_line - 1 then
-            vim.api.nvim_feedkeys('{{', 'n', true)
+            vim.cmd('normal! {')
         end
-        if V.current.line_number() ~= 1 then
-            vim.api.nvim_feedkeys('j', 'n', true)
-        end
+        if V.current.line_number() ~= 1 then vim.cmd('normal! j') end
     else
         vim.fn.search(vim.env.USER, 'Wbz')
     end
@@ -61,12 +55,12 @@ end
 function M.next_block()
     if vim.bo.buftype ~= 'terminal' then
         local ori_line = V.current.line_number()
-        vim.api.nvim_feedkeys('}', 'n', true)
-        if V.current.line_number() == ori_line - 1 then
-            vim.api.nvim_feedkeys('}', 'n', true)
+        vim.cmd('normal! }')
+        if V.current.line_number() == ori_line + 1 then
+            vim.cmd('normal! }')
         end
-        if V.current.line_number() ~= 10000 then
-            vim.api.nvim_feedkeys('k', 'n', true)
+        if V.current.line_number() ~= vim.fn.line('$') then
+            vim.cmd('normal! k')
         end
     else
         vim.fn.search(vim.env.USER, 'Wbz')
