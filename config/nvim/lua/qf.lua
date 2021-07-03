@@ -25,6 +25,7 @@ function M.preview()
     for _, v in pairs(vim.api.nvim_tabpage_list_wins(0)) do
         if v ~= qf_win_id then preview_win_nr = v end
     end
+    if preview_win_nr == -1 then return end
 
     M.target_buf_id = vim.fn.bufnr(fname)
     if M.target_buf_id > 0 then
