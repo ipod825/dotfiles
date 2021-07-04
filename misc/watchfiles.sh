@@ -10,7 +10,7 @@ export P="$D/partial_config"
 
 common="$D/setup.sh \
         $HC/.zshrc $HC/.profile $HC/.xinitrc $HC/.Xresources \
-        $C/i3/config $C/kitty/kitty.conf $C/libinput-gestures.conf $C/nvim/settings/rifle.conf $C/sxhkd/sxhkdrc* \
+        $C/i3/config $C/sway/config $C/kitty/kitty.conf $C/libinput-gestures.conf $C/nvim/settings/rifle.conf $C/sxhkd/sxhkdrc* \
         $C/qutebrowser/config.py \
         $M/watchfiles.sh $M/cheatsheet \
         $A/postchroot.sh \
