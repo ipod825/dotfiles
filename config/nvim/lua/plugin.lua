@@ -93,7 +93,7 @@ require'packer'.startup(function()
             }
         end
     }
-    -- use {'romgrk/nvim-treesitter-context', disable = true}
+    use {'romgrk/nvim-treesitter-context', disable = true}
     use {
         'wellle/context.vim',
         cmd = 'ContextPeek',
@@ -475,6 +475,8 @@ require'packer'.startup(function()
             vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]]
         end
     }
+
+    use {'kevinhwang91/nvim-bqf'}
 
     use {
         'neovim/nvim-lspconfig',

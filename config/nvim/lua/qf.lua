@@ -6,12 +6,12 @@ local map = require'Vim'.map
 M.namespace = vim.api.nvim_create_namespace("QfHi")
 M.last_target_buf_id = -1
 
-vim.api.nvim_exec([[
-augroup QF
-    autocmd!
-    autocmd FileType qf lua qf.setup()
-augroup END
-]], false)
+-- vim.api.nvim_exec([[
+-- augroup QF
+--     autocmd!
+--     autocmd FileType qf lua qf.setup()
+-- augroup END
+-- ]], false)
 
 function M.preview()
     local _, _, fname, line, col = Vim.current.line():find(

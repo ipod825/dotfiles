@@ -1,0 +1,9 @@
+{
+  "hashbang": {
+    "prefix": ["#!"],
+    "body": ["#!/bin/env python"   
+    ]
+  }
+
+}
+

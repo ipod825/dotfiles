@@ -172,6 +172,16 @@ map('n', 'q', '<cmd>quit<cr>')
 map('n', 'Q', 'q')
 map('n', '<m-w>', '<cmd>lua vim.wo.wrap = not vim.wo.wrap<cr>')
 
+function M.close_float_windows()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local config = vim.api.nvim_win_get_config(win)
+        if config.relative ~= "" then
+            vim.api.nvim_win_close(win, false)
+            print('Closing window', win)
+        end
+    end
+end
+
 vim.env.SUDO_ASKPASS = "/usr/bin/ssh-askpass"
 vim.cmd('cnoreabbrev help tab help')
 vim.cmd('cnoreabbrev te Tabdrop')
