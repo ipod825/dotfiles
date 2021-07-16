@@ -1,9 +1,46 @@
 # vim: filetype=i3config
 
 set $mod Mod4
+set $term alacritty
 for_window [class="^.*"] border pixel 0
 floating_modifier $mod
 hide_edge_borders both
+workspace_layout tabbed
+focus_follows_mouse yes
+
+bindsym $mod+Return exec $term
+bindsym $mod+d exec rofi -show run
+bindsym XF86MonBrightnessUp exec brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym XF86AudioRaiseVolume exec pulsemixer --change-volume +5 && pkill -RTMIN+10 i3blocks
+bindsym XF86AudioLowerVolume exec pulsemixer --change-volume -5 && pkill -RTMIN+10 i3blocks
+bindsym XF86AudioMute exec pulsemixer --toggle-mute && pkill -RTMIN+10 i3blocks
+bindsym Print deepin-screenshot
+bindsym $mod+q exec swaymsg kill
+bindsym $mod+h exec swaymsg focus left
+bindsym $mod+l exec swaymsg focus right
+bindsym $mod+j exec swaymsg focus down
+bindsym $mod+k exec swaymsg focus up
+bindsym $mod+f exec swaymsg floating toggle
+bindsym $mod+ctrl+h exec swaymsg move left
+bindsym $mod+ctrl+j exec swaymsg move down
+bindsym $mod+ctrl+k exec swaymsg move up
+bindsym $mod+ctrl+l exec swaymsg move right
+bindsym $mod+1 workspace number 1 
+bindsym $mod+2 workspace number 2 
+bindsym $mod+3 workspace number 3 
+bindsym $mod+Shift+1 exec "swaymsg move container to workspace number 1;swaymsg workspace number 1"
+bindsym $mod+Shift+2 exec "swaymsg move container to workspace number 2;swaymsg workspace number 2"
+bindsym $mod+Shift+3 exec "swaymsg move container to workspace number 3;swaymsg workspace number 3"
+
+mode "window" {
+    bindsym s exec "i3-msg layout toggle split; i3-msg mode default"
+    bindsym t exec "i3-msg layout tabbed; i3-msg mode default"
+    bindsym r exec "i3-msg reload; i3-msg mode default"
+    bindsym e exec "i3-msg exit; i3-msg mode default"
+    bindsym l exec "i3-msg mode default;swaylock -e -c 000000"
+}
+bindsym $mod+w mode "window"
 
 bar {
 	font pango:mono 11
@@ -18,8 +55,7 @@ focus_follows_mouse yes
 
 exec --no-startup-id easystroke --config-dir $HOME/dotfiles/home_config/.easystroke/i3 hide
 exec --no-startup-id alttab
+exec libinput-gestures
 
 # Ibus doesn't play well with sxhkd if the following snippet is put in ~/.xinitrc. So it must be put here.
-exec sxhkd -c "${XDG_CONFIG_HOME}/sxhkd/sxhkdrc" "${XDG_CONFIG_HOME}/sxhkd/sxhkdrc-common" &
-# exec xdotool search --class ".*" behave %@ focus exec 'sxhkdswitch' &
 exec --no-startup-id PYENV_VERSION=system ibus-daemon --xim -d -r
