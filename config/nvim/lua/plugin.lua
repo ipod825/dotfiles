@@ -496,7 +496,7 @@ require'packer'.startup(function()
                         return client.manager.orig_try_add(bufnr)
                     end
             end
-            set_lsp('pyls')
+            set_lsp('pylsp')
             set_lsp('clangd')
             set_lsp('gopls')
             set_lsp('rls')

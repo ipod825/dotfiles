@@ -3,7 +3,7 @@ neovim-remote
 ipython
 ipdb
 pudb
-python-language-server
+python-lsp-server
 rope
 pyflakes
 pydocstyle
