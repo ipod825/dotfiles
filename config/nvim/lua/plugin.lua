@@ -27,7 +27,10 @@ require'packer'.startup(function()
     use {
         'terrortylor/nvim-comment',
         config = function()
-            require'nvim_comment'.setup({create_mapping = false})
+            require'nvim_comment'.setup({
+                comment_empty = true,
+                create_mapping = false
+            })
         end
     }
     map("n", '<c-_>', "<cmd>CommentToggle<cr>")
