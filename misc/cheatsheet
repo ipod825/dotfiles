@@ -45,3 +45,5 @@ git format-patch -1 <sha>
 git am < <patch>
 # adb search package
 adb shell pm list packages -f | fzf
+# adb show tap location
+adb shell settings put system pointer_location 1

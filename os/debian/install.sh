@@ -13,6 +13,7 @@ fi
 sudo apt-get -y install dmenu dunst
 
 sudo apt-get -y install i3-wm i3blocks i3lock rofi keynav xterm xautolock
+sudo apt-get -y install sway swaylock swayidle foot
 sudo apt-get -y install ibus librime-bin ibus-rime python-gobject
 sudo apt-get -y install zathura zathura-pdf-poppler sxiv
 sudo apt-get -y install pulsemixer mpv mpd xclip copyq deepin-screenshot

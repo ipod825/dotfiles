@@ -39,6 +39,7 @@ alias gca='git commit -a -m'
 alias gro='git rebase --onto'
 alias gprun='cuthon --'
 alias cprun='cuthon -n 0 --'
+alias hi='zenity --info --text "hi" --display=$DISPLAY'
 
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
     alias ls='ls -G'
