@@ -11,7 +11,7 @@
 const kPanelCls = 'ytctl-panel';
 const kSpeedBtnCls = 'ytctl-speed-button';
 const kSpeedBtnPressedCls = 'ytctl-speed-button-pressed';
-const kDefaultSpeed = 2;
+const kDefaultSpeed = 1.8;
 const kPlayerID = "movie_player"
 var curr_speed = kDefaultSpeed;
 var everForground = false;
@@ -35,7 +35,6 @@ function CSS() {
         margin:  10% 0 0 90%;
         font-size:  2em;
         z-index: 999;
-        cursor: all-scroll;
     }
     .${kPanelCls}:hover {
         opacity: 0.8;
@@ -91,6 +90,7 @@ function AddPanel (trial=0) {
     AddSpeedBtn(panel, 1.25);
     AddSpeedBtn(panel, 1.5);
     AddSpeedBtn(panel, 1.75);
+    AddSpeedBtn(panel, 1.8);
     AddSpeedBtn(panel, 2);
     AddSpeedBtn(panel, 10);
     player.appendChild(panel, player.childNodes[0]);
