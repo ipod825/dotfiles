@@ -32,6 +32,8 @@ bindsym $mod+3 workspace number 3
 bindsym $mod+Shift+1 exec "i3-msg move container to workspace number 1;i3-msg workspace number 1"
 bindsym $mod+Shift+2 exec "i3-msg move container to workspace number 2;i3-msg workspace number 2"
 bindsym $mod+Shift+3 exec "i3-msg move container to workspace number 3;i3-msg workspace number 3"
+bindsym Mod1+Tab exec i3_cycle_windows --switch
+
 
 mode "window" {
     bindsym s exec "i3-msg layout toggle split; i3-msg mode default"
@@ -54,7 +56,7 @@ workspace_layout tabbed
 focus_follows_mouse yes
 
 exec --no-startup-id easystroke --config-dir $HOME/dotfiles/home_config/.easystroke/i3 hide
-exec --no-startup-id alttab
+# exec --no-startup-id alttab
 exec libinput-gestures
 
 # Ibus doesn't play well with sxhkd if the following snippet is put in ~/.xinitrc. So it must be put here.

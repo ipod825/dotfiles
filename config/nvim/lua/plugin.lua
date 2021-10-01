@@ -589,7 +589,7 @@ require'packer'.startup(function()
             vim.api.nvim_exec([[
             augroup FORMATTER
                 autocmd!
-                autocmd BufwritePre * FormatWrite
+                autocmd BufwritePost * silent! FormatWrite
             augroup END
         ]], false)
         end
