@@ -16,7 +16,7 @@ end
 map('n', '<m-d>', '<cmd>lua lsp.goto_tag_or_lsp_fn(vim.lsp.buf.definition)<cr>')
 map('n', '<m-s>', '<cmd>TabdropPopTag<cr>')
 
-function M.goto_handler(_, method, res)
+function M.goto_handler(_, res, _)
     if res == nil or vim.tbl_isempty(res) then
         print('No location found')
         return nil
@@ -88,17 +88,20 @@ function M.signature_jump(direction)
     end
 end
 
-function M.switch_source_header(bufnr)
-    local params = {uri = vim.uri_from_bufnr(0)}
-    vim.lsp.buf_request(0, 'textDocument/switchSourceHeader', params,
-                        function(err, _, result)
-        if err then error(tostring(err)) end
-        if not result then
-            print("Corresponding file can’t be determined")
-            return
-        end
-        vim.api.nvim_command('Tabdrop ' .. vim.uri_to_fname(result))
-    end)
+function M.switch_source_header()
+    local util = require'lspconfig'.util
+    local bufnr = 0
+    local params = {uri = vim.uri_from_bufnr(bufnr)}
+    vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params,
+                        util.compat_handler(
+                            function(err, result)
+            if err then error(tostring(err)) end
+            if not result then
+                print 'Corresponding file cannot be determined'
+                return
+            end
+            vim.api.nvim_command('Tabdrop ' .. vim.uri_to_fname(result))
+        end))
 end
 add_util_menu('LspSourceHeader', M.switch_source_header)
 add_util_menu('LspHover', vim.lsp.buf.hover)
