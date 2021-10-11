@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+function Len {
+    target=$1
+    echo ${#target}
+}
+
+function EchoErr {
+    echo -e "\033[0;31mError:\033[0;0m" $@  > /dev/stderr
+    exit
+}
+
+function EchoSucc {
+    echo -e "\033[0;32m$@\033[0;0m" > /dev/stderr
+}
+
+function EchoWarn {
+    echo -e "\033[0;33mWarning:\033[0;0m" $@  > /dev/stderr
+}
+
+function Notify {
+    zenity --info --text $@ --display=$DISPLAY
+}
+
+function FindDir {
+    cur_dir=$1
+    target=$2
+    while [[ $(Len $cur_dir) > 1 ]]; do
+        if [[ -d  $cur_dir/${target} ]]; then
+           break
+       fi
+       cur_dir=`dirname ${cur_dir}`
+    done
+
+    if [[ -d  ${cur_dir}/${target} ]]; then
+        EchoSucc Found: ${cur_dir}/${target}
+        echo $cur_dir
+    else
+        EchoWarn ${target} not found in $1
+        echo ""
+    fi
+}

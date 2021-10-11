@@ -19,6 +19,8 @@ done
 addToPATH $HOME/dotfiles/bin
 addToPATH $HOME/.cargo/bin
 
+source bashlib
+
 # alias
 alias ls='ls --color'
 alias palette='for i in {0..255}; do echo -e "\e[38;05;${i}m${i}"; done | column -c 180 -s "  "; echo -e "\e[m"'
@@ -39,7 +41,7 @@ alias gca='git commit -a -m'
 alias gro='git rebase --onto'
 alias gprun='cuthon --'
 alias cprun='cuthon -n 0 --'
-alias hi='zenity --info --text "hi" --display=$DISPLAY'
+alias hi='Notify done'
 
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
     alias ls='ls -G'

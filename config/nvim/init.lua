@@ -47,6 +47,7 @@ vim.o.showmode = false
 vim.o.shortmess = vim.o.shortmess .. 'c'
 vim.o.undofile = true
 vim.o.undodir = vim.fn.stdpath('data') .. '/undo'
+vim.o.switchbuf = 'usetab'
 vim.api.nvim_exec([[
     set copyindent
     set smartindent
