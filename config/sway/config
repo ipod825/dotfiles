@@ -1,7 +1,7 @@
 # vim: filetype=i3config
 
 set $mod Mod4
-set $term xterm
+set $term alacritty
 for_window [class="^.*"] border pixel 0
 floating_modifier $mod
 hide_edge_borders both
@@ -62,7 +62,7 @@ exec swayidle -w \
          before-sleep 'swaylock -f -c 000000'
 exec --no-startup-id PYENV_VERSION=system ibus-daemon --xim -d -r
 
-output eDP-1 scale 2.4
+output eDP-1 scale 2.8
 input type:keyboard {
     repeat_delay 200
     repeat_rate 40
