@@ -575,9 +575,9 @@ require'packer'.startup(function()
             require('formatter').setup {
                 logging = false,
                 filetype = {
-                    javascript = {prettier},
-                    json = {prettier},
-                    html = {prettier},
+                    -- javascript = {prettier},
+                    -- json = {prettier},
+                    -- html = {prettier},
                     rust = {rustfmt},
                     python = {isort, yapf},
                     tex = {latexindent},
