@@ -34,3 +34,6 @@
 	rebase = true
 [branch]
 	autosetuprebase = always
+[repo]
+	superprojectChoiceExpire = 1632773868
+	superprojectChoice = true
