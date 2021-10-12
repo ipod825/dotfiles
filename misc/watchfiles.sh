@@ -15,6 +15,7 @@ common="$D/setup.sh \
         $M/watchfiles.sh $M/cheatsheet \
         $A/postchroot.sh \
         $P/Vieb/viebrc \
+        bin/shlib \
         "
 
 if [ "$1" == "vim" ]; then

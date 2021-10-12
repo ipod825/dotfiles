@@ -5,10 +5,15 @@ function Len {
     echo ${#target}
 }
 
-function EchoErr {
-    echo -e "\033[0;31mError:\033[0;0m" $@  > /dev/stderr
+function EchoFatal {
+    echo -e "\033[0;31mFatal:\033[0;0m" $@  > /dev/stderr
     exit
 }
+
+function EchoErr {
+    echo -e "\033[0;31mError:\033[0;0m" $@  > /dev/stderr
+}
+
 
 function EchoSucc {
     echo -e "\033[0;32m$@\033[0;0m" > /dev/stderr

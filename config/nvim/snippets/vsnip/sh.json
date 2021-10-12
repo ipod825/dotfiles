@@ -1,7 +1,33 @@
 {
   "hashbang": {
     "prefix": ["#!"],
-    "body": ["#!/bin/sh"   
+    "body": ["#!/usr/bin/env bash"]
+  },
+
+  "if": {
+    "prefix": ["if"],
+    "body": [
+        "if [[ ${1:cond} ]]; then",
+        "   $0",
+        "fi"
+    ]
+  },
+
+  "while": {
+    "prefix": ["while"],
+    "body": [
+        "while [[ ${1:cond} ]]; then",
+        "   $0",
+        "done"
+    ]
+  },
+
+  "function": {
+    "prefix": ["fn"],
+    "body": [
+        "function ${1:fn}(){",
+        "   $0",
+        "}"
     ]
   }
 
