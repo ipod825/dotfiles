@@ -61,6 +61,7 @@ export XDG_DATA_HOME=$HOME/.local/share
 # pyenv
 if [ -d $HOME/.pyenv ];then
     addToPATH $HOME/.pyenv/bin
+    eval "$(pyenv init --path)"
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
     export PYENV_VIRTUALENV_DISABLE_PROMPT=0

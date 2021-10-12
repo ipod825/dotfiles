@@ -50,7 +50,6 @@ if [ ! -d $HOME/.pyenv ];then
     git clone --depth 1 https://github.com/pyenv/pyenv.git ~/.pyenv
     git clone --depth 1 https://github.com/pyenv/pyenv-virtualenv.git $(pyenv root)/plugins/pyenv-virtualenv
     git clone --depth 1 https://github.com/pyenv/pyenv-update.git $(pyenv root)/plugins/pyenv-update
-    git clone --depth 1 https://github.com/pyenv/pyenv-doctor.git $(pyenv root)/plugins/pyenv-doctor
     eval "$(pyenv init -)"
     eval "$(pyenv virtualenv-init -)"
     pyenv_install 3
