@@ -2,7 +2,6 @@ local M = _G.tabline or {}
 _G.tabline = M
 local api = vim.api
 local utils = require 'utils'
-local devicons = require 'nvim-web-devicons'
 
 function M.get_file_icon(buf_id)
     local filetype = api.nvim_buf_get_option(buf_id, 'ft')
@@ -13,6 +12,7 @@ function M.get_file_icon(buf_id)
         local path = api.nvim_buf_get_name(buf_id)
         local f_name = utils.basename(path)
         local f_extension = utils.extension(path)
+        local devicons = require 'nvim-web-devicons'
         icon = devicons.get_icon(f_name, f_extension)
     end
 
