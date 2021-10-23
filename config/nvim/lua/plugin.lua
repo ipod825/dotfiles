@@ -342,36 +342,41 @@ require'packer'.startup(function()
     }
 
     use {
-        'hrsh7th/nvim-compe',
+        'hrsh7th/nvim-cmp',
+        requires = {
+            {'hrsh7th/cmp-buffer'}, {'hrsh7th/cmp-nvim-lsp'},
+            {'hrsh7th/cmp-vsnip'}, {'hrsh7th/cmp-path'},
+            {'hrsh7th/cmp-nvim-lua'}, {'f3fora/cmp-spell'}
+        },
         config = function()
-            vim.g.loaded_compe_treesitter = true
-            vim.g.loaded_compe_snippets_nvim = true
-            vim.g.loaded_compe_spell = true
-            vim.g.loaded_compe_tags = true
-            vim.g.loaded_compe_ultisnips = true
-            vim.g.loaded_compe_vim_lsc = true
-            vim.g.loaded_compe_vim_lsp = true
-
-            require('compe').setup {
-                enabled = true,
-                autocomplete = true,
-                debug = false,
-                min_length = 1,
-                preselect = 'always',
-                source = {
-                    path = true,
-                    buffer = true,
-                    nvim_lsp = true,
-                    nvim_lua = true,
-                    vsnip = true
-                }
-            }
-            vim.api.nvim_exec([[
-            augroup COMPE
-                autocmd!
-                autocmd VimEnter * lua vim.defer_fn(function() vim.api.nvim_set_keymap('i', '<cr>', 'compe#confirm("<cr>")', {expr=true}) end, 0)
-            augroup END
-        ]], false)
+            local cmp = require 'cmp'
+            cmp.setup({
+                completion = {completeopt = 'menu,menuone,noinsert'},
+                snippet = {
+                    expand = function(args)
+                        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+                    end
+                },
+                mapping = {
+                    ['<c-j>'] = cmp.mapping.select_next_item(
+                        {behavior = cmp.SelectBehavior.Insert}),
+                    ['<c-k>'] = cmp.mapping.select_prev_item(
+                        {behavior = cmp.SelectBehavior.Insert}),
+                    ['<c-n>'] = cmp.mapping.select_next_item(
+                        {behavior = cmp.SelectBehavior.Insert}),
+                    ['<c-p>'] = cmp.mapping.select_prev_item(
+                        {behavior = cmp.SelectBehavior.Insert}),
+                    ['<c-d>'] = cmp.mapping.scroll_docs(-4),
+                    ['<c-f>'] = cmp.mapping.scroll_docs(4),
+                    ['<c-c>'] = cmp.mapping.close(),
+                    ['<cr>'] = cmp.mapping.confirm({select = true})
+                },
+                sources = cmp.config.sources(
+                    {
+                        {name = 'nvim_lsp'}, {name = 'vsnip'},
+                        {name = 'buffer'}, {name = 'spell'}
+                    })
+            })
         end
     }
 

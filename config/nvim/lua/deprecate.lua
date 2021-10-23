@@ -1,3 +1,36 @@
+--     use {
+--         'hrsh7th/nvim-compe',
+--         config = function()
+--             vim.g.loaded_compe_treesitter = true
+--             vim.g.loaded_compe_snippets_nvim = true
+--             vim.g.loaded_compe_spell = true
+--             vim.g.loaded_compe_tags = true
+--             vim.g.loaded_compe_ultisnips = true
+--             vim.g.loaded_compe_vim_lsc = true
+--             vim.g.loaded_compe_vim_lsp = true
+-- 
+--             require('compe').setup {
+--                 enabled = true,
+--                 autocomplete = true,
+--                 debug = false,
+--                 min_length = 1,
+--                 preselect = 'always',
+--                 source = {
+--                     path = true,
+--                     buffer = true,
+--                     nvim_lsp = true,
+--                     nvim_lua = true,
+--                     vsnip = true
+--                 }
+--             }
+--             vim.api.nvim_exec([[
+--             augroup COMPE
+--                 autocmd!
+--                 autocmd VimEnter * lua vim.defer_fn(function() vim.api.nvim_set_keymap('i', '<cr>', 'compe#confirm("<cr>")', {expr=true}) end, 0)
+--             augroup END
+--         ]], false)
+--         end
+--     }
 -- use {
 --     "ray-x/lsp_signature.nvim",
 --     disable = true,
