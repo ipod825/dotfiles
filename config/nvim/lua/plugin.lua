@@ -2,25 +2,26 @@ local M = _G.plugin or {}
 _G.plugin = M
 local map = require'Vim'.map
 
--- Auto install packer.nvim if not exists
-local install_path = vim.fn.stdpath('data') ..
-                         '/site/pack/packer/opt/packer.nvim'
-local should_install = vim.fn.empty(vim.fn.glob(install_path)) > 0
-if should_install then
-    vim.cmd('!git clone https://github.com/wbthomason/packer.nvim ' ..
-                install_path)
+local fn = vim.fn
+local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+local packer_bootstrap = false
+if fn.empty(fn.glob(install_path)) > 0 then
+    packer_bootstrap = fn.system({
+        'git', 'clone', '--depth', '1',
+        'https://github.com/wbthomason/packer.nvim', install_path
+    })
 end
-vim.cmd 'packadd packer.nvim'
+
 vim.api.nvim_exec([[
     augroup PACKER
         autocmd!
-        autocmd BufWritePost plugin.lua PackerCompile
+        autocmd BufWritePost plugin.lua source <afile> | PackerCompile
         autocmd BufWritePost *.lua luafile %
     augroup END
 ]], false)
 
 require'packer'.startup(function()
-    use {'wbthomason/packer.nvim', opt = true}
+    use {'wbthomason/packer.nvim'}
     use {'kyazdani42/nvim-web-devicons'}
     use {'rbtnn/vim-vimscript_lasterror', cmd = 'VimscriptLastError'}
 
@@ -793,6 +794,6 @@ require'packer'.startup(function()
         ]], false)
         end
     }
-end)
 
-if should_install then vim.cmd('PackerSync') end
+    if packer_bootstrap then vim.cmd('PackerSync') end
+end)
