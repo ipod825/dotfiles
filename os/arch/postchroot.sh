@@ -34,6 +34,7 @@ pacman -S --noconfirm --needed ttf-droid noto-fonts-cjk ttf-font-awesome
 pacman -S --noconfirm --needed pulsemixer mpv mpd xclip copyq deepin-screenshot
 pacman -S --noconfirm --needed easystroke
 pacman -S --noconfirm --needed clang-format
+pacman -S --noconfirm --needed ripgrep
 
 # Set larget font for virtual console
 sudo pacman -S --noconfirm --needed terminus-font
