@@ -1,3 +1,10 @@
+function prequire(...)
+    local status, lib = pcall(require, ...)
+    if(status) then return lib end
+    --Library failed to load, so perhaps return `nil` or something?
+    return nil
+end
+
 vim.cmd('colorscheme main')
 require('utils')
 require('mapping')
@@ -6,9 +13,9 @@ require('tabline')
 require('fzf_cfg')
 require('qf')
 require('lsp')
-require('gwork')
-require('android')
-require('g4')
+prequire('gwork')
+prequire('android')
+prequire('g4')
 
 function _G.p(...)
     local objects = vim.tbl_map(vim.inspect, {...})
