@@ -75,8 +75,15 @@ require'packer'.startup(function()
                     },
                     move = {
                         enable = true,
-                        goto_next_start = {["L"] = "@parameter.inner"},
-                        goto_previous_start = {["H"] = "@parameter.inner"}
+                        set_jumps = true, -- whether to set jumps in the jumplist
+                        goto_next_end = {
+                            ["]]"] = "@function.outer",
+                            ["]["] = "@class.outer"
+                        },
+                        goto_previous_start = {
+                            ["[["] = "@function.outer",
+                            ["[]"] = "@class.outer"
+                        }
                     }
                 }
             }
@@ -97,7 +104,8 @@ require'packer'.startup(function()
             }
         end
     }
-    use {'romgrk/nvim-treesitter-context', disable = true}
+    use {'romgrk/nvim-treesitter-context'}
+    use {'haringsrob/nvim_context_vt'}
     use {
         'wellle/context.vim',
         cmd = 'ContextPeek',

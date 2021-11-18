@@ -8,3 +8,12 @@ nvr.gui = False
 
 [pager]
 ignore = log, cls
+
+[extensions]
+beautifygraph =
+
+[color]
+desc.here = red bold
+
+[color256]
+changeset.public=brightblue
