@@ -10,7 +10,7 @@ augroup GINA
     autocmd!
     autocmd VimEnter * call s:SetupGina()
     autocmd Filetype gina-log call matchadd('ErrorMsg', '.*HEAD.*')
-    autocmd Filetype gina-status,gina-log,gina-branch,diff silent! tabmove -1 | exec 'lcd '.system('git rev-parse --show-toplevel')
+    autocmd Filetype gina-status,gina-log,gina-branch,diff,git silent! tabmove -1 | exec 'lcd '.system('git rev-parse --show-toplevel')
 augroup END
 
 function! GitNavigate(back)
@@ -47,7 +47,7 @@ endfunction
 
 function! s:SetupGina()
 try
-	call gina#custom#command#option('/\%(diff\|commit\|status\|branch\|log\)', '--opener', 'tabedit')
+	call gina#custom#command#option('/\%(diff\|commit\|status\|branch\|log\)', '--opener', 'tab drop')
 	call gina#custom#command#option('/\%(changes\)', '--opener', 'vsplit')
 	call gina#custom#mapping#nmap('/.*', '<F1>','<Plug>(gina-builtin-help)')
     call gina#custom#mapping#nmap('/.*', '?','<Plug>MSAddBySearchForward')
