@@ -104,7 +104,7 @@ require'packer'.startup(function()
             }
         end
     }
-    use {'romgrk/nvim-treesitter-context'}
+    use {'romgrk/nvim-treesitter-context', disable = true}
     use {'haringsrob/nvim_context_vt'}
     use {
         'wellle/context.vim',

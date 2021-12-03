@@ -222,7 +222,7 @@ end
 map('x', 'y', 'y`]')
 -- map('n', 'p', '<cmd>lua mapping.paste_stay_last()<cr>')
 -- consistent paste for visual selection
-map('x', 'p', '"_dP`]')
+map('x', 'p', '"_dP')
 -- select last paste
 map('n', '<m-p>', "V'[")
 -- wrap long comment that is not automatically done by ale

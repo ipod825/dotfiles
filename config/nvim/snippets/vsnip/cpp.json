@@ -89,6 +89,15 @@
     ]
   },
 
+  "while": {
+    "prefix": ["while"],
+    "body": [
+        "while (${1:const}) {",
+        "   $0",
+        "}"
+    ]
+  },
+
   "reinterpret_cast": {
     "prefix": ["reinp"],
     "body": [
