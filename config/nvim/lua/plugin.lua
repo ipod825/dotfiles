@@ -493,7 +493,13 @@ require'packer'.startup(function()
         end
     }
 
-    use {'kevinhwang91/nvim-bqf'}
+    use {
+        'kevinhwang91/nvim-bqf',
+        ft = 'qf',
+        config = function()
+            require('bqf').setup({preview = {win_height = 50}})
+        end
+    }
 
     use {
         'neovim/nvim-lspconfig',

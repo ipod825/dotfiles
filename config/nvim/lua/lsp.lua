@@ -91,17 +91,21 @@ end
 function M.switch_source_header()
     local util = require'lspconfig'.util
     local bufnr = 0
+    local clangd_client = util.get_active_client_by_name(bufnr, 'clangd')
     local params = {uri = vim.uri_from_bufnr(bufnr)}
-    vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params,
-                        util.compat_handler(
-                            function(err, result)
+    if clangd_client then
+        clangd_client.request('textDocument/switchSourceHeader', params,
+                              function(err, result)
             if err then error(tostring(err)) end
             if not result then
                 print 'Corresponding file cannot be determined'
                 return
             end
             vim.api.nvim_command('Tabdrop ' .. vim.uri_to_fname(result))
-        end))
+        end, bufnr)
+    else
+        print 'method textDocument/switchSourceHeader is not supported by any servers active on the current buffer'
+    end
 end
 add_util_menu('LspSourceHeader', M.switch_source_header)
 add_util_menu('LspHover', vim.lsp.buf.hover)

@@ -10,7 +10,7 @@ augroup GINA
     autocmd!
     autocmd VimEnter * call s:SetupGina()
     autocmd Filetype gina-log call matchadd('ErrorMsg', '.*HEAD.*')
-    autocmd Filetype gina-status,gina-log,gina-branch,diff,git silent! tabmove -1 | exec 'lcd '.system('git rev-parse --show-toplevel')
+    autocmd Filetype gina-status,gina-log,gina-branch,diff silent! tabmove -1 | exec 'lcd '.system('git rev-parse --show-toplevel')
 augroup END
 
 function! GitNavigate(back)
@@ -31,6 +31,7 @@ augroup GIT
     autocmd Filetype git nnoremap <buffer> <c-j> <cmd>call GitNavigate(v:false)<cr>
     autocmd Filetype git nnoremap <buffer> <c-k> <cmd>call GitNavigate(v:true)<cr>
     autocmd Filetype git setlocal scrolloff=0
+    autocmd Filetype git silent! tabmove -1
 augroup END
 
 function! s:GitCheckOutFile()
