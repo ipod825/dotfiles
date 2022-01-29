@@ -43,13 +43,13 @@
 
   "include_system": {
     "prefix": ["inc"],
-    "body": [ "#include <${1:iostream}>" ]
+    "body": [ "#include <$0>" ]
   },
 
 
   "include_user": {
     "prefix": ["inu"],
-    "body": [ "#include \"${1:util.h}\"" ]
+    "body": [ "#include \"$0\"" ]
   },
 
   "namespace": {
