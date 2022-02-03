@@ -13,6 +13,7 @@ require('tabline')
 require('fzf_cfg')
 require('qf')
 require('lsp')
+require('profile')
 prequire('gwork')
 prequire('android')
 prequire('g4')
@@ -85,7 +86,7 @@ augroup GENERAL "{{{
     autocmd TextYankPost * lua vim.highlight.on_yank {higroup='IncSearch', timeout=200}
 
     " Automatically change directory (avoid vim-fugitive)
-    autocmd BufEnter * if &ft != 'gitcommit' | silent! lcd %:p:h | endif
+    autocmd BufEnter * if &ft != 'gitcommit' && &ft != 'qf' | silent! lcd %:p:h | endif
 
     " Man/help in left new tab
     autocmd FileType man wincmd T | silent! tabmove -1

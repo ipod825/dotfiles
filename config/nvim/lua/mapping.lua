@@ -87,6 +87,7 @@ vim.api.nvim_exec(
     'command! ToggleTermInsert let b:auto_term_insert=1-b:auto_term_insert | if b:auto_term_insert | startinsert | endif',
     false)
 function M.open_term(open_cmd)
+    print(open_cmd)
     vim.cmd(open_cmd)
     vim.cmd('term')
     vim.b.auto_term_insert = 1
@@ -222,7 +223,7 @@ end
 map('x', 'y', 'y`]')
 -- map('n', 'p', '<cmd>lua mapping.paste_stay_last()<cr>')
 -- consistent paste for visual selection
-map('x', 'p', '"_dp')
+map('x', 'p', '"_d<left>p')
 -- select last paste
 map('n', 'gp', "V'[")
 -- wrap long comment that is not automatically done by ale

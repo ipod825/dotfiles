@@ -68,4 +68,14 @@ function M.left_tab_termopen(cmd)
     vim.fn.termopen(cmd, {on_exit = function(_, _, _) vim.cmd('quit') end})
 end
 
+function M.collapse_white_space(str) return string.gsub(str, '%s+', ' ') end
+
+function M.asyncrun_pre() vim.g.asyncrun_win = vim.api.nvim_get_current_win() end
+
+function M.asyncrun_callback()
+    vim.api.nvim_set_current_win(vim.g.asyncrun_win)
+    vim.cmd('botright copen')
+    vim.fn.system([[zenity --info --text Done --display=$DISPLAY]])
+end
+
 return M

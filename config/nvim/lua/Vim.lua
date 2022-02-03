@@ -101,7 +101,9 @@ function M.restore_keymap(mappings)
     end
 end
 
-function M.term_feed(str) vim.fn.feedkeys(string.gsub(str, '%s+', ' ') .. '\r') end
+function M.term_feed(str)
+    vim.fn.chansend(vim.b.terminal_job_id, string.gsub(str, '%s+', ' ') .. '\r')
+end
 
 function M.feedkeys(key, mode)
     key = vim.api.nvim_replace_termcodes(key, true, false, true)

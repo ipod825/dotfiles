@@ -16,7 +16,6 @@ vim.api.nvim_exec([[
     augroup PACKER
         autocmd!
         autocmd BufWritePost plugin.lua source <afile> | PackerCompile
-        autocmd BufWritePost *.lua luafile %
     augroup END
 ]], false)
 
@@ -355,7 +354,8 @@ require'packer'.startup(function()
         requires = {
             {'hrsh7th/cmp-buffer'}, {'hrsh7th/cmp-nvim-lsp'},
             {'hrsh7th/cmp-vsnip'}, {'hrsh7th/cmp-path'},
-            {'hrsh7th/cmp-nvim-lua'}, {'f3fora/cmp-spell'}
+            {'hrsh7th/cmp-nvim-lua'}, {'f3fora/cmp-spell'},
+            {'hrsh7th/cmp-cmdline'}
         },
         config = function()
             local cmp = require 'cmp'
@@ -378,14 +378,15 @@ require'packer'.startup(function()
                     ['<c-d>'] = cmp.mapping.scroll_docs(-4),
                     ['<c-f>'] = cmp.mapping.scroll_docs(4),
                     ['<c-c>'] = cmp.mapping.close(),
-                    ['<cr>'] = cmp.mapping.confirm({select = true})
+                    ['<CR>'] = cmp.mapping.confirm({select = true})
                 },
                 sources = cmp.config.sources(
                     {
-                        {name = 'nvim_lsp'}, {name = 'vsnip'},
-                        {name = 'buffer'}, {name = 'spell'}
+                        {name = 'nvim_lsp'}, {name = 'buffer'},
+                        {name = 'vsnip'}, {name = 'spell'}
                     })
             })
+            cmp.setup.cmdline('/', {sources = {{name = 'buffer'}}})
         end
     }
 
@@ -494,10 +495,17 @@ require'packer'.startup(function()
     }
 
     use {
-        'kevinhwang91/nvim-bqf',
+        'git@github.com:ipod825/nvim-bqf',
         ft = 'qf',
         config = function()
-            require('bqf').setup({preview = {win_height = 50}})
+            require('bqf').setup({
+                qf_win_option = {
+                    wrap = true,
+                    number = false,
+                    relativenumber = false
+                },
+                preview = {win_height = 50}
+            })
         end
     }
 
@@ -505,8 +513,12 @@ require'packer'.startup(function()
         'neovim/nvim-lspconfig',
         config = function()
             SkipLspFns = SkipLspFns or {}
+            local capabilities = vim.lsp.protocol.make_client_capabilities()
+            capabilities = require('cmp_nvim_lsp').update_capabilities(
+                               capabilities)
+
             local set_lsp = function(name, options)
-                options = options or {}
+                options = options or {capabilities = capabilities}
                 local lspconfig = require 'lspconfig'
                 local client = lspconfig[name]
                 client.setup(options)
@@ -741,6 +753,29 @@ require'packer'.startup(function()
 
     use {'kkoomen/vim-doge'}
     use {'will133/vim-dirdiff'}
+
+    use {
+        'skywind3000/asyncrun.vim',
+        config = function()
+            vim.g.asyncrun_exit = 'lua utils.asyncrun_callback()'
+            vim.g.asyncrun_pathfix = 1
+            vim.api.nvim_exec([[
+                augroup PACKER
+                    autocmd!
+                    autocmd User AsyncRunPre lua utils.asyncrun_pre()
+                augroup END
+            ]], false)
+            vim.g.asyncrun_open = 6
+        end
+    }
+
+    use {
+        'skywind3000/asynctasks.vim',
+        config = function()
+            vim.g.asynctasks_term_reuse = 1
+            vim.g.asynctasks_confirm = 0
+        end
+    }
 
     use {
         'embear/vim-localvimrc',
