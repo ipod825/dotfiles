@@ -73,55 +73,32 @@ vim.api.nvim_exec([[
 ]], false)
 
 require'Vim'.augroup('GENERAL', {
-    -- auto reload vimrc
-    [[BufWritePost $MYVIMRC,*.vim source %:p]],
-    [[BufAdd $MYVIMRC,*.vim setlocal foldmethod=marker]],
+    -- auto reload config files
+    string.format([[BufWritePost %s source <afile>]], vim.fn.glob(
+                      '$HOME/dotfiles/config/nvim/**/*.lua'):gsub('\n', ',')),
+    [[BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd]],
+    [[BufWritePost *Xresources,*Xdefaults !xrdb %]],
 
-    -- Diff setting
+    -- Better diff
     [[BufWritePost * if &diff == 1 | diffupdate | endif]],
-
     [[OptionSet diff setlocal wrap | nmap <buffer> <c-j> ]c | nmap <buffer> <c-k> [c | nmap <buffer> q <cmd>tabclose<cr>]],
-    [[TextYankPost * lua vim.highlight.on_yank {higroup='IncSearch', timeout=200}]] -- Automatically change directory (avoid vim-fugitive)
-    ,
+
+    -- Yank highlight
+    [[TextYankPost * lua vim.highlight.on_yank {higroup='IncSearch', timeout=200}]],
+
+    -- Automatically change directory (avoid git, qf)
     [[BufEnter * if &ft != 'gitcommit' && &ft != 'qf' | silent! lcd %:p:h | endif]],
 
-    -- Automatically reload plugin.lua on write.
-    [[BufWritePost plugin.lua source <afile>]],
-
-    -- Man/help in left new tab
+    -- Automatically open in new tab on the left.
     [[FileType man wincmd T | silent! tabmove -1]],
+    [[FileType help silent! tabmove -1 | setlocal bufhidden=wipe ]],
 
-    [[FileType help silent! tabmove -1 | setlocal bufhidden=wipe ]] -- Disables automatic commenting on newline:
-    ,
-    [[FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o]] -- Move to last position and unfold when openning a file
-    ,
+    -- Disables automatic commenting on newline:
+    [[FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o]],
+
+    -- Move to last position and unfold when openning a file
     [[BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | exe "normal! zi" | endif]],
 
     -- Writing
-    [[BufEnter *.tex,*.md,*.adoc setlocal spell]],
-    [[BufEnter *.tex setlocal nocursorline]],
-
-    [[BufEnter *.tex setlocal wildignore+=*.aux,*.fls,*.blg,*.pdf,*.log,*.out,*.bbl,*.fdb_latexmk]],
-    [[BufEnter *.md,*.tex inoremap <buffer> sl \]],
-    [[BufEnter *.md,*.tex inoreabbrev <buffer> an &]],
-    [[BufEnter *.md,*.tex inoreabbrev <buffer> da $$<Left>]],
-    [[BufEnter *.md,*.tex inoreabbrev <buffer> pl +]],
-    [[BufEnter *.md,*.tex inoreabbrev <buffer> mi -]],
-    [[BufEnter *.md,*.tex inoreabbrev <buffer> eq =]],
-    [[BufEnter *.md,*.tex inoremap <buffer> <M-j> _]],
-    [[BufEnter *.md,*.tex inoremap <buffer> <M-j> _]],
-    [[BufEnter *.md,*.tex inoremap <buffer> <M-k> ^]],
-    [[BufEnter *.md,*.tex inoremap <buffer> <M-q> {}<Left>]],
-
-    -- Comment
-    [[Filetype c,cpp setlocal commentstring=//\ %s]],
-
-    -- Set correct filetype.
-
     [[BufEnter *sxhkdrc* setlocal ft=sxhkdrc | setlocal commentstring=#%s | setlocal foldmethod=marker]],
-    [[BufEnter *.xinitrc setlocal ft=sh | setlocal commentstring=#%s]],
-
-    -- Reload on write.
-    [[BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd]],
-    [[BufWritePost *Xresources,*Xdefaults !xrdb %]]
 })

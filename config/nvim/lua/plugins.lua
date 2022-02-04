@@ -18,6 +18,10 @@ Plug('terrortylor/nvim-comment', {
         })
         map("n", '<c-_>', "<cmd>CommentToggle<cr>")
         map("v", '<c-_>', ":<c-u>call CommentOperator(visualmode())<cr>")
+        V.augroup('COMMENT', {
+            [[Filetype c,cpp setlocal commentstring=//\ %s]],
+            [[Filetype *.xinitrc setlocal ft=sh | setlocal commentstring=#%s]]
+        })
     end
 })
 
@@ -224,6 +228,13 @@ Plug('chaoren/vim-wordmotion', {
 Plug('windwp/nvim-autopairs',
      {config = function() require'nvim-autopairs'.setup() end})
 
+Plug('anuvyklack/pretty-fold.nvim', {
+    config = function()
+        require('pretty-fold').setup {}
+        require('pretty-fold.preview').setup()
+    end
+})
+
 Plug('tpope/vim-endwise')
 
 Plug('mg979/vim-visual-multi', {
@@ -379,7 +390,20 @@ Plug('lervag/vimtex', {
         vim.g.tex_conceal = "abdgm"
         if vim.fn.has("*deoplete#custom#var") then
             V.augroup('VIMTEX', {
-                [[Filetype tex call deoplete#custom#var('omni', 'input_patterns', {'tex': g:vimtex#re#deoplete})]]
+                [[Filetype tex call deoplete#custom#var('omni', 'input_patterns', {'tex': g:vimtex#re#deoplete})]],
+                [[Filetype *.tex,*.md,*.adoc setlocal spell]],
+                [[Filetype *.tex setlocal nocursorline]],
+                [[Filetype *.tex setlocal wildignore+=*.aux,*.fls,*.blg,*.pdf,*.log,*.out,*.bbl,*.fdb_latexmk]],
+                [[Filetype *.md,*.tex inoremap <buffer> sl \]],
+                [[Filetype *.md,*.tex inoreabbrev <buffer> an &]],
+                [[Filetype *.md,*.tex inoreabbrev <buffer> da $$<Left>]],
+                [[Filetype *.md,*.tex inoreabbrev <buffer> pl +]],
+                [[Filetype *.md,*.tex inoreabbrev <buffer> mi -]],
+                [[Filetype *.md,*.tex inoreabbrev <buffer> eq =]],
+                [[Filetype *.md,*.tex inoremap <buffer> <M-j> _]],
+                [[Filetype *.md,*.tex inoremap <buffer> <M-j> _]],
+                [[Filetype *.md,*.tex inoremap <buffer> <M-k> ^]],
+                [[Filetype *.md,*.tex inoremap <buffer> <M-q> {}<Left>]] -- Comment
             })
         end
     end
