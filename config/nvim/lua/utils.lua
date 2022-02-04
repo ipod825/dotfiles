@@ -70,11 +70,20 @@ end
 
 function M.collapse_white_space(str) return string.gsub(str, '%s+', ' ') end
 
-function M.asyncrun_pre() vim.g.asyncrun_win = vim.api.nvim_get_current_win() end
+function M.asyncrun_pre()
+    vim.cmd('wincmd o')
+    vim.g.asyncrun_win = vim.api.nvim_get_current_win()
+end
 
 function M.asyncrun_callback()
     vim.api.nvim_set_current_win(vim.g.asyncrun_win)
-    vim.cmd('botright copen')
+    if vim.g.asyncrun_code == 0 then
+        vim.cmd('cclose')
+    else
+        vim.fn.setqflist(vim.tbl_filter(function(e) return e.valid ~= 0 end,
+                                        vim.fn.getqflist()), 'r')
+        vim.cmd('botright copen')
+    end
     vim.fn.system([[zenity --info --text Done --display=$DISPLAY]])
 end
 
