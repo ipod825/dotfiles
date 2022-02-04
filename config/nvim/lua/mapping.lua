@@ -138,9 +138,9 @@ function M.move_to_previous_tab()
         vim.cmd('wincmd T')
         vim.cmd('silent! tabmove -1')
     else
-        current_buf = vim.api.nvim_get_current_buf()
+        local current_buf = vim.api.nvim_get_current_buf()
         vim.cmd('normal! gT')
-        target_tab_page = vim.api.nvim_get_current_tabpage()
+        local target_tab_page = vim.api.nvim_get_current_tabpage()
         vim.cmd('normal! gt')
         vim.cmd('close')
         vim.api.nvim_set_current_tabpage(target_tab_page)
@@ -152,9 +152,9 @@ function M.move_to_next_tab()
         #vim.api.nvim_list_tabpages() then
         vim.cmd('wincmd T')
     else
-        current_buf = vim.api.nvim_get_current_buf()
+        local current_buf = vim.api.nvim_get_current_buf()
         vim.cmd('normal! gt')
-        target_tab_page = vim.api.nvim_get_current_tabpage()
+        local target_tab_page = vim.api.nvim_get_current_tabpage()
         vim.cmd('normal! gT')
         vim.cmd('close')
         vim.api.nvim_set_current_tabpage(target_tab_page)
@@ -199,12 +199,12 @@ map('c', '<m-f>', '<c-r>%<c-f>')
 -- yank to system clipboard
 map('x', '<m-y>', '<cmd>lua mapping.yank_to_system_clipboard()<cr>')
 function M.yank_to_system_clipboard()
-    should_strip = vim.bo.buftype == 'terminal' and vim.fn.mode() == 'V'
+    local should_strip = vim.bo.buftype == 'terminal' and vim.fn.mode() == 'V'
     vim.cmd('silent! normal! "+y')
     if should_strip then
-        src = vim.fn.getreg('+')
-        w = vim.api.nvim_win_get_width(0)
-        res, _ = string.gsub(src, "([^\n]+)\n", function(s)
+        local src = vim.fn.getreg('+')
+        local w = vim.api.nvim_win_get_width(0)
+        local res, _ = string.gsub(src, "([^\n]+)\n", function(s)
             if #s == w then
                 return s
             else
@@ -214,16 +214,9 @@ function M.yank_to_system_clipboard()
         vim.fn.setreg('+', res)
     end
 end
-function M.paste_stay_last()
-    local line = V.current.line_number
-    vim.cmd('normal! p')
-    local new_line = V.current.line_number
-    if new_line ~= line then vim.cmd("normal! `]") end
-end
 map('x', 'y', 'y`]')
--- map('n', 'p', '<cmd>lua mapping.paste_stay_last()<cr>')
 -- consistent paste for visual selection
-map('x', 'p', '"_d<left>p')
+map('x', 'p', '<esc>:let @0=@"<cr>gvp:let @"=@0<cr>')
 -- select last paste
 map('n', 'gp', "V'[")
 -- wrap long comment that is not automatically done by ale
@@ -240,8 +233,6 @@ end
 -- folding
 map('n', '<leader><space>', 'za', {noremap = false})
 map('n', '<leader>z', 'zMzvzz')
--- simple calculator
-map('i', '<c-c>', '<c-o>yiW<end>=<c-r>=<c-r>0<cr>')
 -- shift
 map('n', '>', '>>')
 map('n', '<', '<<')

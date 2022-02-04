@@ -1,7 +1,7 @@
 local M = _G.plugins or {}
 _G.plugins = M
 local map = require'Vim'.map
-local Plug = require('plug')
+local Plug = require('vplug')
 local V = require('Vim')
 
 Plug.begin()
@@ -308,13 +308,10 @@ Plug('mg979/vim-visual-multi', {
             [']}'] = '])',
             ['w'] = 'e'
         }
-        vim.cmd([[
-          augroup VISUAL-MULTI
-              autocmd!
-              autocmd User visual_multi_start lua plug.utils.VisualMultiStart()
-              autocmd User visual_multi_exit  lua plug.utils.VisualMultiExit()
-          augroup END
-      ]])
+        V.augroup('VISUAL-MULTI', {
+            [[User visual_multi_start lua plug.utils.VisualMultiStart()]],
+            [[User visual_multi_exit  lua plug.utils.VisualMultiExit()]]
+        })
     end
 })
 
@@ -380,14 +377,11 @@ Plug('lervag/vimtex', {
         vim.g.vimtex_log_ignore = {'25'}
         vim.g.vimtex_view_general_viewer = 'zathura'
         vim.g.tex_conceal = "abdgm"
-        vim.cmd([[
-      augroup VIMTEX
-          autocmd!
-          if has("*deoplete#custom#var")
-              autocmd Filetype tex call deoplete#custom#var('omni', 'input_patterns', {'tex': g:vimtex#re#deoplete})
-          endif
-      augroup END
-      ]])
+        if vim.fn.has("*deoplete#custom#var") then
+            V.augroup('VIMTEX', {
+                [[Filetype tex call deoplete#custom#var('omni', 'input_patterns', {'tex': g:vimtex#re#deoplete})]]
+            })
+        end
     end
 })
 
@@ -430,19 +424,16 @@ Plug('farmergreg/vim-lastplace')
 
 Plug('git@github.com:ipod825/war.vim', {
     config = function()
-        vim.cmd([[
-              augroup WAR
-                  autocmd!
-                  autocmd Filetype git call war#fire(-1, 0.8, -1, 0.1)
-                  autocmd Filetype esearch call war#fire(0.8, -1, 0.2, -1)
-                  autocmd Filetype bookmark call war#fire(-1, 1, -1, 0.2)
-                  autocmd Filetype bookmark call war#enter(-1)
-              augroup END
-          ]])
+        V.augroup('WAR', {
+            [[Filetype git call war#fire(-1, 0.8, -1, 0.1)]],
+            [[Filetype esearch call war#fire(0.8, -1, 0.2, -1)]],
+            [[Filetype bookmark call war#fire(-1, 1, -1, 0.2)]],
+            [[Filetype bookmark call war#enter(-1)]]
+        })
     end
 })
 
-Plug('vim-test/vim-test', {disable=true})
+Plug('vim-test/vim-test', {disable = true})
 
 Plug('voldikss/vim-floaterm', {
     utils = {
@@ -461,7 +452,7 @@ Plug('voldikss/vim-floaterm', {
         SendReplLine = function()
             vim.cmd(string.format('FloatermSend %s', vim.fn.getline('.')))
             vim.cmd('normal! j')
-        end,
+        end
     },
     config = function()
         vim.g.floaterm_wintype = 'vsplit'
@@ -470,7 +461,7 @@ Plug('voldikss/vim-floaterm', {
         vim.g.floaterm_height = 0.5
         map('n', '\\s', '<cmd>lua plug.utils.StartRepl()<cr>')
         map('n', 'E', '<cmd>lua plug.utils.SendReplLine()<cr>')
-        map('v', 'E', 'y<c-w>l<esc>pi<cr><cr><esc><c-w>h', {noremap=false})
+        map('v', 'E', 'y<c-w>l<esc>pi<cr><cr><esc><c-w>h', {noremap = false})
     end
 })
 
@@ -582,12 +573,7 @@ Plug('mhartington/formatter.nvim', {
                 lua = {lua_format}
             }
         }
-        vim.cmd([[
-              augroup FORMATTER
-                  autocmd!
-                  autocmd BufwritePost * silent! FormatWrite
-              augroup END
-          ]])
+        V.augroup('FORMATTER', {[[BufwritePost * silent! FormatWrite]]})
     end
 })
 
@@ -638,11 +624,10 @@ Plug('git@github.com:ipod825/vim-bookmark', {
             {  return [tagbar#currenttag("%s", "", "f"), getline('.')}]
           endfunction
           let g:Bookmark_pos_context_fn = function('BookmarkContext')
-          augroup BOOKMARK
-              autocmd!
-              autocmd Filetype bookmark nmap <buffer> <c-t> <cmd>call bookmark#open('Tabdrop')<cr>
-          augroup END
           ]])
+        V.augroup('BOOKMARK', {
+            [[Filetype bookmark nmap <buffer> <c-t> <cmd>call bookmark#open('Tabdrop')<cr>]]
+        })
         map('n', "'", '<cmd>BookmarkGo netranger<cr>')
         map('n', "<leader>'", '<cmd>BookmarkGo<cr>')
         map('n', "<leader>m", '<cmd>BookmarkAddPos<cr>')
@@ -691,14 +676,10 @@ Plug('eugen0329/vim-esearch', {
         }
     end,
     config = function()
-        vim.cmd([[
-          augroup ESEARCH
-              autocmd!
-              autocmd ColorScheme * highlight! link esearchMatch Cursor
-              autocmd Filetype esearch silent! tabmove -1
-          augroup END
-          ]])
-
+        V.augroup('ESEARCH', {
+            [[ColorScheme * highlight! link esearchMatch Cursor]],
+            [[Filetype esearch silent! tabmove -1]]
+        })
         map('n', '<leader>f', '<Plug>(operator-esearch-prefill)iw',
             {noremap = false})
         map('x', '<leader>f', '<Plug>(esearch)', {noremap = false})
@@ -714,16 +695,30 @@ Plug('kkoomen/vim-doge', {disable = true})
 Plug('will133/vim-dirdiff', {on_cmd = 'DirDiff'})
 
 Plug('skywind3000/asyncrun.vim', {
+    utils = {
+        AsyncrunPre = function()
+            vim.cmd('wincmd o')
+            vim.g.asyncrun_win = vim.api.nvim_get_current_win()
+        end,
+        AsyncrunCallback = function()
+            vim.api.nvim_set_current_win(vim.g.asyncrun_win)
+            if vim.g.asyncrun_code == 0 then
+                vim.cmd('cclose')
+            else
+                vim.fn.setqflist(vim.tbl_filter(
+                                     function(e)
+                        return e.valid ~= 0
+                    end, vim.fn.getqflist()), 'r')
+                vim.cmd('botright copen')
+            end
+            vim.fn.system([[zenity --info --text Done --display=$DISPLAY]])
+        end
+    },
     config = function()
-        vim.g.asyncrun_exit = 'lua utils.asyncrun_callback()'
         vim.g.asyncrun_pathfix = 1
-        vim.cmd([[
-            augroup PACKER
-                autocmd!
-                autocmd User AsyncRunPre lua utils.asyncrun_pre()
-            augroup END
-        ]])
         vim.g.asyncrun_open = 6
+        vim.g.asyncrun_exit = 'lua plug.utils.AsyncrunCallback()'
+        V.augroup('PACKER', {[[User AsyncRunPre lua plug.utils.AsyncrunPre()]]})
     end
 })
 
@@ -787,4 +782,3 @@ Plug('git@github.com:ipod825/vim-netranger', {
 })
 
 Plug.ends()
-

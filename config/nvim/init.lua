@@ -8,7 +8,7 @@ end
 vim.cmd('colorscheme main')
 require('utils')
 require('mapping')
-require('plug')
+require('vplug')
 require('plugins')
 require('tabline')
 require('fzf_cfg')
@@ -72,61 +72,56 @@ vim.api.nvim_exec([[
     set undofile
 ]], false)
 
-vim.api.nvim_exec([[
+require'Vim'.augroup('GENERAL', {
+    -- auto reload vimrc
+    [[BufWritePost $MYVIMRC,*.vim source %:p]],
+    [[BufAdd $MYVIMRC,*.vim setlocal foldmethod=marker]],
 
-augroup GENERAL "{{{
-    autocmd!
-    " auto reload vimrc
-    autocmd BufWritePost $MYVIMRC,*.vim source %:p
-    autocmd BufAdd $MYVIMRC,*.vim setlocal foldmethod=marker
+    -- Diff setting
+    [[BufWritePost * if &diff == 1 | diffupdate | endif]],
 
-    " Diff setting
-    autocmd BufWritePost * if &diff == 1 | diffupdate | endif
-    autocmd OptionSet diff setlocal wrap | nmap <buffer> <c-j> ]c | nmap <buffer> <c-k> [c | nmap <buffer> q <cmd>tabclose<cr>
+    [[OptionSet diff setlocal wrap | nmap <buffer> <c-j> ]c | nmap <buffer> <c-k> [c | nmap <buffer> q <cmd>tabclose<cr>]],
+    [[TextYankPost * lua vim.highlight.on_yank {higroup='IncSearch', timeout=200}]] -- Automatically change directory (avoid vim-fugitive)
+    ,
+    [[BufEnter * if &ft != 'gitcommit' && &ft != 'qf' | silent! lcd %:p:h | endif]],
 
-    autocmd TextYankPost * lua vim.highlight.on_yank {higroup='IncSearch', timeout=200}
+    -- Automatically reload plugin.lua on write.
+    [[BufWritePost plugin.lua source <afile>]],
 
-    " Automatically change directory (avoid vim-fugitive)
-    autocmd BufEnter * if &ft != 'gitcommit' && &ft != 'qf' | silent! lcd %:p:h | endif
+    -- Man/help in left new tab
+    [[FileType man wincmd T | silent! tabmove -1]],
 
-    " Automatically reload plugin.lua on write.
-    autocmd BufWritePost plugin.lua source <afile>
+    [[FileType help silent! tabmove -1 | setlocal bufhidden=wipe ]] -- Disables automatic commenting on newline:
+    ,
+    [[FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o]] -- Move to last position and unfold when openning a file
+    ,
+    [[BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | exe "normal! zi" | endif]],
 
-    " Man/help in left new tab
-    autocmd FileType man wincmd T | silent! tabmove -1
-    autocmd FileType help silent! tabmove -1 | setlocal bufhidden=wipe 
+    -- Writing
+    [[BufEnter *.tex,*.md,*.adoc setlocal spell]],
+    [[BufEnter *.tex setlocal nocursorline]],
 
-    " Disables automatic commenting on newline:
-    autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+    [[BufEnter *.tex setlocal wildignore+=*.aux,*.fls,*.blg,*.pdf,*.log,*.out,*.bbl,*.fdb_latexmk]],
+    [[BufEnter *.md,*.tex inoremap <buffer> sl \]],
+    [[BufEnter *.md,*.tex inoreabbrev <buffer> an &]],
+    [[BufEnter *.md,*.tex inoreabbrev <buffer> da $$<Left>]],
+    [[BufEnter *.md,*.tex inoreabbrev <buffer> pl +]],
+    [[BufEnter *.md,*.tex inoreabbrev <buffer> mi -]],
+    [[BufEnter *.md,*.tex inoreabbrev <buffer> eq =]],
+    [[BufEnter *.md,*.tex inoremap <buffer> <M-j> _]],
+    [[BufEnter *.md,*.tex inoremap <buffer> <M-j> _]],
+    [[BufEnter *.md,*.tex inoremap <buffer> <M-k> ^]],
+    [[BufEnter *.md,*.tex inoremap <buffer> <M-q> {}<Left>]],
 
-    " Move to last position and unfold when openning a file
-    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | exe "normal! zi" | endif
+    -- Comment
+    [[Filetype c,cpp setlocal commentstring=//\ %s]],
 
-    " Writing
-    autocmd BufEnter *.tex,*.md,*.adoc setlocal spell
-    autocmd BufEnter *.tex setlocal nocursorline
-    autocmd BufEnter *.tex setlocal wildignore+=*.aux,*.fls,*.blg,*.pdf,*.log,*.out,*.bbl,*.fdb_latexmk
-    autocmd BufEnter *.md,*.tex inoremap <buffer> sl \
-    autocmd BufEnter *.md,*.tex inoreabbrev <buffer> an &
-    autocmd BufEnter *.md,*.tex inoreabbrev <buffer> da $$<Left>
-    autocmd BufEnter *.md,*.tex inoreabbrev <buffer> pl +
-    autocmd BufEnter *.md,*.tex inoreabbrev <buffer> mi -
-    autocmd BufEnter *.md,*.tex inoreabbrev <buffer> eq =
-    autocmd BufEnter *.md,*.tex inoremap <buffer> <M-j> _
-    autocmd BufEnter *.md,*.tex inoremap <buffer> <M-j> _
-    autocmd BufEnter *.md,*.tex inoremap <buffer> <M-k> ^
-    autocmd BufEnter *.md,*.tex inoremap <buffer> <M-q> {}<Left>
+    -- Set correct filetype.
 
-    " Comment
-    autocmd Filetype c,cpp setlocal commentstring=//\ %s
+    [[BufEnter *sxhkdrc* setlocal ft=sxhkdrc | setlocal commentstring=#%s | setlocal foldmethod=marker]],
+    [[BufEnter *.xinitrc setlocal ft=sh | setlocal commentstring=#%s]],
 
-    " Set correct filetype.
-    autocmd BufEnter *sxhkdrc* setlocal ft=sxhkdrc | setlocal commentstring=#%s | setlocal foldmethod=marker
-    autocmd BufEnter *.xinitrc setlocal ft=sh | setlocal commentstring=#%s
-
-    " Reload on write.
-    autocmd BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd
-    autocmd BufWritePost *Xresources,*Xdefaults !xrdb %
-
-augroup END
-]], false)
+    -- Reload on write.
+    [[BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd]],
+    [[BufWritePost *Xresources,*Xdefaults !xrdb %]]
+})
