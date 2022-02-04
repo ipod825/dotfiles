@@ -12,6 +12,15 @@ function M.map(mode, lhs, rhs, opts)
     end
 end
 
+function M.unmap(mode, lhs, opts)
+    opts = opts or {}
+    if opts.buffer ~= nil then
+        vim.api.nvim_buf_del_keymap(opts.bufnr or 0, mode, lhs)
+    else
+        vim.api.nvim_del_keymap(mode, lhs)
+    end
+end
+
 M.current = {}
 function M.current.line_number() return vim.api.nvim_win_get_cursor(0)[1] end
 
@@ -26,6 +35,18 @@ function M.current.word() return vim.fn.expand('<cword>') end
 function M.current.char()
     return vim.fn.strcharpart(vim.fn.strpart(M.current.line(),
                                              M.current.col_number()), 0, 1)
+end
+
+function M.visual_range()
+    local line_beg, line_end, column_beg, column_end
+    _, line_beg, column_beg = unpack(vim.fn.getpos("'<"))
+    _, line_end, column_end = unpack(vim.fn.getpos("'>"))
+    return {
+        line_beg = line_beg,
+        column_beg = column_beg,
+        line_end = line_end,
+        column_end = column_end
+    }
 end
 
 function M.current.textobject(mark)
@@ -108,6 +129,10 @@ end
 function M.feedkeys(key, mode)
     key = vim.api.nvim_replace_termcodes(key, true, false, true)
     vim.api.nvim_feedkeys(key, mode, true)
+end
+
+function M.feed_plug_keys(key)
+    vim.fn.feedkeys(string.format('%c%c%c%s', 0x80, 253, 83, key))
 end
 
 return M

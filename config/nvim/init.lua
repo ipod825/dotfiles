@@ -1,14 +1,15 @@
 function prequire(...)
     local status, lib = pcall(require, ...)
-    if(status) then return lib end
-    --Library failed to load, so perhaps return `nil` or something?
+    if (status) then return lib end
+    -- Library failed to load, so perhaps return `nil` or something?
     return nil
 end
 
 vim.cmd('colorscheme main')
 require('utils')
 require('mapping')
-require('plugin')
+require('plug')
+require('plugins')
 require('tabline')
 require('fzf_cfg')
 require('qf')
@@ -87,6 +88,9 @@ augroup GENERAL "{{{
 
     " Automatically change directory (avoid vim-fugitive)
     autocmd BufEnter * if &ft != 'gitcommit' && &ft != 'qf' | silent! lcd %:p:h | endif
+
+    " Automatically reload plugin.lua on write.
+    autocmd BufWritePost plugin.lua source <afile>
 
     " Man/help in left new tab
     autocmd FileType man wincmd T | silent! tabmove -1
