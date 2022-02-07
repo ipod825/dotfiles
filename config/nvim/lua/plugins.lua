@@ -484,8 +484,6 @@ Plug('voldikss/vim-floaterm', {
         vim.g.floaterm_width = 0.5
         vim.g.floaterm_height = 0.5
         map('n', '\\s', '<cmd>lua plug.utils.StartRepl()<cr>')
-        map('n', 'E', '<cmd>lua plug.utils.SendReplLine()<cr>')
-        map('v', 'E', 'y<c-w>l<esc>pi<cr><cr><esc><c-w>h', {noremap = false})
     end
 })
 
