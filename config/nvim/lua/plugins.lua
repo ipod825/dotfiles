@@ -130,13 +130,23 @@ Plug('hoob3rt/lualine.nvim', {
             end
             return true
         end
-        local my_extension = {
+        local lualine_netranger = {
             sections = {
                 lualine_a = {'mode'},
                 lualine_b = {{'filename', file_status = false}},
                 lualine_c = {{'branch', condition = enable_fn}}
             },
             filetypes = {'netranger'}
+        }
+        local lualine_gina = {
+            sections = {
+                lualine_a = {'mode'},
+                lualine_b = {{'filename', file_status = false}},
+                lualine_c = {
+                    {function() return ' ' ..vim.fn.trim(vim.fn.system('git branch --show-current')) end, condition = enable_fn}
+                }
+            },
+            filetypes = {'gina-status', 'gina-branch', 'gina-log'}
         }
         require'lualine'.setup {
             options = {
@@ -185,7 +195,7 @@ Plug('hoob3rt/lualine.nvim', {
                 lualine_z = {}
             },
             tabline = {},
-            extensions = {my_extension, 'quickfix'}
+            extensions = {lualine_netranger, lualine_gina, 'quickfix'}
         }
     end
 })
