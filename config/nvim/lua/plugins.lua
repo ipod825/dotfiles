@@ -308,13 +308,19 @@ Plug('mg979/vim-visual-multi', {
             ['Numbers'] = '<leader>n',
             ['Visual Add'] = '<c-n>',
             ['Visual Find'] = '<c-n>',
-            ['Visual Regex'] = '<leader>/',
             ["Add Cursor At Pos"] = '<c-i>',
             ['Visual Cursors'] = '<c-i>',
             ["Visual Reduce"] = '<leader>r',
+            ["Visiual Subtract"] = '<leader>s',
             ['Increase'] = '+',
             ['Decrease'] = '-',
-            ['Exit'] = '<Esc>'
+            ['Exit'] = '<Esc>',
+            ['Transpose'] = '<leader>t',
+            ['Case conversion'] = '<leader>c',
+            ['Go-to-regex motion'] = '\\g',
+            ['Toggle Single Region'] = '\\<cr>',
+            -- Not used in my flow
+            ['Visual Regex'] = '<leader>/'
         }
     end,
     config = function()
@@ -651,12 +657,11 @@ Plug('majutsushi/tagbar')
 Plug('git@github.com:ipod825/vim-bookmark', {
     config = function()
         vim.g.bookmark_opencmd = 'NewTabdrop'
-        vim.cmd([[
-          function! BookmarkContext()
-            {  return [tagbar#currenttag("%s", "", "f"), getline('.')}]
-          endfunction
-          let g:Bookmark_pos_context_fn = function('BookmarkContext')
-          ]])
+        vim.g.Bookmark_pos_context_fn = function()
+            return {
+                vim.fn['tagbar#currenttag']("%s", "", "f"), vim.fn.getline('.')
+            }
+        end
         V.augroup('BOOKMARK', {
             [[Filetype bookmark nmap <buffer> <c-t> <cmd>call bookmark#open('Tabdrop')<cr>]]
         })
