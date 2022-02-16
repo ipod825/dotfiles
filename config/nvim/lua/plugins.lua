@@ -217,10 +217,10 @@ Plug('hoob3rt/lualine.nvim', {
 
 Plug('git@github.com:ipod825/msearch.vim', {
     config = function()
-        map('n', '8', '<Plug>MSToggleAddCword', {noremap = false})
-        map('x', '8', '<Plug>MSToggleAddVisual', {noremap = false})
-        map('n', '*', '<Plug>MSExclusiveAddCword', {noremap = false})
-        map('x', '*', '<Plug>MSExclusiveAddVisual', {noremap = false})
+        map('n', '*', '<Plug>MSToggleAddCword', {noremap = false})
+        map('x', '*', '<Plug>MSToggleAddVisual', {noremap = false})
+        map('n', '&', '<Plug>MSExclusiveAddCword', {noremap = false})
+        map('x', '&', '<Plug>MSExclusiveAddVisual', {noremap = false})
         map('n', 'n', '<Plug>MSNext', {noremap = false})
         map('n', 'N', '<Plug>MSPrev', {noremap = false})
         map('o', 'n', '<Plug>MSNext', {noremap = false})
@@ -672,14 +672,10 @@ Plug('terryma/vim-expand-region', {
             }
     end,
     config = function()
-        map('x', '<m-k>', '<cmd>lua plug.utils.ExpandRegion()<cr>',
-            {noremap = false})
-        map('x', '<m-j>', '<cmd>lua plug.utils.ShrinkRegion()<cr>',
-            {noremap = false})
-        map('n', '<m-k>', '<cmd>lua plug.utils.ExpandRegion()<cr>',
-            {noremap = false})
-        map('n', '<m-j>', '<cmd>lua plug.utils.ShrinkRegion()<cr>',
-            {noremap = false})
+        map('x', '<m-k>', '<Plug>(expand_region_expand)', {noremap = false})
+        map('x', '<m-j>', '<Plug>(expand_region_shrink)', {noremap = false})
+        map('n', '<m-k>', '<Plug>(expand_region_expand)', {noremap = false})
+        map('n', '<m-j>', '<Plug>(expand_region_shrink)', {noremap = false})
     end
 })
 
