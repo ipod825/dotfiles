@@ -113,6 +113,13 @@ Plug('airblade/vim-rooter',
 Plug('wsdjeg/vim-fetch')
 Plug('git@github.com:ipod825/vim-tabdrop')
 
+Plug('nvim-lua/plenary.nvim')
+Plug('tanvirtin/vgit.nvim', {
+    config = function()
+        require('vgit').setup {settings = {live_gutter = {enabled = false}}}
+    end
+})
+-- Plug('TimUntersberger/neogit')
 Plug('lambdalisue/gina.vim', {
     config = function()
         vim.g['gina#action#index#discard_directories'] = 1
@@ -143,10 +150,18 @@ Plug('hoob3rt/lualine.nvim', {
                 lualine_a = {'mode'},
                 lualine_b = {{'filename', file_status = false}},
                 lualine_c = {
-                    {function() return ' ' ..vim.fn.trim(vim.fn.system('git branch --show-current')) end, condition = enable_fn}
+                    {
+                        function()
+                            return ' ' ..
+                                       vim.fn.trim(
+                                           vim.fn.system(
+                                               'git branch --show-current'))
+                        end,
+                        condition = enable_fn
+                    }
                 }
             },
-            filetypes = {'gina-status', 'gina-branch', 'gina-log'}
+            filetypes = {'gina-status'}
         }
         require'lualine'.setup {
             options = {
@@ -195,7 +210,7 @@ Plug('hoob3rt/lualine.nvim', {
                 lualine_z = {}
             },
             tabline = {},
-            extensions = {lualine_netranger, lualine_gina, 'quickfix'}
+            extensions = {lualine_netranger, 'quickfix'}
         }
     end
 })
@@ -621,6 +636,18 @@ Plug('machakann/vim-textobj-functioncall')
 Plug('sgur/vim-textobj-parameter')
 Plug('whatyouhide/vim-textobj-xmlattr', {ft = {'html', 'xml'}})
 Plug('terryma/vim-expand-region', {
+    utils = {
+        ExpandRegion = function()
+            local saved_mapping = Vim.save_keymap({'8'}, 'n', true)
+            Vim.feed_plug_keys('(expand_region_expand)')
+            Vim.restore_keymap(saved_mapping)
+        end,
+        ShrinkRegion = function()
+            local saved_mapping = Vim.save_keymap({'8'}, 'n', true)
+            Vim.feed_plug_keys('(expand_region_shrink)')
+            Vim.restore_keymap(saved_mapping)
+        end
+    },
     setup = function()
         vim.g.vim_textobj_parameter_mapping = ','
         vim.g.expand_region_text_objects =
@@ -645,10 +672,14 @@ Plug('terryma/vim-expand-region', {
             }
     end,
     config = function()
-        map('x', '<m-k>', '<Plug>(expand_region_expand)', {noremap = false})
-        map('x', '<m-j>', '<Plug>(expand_region_shrink)', {noremap = false})
-        map('n', '<m-k>', '<Plug>(expand_region_expand)', {noremap = false})
-        map('n', '<m-j>', '<Plug>(expand_region_shrink)', {noremap = false})
+        map('x', '<m-k>', '<cmd>lua plug.utils.ExpandRegion()<cr>',
+            {noremap = false})
+        map('x', '<m-j>', '<cmd>lua plug.utils.ShrinkRegion()<cr>',
+            {noremap = false})
+        map('n', '<m-k>', '<cmd>lua plug.utils.ExpandRegion()<cr>',
+            {noremap = false})
+        map('n', '<m-j>', '<cmd>lua plug.utils.ShrinkRegion()<cr>',
+            {noremap = false})
     end
 })
 
