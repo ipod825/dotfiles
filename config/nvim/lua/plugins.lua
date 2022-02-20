@@ -217,10 +217,10 @@ Plug('hoob3rt/lualine.nvim', {
 
 Plug('git@github.com:ipod825/msearch.vim', {
     config = function()
-        map('n', '*', '<Plug>MSToggleAddCword', {noremap = false})
-        map('x', '*', '<Plug>MSToggleAddVisual', {noremap = false})
-        map('n', '&', '<Plug>MSExclusiveAddCword', {noremap = false})
-        map('x', '&', '<Plug>MSExclusiveAddVisual', {noremap = false})
+        map('n', '8', '<Plug>MSToggleAddCword', {noremap = false})
+        map('x', '8', '<Plug>MSToggleAddVisual', {noremap = false})
+        map('n', '*', '<Plug>MSExclusiveAddCword', {noremap = false})
+        map('x', '*', '<Plug>MSExclusiveAddVisual', {noremap = false})
         map('n', 'n', '<Plug>MSNext', {noremap = false})
         map('n', 'N', '<Plug>MSPrev', {noremap = false})
         map('o', 'n', '<Plug>MSNext', {noremap = false})
@@ -635,17 +635,15 @@ Plug('kana/vim-textobj-line')
 Plug('machakann/vim-textobj-functioncall')
 Plug('sgur/vim-textobj-parameter')
 Plug('whatyouhide/vim-textobj-xmlattr', {ft = {'html', 'xml'}})
-Plug('terryma/vim-expand-region', {
+Plug('git@github.com:ipod825/vim-expand-region', {
     utils = {
-        ExpandRegion = function()
-            local saved_mapping = Vim.save_keymap({'8'}, 'n', true)
-            Vim.feed_plug_keys('(expand_region_expand)')
-            Vim.restore_keymap(saved_mapping)
+        ExpandRegionStart = function()
+            Vim.unmap('n', '8')
+            Vim.unmap('x', '8')
         end,
-        ShrinkRegion = function()
-            local saved_mapping = Vim.save_keymap({'8'}, 'n', true)
-            Vim.feed_plug_keys('(expand_region_shrink)')
-            Vim.restore_keymap(saved_mapping)
+        ExpandRegionStop = function()
+            map('n', '8', '<Plug>MSToggleAddCword', {noremap = false})
+            map('x', '8', '<Plug>MSToggleAddVisual', {noremap = false})
         end
     },
     setup = function()
@@ -672,6 +670,10 @@ Plug('terryma/vim-expand-region', {
             }
     end,
     config = function()
+        Vim.augroup('EXPANDREGION', {
+            [[USER ExpandRegionStart lua plug.utils.ExpandRegionStart()]],
+            [[USER ExpandRegionStop lua plug.utils.ExpandRegionStop()]]
+        })
         map('x', '<m-k>', '<Plug>(expand_region_expand)', {noremap = false})
         map('x', '<m-j>', '<Plug>(expand_region_shrink)', {noremap = false})
         map('n', '<m-k>', '<Plug>(expand_region_expand)', {noremap = false})
