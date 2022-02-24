@@ -77,9 +77,7 @@ require'Vim'.augroup('GENERAL', {
     string.format([[BufWritePost %s source <afile>]], vim.fn.glob(
                       '$HOME/dotfiles/config/nvim/**/*.lua'):gsub('\n', ',')),
     [[BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd]],
-    [[BufWritePost *Xresources,*Xdefaults !xrdb %]],
-
-    -- Better diff
+    [[BufWritePost *Xresources,*Xdefaults !xrdb %]], -- Better diff
     [[BufWritePost * if &diff == 1 | diffupdate | endif]],
     [[OptionSet diff setlocal wrap | nmap <buffer> <c-j> ]c | nmap <buffer> <c-k> [c | nmap <buffer> q <cmd>tabclose<cr>]],
 
@@ -100,5 +98,5 @@ require'Vim'.augroup('GENERAL', {
     [[BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | exe "normal! zi" | endif]],
 
     -- Writing
-    [[BufEnter *sxhkdrc* setlocal ft=sxhkdrc | setlocal commentstring=#%s | setlocal foldmethod=marker]],
+    [[BufEnter *sxhkdrc* setlocal ft=sxhkdrc | setlocal commentstring=#%s | setlocal foldmethod=marker]]
 })

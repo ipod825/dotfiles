@@ -13,6 +13,13 @@ M.plugins_path = vim.fn.stdpath('data') .. '/site/pluggins'
 M.configs = {lazy = {}, start = {}}
 M.utils = {}
 
+function M.reload(name)
+    package.loaded[name] = nil
+    loadfile(vim.env.MYVIMRC)
+    vim.cmd('edit')
+    return require(name)
+end
+
 function M.begin() vim.fn['plug#begin'](M.plugins_path) end
 
 function M.ends()
