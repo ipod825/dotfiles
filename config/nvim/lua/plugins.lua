@@ -795,6 +795,14 @@ Plug('skywind3000/asynctasks.vim', {
     end
 })
 
+Plug('git@github.com:ipod825/igit.nvim', {
+    branch = 'main',
+    config = function()
+        local igit = require('igit')
+        igit.setup({branch = {mapping = {['a'] = function() print(1) end}}})
+    end
+})
+
 Plug('andymass/vim-matchup')
 Plug('AndrewRadev/linediff.vim', {on_cmd = {'LineDiffAdd'}})
 
@@ -848,3 +856,5 @@ Plug('git@github.com:ipod825/vim-netranger', {
 })
 
 Plug.ends()
+
+return M
