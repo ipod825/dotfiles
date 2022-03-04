@@ -141,4 +141,6 @@ end
 map('t', '<m-c>', '<cmd>lua fuzzy_menu.cheat_sheet()<cr>')
 map('n', '<m-c>', '<cmd>lua fuzzy_menu.cheat_sheet()<cr>')
 
+M.add_util_menu('RunTests', function() vim.cmd('AsyncTask test') end)
+
 return M

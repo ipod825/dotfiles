@@ -1,5 +1,5 @@
-cnoreabbrev G Gina status -s
-cnoreabbrev gbr Gina branch
+" cnoreabbrev G Gina status -s
+" cnoreabbrev gbr Gina branch
 cnoreabbrev glg Gina log --branches --graph
 cnoreabbrev glc exec 'Gina log --branches --graph --follow --author="Shih-Ming Wang" -- '.expand("%:p")
 cnoreabbrev gps Gina push

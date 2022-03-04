@@ -113,6 +113,8 @@ Plug('airblade/vim-rooter',
 Plug('wsdjeg/vim-fetch')
 Plug('git@github.com:ipod825/vim-tabdrop')
 
+Plug('jreybert/vimagit')
+
 Plug('nvim-lua/plenary.nvim')
 Plug('tanvirtin/vgit.nvim', {
     config = function()
@@ -253,12 +255,12 @@ Plug('chaoren/vim-wordmotion', {
 Plug('windwp/nvim-autopairs',
      {config = function() require'nvim-autopairs'.setup() end})
 
-Plug('anuvyklack/pretty-fold.nvim', {
-    config = function()
-        require('pretty-fold').setup {}
-        require('pretty-fold.preview').setup()
-    end
-})
+-- Plug('anuvyklack/pretty-fold.nvim', {
+--     config = function()
+--         require('pretty-fold').setup {}
+--         require('pretty-fold.preview').setup()
+--     end
+-- })
 
 Plug('tpope/vim-endwise')
 
@@ -798,8 +800,13 @@ Plug('skywind3000/asynctasks.vim', {
 Plug('git@github.com:ipod825/igit.nvim', {
     branch = 'main',
     config = function()
+        local igit = require 'igit'
+        vim.cmd('cnoreabbrev G lua require"igit".status:open()')
+        vim.cmd('cnoreabbrev gbr lua require"igit".branch:open()')
         local igit = require('igit')
-        igit.setup({branch = {mapping = {['a'] = function() print(1) end}}})
+        igit.setup({
+            branch = {mapping = {n = {['a'] = function() print(1) end}}}
+        })
     end
 })
 

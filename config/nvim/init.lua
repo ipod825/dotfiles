@@ -79,7 +79,7 @@ require'Vim'.augroup('GENERAL', {
     [[BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd]],
     [[BufWritePost *Xresources,*Xdefaults !xrdb %]], -- Better diff
     [[BufWritePost * if &diff == 1 | diffupdate | endif]],
-    [[OptionSet diff setlocal wrap | nmap <buffer> <c-j> ]c | nmap <buffer> <c-k> [c | nmap <buffer> q <cmd>tabclose<cr>]],
+    [[OptionSet diff setlocal wrap | nmap <buffer> <c-j> ]c | nmap <buffer> <c-k> [c ]],
 
     -- Yank highlight
     [[TextYankPost * lua vim.highlight.on_yank {higroup='IncSearch', timeout=200}]],
