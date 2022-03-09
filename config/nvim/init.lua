@@ -93,6 +93,7 @@ require'Vim'.augroup('GENERAL', {
 
     -- Disables automatic commenting on newline:
     [[FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o]],
+    [[FileType lua map <F5> :lua require('plenary.test_harness').test_directory(vim.fn.expand("%:p"))<CR>]],
 
     -- Move to last position and unfold when openning a file
     [[BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | exe "normal! zi" | endif]],

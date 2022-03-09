@@ -779,7 +779,10 @@ Plug('skywind3000/asyncrun.vim', {
                     end, vim.fn.getqflist()), 'r')
                 vim.cmd('botright copen')
             end
-            vim.fn.system([[zenity --info --text Done --display=$DISPLAY]])
+            -- vim.fn.system([[zenity --info --text Done --display=$DISPLAY]])
+            vim.fn.system(
+                ([[notify-send -u critical -t 5000 'Job Finished' '%s']]):format(
+                    ('~'):rep(100)))
         end
     },
     config = function()
@@ -797,12 +800,14 @@ Plug('skywind3000/asynctasks.vim', {
     end
 })
 
+Plug('MunifTanjim/nui.nvim', {branch = 'main'})
 Plug('git@github.com:ipod825/igit.nvim', {
     branch = 'main',
     config = function()
         local igit = require 'igit'
         vim.cmd('cnoreabbrev G lua require"igit".status:open()')
         vim.cmd('cnoreabbrev gbr lua require"igit".branch:open()')
+        vim.cmd('cnoreabbrev glg lua require"igit".log:open()')
         local igit = require('igit')
         igit.setup({
             branch = {mapping = {n = {['a'] = function() print(1) end}}}
