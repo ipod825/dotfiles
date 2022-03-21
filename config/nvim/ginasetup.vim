@@ -1,11 +1,11 @@
 " cnoreabbrev G Gina status -s
 " cnoreabbrev gbr Gina branch
 " cnoreabbrev glg Gina log --branches --graph
-cnoreabbrev glc exec 'Gina log --branches --graph --follow --author="Shih-Ming Wang" -- '.expand("%:p")
-cnoreabbrev gps Gina push
-cnoreabbrev gpl Gina pull
-cnoreabbrev grc Gina!! rebase --continue
-cnoreabbrev gra Gina!! rebase --abort
+" cnoreabbrev glc exec 'Gina log --branches --graph --follow --author="Shih-Ming Wang" -- '.expand("%:p")
+" cnoreabbrev gps Gina push
+" cnoreabbrev gpl Gina pull
+" cnoreabbrev grc Gina!! rebase --continue
+" cnoreabbrev gra Gina!! rebase --abort
 augroup GINA
     autocmd!
     autocmd VimEnter * call s:SetupGina()

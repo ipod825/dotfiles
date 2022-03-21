@@ -41,7 +41,7 @@ alias gca='git commit -a -m'
 alias gro='git rebase --onto'
 alias gprun='cuthon --'
 alias cprun='cuthon -n 0 --'
-alias hi='Notify done'
+alias hi='notify-send -u critical -t 5000 "Job Finished" `printf "~%.0s" {1..100}`'
 
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
     alias ls='ls -G'

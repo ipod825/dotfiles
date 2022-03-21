@@ -89,7 +89,8 @@ Plug('nvim-treesitter/playground', {
         }
     end
 })
-Plug('romgrk/nvim-treesitter-context', {disable = true})
+
+-- Plug('romgrk/nvim-treesitter-context')
 Plug('haringsrob/nvim_context_vt')
 Plug('wellle/context.vim', {
     on_cmd = 'ContextPeek',
@@ -781,8 +782,7 @@ Plug('skywind3000/asyncrun.vim', {
             end
             -- vim.fn.system([[zenity --info --text Done --display=$DISPLAY]])
             vim.fn.system(
-                ([[notify-send -u critical -t 5000 'Job Finished' '%s']]):format(
-                    ('~'):rep(100)))
+                ([[notify-send -u critical -t 5000 'Job Finished' `printf '~%.0s' {1..100}`]]))
         end
     },
     config = function()
@@ -805,12 +805,21 @@ Plug('git@github.com:ipod825/igit.nvim', {
     branch = 'main',
     config = function()
         local igit = require 'igit'
-        vim.cmd('cnoreabbrev G lua require"igit".status:open()')
-        vim.cmd('cnoreabbrev gbr lua require"igit".branch:open()')
-        vim.cmd('cnoreabbrev glg lua require"igit".log:open()')
+        vim.cmd('cnoreabbrev G IGit status')
+        vim.cmd('cnoreabbrev gbr IGit branch')
+        vim.cmd('cnoreabbrev glg IGit log')
+        vim.cmd('cnoreabbrev gps IGit push')
+        vim.cmd('cnoreabbrev gpl IGit pull')
+        vim.cmd('cnoreabbrev grc IGit rebase --continue')
+        vim.cmd('cnoreabbrev gpa IGit rebase --abort')
+        vim.cmd([[cnoreabbrev glc exec 'IGit log --branches --graph --follow --author="Shih-Ming Wang" -- '.expand("%:p")]])
+        vim.cmd(
+            'cnoreabbrev gllg lua require"igit".log:open("--oneline --branches --graph --decorate=short")')
         local igit = require('igit')
         igit.setup({
-            branch = {mapping = {n = {['a'] = function() print(1) end}}}
+            branch = {mapping = {n = {['a'] = function() print(1) end}}},
+            log = {},
+            status = {}
         })
     end
 })
