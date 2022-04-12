@@ -1,63 +1,66 @@
 function prequire(...)
-    local status, lib = pcall(require, ...)
-    if (status) then return lib end
-    -- Library failed to load, so perhaps return `nil` or something?
-    return nil
+	local status, lib = pcall(require, ...)
+	if status then
+		return lib
+	end
+	-- Library failed to load, so perhaps return `nil` or something?
+	return nil
 end
 
-vim.cmd('colorscheme main')
-require('utils')
-require('mapping')
-require('vplug')
-require('plugins')
-require('tabline')
-require('fzf_cfg')
-require('qf')
-require('lsp')
-require('profile')
-prequire('gwork')
-prequire('android')
-prequire('g4')
+vim.cmd("colorscheme main")
+require("utils")
+require("mapping")
+require("vplug")
+require("plugins")
+require("tabline")
+require("fzf_cfg")
+require("qf")
+require("lsp")
+require("profile")
+prequire("gwork")
+prequire("android")
+prequire("g4")
 
 function _G.p(...)
-    local objects = vim.tbl_map(vim.inspect, {...})
-    print(unpack(objects))
+	local objects = vim.tbl_map(vim.inspect, { ... })
+	print(unpack(objects))
 end
 
-vim.o.syntax = 'on'
-vim.o.filetype = 'on'
-vim.g.mapleader = ' '
+vim.o.syntax = "on"
+vim.o.filetype = "on"
+vim.g.mapleader = " "
 vim.o.hidden = true
 vim.o.copyindent = true
 vim.o.smartindent = true
-vim.o.wildignore =
-    [[*/.git/*,*.o,*.class,*.pyc,*.aux,*.fls,*.pdf,*.fdb_latexmk]]
+vim.o.wildignore = [[*/.git/*,*.o,*.class,*.pyc,*.aux,*.fls,*.pdf,*.fdb_latexmk]]
 vim.o.splitright = true
 vim.o.splitbelow = true
-vim.o.background = 'dark'
+vim.o.background = "dark"
 vim.o.autoread = true
 vim.o.timeoutlen = 500
 vim.o.ttimeoutlen = 0
-vim.o.diffopt = vim.o.diffopt .. ',vertical'
-vim.o.virtualedit = 'block'
+vim.o.diffopt = vim.o.diffopt .. ",vertical,followwrap"
+vim.o.diffopt = vim.o.diffopt .. ",vertical"
+vim.o.virtualedit = "block"
 vim.o.showmatch = true
 vim.o.cursorline = true
 vim.o.winminwidth = 0
 vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 vim.o.expandtab = true
-vim.o.completeopt = 'menuone,noselect'
+vim.o.completeopt = "menuone,noselect"
 vim.o.termguicolors = true
 vim.o.scrolloff = 2
 vim.o.lazyredraw = true
 vim.o.swapfile = false
 vim.o.backup = false
 vim.o.showmode = false
-vim.o.shortmess = vim.o.shortmess .. 'c'
+vim.o.shortmess = vim.o.shortmess .. "c"
 vim.o.undofile = true
-vim.o.undodir = vim.fn.stdpath('data') .. '/undo'
-vim.o.switchbuf = 'usetab'
-vim.api.nvim_exec([[
+vim.o.undodir = vim.fn.stdpath("data") .. "/undo"
+vim.o.switchbuf = "usetab"
+vim.api.nvim_exec(
+	[[
     set copyindent
     set smartindent
     set smartcase
@@ -70,34 +73,39 @@ vim.api.nvim_exec([[
     set noswapfile
     set nobackup
     set undofile
-]], false)
+]],
+	false
+)
 
-require'Vim'.augroup('GENERAL', {
-    -- auto reload config files
-    string.format([[BufWritePost %s source <afile>]], vim.fn.glob(
-                      '$HOME/dotfiles/config/nvim/**/*.lua'):gsub('\n', ',')),
-    [[BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd]],
-    [[BufWritePost *Xresources,*Xdefaults !xrdb %]], -- Better diff
-    [[BufWritePost * if &diff == 1 | diffupdate | endif]],
-    [[OptionSet diff setlocal wrap | nmap <buffer> <c-j> ]c | nmap <buffer> <c-k> [c ]],
+require("Vim").augroup("GENERAL", {
+	-- auto reload config files
+	string.format(
+		[[BufWritePost %s source <afile>]],
+		vim.fn.glob("$HOME/dotfiles/config/nvim/**/*.lua"):gsub("\n", ",")
+	),
+	[[BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd]],
+	[[BufWritePost *Xresources,*Xdefaults !xrdb %]], -- Better diff
+	[[BufWritePost * if &diff == 1 | diffupdate | endif]],
+	[[OptionSet diff nmap <buffer> <c-j> ]c | nmap <buffer> <c-k> [c ]],
 
-    -- Yank highlight
-    [[TextYankPost * lua vim.highlight.on_yank {higroup='IncSearch', timeout=200}]],
+	-- Yank highlight
+	[[TextYankPost * lua vim.highlight.on_yank {higroup='IncSearch', timeout=200}]],
 
-    -- Automatically change directory (avoid git, qf)
-    [[BufEnter * if &ft != 'gitcommit' && &ft != 'qf' | silent! lcd %:p:h | endif]],
+	-- Automatically change directory (avoid git, qf)
+	[[BufEnter * if &ft != 'gitcommit' && &ft != 'qf' | silent! lcd %:p:h | endif]],
 
-    -- Automatically open in new tab on the left.
-    [[FileType man wincmd T | silent! tabmove -1]],
-    [[FileType help silent! tabmove -1 | setlocal bufhidden=wipe ]],
+	-- Automatically open in new tab on the left.
+	[[FileType man wincmd T | silent! tabmove -1]],
+	[[FileType help silent! tabmove -1 | setlocal bufhidden=wipe ]],
 
-    -- Disables automatic commenting on newline:
-    [[FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o]],
-    [[FileType lua map <F5> :lua require('plenary.test_harness').test_directory(vim.fn.expand("%:p"))<CR>]],
+	-- Disables automatic commenting on newline:
+	[[FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o]],
+	[[FileType lua map <F5> :lua require('plenary.test_harness').test_directory(vim.fn.expand("%:p"))<CR>]],
 
-    -- Move to last position and unfold when openning a file
-    [[BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | exe "normal! zi" | endif]],
+	-- Move to last position and unfold when openning a file
+	[[BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | exe "normal! zi" | endif]],
 
-    -- Writing
-    [[BufEnter *sxhkdrc* setlocal ft=sxhkdrc | setlocal commentstring=#%s | setlocal foldmethod=marker]]
+	-- Writing
+	[[BufEnter *sxhkdrc* setlocal ft=sxhkdrc | setlocal commentstring=#%s | setlocal foldmethod=marker]],
+	[[BufEnter *.md setlocal spell]],
 })

@@ -41,6 +41,8 @@ function M.switch_env(env)
 		return
 	end
 	M.cur_env = env
+	-- Restore default mappings and then apply current env mappings.
+	V.restore_keymap(M.mappings)
 	V.restore_keymap(M.cur_env.mappings)
 end
 

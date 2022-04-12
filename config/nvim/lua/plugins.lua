@@ -16,8 +16,8 @@ Plug("terrortylor/nvim-comment", {
 			comment_empty = true,
 			create_mapping = false,
 		})
-		map("n", "<c-_>", "<cmd>CommentToggle<cr>")
-		map("v", "<c-_>", ":<c-u>call CommentOperator(visualmode())<cr>")
+		map("n", "<c-/>", "<cmd>CommentToggle<cr>")
+		map("v", "<c-/>", ":<c-u>call CommentOperator(visualmode())<cr>")
 		V.augroup("COMMENT", {
 			[[Filetype c,cpp setlocal commentstring=//\ %s]],
 			[[Filetype *.xinitrc setlocal ft=sh | setlocal commentstring=#%s]],
@@ -665,8 +665,16 @@ Plug("mhartington/formatter.nvim", {
 			return {
 				exe = "stylua",
 				args = {
+					"--search-parent-directories",
 					"-",
 				},
+				stdin = true,
+			}
+		end
+		local md_format = function()
+			return {
+				exe = "mdformat",
+				args = { "-" },
 				stdin = true,
 			}
 		end
@@ -679,9 +687,13 @@ Plug("mhartington/formatter.nvim", {
 				c = { clang_format },
 				cpp = { clang_format },
 				lua = { lua_format },
+				markdown = { md_format },
 			},
 		})
-		V.augroup("FORMATTER", { [[BufwritePost * silent! FormatWrite]] })
+		-- V.augroup("FORMATTER", { [[BufwritePost * silent! FormatWrite]] })
+		-- V.augroup("FORMATTER", { [[BufwritePost * if g:autoformat | FormatWrite | endif ]] })
+		V.augroup("FORMATTER", { [[BufwritePost * FormatWrite ]] })
+		vim.g.autoformat = true
 	end,
 })
 
@@ -749,9 +761,10 @@ Plug("git@github.com:ipod825/vim-bookmark", {
 		V.augroup("BOOKMARK", {
 			[[Filetype bookmark nmap <buffer> <c-t> <cmd>call bookmark#open('Tabdrop')<cr>]],
 		})
-		map("n", "'", "<cmd>BookmarkGo netranger<cr>")
-		map("n", "'", "<cmd>BookmarkGo<cr>")
-		map("n", "m", "<cmd>BookmarkAddPos<cr>")
+		map("n", "'", "<cmd>BookmarkGo directory<cr>")
+		map("n", "m", "<cmd>BookmarkAddPos directory<cr>")
+		map("n", "<leader>'", "<cmd>BookmarkGo<cr>")
+		map("n", "<leader>m", "<cmd>BookmarkAddPos<cr>")
 	end,
 })
 
@@ -855,17 +868,16 @@ Plug("skywind3000/asynctasks.vim", {
 	end,
 })
 
-Plug("akinsho/git-conflict.nvim", {
-	branch = "main",
-	config = function()
-		require("git-conflict").setup()
-	end,
-})
+-- Plug("akinsho/git-conflict.nvim", {
+-- 	branch = "main",
+-- 	config = function()
+-- 		require("git-conflict").setup()
+-- 	end,
+-- })
 
-Plug("git@github.com:ipod825/igit.nvim", {
+Plug("git@github.com:ipod825/ivcs.nvim", {
 	branch = "main",
 	config = function()
-		local igit = require("igit")
 		vim.cmd("cnoreabbrev G IGit status")
 		vim.cmd("cnoreabbrev gbr IGit branch")
 		vim.cmd("cnoreabbrev glg IGit log")
@@ -876,22 +888,28 @@ Plug("git@github.com:ipod825/igit.nvim", {
 		vim.cmd(
 			[[cnoreabbrev glc exec 'IGit log --branches --graph --follow --author="Shih-Ming Wang" -- '.expand("%:p")]]
 		)
-		vim.cmd('cnoreabbrev gllg lua require"igit".log:open("--oneline --branches --graph --decorate=short")')
-		local igit = require("igit")
-		igit.setup({
-			branch = { mapping = { n = {
-				["a"] = function()
-					print(1)
-				end,
-			} } },
-			log = {},
+		local ivcs = require("ivcs")
+		ivcs.setup("git", {
+			branch = {
+				mapping = { n = {
+					["a"] = function()
+						print(1)
+					end,
+				} },
+				confirm_rebase = false,
+			},
+			log = { confirm_rebase = false },
 			status = {},
 		})
+		-- ivcs.setup("hg", {})
 	end,
 })
 
 Plug("andymass/vim-matchup")
 Plug("AndrewRadev/linediff.vim", { on_cmd = { "LineDiffAdd" } })
+
+Plug("chrisbra/Colorizer")
+Plug("powerman/vim-plugin-AnsiEsc")
 
 Plug("git@github.com:ipod825/vim-netranger", {
 	setup = function()
@@ -921,11 +939,11 @@ Plug("git@github.com:ipod825/vim-netranger", {
               call netranger#api#cp(path, dir.'/'.newname)
           endfunction
           function! NETRBookMark()
-              BookmarkAdd netranger
+              BookmarkAdd directory
           endfunction
       
           function! NETRBookMarkGo()
-              BookmarkGo netranger
+              BookmarkGo directory
           endfunction
       
           function! NETRInit()
