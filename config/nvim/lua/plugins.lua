@@ -290,7 +290,7 @@ Plug("chaoren/vim-wordmotion", {
 
 Plug("windwp/nvim-autopairs", {
 	config = function()
-		require("nvim-autopairs").setup({ map_cr = false })
+		require("nvim-autopairs").setup({ map_cr = false, fast_wrap = {} })
 	end,
 })
 
@@ -875,7 +875,7 @@ Plug("skywind3000/asynctasks.vim", {
 -- 	end,
 -- })
 
-Plug("git@github.com:ipod825/ivcs.nvim", {
+Plug("git@github.com:ipod825/igit.nvim", {
 	branch = "main",
 	config = function()
 		vim.cmd("cnoreabbrev G IGit status")
@@ -888,8 +888,7 @@ Plug("git@github.com:ipod825/ivcs.nvim", {
 		vim.cmd(
 			[[cnoreabbrev glc exec 'IGit log --branches --graph --follow --author="Shih-Ming Wang" -- '.expand("%:p")]]
 		)
-		local ivcs = require("ivcs")
-		ivcs.setup("git", {
+		require("igit").setup({
 			branch = {
 				mapping = { n = {
 					["a"] = function()
