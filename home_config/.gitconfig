@@ -1,6 +1,15 @@
 [core]
     editor = "nvim"
 	excludesfile = ~/.gitignore_global
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true
+    side-by-side = true
+
 [user]
 	name = Shih-Ming Wang
 	email = swang150@ucsc.edu
@@ -10,6 +19,7 @@
 
 [diff]
     tool = nvr
+    colorMoved = default
 
 [difftool "nvr"]
     cmd = nvr -s -d $LOCAL $REMOTE

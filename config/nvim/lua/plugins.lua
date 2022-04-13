@@ -157,7 +157,7 @@ Plug("tanvirtin/vgit.nvim", {
 		require("vgit").setup({ settings = { live_gutter = { enabled = false } } })
 	end,
 })
--- Plug('TimUntersberger/neogit')
+Plug("TimUntersberger/neogit")
 Plug("lambdalisue/gina.vim", {
 	config = function()
 		vim.g["gina#action#index#discard_directories"] = 1
@@ -527,7 +527,7 @@ Plug("farmergreg/vim-lastplace")
 Plug("git@github.com:ipod825/war.vim", {
 	config = function()
 		V.augroup("WAR", {
-			[[Filetype git call war#fire(-1, 0.8, -1, 0.1)]],
+			-- [[Filetype git call war#fire(-1, 0.8, -1, 0.1)]],
 			[[Filetype esearch call war#fire(0.8, -1, 0.2, -1)]],
 			[[Filetype bookmark call war#fire(-1, 1, -1, 0.2)]],
 			[[Filetype bookmark call war#enter(-1)]],
