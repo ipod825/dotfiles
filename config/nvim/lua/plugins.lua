@@ -150,14 +150,14 @@ Plug("jreybert/vimagit")
 
 -- Plug('nvim-lua/plenary.nvim')
 Plug("git@github.com:ipod825/plenary.nvim")
-Plug("tanvirtin/vgit.nvim", {
-	diable = true,
-	branch = "main",
-	config = function()
-		require("vgit").setup({ settings = { live_gutter = { enabled = false } } })
-	end,
-})
-Plug("TimUntersberger/neogit")
+-- Plug("tanvirtin/vgit.nvim", {
+-- 	diable = true,
+-- 	branch = "main",
+-- 	config = function()
+-- 		require("vgit").setup({ settings = { live_gutter = { enabled = false } } })
+-- 	end,
+-- })
+-- Plug("TimUntersberger/neogit")
 Plug("lambdalisue/gina.vim", {
 	config = function()
 		vim.g["gina#action#index#discard_directories"] = 1
@@ -890,11 +890,6 @@ Plug("git@github.com:ipod825/igit.nvim", {
 		)
 		require("igit").setup({
 			branch = {
-				mapping = { n = {
-					["a"] = function()
-						print(1)
-					end,
-				} },
 				confirm_rebase = false,
 			},
 			log = { confirm_rebase = false },
