@@ -37,6 +37,7 @@ end
 
 map("n", "/", "<cmd>lua fuzzy_menu.search_word()<cr>")
 function M.search_word()
+	vim.g.fzf_ft = vim.bo.filetype
 	local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 	for k, v in pairs(lines) do
 		lines[k] = string.format(" %4d %s", k, v)
@@ -45,6 +46,7 @@ function M.search_word()
 		local lineno
 		_, _, lineno = string.find(l, "(%d+)%s*")
 		vim.cmd(lineno)
+		vim.g.fzf_ft = ""
 	end, {
 		"--ansi",
 		"--multi",
@@ -55,6 +57,7 @@ function M.search_word()
 		"--color",
 		"hl:reverse:underline:-1:reverse:underline:-1",
 	})
+	vim.cmd("syntax on")
 end
 
 map("n", "<c-o>", "<cmd>lua fuzzy_menu.open_file_from_project_root()<cr>")

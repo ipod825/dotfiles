@@ -2,7 +2,7 @@ local M = _G.fzf_cfg or {}
 _G.fzf_cfg = M
 local map = require("Vim").map
 
-vim.g.fzf_layout = { up = "100%" }
+vim.g.fzf_layout = { window = { width = 1, height = 1 } }
 vim.g.fzf_action = {
 	["ctrl-e"] = "edit",
 	["Enter"] = "Tabdrop",

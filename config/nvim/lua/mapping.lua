@@ -104,7 +104,6 @@ vim.api.nvim_exec(
 	false
 )
 function M.open_term(open_cmd)
-	print(open_cmd)
 	vim.cmd(open_cmd)
 	vim.cmd("term")
 	vim.b.auto_term_insert = 1
