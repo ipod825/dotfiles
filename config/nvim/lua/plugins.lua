@@ -434,8 +434,8 @@ Plug("hrsh7th/nvim-cmp", {
 				["<cr>"] = cmp.mapping.confirm({ select = true }),
 			},
 			sources = cmp.config.sources({
-				{ name = "buffer" },
 				{ name = "nvim_lsp" },
+				{ name = "buffer" },
 				{ name = "vsnip" },
 				{ name = "spell" },
 			}),
@@ -590,7 +590,9 @@ Plug("neovim/nvim-lspconfig", {
 	config = function()
 		SkipLspFns = SkipLspFns or {}
 		local capabilities = vim.lsp.protocol.make_client_capabilities()
-		capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+		if pcall(require, "cmp_nvim_lsp") then
+			capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+		end
 
 		local set_lsp = function(name, options)
 			options = options or { capabilities = capabilities }
@@ -622,7 +624,7 @@ Plug("neovim/nvim-lspconfig", {
 						-- Setup your lua path
 						path = vim.split(package.path, ";"),
 					},
-					diagnostics = { globals = { "vim" } },
+					diagnostics = { globals = { "vim", "describe", "it", "before_each", "after_each" } },
 					workspace = {
 						-- Make the server aware of Neovim runtime files
 						library = {
