@@ -290,7 +290,7 @@ Plug("chaoren/vim-wordmotion", {
 
 Plug("windwp/nvim-autopairs", {
 	config = function()
-		require("nvim-autopairs").setup({ map_cr = false, fast_wrap = {} })
+		require("nvim-autopairs").setup({ fast_wrap = {} })
 	end,
 })
 
@@ -877,6 +877,8 @@ Plug("skywind3000/asynctasks.vim", {
 -- 	end,
 -- })
 
+Plug("git@github.com:ipod825/libp.nvim", { branch = "main" })
+
 Plug("git@github.com:ipod825/igit.nvim", {
 	branch = "main",
 	config = function()
@@ -897,7 +899,6 @@ Plug("git@github.com:ipod825/igit.nvim", {
 			log = { confirm_rebase = false },
 			status = {},
 		})
-		-- ivcs.setup("hg", {})
 	end,
 })
 
