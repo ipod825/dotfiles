@@ -43,6 +43,7 @@ Plug("nvim-treesitter/nvim-treesitter", {
 				"fennel",
 				"go",
 				"html",
+				"java",
 				"javascript",
 				"json",
 				"jsonc",
