@@ -22,8 +22,7 @@ prequire("android")
 prequire("g4")
 
 function _G.p(...)
-	local objects = vim.tbl_map(vim.inspect, { ... })
-	print(unpack(objects))
+    vim.pretty_print(...)
 end
 
 vim.o.syntax = "on"

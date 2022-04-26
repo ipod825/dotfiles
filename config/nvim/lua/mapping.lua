@@ -27,18 +27,17 @@ map("i", "<c-j>", "<down>")
 map("i", "<c-k>", "<up>")
 map("n", "<cr>", "<cmd>lua mapping.next_window()<cr>")
 function M.next_window()
-	vim.cmd("wincmd w")
-	-- if vim.wo.diff then
-	--     local ori_w = vim.api.nvim_get_current_win()
-	--     for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-	--         if w ~= ori_w and vim.api.nvim_win_get_option(w, 'diff') then
-	--             vim.api.nvim_set_current_win(w)
-	--             return
-	--         end
-	--     end
-	-- else
-	--     vim.cmd('wincmd w')
-	-- end
+	if vim.wo.diff then
+		local ori_w = vim.api.nvim_get_current_win()
+		for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+			if w ~= ori_w and vim.api.nvim_win_get_option(w, "diff") then
+				vim.api.nvim_set_current_win(w)
+				return
+			end
+		end
+	else
+		vim.cmd("wincmd w")
+	end
 end
 
 -- Moving Around (home,END)

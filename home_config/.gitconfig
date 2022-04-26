@@ -1,7 +1,7 @@
 [core]
     editor = "nvim"
 	excludesfile = ~/.gitignore_global
-    pager = delta
+    ; pager = delta
 
 [interactive]
     diffFilter = delta --color-only
@@ -47,3 +47,9 @@
 [repo]
 	superprojectChoiceExpire = 1632773868
 	superprojectChoice = true
+[credential "https://github.com"]
+	helper = 
+	helper = !$HOME/.pyenv/versions/miniconda3-latest/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !$HOME/.pyenv/versions/miniconda3-latest/bin/gh auth git-credential

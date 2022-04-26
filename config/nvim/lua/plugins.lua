@@ -405,6 +405,8 @@ Plug("lukas-reineke/indent-blankline.nvim", {
 	end,
 })
 
+Plug("hrsh7th/cmp-nvim-lua")
+Plug("hrsh7th/cmp-nvim-lsp-signature-help", { branch = "main" })
 Plug("hrsh7th/cmp-buffer", { branch = "main" })
 Plug("hrsh7th/cmp-nvim-lsp", { branch = "main" })
 Plug("hrsh7th/cmp-vsnip", { branch = "main" })
@@ -434,6 +436,8 @@ Plug("hrsh7th/nvim-cmp", {
 				["<cr>"] = cmp.mapping.confirm({ select = true }),
 			},
 			sources = cmp.config.sources({
+				{ name = "nvim_lsp_signature_help" },
+				{ name = "nvim_lua" },
 				{ name = "nvim_lsp" },
 				{ name = "buffer" },
 				{ name = "vsnip" },
