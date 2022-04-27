@@ -36,6 +36,7 @@ Plug("nvim-treesitter/nvim-treesitter", {
 				"comment",
 				"cpp",
 				"css",
+				"dart",
 				"fennel",
 				"go",
 				"html",
@@ -154,7 +155,7 @@ Plug("git@github.com:ipod825/plenary.nvim", {
 			callback = function(arg)
 				map("n", "<F5>", function()
 					require("plenary.test_harness").test_directory(arg.file)
-				end, {desc='plenary test file'})
+				end, { desc = "plenary test file" })
 			end,
 		})
 	end,
@@ -810,6 +811,7 @@ Plug("eugen0329/vim-esearch", {
 			default_mappings = 0,
 			live_update = 0,
 			win_ui_nvim_syntax = 1,
+			root_markers = { ".git", ".hg", ".svn", ".bzr", "_darcs", "OWNERS" },
 			remember = {
 				"case",
 				"regex",
