@@ -65,15 +65,6 @@ function M.current.textobject(mark)
 	return vim.fn.getreg("a")
 end
 
-function M.augroup(name, autocmds)
-	vim.cmd("augroup " .. name)
-	vim.cmd("autocmd!")
-	for _, cmd in ipairs(autocmds) do
-		vim.cmd("autocmd " .. cmd)
-	end
-	vim.cmd("augroup END")
-end
-
 function M.save_keymap(keys, mode, is_global)
 	mode = mode or "n"
 	if is_global == nil then

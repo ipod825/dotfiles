@@ -22,7 +22,7 @@ prequire("android")
 prequire("g4")
 
 function _G.p(...)
-    vim.pretty_print(...)
+	vim.pretty_print(...)
 end
 
 vim.o.syntax = "on"
@@ -76,35 +76,116 @@ vim.api.nvim_exec(
 	false
 )
 
-require("Vim").augroup("GENERAL", {
-	-- auto reload config files
-	string.format(
-		[[BufWritePost %s source <afile>]],
-		vim.fn.glob("$HOME/dotfiles/config/nvim/**/*.lua"):gsub("\n", ",")
-	),
-	[[BufWritePost *sxhkdrc* silent !pkill -USR1 sxhkd]],
-	[[BufWritePost *Xresources,*Xdefaults !xrdb %]], -- Better diff
-	[[BufWritePost * if &diff == 1 | diffupdate | endif]],
-	[[OptionSet diff nmap <buffer> <c-j> ]c | nmap <buffer> <c-k> [c ]],
+local GENERAL = vim.api.nvim_create_augroup("GENERAL", {})
 
-	-- Yank highlight
-	[[TextYankPost * lua vim.highlight.on_yank {higroup='IncSearch', timeout=200}]],
+-- auto reload config files
+vim.api.nvim_create_autocmd("BufWritePost", {
+	group = GENERAL,
+	pattern = vim.split(vim.fn.glob("$HOME/dotfiles/config/nvim/**/*.lua"), "\n"),
+	callback = function(arg)
+		vim.cmd("source " .. arg.file)
+	end,
+})
 
-	-- Automatically change directory (avoid git, qf)
-	[[BufEnter * if &ft != 'gitcommit' && &ft != 'qf' | silent! lcd %:p:h | endif]],
+vim.api.nvim_create_autocmd("BufWritePost", {
+	group = GENERAL,
+	pattern = "*sxhkdrc*",
+	command = "silent !pkill -USR1 sxhkd",
+})
 
-	-- Automatically open in new tab on the left.
-	[[FileType man wincmd T | silent! tabmove -1]],
-	[[FileType help silent! tabmove -1 | setlocal bufhidden=wipe ]],
+vim.api.nvim_create_autocmd("BufWritePost", {
+	group = GENERAL,
+	pattern = { ".Xresources", "*Xdefaults" },
+	command = "!xrdb %",
+})
 
-	-- Disables automatic commenting on newline:
-	[[FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o]],
-	[[FileType lua map <F5> :lua require('plenary.test_harness').test_directory(vim.fn.expand("%:p"))<CR>]],
+-- Filetype correction
+vim.api.nvim_create_autocmd("BufRead", {
+	group = GENERAL,
+	pattern = ".xinitrc",
+	callback = function()
+		vim.bo.filetype = "sh"
+	end,
+})
 
-	-- Move to last position and unfold when openning a file
-	[[BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | exe "normal! zi" | endif]],
+vim.api.nvim_create_autocmd("BufRead", {
+	group = GENERAL,
+	pattern = "*sxhkdrc*",
+	callback = function()
+		vim.bo.filetype = "sxhkdrc"
+		vim.bo.commentstring = "#%s"
+		vim.bo.foldmethod = "marker"
+	end,
+})
 
-	-- Writing
-	[[BufEnter *sxhkdrc* setlocal ft=sxhkdrc | setlocal commentstring=#%s | setlocal foldmethod=marker]],
-	[[BufEnter *.md setlocal spell]],
+-- Technical writing
+vim.api.nvim_create_autocmd("Filetype", {
+	group = GENERAL,
+	pattern = { "markdown", "tex", "asciidoc" },
+	callback = function()
+		vim.wo.spell = true
+	end,
+})
+
+vim.api.nvim_create_autocmd("Filetype", {
+	group = GENERAL,
+	pattern = { "tex" },
+	callback = function()
+		vim.wo.cursorline = false
+		vim.opt.wildignor:append({ "*.aux", "*.fls", "*.blg", "*.pdf", "*.log", "*.out", "*.bbl", "*.fdb_latexmk" })
+	end,
+})
+
+vim.api.nvim_create_autocmd("Filetype", {
+	group = GENERAL,
+	pattern = { "markdown", "tex"},
+	callback = function()
+	    vim.keymap.set('i', 'sl','\\', {buffer=0})
+	    vim.keymap.set('i', '<m-j>','_', {buffer=0})
+	    vim.keymap.set('i', '<m-k>','&', {buffer=0})
+	    vim.keymap.set('i', '<m-q>','{}<Left>', {buffer=0})
+        vim.cmd('inoreabbrev <buffer> an &')
+	    vim.cmd('inoreabbrev <buffer> da $$<left>')
+	    vim.cmd('inoreabbrev <buffer> pl +')
+	    vim.cmd('inoreabbrev <buffer> mi -')
+	    vim.cmd('inoreabbrev <buffer> eq =')
+	end,
+})
+
+-- Better diff
+vim.api.nvim_create_autocmd("BufWritePost", {
+	group = GENERAL,
+	callback = function()
+		if vim.wo.diff then
+			vim.cmd("diffupdate")
+		end
+	end,
+})
+
+vim.api.nvim_create_autocmd("OptionSet", {
+	group = GENERAL,
+	callback = function(arg)
+		if arg.match == "diff" then
+			vim.keymap.set("n", "<c-j>", "]c", { buffer = 0 })
+			vim.keymap.set("n", "<c-k>", "[c", { buffer = 0 })
+		end
+	end,
+})
+
+-- Automatically change directory (avoid quickfix)
+vim.api.nvim_create_autocmd("BufEnter", {
+	group = GENERAL,
+	callback = function()
+		if vim.bo.filetype ~= "qf" then
+			vim.cmd("silent! lcd %:p:h")
+		end
+	end,
+})
+
+-- Disables automatic commenting on newline:
+vim.api.nvim_create_autocmd("Filetype", {
+	group = GENERAL,
+	callback = function()
+		vim.opt.formatoptions:remove({ "c", "r", "o" })
+	end,
 })

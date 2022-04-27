@@ -7,7 +7,6 @@ local V = require("Vim")
 Plug.begin()
 
 Plug("kyazdani42/nvim-web-devicons")
-Plug("rbtnn/vim-vimscript_lasterror", { on_cmd = "VimscriptLastError" })
 
 Plug("terrortylor/nvim-comment", {
 	branch = "main",
@@ -146,7 +145,19 @@ Plug("git@github.com:ipod825/vim-tabdrop")
 Plug("jreybert/vimagit")
 
 -- Plug('nvim-lua/plenary.nvim')
-Plug("git@github.com:ipod825/plenary.nvim")
+Plug("git@github.com:ipod825/plenary.nvim", {
+	config = function()
+		vim.api.nvim_create_autocmd("Filetype", {
+			group = vim.api.nvim_create_augroup("PLENARY", {}),
+			pattern = "lua",
+			callback = function(arg)
+				vim.keymap.set("n", "<F5>", function()
+					require("plenary.test_harness").test_directory(arg.file)
+				end)
+			end,
+		})
+	end,
+})
 -- Plug("tanvirtin/vgit.nvim", {
 -- 	diable = true,
 -- 	branch = "main",
@@ -314,35 +325,6 @@ Plug("mg979/vim-visual-multi", {
 				string.format("%d,%d VMSearch %s", range.line_beg, range.line_end, vim.fn["msearch#joint_pattern"]())
 			)
 		end,
-		VisualMultiStart = function()
-			vim.fn.setreg('"', "")
-			map("i", "jk", "<Esc>", { buffer = true })
-			map("i", "<c-h>", "<left>", { buffer = true })
-			map("i", "<c-l>", "<right>", { buffer = true })
-			map("i", "<c-j>", "<down>", { buffer = true })
-			map("i", "<c-k>", "<up>", { buffer = true })
-			map("i", "<m-h>", "<esc><m-h>i", { buffer = true })
-			map("i", "<m-l>", "<esc><m-l>i", { buffer = true })
-			map("n", "J", "<down>", { buffer = true })
-			map("n", "K", "<up>", { buffer = true })
-			map("n", "H", "<Left>", { buffer = true })
-			map("n", "L", "<Right>", { buffer = true })
-			map("n", "<c-c>", "<Esc>", { buffer = true })
-		end,
-		VisualMultiExit = function()
-			V.unmap("i", "jk", { buffer = true })
-			V.unmap("i", "<c-h>", { buffer = true })
-			V.unmap("i", "<c-l>", { buffer = true })
-			V.unmap("i", "<c-j>", { buffer = true })
-			V.unmap("i", "<c-k>", { buffer = true })
-			V.unmap("i", "<m-h>", { buffer = true })
-			V.unmap("i", "<m-l>", { buffer = true })
-			V.unmap("n", "J", { buffer = true })
-			V.unmap("n", "K", { buffer = true })
-			V.unmap("n", "H", { buffer = true })
-			V.unmap("n", "L", { buffer = true })
-			V.unmap("n", "<c-c>", { buffer = true })
-		end,
 	},
 	setup = function()
 		vim.g.VM_default_mappings = 0
@@ -388,9 +370,43 @@ Plug("mg979/vim-visual-multi", {
 			["]}"] = "])",
 			["w"] = "e",
 		}
-		V.augroup("VISUAL-MULTI", {
-			[[User visual_multi_start lua plug.utils.VisualMultiStart()]],
-			[[User visual_multi_exit  lua plug.utils.VisualMultiExit()]],
+		local VISUAL_MULTI = vim.api.nvim_create_augroup("VISUAL_MULTI", {})
+		vim.api.nvim_create_autocmd("User", {
+			group = VISUAL_MULTI,
+			pattern = "visual_multi_start",
+			callback = function()
+				vim.fn.setreg('"', "")
+				map("i", "jk", "<esc>", { buffer = true })
+				map("i", "<c-h>", "<left>", { buffer = true, noremap = false })
+				map("i", "<c-l>", "<right>", { buffer = true, noremap = false })
+				map("i", "<c-j>", "<down>", { buffer = true, noremap = false })
+				map("i", "<c-k>", "<up>", { buffer = true, noremap = false })
+				map("i", "<m-h>", "<esc><m-h>i", { buffer = true, noremap = false })
+				map("i", "<m-l>", "<esc><m-l>i", { buffer = true, noremap = false })
+				map("n", "J", "<down>", { buffer = true })
+				map("n", "K", "<up>", { buffer = true })
+				map("n", "H", "<Left>", { buffer = true })
+				map("n", "L", "<Right>", { buffer = true })
+				map("n", "<c-c>", "<Esc>", { buffer = true })
+			end,
+		})
+		vim.api.nvim_create_autocmd("User", {
+			group = VISUAL_MULTI,
+			pattern = "visual_multi_exit",
+			callback = function()
+				V.unmap("i", "jk", { buffer = true })
+				V.unmap("i", "<c-h>", { buffer = true })
+				V.unmap("i", "<c-l>", { buffer = true })
+				V.unmap("i", "<c-j>", { buffer = true })
+				V.unmap("i", "<c-k>", { buffer = true })
+				V.unmap("i", "<m-h>", { buffer = true })
+				V.unmap("i", "<m-l>", { buffer = true })
+				V.unmap("n", "J", { buffer = true })
+				V.unmap("n", "K", { buffer = true })
+				V.unmap("n", "H", { buffer = true })
+				V.unmap("n", "L", { buffer = true })
+				V.unmap("n", "<c-c>", { buffer = true })
+			end,
 		})
 	end,
 })
@@ -456,28 +472,9 @@ Plug("lervag/vimtex", {
 	config = function()
 		vim.g.tex_flavor = "latex"
 		vim.g.vimtex_fold_enabled = 1
-		vim.g.polyglot_disabled = { "latex" }
 		vim.g.vimtex_log_ignore = { "25" }
 		vim.g.vimtex_view_general_viewer = "zathura"
 		vim.g.tex_conceal = "abdgm"
-		if vim.fn.has("*deoplete#custom#var") then
-			V.augroup("VIMTEX", {
-				[[Filetype tex call deoplete#custom#var('omni', 'input_patterns', {'tex': g:vimtex#re#deoplete})]],
-				[[Filetype *.tex,*.md,*.adoc setlocal spell]],
-				[[Filetype *.tex setlocal nocursorline]],
-				[[Filetype *.tex setlocal wildignore+=*.aux,*.fls,*.blg,*.pdf,*.log,*.out,*.bbl,*.fdb_latexmk]],
-				[[Filetype *.md,*.tex inoremap <buffer> sl \]],
-				[[Filetype *.md,*.tex inoreabbrev <buffer> an &]],
-				[[Filetype *.md,*.tex inoreabbrev <buffer> da $$<Left>]],
-				[[Filetype *.md,*.tex inoreabbrev <buffer> pl +]],
-				[[Filetype *.md,*.tex inoreabbrev <buffer> mi -]],
-				[[Filetype *.md,*.tex inoreabbrev <buffer> eq =]],
-				[[Filetype *.md,*.tex inoremap <buffer> <M-j> _]],
-				[[Filetype *.md,*.tex inoremap <buffer> <M-j> _]],
-				[[Filetype *.md,*.tex inoremap <buffer> <M-k> ^]],
-				[[Filetype *.md,*.tex inoremap <buffer> <M-q> {}<Left>]], -- Comment
-			})
-		end
 	end,
 })
 
@@ -527,11 +524,21 @@ Plug("farmergreg/vim-lastplace")
 
 Plug("git@github.com:ipod825/war.vim", {
 	config = function()
-		V.augroup("WAR", {
-			-- [[Filetype git call war#fire(-1, 0.8, -1, 0.1)]],
-			[[Filetype esearch call war#fire(0.8, -1, 0.2, -1)]],
-			[[Filetype bookmark call war#fire(-1, 1, -1, 0.2)]],
-			[[Filetype bookmark call war#enter(-1)]],
+		local WAR = vim.api.nvim_create_augroup("WAR", {})
+		vim.api.nvim_create_autocmd("Filetype", {
+			group = WAR,
+			pattern = "esearch",
+			callback = function()
+				vim.fn["war#fire"](0.8, -1, 0.2, -1)
+			end,
+		})
+		vim.api.nvim_create_autocmd("Filetype", {
+			group = WAR,
+			pattern = "bookmark",
+			callback = function()
+				vim.fn["war#fire"](-1, 1, -1, 0.2)
+				vim.fn["war#enter"](-1)
+			end,
 		})
 	end,
 })
@@ -693,10 +700,18 @@ Plug("mhartington/formatter.nvim", {
 				markdown = { md_format },
 			},
 		})
-		-- V.augroup("FORMATTER", { [[BufwritePost * silent! FormatWrite]] })
-		-- V.augroup("FORMATTER", { [[BufwritePost * if g:autoformat | FormatWrite | endif ]] })
-		V.augroup("FORMATTER", { [[BufwritePost * FormatWrite ]] })
-		vim.g.autoformat = true
+		local enable_formatter = true
+		vim.api.nvim_create_user_command("ToggleFormatter", function()
+			enable_formatter = not enable_formatter
+		end, {})
+		vim.api.nvim_create_autocmd("BufwritePost", {
+			group = vim.api.nvim_create_augroup("FORMATTER", {}),
+			callback = function()
+				if enable_formatter then
+					vim.cmd("FormatWrite")
+				end
+			end,
+		})
 	end,
 })
 
@@ -739,9 +754,22 @@ Plug("git@github.com:ipod825/vim-expand-region", {
 		}
 	end,
 	config = function()
-		Vim.augroup("EXPANDREGION", {
-			[[USER ExpandRegionStart lua plug.utils.ExpandRegionStart()]],
-			[[USER ExpandRegionStop lua plug.utils.ExpandRegionStop()]],
+		local EXPANDREGION = vim.api.nvim_create_augroup("EXPANDREGION", {})
+		vim.api.nvim_create_autocmd("User", {
+			group = EXPANDREGION,
+			pattern = "ExpandRegionStart",
+			callback = function()
+				Vim.unmap("n", "8")
+				Vim.unmap("x", "8")
+			end,
+		})
+		vim.api.nvim_create_autocmd("User", {
+			group = EXPANDREGION,
+			pattern = "ExpandRegionStop",
+			callback = function()
+				map("n", "8", "<Plug>MSToggleAddCword", { noremap = false })
+				map("x", "8", "<Plug>MSToggleAddVisual", { noremap = false })
+			end,
 		})
 		map("x", "<m-k>", "<Plug>(expand_region_expand)", { noremap = false })
 		map("x", "<m-j>", "<Plug>(expand_region_shrink)", { noremap = false })
@@ -827,9 +855,9 @@ Plug("eugen0329/vim-esearch", {
 		}
 	end,
 	config = function()
-		V.augroup("ESEARCH", {
-			[[ColorScheme * highlight! link esearchMatch Cursor]],
-			[[Filetype esearch silent! tabmove -1]],
+		vim.api.nvim_create_autocmd("ColorScheme", {
+			group = vim.api.nvim_create_augroup("ESEARCH", {}),
+			command = "highlight! link esearchMatch Cursor",
 		})
 		map("n", "<leader>f", "<Plug>(operator-esearch-prefill)iw", { noremap = false })
 		map("x", "<leader>f", "<Plug>(esearch)", { noremap = false })
@@ -868,7 +896,14 @@ Plug("skywind3000/asyncrun.vim", {
 		vim.g.asyncrun_pathfix = 1
 		vim.g.asyncrun_open = 6
 		vim.g.asyncrun_exit = "lua plug.utils.AsyncrunCallback()"
-		V.augroup("PACKER", { [[User AsyncRunPre lua plug.utils.AsyncrunPre()]] })
+		vim.api.nvim_create_autocmd("User", {
+			group = vim.api.nvim_create_augroup("ASYNCRUN", {}),
+			pattern = "AsyncRunPre",
+			callback = function()
+				vim.cmd("wincmd o")
+				vim.g.asyncrun_win = vim.api.nvim_get_current_win()
+			end,
+		})
 	end,
 })
 
