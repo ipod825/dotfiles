@@ -154,7 +154,7 @@ Plug("git@github.com:ipod825/plenary.nvim", {
 			callback = function(arg)
 				map("n", "<F5>", function()
 					require("plenary.test_harness").test_directory(arg.file)
-				end)
+				end, {desc='plenary test file'})
 			end,
 		})
 	end,
@@ -324,12 +324,11 @@ Plug("mg979/vim-visual-multi", {
 	},
 	setup = function()
 		vim.g.VM_default_mappings = 0
-		local function SelectAllMark ()
+		map("n", "<leader>r", function()
 			vim.cmd("VMSearch " .. vim.fn["msearch#joint_pattern"]())
 			V.feed_plug_keys("(VM-Select-All)")
 			V.feed_plug_keys("(VM-Goto-Prev)")
-		end
-		map("n", "<leader>r", SelectAllMark)
+		end, { desc = "select all marks" })
 		map("x", "<leader>r", ":<c-u>lua plug.utils.VSelectAllMark()<cr>")
 		vim.g.VM_maps = {
 			["Switch Mode"] = "v",

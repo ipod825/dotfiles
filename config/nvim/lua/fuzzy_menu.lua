@@ -14,7 +14,6 @@ function M.add_util_menu(name, fn, id)
 	end
 end
 
-map("n", "<leader><cr>", "<cmd>lua fuzzy_menu.select()<cr>")
 function M.select(ids)
 	ids = ids or { "default" }
 	if type(ids) == "string" then
@@ -34,9 +33,9 @@ function M.select(ids)
 		end
 	end)
 end
+map("n", "<leader><cr>", M.select)
 
-map("n", "/", "<cmd>lua fuzzy_menu.search_word()<cr>")
-function M.search_word()
+map("n", "/", function()
 	local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 	for k, v in pairs(lines) do
 		lines[k] = string.format(" %4d %s", k, v)
@@ -56,25 +55,21 @@ function M.search_word()
 		"--color",
 		"hl:reverse:underline:-1:reverse:underline:-1",
 	})
-end
+end, { desc = "search word" })
 
-map("n", "<c-o>", "<cmd>lua fuzzy_menu.open_file_from_project_root()<cr>")
-function M.open_file_from_project_root()
+map("n", "<c-o>", function()
 	vim.cmd(string.format("Files %s", vim.fn.FindRootDirectory()))
-end
+end, { desc = "open file from project root" })
 
-map("n", "<leader>e", "<cmd>lua fuzzy_menu.open_config_files()<cr>")
-function M.open_config_files()
+map("n", "<leader>e", function()
 	fuzzy_run(vim.fn.systemlist("$HOME/dotfiles/misc/watchfiles.sh nvim"))
-end
+end, { desc = "open config files" })
 
-map("n", "<c-m-o>", "<cmd>lua fuzzy_menu.open_recent_files()<cr>")
-vim.cmd("cnoreabbrev f lua fuzzy_menu.open_recent_files()")
-function M.open_recent_files()
+map("n", "<c-m-o>", function()
 	fuzzy_run(vim.tbl_filter(function(val)
 		return 0 ~= vim.fn.filereadable(val)
 	end, vim.v.oldfiles))
-end
+end, { desc = "open recent files" })
 
 function M.copy_abs_path()
 	local path = vim.fn.expand("%:p")
@@ -90,7 +85,7 @@ function M.copy_base_name()
 end
 M.add_util_menu("CopyBaseName", M.copy_base_name)
 
-function M.select_yank()
+M.add_util_menu("SelectYank", function()
 	local yank_history = vim.tbl_map(function(e)
 		return e.text
 	end, vim.fn["yoink#getYankHistory"]())
@@ -101,8 +96,7 @@ function M.select_yank()
 		vim.fn.setreg('"', l)
 		vim.cmd("normal! p")
 	end)
-end
-M.add_util_menu("SelectYank", M.select_yank)
+end, { desc = "select yank" })
 
 function M.abolish()
 	fuzzy_run({
@@ -161,8 +155,8 @@ function M.cheat_sheet()
 		end
 	end, { "--exact" })
 end
-map("t", "<m-c>", "<cmd>lua fuzzy_menu.cheat_sheet()<cr>")
-map("n", "<m-c>", "<cmd>lua fuzzy_menu.cheat_sheet()<cr>")
+map("t", "<m-c>", M.cheat_sheet)
+map("n", "<m-c>", M.cheat_sheet)
 
 M.add_util_menu("RunTests", function()
 	vim.cmd("AsyncTask test")

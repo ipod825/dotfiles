@@ -13,7 +13,9 @@ function M.goto_tag_or_lsp_fn(target_fn)
 		target_fn()
 	end
 end
-map("n", "<m-d>", "<cmd>lua lsp.goto_tag_or_lsp_fn(vim.lsp.buf.definition)<cr>")
+map("n", "<m-d>", function()
+	M.goto_tag_or_lsp_fn(vim.lsp.buf.definition)
+end)
 map("n", "<m-s>", "<cmd>TabdropPopTag<cr>")
 
 function M.goto_handler(_, res, _)
