@@ -93,25 +93,17 @@ end
 function M.restore_keymap(mappings)
 	for _, v in pairs(mappings) do
 		local options = {
-			noremap = (v.noremap and v.noremap ~= 0),
+			remap = (v.remap and v.remap ~= 0),
 			nowait = (v.nowait and v.nowait ~= 0),
 			silent = (v.silent and v.silent ~= 0),
 			script = (v.script and v.script ~= 0),
 			expr = (v.expr and v.expr ~= 0),
 			unique = (v.unique and v.unique ~= 0),
 		}
-		if v.buffer > 0 then
-			if v.rhs then
-				vim.api.nvim_buf_set_keymap(v.buffer, v.mode, v.lhs, v.rhs, options)
-			else
-				vim.api.nvim_buf_del_keymap(v.buffer, v.mode, v.lhs)
-			end
+		if v.rhs or v.callback then
+			vim.keymap.set(v.mode, v.lhs, v.rhs or v.callback, options)
 		else
-			if v.rhs then
-				vim.api.nvim_set_keymap(v.mode, v.lhs, v.rhs, options)
-			else
-				vim.api.nvim_del_keymap(v.mode, v.lhs)
-			end
+			vim.keymap.del(v.mode, v.lhs)
 		end
 	end
 end
