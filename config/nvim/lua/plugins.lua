@@ -570,7 +570,7 @@ Plug("kosayoda/nvim-lightbulb", {
 	end,
 })
 
-Plug("git@github.com:ipod825/nvim-bqf", {
+Plug("kevinhwang91/nvim-bqf", {
 	branch = "main",
 	ft = "qf",
 	config = function()
