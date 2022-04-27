@@ -18,10 +18,6 @@ Plug("terrortylor/nvim-comment", {
 		})
 		map("n", "<c-/>", "<cmd>CommentToggle<cr>")
 		map("v", "<c-/>", ":<c-u>call CommentOperator(visualmode())<cr>")
-		V.augroup("COMMENT", {
-			[[Filetype c,cpp setlocal commentstring=//\ %s]],
-			[[Filetype *.xinitrc setlocal ft=sh | setlocal commentstring=#%s]],
-		})
 	end,
 })
 
@@ -765,8 +761,16 @@ Plug("git@github.com:ipod825/vim-bookmark", {
 				vim.fn.getline("."),
 			}
 		end
-		V.augroup("BOOKMARK", {
-			[[Filetype bookmark nmap <buffer> <c-t> <cmd>call bookmark#open('Tabdrop')<cr>]],
+
+		local BOOKMARK = vim.api.nvim_create_augroup("BOOKMARK", {})
+		vim.api.nvim_create_autocmd("Filetype", {
+			group = BOOKMARK,
+			pattern = { "bookmark" },
+			callback = function()
+				vim.keymap.set("n", "<c-t>", function()
+					vim.fn["bookmark#open"]("Tabdrop")
+				end, { buffer = 0 })
+			end,
 		})
 		map("n", "'", "<cmd>BookmarkGo directory<cr>")
 		map("n", "m", "<cmd>BookmarkAddPos directory<cr>")
