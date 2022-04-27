@@ -1,6 +1,7 @@
 local M = _G.plugins or {}
 _G.plugins = M
-local map = require("Vim").map
+local map = vim.keymap.set
+local unmap = vim.keymap.del
 local Plug = require("vplug")
 local V = require("Vim")
 
@@ -151,7 +152,7 @@ Plug("git@github.com:ipod825/plenary.nvim", {
 			group = vim.api.nvim_create_augroup("PLENARY", {}),
 			pattern = "lua",
 			callback = function(arg)
-				vim.keymap.set("n", "<F5>", function()
+				map("n", "<F5>", function()
 					require("plenary.test_harness").test_directory(arg.file)
 				end)
 			end,
@@ -263,17 +264,17 @@ Plug("hoob3rt/lualine.nvim", {
 
 Plug("git@github.com:ipod825/msearch.vim", {
 	config = function()
-		map("n", "8", "<Plug>MSToggleAddCword", { noremap = false })
-		map("x", "8", "<Plug>MSToggleAddVisual", { noremap = false })
-		map("n", "*", "<Plug>MSExclusiveAddCword", { noremap = false })
-		map("x", "*", "<Plug>MSExclusiveAddVisual", { noremap = false })
-		map("n", "n", "<Plug>MSNext", { noremap = false })
-		map("n", "N", "<Plug>MSPrev", { noremap = false })
-		map("o", "n", "<Plug>MSNext", { noremap = false })
-		map("o", "N", "<Plug>MSPrev", { noremap = false })
-		map("n", "<leader>n", "<Plug>MSToggleJump", { noremap = false })
-		map("n", "<leader>/", "<Plug>MSClear", { noremap = false })
-		map("n", "?", "<Plug>MSAddBySearchForward", { noremap = false })
+		map("n", "8", "<Plug>MSToggleAddCword", { remap = true })
+		map("x", "8", "<Plug>MSToggleAddVisual", { remap = true })
+		map("n", "*", "<Plug>MSExclusiveAddCword", { remap = true })
+		map("x", "*", "<Plug>MSExclusiveAddVisual", { remap = true })
+		map("n", "n", "<Plug>MSNext", { remap = true })
+		map("n", "N", "<Plug>MSPrev", { remap = true })
+		map("o", "n", "<Plug>MSNext", { remap = true })
+		map("o", "N", "<Plug>MSPrev", { remap = true })
+		map("n", "<leader>n", "<Plug>MSToggleJump", { remap = true })
+		map("n", "<leader>/", "<Plug>MSClear", { remap = true })
+		map("n", "?", "<Plug>MSAddBySearchForward", { remap = true })
 	end,
 })
 
@@ -284,15 +285,15 @@ Plug("voldikss/vim-translator", { cmd = "TranslateW" })
 Plug("chaoren/vim-wordmotion", {
 	setup = function()
 		vim.g.wordmotion_nomap = 1
-		map("n", "w", "<Plug>WordMotion_w", { noremap = false })
-		map("x", "w", "<Plug>WordMotion_e", { noremap = false })
-		map("o", "w", "<Plug>WordMotion_e", { noremap = false })
-		map("n", "e", "<Plug>WordMotion_e", { noremap = false })
-		map("x", "e", "<Plug>WordMotion_e", { noremap = false })
-		map("n", "b", "<Plug>WordMotion_b", { noremap = false })
-		map("x", "b", "<Plug>WordMotion_b", { noremap = false })
-		map("x", "iv", "<Plug>WordMotion_iw", { noremap = false })
-		map("o", "iv", "<Plug>WordMotion_iw", { noremap = false })
+		map("n", "w", "<Plug>WordMotion_w", { remap = true })
+		map("x", "w", "<Plug>WordMotion_e", { remap = true })
+		map("o", "w", "<Plug>WordMotion_e", { remap = true })
+		map("n", "e", "<Plug>WordMotion_e", { remap = true })
+		map("x", "e", "<Plug>WordMotion_e", { remap = true })
+		map("n", "b", "<Plug>WordMotion_b", { remap = true })
+		map("x", "b", "<Plug>WordMotion_b", { remap = true })
+		map("x", "iv", "<Plug>WordMotion_iw", { remap = true })
+		map("o", "iv", "<Plug>WordMotion_iw", { remap = true })
 	end,
 })
 
@@ -314,11 +315,6 @@ Plug("tpope/vim-endwise")
 Plug("mg979/vim-visual-multi", {
 	branch = "test",
 	utils = {
-		SelectAllMark = function()
-			vim.cmd("VMSearch " .. vim.fn["msearch#joint_pattern"]())
-			V.feed_plug_keys("(VM-Select-All)")
-			V.feed_plug_keys("(VM-Goto-Prev)")
-		end,
 		VSelectAllMark = function()
 			local range = V.visual_range()
 			vim.cmd(
@@ -328,7 +324,12 @@ Plug("mg979/vim-visual-multi", {
 	},
 	setup = function()
 		vim.g.VM_default_mappings = 0
-		map("n", "<leader>r", "<cmd>lua plug.utils.SelectAllMark()<cr>")
+		local function SelectAllMark ()
+			vim.cmd("VMSearch " .. vim.fn["msearch#joint_pattern"]())
+			V.feed_plug_keys("(VM-Select-All)")
+			V.feed_plug_keys("(VM-Goto-Prev)")
+		end
+		map("n", "<leader>r", SelectAllMark)
 		map("x", "<leader>r", ":<c-u>lua plug.utils.VSelectAllMark()<cr>")
 		vim.g.VM_maps = {
 			["Switch Mode"] = "v",
@@ -377,12 +378,12 @@ Plug("mg979/vim-visual-multi", {
 			callback = function()
 				vim.fn.setreg('"', "")
 				map("i", "jk", "<esc>", { buffer = true })
-				map("i", "<c-h>", "<left>", { buffer = true, noremap = false })
-				map("i", "<c-l>", "<right>", { buffer = true, noremap = false })
-				map("i", "<c-j>", "<down>", { buffer = true, noremap = false })
-				map("i", "<c-k>", "<up>", { buffer = true, noremap = false })
-				map("i", "<m-h>", "<esc><m-h>i", { buffer = true, noremap = false })
-				map("i", "<m-l>", "<esc><m-l>i", { buffer = true, noremap = false })
+				map("i", "<c-h>", "<left>", { buffer = true, remap = true })
+				map("i", "<c-l>", "<right>", { buffer = true, remap = true })
+				map("i", "<c-j>", "<down>", { buffer = true, remap = true })
+				map("i", "<c-k>", "<up>", { buffer = true, remap = true })
+				map("i", "<m-h>", "<esc><m-h>i", { buffer = true, remap = true })
+				map("i", "<m-l>", "<esc><m-l>i", { buffer = true, remap = true })
 				map("n", "J", "<down>", { buffer = true })
 				map("n", "K", "<up>", { buffer = true })
 				map("n", "H", "<Left>", { buffer = true })
@@ -394,18 +395,18 @@ Plug("mg979/vim-visual-multi", {
 			group = VISUAL_MULTI,
 			pattern = "visual_multi_exit",
 			callback = function()
-				V.unmap("i", "jk", { buffer = true })
-				V.unmap("i", "<c-h>", { buffer = true })
-				V.unmap("i", "<c-l>", { buffer = true })
-				V.unmap("i", "<c-j>", { buffer = true })
-				V.unmap("i", "<c-k>", { buffer = true })
-				V.unmap("i", "<m-h>", { buffer = true })
-				V.unmap("i", "<m-l>", { buffer = true })
-				V.unmap("n", "J", { buffer = true })
-				V.unmap("n", "K", { buffer = true })
-				V.unmap("n", "H", { buffer = true })
-				V.unmap("n", "L", { buffer = true })
-				V.unmap("n", "<c-c>", { buffer = true })
+				unmap("i", "jk", { buffer = true })
+				unmap("i", "<c-h>", { buffer = true })
+				unmap("i", "<c-l>", { buffer = true })
+				unmap("i", "<c-j>", { buffer = true })
+				unmap("i", "<c-k>", { buffer = true })
+				unmap("i", "<m-h>", { buffer = true })
+				unmap("i", "<m-l>", { buffer = true })
+				unmap("n", "J", { buffer = true })
+				unmap("n", "K", { buffer = true })
+				unmap("n", "H", { buffer = true })
+				unmap("n", "L", { buffer = true })
+				unmap("n", "<c-c>", { buffer = true })
 			end,
 		})
 	end,
@@ -488,21 +489,11 @@ Plug("hrsh7th/vim-vsnip", {
 			"i",
 			"<tab>",
 			'vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<tab>"',
-			{ expr = true, noremap = false }
+			{ expr = true, remap = true }
 		)
-		map(
-			"i",
-			"<s-tab>",
-			'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"',
-			{ expr = true, noremap = false }
-		)
-		map("s", "<tab>", 'vsnip#jumpable(1) ? "<Plug>(vsnip-jump-next)" : "<tab>"', { expr = true, noremap = false })
-		map(
-			"s",
-			"<s-tab>",
-			'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"',
-			{ expr = true, noremap = false }
-		)
+		map("i", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
+		map("s", "<tab>", 'vsnip#jumpable(1) ? "<Plug>(vsnip-jump-next)" : "<tab>"', { expr = true, remap = true })
+		map("s", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
 	end,
 })
 
@@ -515,8 +506,8 @@ Plug("git@github.com:ipod825/julia-unicode.vim", { ft = "julia" })
 
 Plug("junegunn/vim-easy-align", {
 	config = function()
-		map("n", "ga", "<Plug>(EasyAlign)", { noremap = false })
-		map("x", "ga", "<Plug>(EasyAlign)", { noremap = false })
+		map("n", "ga", "<Plug>(EasyAlign)", { remap = true })
+		map("x", "ga", "<Plug>(EasyAlign)", { remap = true })
 	end,
 })
 
@@ -721,16 +712,6 @@ Plug("machakann/vim-textobj-functioncall")
 Plug("sgur/vim-textobj-parameter")
 Plug("whatyouhide/vim-textobj-xmlattr", { ft = { "html", "xml" } })
 Plug("git@github.com:ipod825/vim-expand-region", {
-	utils = {
-		ExpandRegionStart = function()
-			Vim.unmap("n", "8")
-			Vim.unmap("x", "8")
-		end,
-		ExpandRegionStop = function()
-			map("n", "8", "<Plug>MSToggleAddCword", { noremap = false })
-			map("x", "8", "<Plug>MSToggleAddVisual", { noremap = false })
-		end,
-	},
 	setup = function()
 		vim.g.vim_textobj_parameter_mapping = ","
 		vim.g.expand_region_text_objects = {
@@ -759,22 +740,22 @@ Plug("git@github.com:ipod825/vim-expand-region", {
 			group = EXPANDREGION,
 			pattern = "ExpandRegionStart",
 			callback = function()
-				Vim.unmap("n", "8")
-				Vim.unmap("x", "8")
+				unmap("n", "8")
+				unmap("x", "8")
 			end,
 		})
 		vim.api.nvim_create_autocmd("User", {
 			group = EXPANDREGION,
 			pattern = "ExpandRegionStop",
 			callback = function()
-				map("n", "8", "<Plug>MSToggleAddCword", { noremap = false })
-				map("x", "8", "<Plug>MSToggleAddVisual", { noremap = false })
+				map("n", "8", "<Plug>MSToggleAddCword", { remap = true })
+				map("x", "8", "<Plug>MSToggleAddVisual", { remap = true })
 			end,
 		})
-		map("x", "<m-k>", "<Plug>(expand_region_expand)", { noremap = false })
-		map("x", "<m-j>", "<Plug>(expand_region_shrink)", { noremap = false })
-		map("n", "<m-k>", "<Plug>(expand_region_expand)", { noremap = false })
-		map("n", "<m-j>", "<Plug>(expand_region_shrink)", { noremap = false })
+		map("x", "<m-k>", "<Plug>(expand_region_expand)", { remap = true })
+		map("x", "<m-j>", "<Plug>(expand_region_shrink)", { remap = true })
+		map("n", "<m-k>", "<Plug>(expand_region_expand)", { remap = true })
+		map("n", "<m-j>", "<Plug>(expand_region_shrink)", { remap = true })
 	end,
 })
 
@@ -795,7 +776,7 @@ Plug("git@github.com:ipod825/vim-bookmark", {
 			group = BOOKMARK,
 			pattern = { "bookmark" },
 			callback = function()
-				vim.keymap.set("n", "<c-t>", function()
+				map("n", "<c-t>", function()
 					vim.fn["bookmark#open"]("Tabdrop")
 				end, { buffer = 0 })
 			end,
@@ -812,8 +793,8 @@ Plug("justinmk/vim-sneak", {
 	config = function()
 		vim.g["sneak#label"] = 1
 		vim.g["sneak#absolute_dir"] = -4
-		map("n", "f", "<Plug>Sneak_s", { noremap = false })
-		map("n", "F", "<Plug>Sneak_S", { noremap = false })
+		map("n", "f", "<Plug>Sneak_s", { remap = true })
+		map("n", "F", "<Plug>Sneak_S", { remap = true })
 	end,
 })
 
@@ -859,8 +840,8 @@ Plug("eugen0329/vim-esearch", {
 			group = vim.api.nvim_create_augroup("ESEARCH", {}),
 			command = "highlight! link esearchMatch Cursor",
 		})
-		map("n", "<leader>f", "<Plug>(operator-esearch-prefill)iw", { noremap = false })
-		map("x", "<leader>f", "<Plug>(esearch)", { noremap = false })
+		map("n", "<leader>f", "<Plug>(operator-esearch-prefill)iw", { remap = true })
+		map("x", "<leader>f", "<Plug>(esearch)", { remap = true })
 		map("n", "<leader>F", '<cmd>call esearch#init({"prefill":["cword"], "paths": expand("%:p")})<cr>')
 		map("x", "<leader>F", 'esearch#prefill({"paths": expand("%:p")})', { expr = true })
 	end,

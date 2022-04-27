@@ -1,6 +1,6 @@
 local M = _G.fuzzy_menu or {}
 _G.fuzzy_menu = M
-local map = require("Vim").map
+local map = vim.keymap.set
 local fuzzy_run = require("fzf_cfg").fzf
 
 M.actions = M.actions or { default = {} }

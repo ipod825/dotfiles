@@ -1,7 +1,7 @@
 local M = _G.lsp or {}
 _G.lsp = M
 
-local map = require("Vim").map
+local map = vim.keymap.set
 local add_util_menu = require("fuzzy_menu").add_util_menu
 local Vim = require("Vim")
 

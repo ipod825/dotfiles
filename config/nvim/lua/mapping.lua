@@ -1,7 +1,7 @@
 local M = _G.mapping or {}
 _G.mapping = M
 
-local map = require("Vim").map
+local map = vim.keymap.set
 local V = require("Vim")
 
 vim.g.mapleader = " "
@@ -140,8 +140,8 @@ map("n", "<c-h>", "gT")
 map("n", "<c-l>", "gt")
 map("n", "<c-m-h>", ":tabmove -1<cr>")
 map("n", "<c-m-l>", ":tabmove +1<cr>")
-map("t", "<c-h>", "jkgT", { noremap = false })
-map("t", "<c-l>", "jkgt", { noremap = false })
+map("t", "<c-h>", "jkgT", { remap = true })
+map("t", "<c-l>", "jkgt", { remap = true })
 map("n", "<c-m-j>", [[<c-\><c-n><cmd>lua mapping.move_to_previous_tab()<cr>]])
 map("n", "<c-m-k>", [[<c-\><c-n><cmd>lua mapping.move_to_next_tab()<cr>]])
 function M.move_to_previous_tab()
@@ -241,7 +241,7 @@ function M.comment_unwrap()
 	vim.bo.textwidth = 0
 end
 -- folding
-map("n", "<leader><space>", "za", { noremap = false })
+map("n", "<leader><space>", "za", { remap = true })
 map("n", "<leader>z", "zMzvzz")
 -- shift
 map("n", ">", ">>")

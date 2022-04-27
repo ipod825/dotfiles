@@ -138,17 +138,18 @@ vim.api.nvim_create_autocmd("Filetype", {
 
 vim.api.nvim_create_autocmd("Filetype", {
 	group = GENERAL,
-	pattern = { "markdown", "tex"},
+	pattern = { "markdown", "tex" },
 	callback = function()
-	    vim.keymap.set('i', 'sl','\\', {buffer=0})
-	    vim.keymap.set('i', '<m-j>','_', {buffer=0})
-	    vim.keymap.set('i', '<m-k>','&', {buffer=0})
-	    vim.keymap.set('i', '<m-q>','{}<Left>', {buffer=0})
-        vim.cmd('inoreabbrev <buffer> an &')
-	    vim.cmd('inoreabbrev <buffer> da $$<left>')
-	    vim.cmd('inoreabbrev <buffer> pl +')
-	    vim.cmd('inoreabbrev <buffer> mi -')
-	    vim.cmd('inoreabbrev <buffer> eq =')
+		local map = vim.keymap.set
+		map("i", "sl", "\\", { buffer = true })
+		map("i", "<m-j>", "_", { buffer = true })
+		map("i", "<m-k>", "&", { buffer = true })
+		map("i", "<m-q>", "{}<Left>", { buffer = true })
+		vim.cmd("inoreabbrev <buffer> an &")
+		vim.cmd("inoreabbrev <buffer> da $$<left>")
+		vim.cmd("inoreabbrev <buffer> pl +")
+		vim.cmd("inoreabbrev <buffer> mi -")
+		vim.cmd("inoreabbrev <buffer> eq =")
 	end,
 })
 
@@ -166,8 +167,8 @@ vim.api.nvim_create_autocmd("OptionSet", {
 	group = GENERAL,
 	callback = function(arg)
 		if arg.match == "diff" then
-			vim.keymap.set("n", "<c-j>", "]c", { buffer = 0 })
-			vim.keymap.set("n", "<c-k>", "[c", { buffer = 0 })
+			vim.keymap.set("n", "<c-j>", "]c", { buffer = true })
+			vim.keymap.set("n", "<c-k>", "[c", { buffer = true })
 		end
 	end,
 })

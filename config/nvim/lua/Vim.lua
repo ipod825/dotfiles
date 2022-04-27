@@ -1,28 +1,6 @@
 local M = _G.Vim or {}
 _G.Vim = M
 
-function M.map(mode, lhs, rhs, opts)
-	local options = { noremap = true }
-	if opts then
-		options = vim.tbl_extend("force", options, opts)
-	end
-	if options.buffer ~= nil then
-		options.buffer = nil
-		vim.api.nvim_buf_set_keymap(0, mode, lhs, rhs, options)
-	else
-		vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-	end
-end
-
-function M.unmap(mode, lhs, opts)
-	opts = opts or {}
-	if opts.buffer ~= nil then
-		vim.api.nvim_buf_del_keymap(opts.bufnr or 0, mode, lhs)
-	else
-		vim.api.nvim_del_keymap(mode, lhs)
-	end
-end
-
 M.current = {}
 function M.current.line_number()
 	return vim.api.nvim_win_get_cursor(0)[1]

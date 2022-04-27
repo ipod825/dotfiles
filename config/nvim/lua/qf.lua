@@ -1,6 +1,6 @@
 local M = _G.qf or {}
 _G.qf = M
-local map = require("Vim").map
+local map = vim.keymap.set
 
 vim.api.nvim_exec(
 	[[
