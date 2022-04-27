@@ -9,9 +9,7 @@ function M.add_util_menu(name, fn, id)
 	if M.actions[id] == nil then
 		M.actions[id] = {}
 	end
-	if M.actions[id][name] == nil then
-		M.actions[id][name] = fn
-	end
+	M.actions[id][name] = fn
 end
 
 function M.select(ids)
