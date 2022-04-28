@@ -69,19 +69,17 @@ map("n", "<c-m-o>", function()
 	end, vim.v.oldfiles))
 end, { desc = "open recent files" })
 
-function M.copy_abs_path()
+M.add_util_menu("CopyAbsPath", function()
 	local path = vim.fn.expand("%:p")
 	vim.fn.setreg("+", path)
 	vim.fn.setreg('"', path)
-end
-M.add_util_menu("CopyAbsPath", M.copy_abs_path)
+end)
 
-function M.copy_base_name()
+M.add_util_menu("CopyBaseName", function()
 	local path = vim.fn.expand("%:p:t")
 	vim.fn.setreg("+", path)
 	vim.fn.setreg('"', path)
-end
-M.add_util_menu("CopyBaseName", M.copy_base_name)
+end)
 
 M.add_util_menu("SelectYank", function()
 	local yank_history = vim.tbl_map(function(e)
@@ -94,9 +92,9 @@ M.add_util_menu("SelectYank", function()
 		vim.fn.setreg('"', l)
 		vim.cmd("normal! p")
 	end)
-end, { desc = "select yank" })
+end)
 
-function M.abolish()
+M.add_util_menu("DoAbolish", function()
 	fuzzy_run({
 		"camelCase:c",
 		"MixedCase:m",
@@ -109,10 +107,9 @@ function M.abolish()
 			vim.cmd(string.format("normal cr%s", cmd))
 		end, 0)
 	end)
-end
-M.add_util_menu("DoAbolish", M.abolish)
+end)
 
-function M.bin_edit()
+M.add_util_menu("BinEdit", function()
 	vim.bo.bin = true
 	vim.api.nvim_exec(
 		[[
@@ -126,15 +123,13 @@ function M.bin_edit()
   ]],
 		false
 	)
-end
-M.add_util_menu("BinEdit", M.bin_edit)
+end)
 
-function M.related_file()
+M.add_util_menu("RelatedFile", function()
 	local name = vim.fn.expand("%:t:r")
 	vim.cmd(string.format("Files %s", vim.fn.FindRootDirectory()))
 	vim.api.nvim_input(name)
-end
-M.add_util_menu("RelatedFile", M.related_file)
+end)
 
 function M.cheat_sheet()
 	local id = vim.b.terminal_job_id
