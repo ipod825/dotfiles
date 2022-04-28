@@ -1,6 +1,5 @@
 local M = _G.fzf_cfg or {}
 _G.fzf_cfg = M
-local map = vim.keymap.set
 
 vim.g.fzf_layout = { window = { width = 1, height = 1 } }
 vim.g.fzf_action = {

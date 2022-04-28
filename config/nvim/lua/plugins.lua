@@ -160,20 +160,6 @@ Plug("git@github.com:ipod825/plenary.nvim", {
 		})
 	end,
 })
--- Plug("tanvirtin/vgit.nvim", {
--- 	diable = true,
--- 	branch = "main",
--- 	config = function()
--- 		require("vgit").setup({ settings = { live_gutter = { enabled = false } } })
--- 	end,
--- })
--- Plug("TimUntersberger/neogit")
-Plug("lambdalisue/gina.vim", {
-	config = function()
-		vim.g["gina#action#index#discard_directories"] = 1
-		vim.cmd(string.format("source %s", vim.fn.stdpath("config") .. "/ginasetup.vim"))
-	end,
-})
 
 Plug("hoob3rt/lualine.nvim", {
 	config = function()
@@ -902,9 +888,22 @@ Plug("skywind3000/asynctasks.vim", {
 -- 		require("git-conflict").setup()
 -- 	end,
 -- })
+-- Plug("tanvirtin/vgit.nvim", {
+-- 	diable = true,
+-- 	branch = "main",
+-- 	config = function()
+-- 		require("vgit").setup({ settings = { live_gutter = { enabled = false } } })
+-- 	end,
+-- })
+-- Plug("TimUntersberger/neogit")
+Plug("lambdalisue/gina.vim", {
+	config = function()
+		vim.g["gina#action#index#discard_directories"] = 1
+		vim.cmd(string.format("source %s", vim.fn.stdpath("config") .. "/ginasetup.vim"))
+	end,
+})
 
 Plug("git@github.com:ipod825/libp.nvim", { branch = "main" })
-
 Plug("git@github.com:ipod825/igit.nvim", {
 	branch = "main",
 	config = function()
