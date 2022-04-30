@@ -713,7 +713,7 @@ Plug("eugen0329/vim-esearch", {
 			default_mappings = 0,
 			live_update = 0,
 			win_ui_nvim_syntax = 1,
-			root_markers = { ".git", ".hg", ".svn", ".bzr", "_darcs", "OWNERS" },
+			root_markers = { ".git", ".hg", ".svn", ".bzr", "_darcs", "OWNERS", ".root" },
 			remember = {
 				"case",
 				"regex",
