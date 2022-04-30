@@ -24,7 +24,6 @@ function M.reload(target)
 	end
 	package.loaded.plugins = nil
 	require("plugins")
-	return require(target)
 end
 
 function M.begin()

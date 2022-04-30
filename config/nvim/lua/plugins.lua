@@ -125,7 +125,21 @@ Plug("svermeulen/vim-yoink", {
 		vim.g.yoinkIncludeDeleteOperations = 1
 	end,
 })
-Plug("tpope/vim-abolish")
+
+Plug("tpope/vim-abolish", {
+	config = function()
+		-- vim.cmd([[Abolish alg{,s,y} algorithm{,s,ically}]])
+	end,
+})
+
+Plug("0styx0/abbremand.nvim", {branch='main'})
+Plug("0styx0/abbreinder.nvim", {
+    branch='main',
+	config = function()
+		require("abbreinder").setup()
+		require("abbreinder").enable()
+	end,
+})
 
 Plug("junegunn/fzf", { run = "call fzf#install()" })
 Plug("junegunn/fzf.vim", {
@@ -153,7 +167,7 @@ Plug("git@github.com:ipod825/plenary.nvim", {
 			pattern = "lua",
 			callback = function(arg)
 				map("n", "<F5>", function()
-					require("plenary.test_harness").test_directory(arg.file)
+					require("plenary.test_harness").test_directory(vim.fn.expand("%:p"))
 				end, { desc = "plenary test file" })
 			end,
 		})
