@@ -36,7 +36,6 @@ Plug("nvim-treesitter/nvim-treesitter", {
 				"comment",
 				"cpp",
 				"css",
-				"dart",
 				"fennel",
 				"go",
 				"html",
@@ -552,7 +551,12 @@ Plug("voldikss/vim-floaterm", {
 
 Plug("kosayoda/nvim-lightbulb", {
 	config = function()
-		vim.cmd([[autocmd CursorHold,CursorHoldI * lua require'nvim-lightbulb'.update_lightbulb()]])
+		vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+			group = vim.api.nvim_create_augroup("LIGHBULB", {}),
+			callback = function()
+				require("nvim-lightbulb").update_lightbulb()
+			end,
+		})
 	end,
 })
 
@@ -571,6 +575,7 @@ Plug("kevinhwang91/nvim-bqf", {
 	end,
 })
 
+Plug("lukas-reineke/lsp-format.nvim")
 Plug("neovim/nvim-lspconfig", {
 	config = function()
 		SkipLspFns = SkipLspFns or {}
@@ -580,7 +585,13 @@ Plug("neovim/nvim-lspconfig", {
 		end
 
 		local set_lsp = function(name, options)
-			options = options or { capabilities = capabilities }
+			options = options
+				or {
+					capabilities = capabilities,
+					on_attach = function(client)
+						require("lsp-format").on_attach(client)
+					end,
+				}
 			local lspconfig = require("lspconfig")
 			local client = lspconfig[name]
 			client.setup(options)
@@ -628,26 +639,6 @@ Plug("mhartington/formatter.nvim", {
 		local isort = function()
 			return { exe = "isort", args = { "-", "--quiet" }, stdin = true }
 		end
-		local yapf = function()
-			return { exe = "yapf", stdin = true }
-		end
-		local rustfmt = function()
-			return { exe = "rustfmt", args = { "--emit=stdout" }, stdin = true }
-		end
-		local latexindent = function()
-			return {
-				exe = "latexindent",
-				args = { "-sl", "-g /dev/stderr", "2>/dev/null" },
-				stdin = true,
-			}
-		end
-		local clang_format = function()
-			return {
-				exe = "clang-format",
-				args = { "-assume-filename=" .. vim.fn.expand("%:t") },
-				stdin = true,
-			}
-		end
 		local lua_format = function()
 			return {
 				exe = "stylua",
@@ -658,23 +649,11 @@ Plug("mhartington/formatter.nvim", {
 				stdin = true,
 			}
 		end
-		local md_format = function()
-			return {
-				exe = "mdformat",
-				args = { "-" },
-				stdin = true,
-			}
-		end
 		require("formatter").setup({
 			logging = false,
 			filetype = {
-				rust = { rustfmt },
-				python = { isort, yapf },
-				tex = { latexindent },
-				c = { clang_format },
-				cpp = { clang_format },
+				python = { isort },
 				lua = { lua_format },
-				markdown = { md_format },
 			},
 		})
 		local enable_formatter = true
