@@ -289,13 +289,6 @@ Plug("windwp/nvim-autopairs", {
 	end,
 })
 
--- Plug('anuvyklack/pretty-fold.nvim', {
---     config = function()
---         require('pretty-fold').setup {}
---         require('pretty-fold.preview').setup()
---     end
--- })
-
 Plug("tpope/vim-endwise")
 
 Plug("mg979/vim-visual-multi", {
