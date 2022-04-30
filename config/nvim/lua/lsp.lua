@@ -82,3 +82,56 @@ add_util_menu("LspDiagnosticOpen", {
 	fn = M.lsp_diagnostic_open,
 	context_fn = require("Vim").current.line_number,
 })
+
+SkipLspFns = SkipLspFns or {}
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+if pcall(require, "cmp_nvim_lsp") then
+	capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+end
+
+function M.set_lsp(name, options)
+	options = vim.tbl_deep_extend("keep", options or {}, {
+		capabilities = capabilities,
+		on_attach = function(client)
+			require("lsp-format").on_attach(client)
+		end,
+	})
+	local lspconfig = require("lspconfig")
+	local client = lspconfig[name]
+	client.setup(options)
+	client.manager.orig_try_add = client.manager.try_add
+	client.manager.try_add = function(bufnr)
+		for _, skip_lsp in pairs(SkipLspFns) do
+			if skip_lsp() then
+				return
+			end
+		end
+		return client.manager.orig_try_add(bufnr)
+	end
+end
+M.set_lsp("pylsp")
+M.set_lsp("clangd")
+M.set_lsp("gopls")
+M.set_lsp("rls")
+local sumneko_root_path = vim.env.XDG_DATA_HOME .. "/lua-language-server"
+local sumneko_binary = sumneko_root_path .. "/bin/Linux/lua-language-server"
+M.set_lsp("sumneko_lua", {
+	cmd = { sumneko_binary, "-E", sumneko_root_path .. "/main.lua" },
+	settings = {
+		Lua = {
+			runtime = {
+				version = "LuaJIT",
+				path = vim.split(package.path, ";"),
+			},
+			diagnostics = { globals = { "vim", "describe", "it", "before_each", "after_each" } },
+			workspace = {
+				library = {
+					[vim.fn.expand("$VIMRUNTIME/lua")] = true,
+					[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+				},
+			},
+		},
+	},
+})
+
+return M

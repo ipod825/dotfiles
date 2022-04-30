@@ -576,63 +576,7 @@ Plug("kevinhwang91/nvim-bqf", {
 })
 
 Plug("lukas-reineke/lsp-format.nvim")
-Plug("neovim/nvim-lspconfig", {
-	config = function()
-		SkipLspFns = SkipLspFns or {}
-		local capabilities = vim.lsp.protocol.make_client_capabilities()
-		if pcall(require, "cmp_nvim_lsp") then
-			capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
-		end
-
-		local set_lsp = function(name, options)
-			options = options
-				or {
-					capabilities = capabilities,
-					on_attach = function(client)
-						require("lsp-format").on_attach(client)
-					end,
-				}
-			local lspconfig = require("lspconfig")
-			local client = lspconfig[name]
-			client.setup(options)
-			client.manager.orig_try_add = client.manager.try_add
-			client.manager.try_add = function(bufnr)
-				for _, skip_lsp in pairs(SkipLspFns) do
-					if skip_lsp() then
-						return
-					end
-				end
-				return client.manager.orig_try_add(bufnr)
-			end
-		end
-		set_lsp("pylsp")
-		set_lsp("clangd")
-		set_lsp("gopls")
-		set_lsp("rls")
-		local sumneko_root_path = vim.env.XDG_DATA_HOME .. "/lua-language-server"
-		local sumneko_binary = sumneko_root_path .. "/bin/Linux/lua-language-server"
-		set_lsp("sumneko_lua", {
-			cmd = { sumneko_binary, "-E", sumneko_root_path .. "/main.lua" },
-			settings = {
-				Lua = {
-					runtime = {
-						version = "LuaJIT",
-						-- Setup your lua path
-						path = vim.split(package.path, ";"),
-					},
-					diagnostics = { globals = { "vim", "describe", "it", "before_each", "after_each" } },
-					workspace = {
-						-- Make the server aware of Neovim runtime files
-						library = {
-							[vim.fn.expand("$VIMRUNTIME/lua")] = true,
-							[vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-						},
-					},
-				},
-			},
-		})
-	end,
-})
+Plug("neovim/nvim-lspconfig")
 
 Plug("mhartington/formatter.nvim", {
 	config = function()
