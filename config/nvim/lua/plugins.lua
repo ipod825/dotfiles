@@ -126,20 +126,7 @@ Plug("svermeulen/vim-yoink", {
 	end,
 })
 
-Plug("tpope/vim-abolish", {
-	config = function()
-		-- vim.cmd([[Abolish alg{,s,y} algorithm{,s,ically}]])
-	end,
-})
-
-Plug("0styx0/abbremand.nvim", {branch='main'})
-Plug("0styx0/abbreinder.nvim", {
-    branch='main',
-	config = function()
-		require("abbreinder").setup()
-		require("abbreinder").enable()
-	end,
-})
+Plug("tpope/vim-abolish")
 
 Plug("junegunn/fzf", { run = "call fzf#install()" })
 Plug("junegunn/fzf.vim", {
@@ -676,6 +663,12 @@ Plug("git@github.com:ipod825/vim-expand-region", {
 })
 
 Plug("majutsushi/tagbar")
+
+Plug("git@github.com:ipod825/oldfiles.nvim", {
+	config = function()
+		require("oldfiles").setup()
+	end,
+})
 
 Plug("git@github.com:ipod825/vim-bookmark", {
 	config = function()

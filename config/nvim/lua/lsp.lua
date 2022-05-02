@@ -123,7 +123,7 @@ M.set_lsp("sumneko_lua", {
 				version = "LuaJIT",
 				path = vim.split(package.path, ";"),
 			},
-			diagnostics = { globals = { "vim", "describe", "it", "before_each", "after_each" } },
+			diagnostics = { globals = { "vim", "describe", "it", "before_each", "after_each", "pending" } },
 			workspace = {
 				library = {
 					[vim.fn.expand("$VIMRUNTIME/lua")] = true,

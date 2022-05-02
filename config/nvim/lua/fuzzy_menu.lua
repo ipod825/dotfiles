@@ -64,9 +64,7 @@ map("n", "<leader>e", function()
 end, { desc = "open config files" })
 
 map("n", "<c-m-o>", function()
-	fuzzy_run(vim.tbl_filter(function(val)
-		return 0 ~= vim.fn.filereadable(val)
-	end, vim.v.oldfiles))
+	fuzzy_run(require("oldfiles").oldfiles())
 end, { desc = "open recent files" })
 
 M.add_util_menu("CopyAbsPath", function()
