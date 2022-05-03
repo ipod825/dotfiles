@@ -33,7 +33,7 @@ end
 function M.ends()
 	vim.fn["plug#end"]()
 	for _, config in pairs(M.configs.start) do
-		config()
+		pcall(config)
 	end
 end
 
