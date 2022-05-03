@@ -665,6 +665,7 @@ Plug("git@github.com:ipod825/vim-expand-region", {
 Plug("majutsushi/tagbar")
 
 Plug("git@github.com:ipod825/oldfiles.nvim", {
+	branch = "main",
 	config = function()
 		require("oldfiles").setup()
 	end,
