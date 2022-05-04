@@ -65,6 +65,8 @@ Plug("lewis6991/spellsitter.nvim", {
 	end,
 })
 
+Plug("ray-x/lsp_signature.nvim")
+
 Plug("nvim-treesitter/nvim-treesitter-textobjects", {
 	config = function()
 		require("nvim-treesitter.configs").setup({

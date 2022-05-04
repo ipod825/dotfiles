@@ -94,6 +94,7 @@ function M.set_lsp(name, options)
 		capabilities = capabilities,
 		on_attach = function(client)
 			require("lsp-format").on_attach(client)
+			require("lsp_signature").on_attach()
 		end,
 	})
 	local lspconfig = require("lspconfig")
