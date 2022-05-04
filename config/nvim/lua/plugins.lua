@@ -569,7 +569,20 @@ Plug("kevinhwang91/nvim-bqf", {
 	end,
 })
 
-Plug("lukas-reineke/lsp-format.nvim")
+Plug("lukas-reineke/lsp-format.nvim", {
+	config = function()
+		require("lsp-format").setup({
+			lua = {
+				exclude = { "sumneko_lua" },
+			},
+		})
+	end,
+})
+Plug("williamboman/nvim-lsp-installer", {
+	config = function()
+		require("nvim-lsp-installer").setup({})
+	end,
+})
 Plug("neovim/nvim-lspconfig")
 
 Plug("mhartington/formatter.nvim", {

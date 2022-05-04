@@ -111,13 +111,12 @@ M.set_lsp("pylsp")
 M.set_lsp("clangd")
 M.set_lsp("gopls")
 M.set_lsp("rls")
-local sumneko_root_path = vim.env.XDG_DATA_HOME .. "/lua-language-server"
-local sumneko_binary = sumneko_root_path .. "/bin/Linux/lua-language-server"
+
 local runtime_path = vim.split(package.path, ";")
 table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 M.set_lsp("sumneko_lua", {
-	cmd = { sumneko_binary, "-E", sumneko_root_path .. "/main.lua" },
+	cmd = { "lua-language-server", ('--configpath="%s/.luarc.json"'):format(vim.env.XDG_CONFIG_HOME) },
 	settings = {
 		Lua = {
 			runtime = {
