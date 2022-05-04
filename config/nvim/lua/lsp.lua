@@ -89,7 +89,8 @@ if pcall(require, "cmp_nvim_lsp") then
 end
 
 function M.set_lsp(name, options)
-	options = vim.tbl_deep_extend("keep", options or { profile = "default" }, {
+	options = vim.tbl_deep_extend("keep", options or {}, {
+		profile = "default",
 		capabilities = capabilities,
 		on_attach = function(client)
 			require("lsp-format").on_attach(client)
