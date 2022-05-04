@@ -6,6 +6,8 @@ M.name = "default"
 M.envs = {}
 M.cur_env = M
 
+local nil_table_value = {}
+
 function M.register_env(opts)
 	vim.validate({ env = { opts.env, "t" }, mode_mappings = { opts.mode_mappings, "t", true } })
 	local env = opts.env
@@ -38,6 +40,8 @@ function M.register_env(opts)
 			default_val = false
 		elseif type(v) == "string" then
 			default_val = ""
+		elseif type(v) == "table" then
+			default_val = nil_table_value
 		end
 		default_env.g[k] = vim.g[k] or default_val
 	end
@@ -65,7 +69,11 @@ function M.switch_env(env)
 	V.restore_keymap(M.cur_env.mappings)
 
 	for k, v in pairs(default_env.g) do
-		vim.g[k] = v
+		if v == nil_table_value then
+			vim.g[k] = nil
+		else
+			vim.g[k] = v
+		end
 	end
 	for k, v in pairs(M.cur_env.g) do
 		vim.g[k] = v
