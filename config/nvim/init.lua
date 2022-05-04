@@ -56,7 +56,7 @@ vim.o.backup = false
 vim.o.showmode = false
 vim.o.shortmess = vim.o.shortmess .. "c"
 vim.o.undofile = true
-vim.o.undodir = vim.fn.stdpath("data") .. "/undo"
+vim.o.undodir = vim.fn.stdpath("cache") .. "/undo"
 vim.o.switchbuf = "usetab"
 vim.api.nvim_exec(
 	[[

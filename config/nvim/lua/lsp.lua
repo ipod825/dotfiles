@@ -89,7 +89,7 @@ if pcall(require, "cmp_nvim_lsp") then
 end
 
 function M.set_lsp(name, options)
-	options = vim.tbl_deep_extend("keep", options or {}, {
+	options = vim.tbl_deep_extend("keep", options or { profile = "default" }, {
 		capabilities = capabilities,
 		on_attach = function(client)
 			require("lsp-format").on_attach(client)
@@ -100,10 +100,8 @@ function M.set_lsp(name, options)
 	client.setup(options)
 	client.manager.orig_try_add = client.manager.try_add
 	client.manager.try_add = function(bufnr, ...)
-		for _, skip_lsp in pairs(vim.g.SkipLspFns or {}) do
-			if skip_lsp() then
-				return
-			end
+		if options.profile ~= require("profile").cur_env.name then
+			return
 		end
 		return client.manager.orig_try_add(bufnr)
 	end
