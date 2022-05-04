@@ -95,6 +95,8 @@ Plug("nvim-treesitter/nvim-treesitter-textobjects", {
 	end,
 })
 
+Plug("TaDaa/vimade")
+
 Plug("nvim-treesitter/playground", {
 	on_cmd = "TSPlaygroundToggle",
 	config = function()
