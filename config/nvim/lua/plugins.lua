@@ -136,6 +136,12 @@ Plug("nvim-telescope/telescope-fzf-native.nvim", { run = "make" })
 Plug("nvim-telescope/telescope.nvim", {
 	config = function()
 		local actions = require("telescope.actions")
+		local full = 0.99
+		local myactions = require("telescope.actions.mt").transform_mod({
+			select_tab_drop = function(prompt_bufnr)
+				return require("telescope.actions.set").edit(prompt_bufnr, "Tabdrop")
+			end,
+		})
 		require("telescope").setup({
 			defaults = {
 				scroll_strategy = "limit",
@@ -143,25 +149,33 @@ Plug("nvim-telescope/telescope.nvim", {
 				border = false,
 				sorting_strategy = "ascending",
 				multi_icon = "* ",
-				path_display = { truncate = 1 },
+				path_display = { "truncate" },
 				layout_config = {
 					horizontal = {
-						height = 0.99,
-						width = 0.99,
+						height = full,
+						width = full,
 						preview_width = 0.75,
 						prompt_position = "top",
 					},
 				},
 				mappings = {
 					i = {
+						["<cr>"] = myactions.select_tab_drop,
+						["<c-e>"] = actions.select_default,
 						["<c-j>"] = actions.move_selection_next,
 						["<c-k>"] = actions.move_selection_previous,
 						["<c-b>"] = actions.results_scrolling_up,
 						["<c-f>"] = actions.results_scrolling_down,
+						["<c-n>"] = actions.cycle_history_next,
+						["<c-p>"] = actions.cycle_history_prev,
 					},
 					n = {
+						["<cr>"] = myactions.select_tab_drop,
+						["<c-e>"] = actions.select_default,
 						["<c-b>"] = actions.results_scrolling_up,
 						["<c-f>"] = actions.results_scrolling_down,
+						["<c-n>"] = actions.cycle_history_next,
+						["<c-p>"] = actions.cycle_history_prev,
 					},
 				},
 			},
@@ -173,24 +187,45 @@ Plug("nvim-telescope/telescope.nvim", {
 				},
 			},
 		})
+
+		vim.api.nvim_set_hl(0, "TelescopeSelection", { default = true, link = "Pmenu" })
 		require("telescope").load_extension("fzf")
 
+		local pickers = require("telescope.pickers")
+		local finders = require("telescope.finders")
+		local conf = require("telescope.config").values
+		local sorters = require("telescope.sorters")
 		local builtin = require("telescope.builtin")
 		map("n", "<c-o>", function()
 			builtin.fd({ cwd = vim.fn.FindRootDirectory() })
 		end, { desc = "open file from project root" })
 
-		map("n", "/", function()
-			builtin.current_buffer_fuzzy_find({
-				layout_config = {
-					horizontal = {
-						prompt_position = "top",
-						height = 0.99,
-						width = 0.99,
-						preview_width = 0,
-					},
-				},
-			})
+		-- map("n", "/", function()
+		-- 	builtin.current_buffer_fuzzy_find({
+		-- 		previewer = false,
+		-- 		layout_config = {
+		-- 			horizontal = {
+		-- 				prompt_position = "top",
+		-- 				height = full,
+		-- 				width = full,
+		-- 			},
+		-- 		},
+		-- 	})
+		-- end)
+
+		map("n", "zs", function()
+			builtin.spell_suggest()
+		end)
+
+		map("n", "<leader>e", function()
+			local opts = {}
+			pickers.new(opts, {
+				finder = finders.new_table({
+					results = vim.fn.systemlist("$HOME/dotfiles/misc/watchfiles.sh nvim"),
+				}),
+				-- previewer = conf.file_previewer(opts),
+				sorter = conf.generic_sorter(opts),
+			}):find()
 		end)
 	end,
 })
@@ -199,6 +234,12 @@ Plug("junegunn/fzf", { run = "call fzf#install()" })
 Plug("junegunn/fzf.vim", {
 	config = function()
 		require("fzf_cfg")
+	end,
+})
+
+Plug("j-hui/fidget.nvim", {
+	config = function()
+		require("fidget").setup()
 	end,
 })
 
@@ -219,7 +260,7 @@ Plug("git@github.com:ipod825/plenary.nvim", {
 		vim.api.nvim_create_autocmd("Filetype", {
 			group = vim.api.nvim_create_augroup("PLENARY", {}),
 			pattern = "lua",
-			callback = function(arg)
+			callback = function()
 				map("n", "<F5>", function()
 					require("plenary.test_harness").test_directory(vim.fn.expand("%:p"))
 				end, { desc = "plenary test file" })
@@ -504,7 +545,6 @@ Plug("hrsh7th/nvim-cmp", {
 				{ name = "spell" },
 			}),
 		})
-		cmp.setup.cmdline("/", { sources = { { name = "buffer" } } })
 	end,
 })
 

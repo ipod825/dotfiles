@@ -31,35 +31,27 @@ function M.select(ids)
 end
 map("n", "<leader><cr>", M.select)
 
--- map("n", "/", function()
--- 	local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
--- 	for k, v in pairs(lines) do
--- 		lines[k] = string.format(" %4d %s", k, v)
--- 	end
--- 	fuzzy_run(lines, function(l)
--- 		local lineno
--- 		_, _, lineno = string.find(l, "(%d+)%s*")
--- 		vim.cmd(lineno)
--- 		vim.g.fzf_ft = ""
--- 	end, {
--- 		"--ansi",
--- 		"--multi",
--- 		"--no-sort",
--- 		"--exact",
--- 		"--nth",
--- 		"2..",
--- 		"--color",
--- 		"hl:reverse:underline:-1:reverse:underline:-1",
--- 	})
--- end, { desc = "search word" })
-
--- map("n", "<c-o>", function()
--- 	vim.cmd(string.format("Files %s", vim.fn.FindRootDirectory()))
--- end, { desc = "open file from project root" })
-
-map("n", "<leader>e", function()
-	fuzzy_run(vim.fn.systemlist("$HOME/dotfiles/misc/watchfiles.sh nvim"))
-end, { desc = "open config files" })
+map("n", "/", function()
+	local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+	for k, v in pairs(lines) do
+		lines[k] = string.format(" %4d %s", k, v)
+	end
+	fuzzy_run(lines, function(l)
+		local lineno
+		_, _, lineno = string.find(l, "(%d+)%s*")
+		vim.cmd(lineno)
+		vim.g.fzf_ft = ""
+	end, {
+		"--ansi",
+		"--multi",
+		"--no-sort",
+		"--exact",
+		"--nth",
+		"2..",
+		"--color",
+		"hl:reverse:underline:-1:reverse:underline:-1",
+	})
+end, { desc = "search word" })
 
 map("n", "<c-m-o>", function()
 	fuzzy_run(require("oldfiles").oldfiles())
