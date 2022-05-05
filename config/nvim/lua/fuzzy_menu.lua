@@ -6,9 +6,7 @@ local fuzzy_run = require("fzf_cfg").fzf
 M.actions = M.actions or { default = {} }
 function M.add_util_menu(name, fn, id)
 	id = id or "default"
-	if M.actions[id] == nil then
-		M.actions[id] = {}
-	end
+	M.actions[id] = M.actions[id] or {}
 	M.actions[id][name] = fn
 end
 

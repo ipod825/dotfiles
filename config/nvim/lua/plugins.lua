@@ -583,6 +583,7 @@ Plug("lukas-reineke/lsp-format.nvim", {
 	end,
 })
 Plug("williamboman/nvim-lsp-installer", {
+	branch = "main",
 	config = function()
 		require("nvim-lsp-installer").setup({})
 	end,

@@ -38,12 +38,11 @@ vim.lsp.handlers["textDocument/typeDefinition"] = M.goto_handler
 vim.lsp.handlers["textDocument/implementation"] = M.goto_handler
 
 function M.switch_source_header()
-	local util = require("lspconfig").util
 	local bufnr = 0
-	local clangd_client = util.get_active_client_by_name(bufnr, "clangd")
+	local client = vim.lsp.get_active_clients()[1]
 	local params = { uri = vim.uri_from_bufnr(bufnr) }
-	if clangd_client then
-		clangd_client.request("textDocument/switchSourceHeader", params, function(err, result)
+	if client then
+		client.request("textDocument/switchSourceHeader", params, function(err, result)
 			if err then
 				error(tostring(err))
 			end
