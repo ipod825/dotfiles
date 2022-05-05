@@ -132,6 +132,69 @@ Plug("svermeulen/vim-yoink", {
 
 Plug("tpope/vim-abolish")
 
+Plug("nvim-telescope/telescope-fzf-native.nvim", { run = "make" })
+Plug("nvim-telescope/telescope.nvim", {
+	config = function()
+		local actions = require("telescope.actions")
+		require("telescope").setup({
+			defaults = {
+				scroll_strategy = "limit",
+				winblend = 30,
+				border = false,
+				sorting_strategy = "ascending",
+				multi_icon = "* ",
+				path_display = { truncate = 1 },
+				layout_config = {
+					horizontal = {
+						height = 0.99,
+						width = 0.99,
+						preview_width = 0.75,
+						prompt_position = "top",
+					},
+				},
+				mappings = {
+					i = {
+						["<c-j>"] = actions.move_selection_next,
+						["<c-k>"] = actions.move_selection_previous,
+						["<c-b>"] = actions.results_scrolling_up,
+						["<c-f>"] = actions.results_scrolling_down,
+					},
+					n = {
+						["<c-b>"] = actions.results_scrolling_up,
+						["<c-f>"] = actions.results_scrolling_down,
+					},
+				},
+			},
+			extensions = {
+				fzf = {
+					fuzzy = true,
+					override_generic_sorter = true,
+					override_file_sorter = true,
+				},
+			},
+		})
+		require("telescope").load_extension("fzf")
+
+		local builtin = require("telescope.builtin")
+		map("n", "<c-o>", function()
+			builtin.fd({ cwd = vim.fn.FindRootDirectory() })
+		end, { desc = "open file from project root" })
+
+		map("n", "/", function()
+			builtin.current_buffer_fuzzy_find({
+				layout_config = {
+					horizontal = {
+						prompt_position = "top",
+						height = 0.99,
+						width = 0.99,
+						preview_width = 0,
+					},
+				},
+			})
+		end)
+	end,
+})
+
 Plug("junegunn/fzf", { run = "call fzf#install()" })
 Plug("junegunn/fzf.vim", {
 	config = function()
