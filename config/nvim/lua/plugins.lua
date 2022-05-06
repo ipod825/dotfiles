@@ -130,27 +130,103 @@ Plug("svermeulen/vim-yoink", {
 
 Plug("tpope/vim-abolish")
 
-Plug("nvim-telescope/telescope-fzf-native.nvim", { branch = "main", run = "make" })
-Plug("nvim-telescope/telescope-file-browser.nvim")
+Plug("nvim-telescope/telescope-fzf-native.nvim", {
+	branch = "main",
+	run = "make",
+	config = function()
+		require("telescope._extensions.fzf").setup({
+			fuzzy = true,
+			override_generic_sorter = true,
+			override_file_sorter = true,
+		}, {})
+		require("telescope._extensions").load("fzf")
+	end,
+})
+Plug("nvim-telescope/telescope-file-browser.nvim", {
+	config = function()
+		local fb_actions = require("telescope").extensions.file_browser.actions
+		require("telescope._extensions.file_browser").setup({
+			initial_mode = "normal",
+			layout_strategy = "horizontal",
+			mappings = {
+				["n"] = {
+					o = fb_actions.create,
+					r = fb_actions.rename,
+					yp = fb_actions.copy,
+					dp = fb_actions.move,
+					D = fb_actions.remove,
+					zh = fb_actions.toggle_hidden,
+					l = fb_actions.goto_cwd,
+					h = fb_actions.goto_parent_dir,
+					L = fb_actions.change_cwd,
+				},
+			},
+		})
+		require("telescope._extensions").load("file_browser")
+	end,
+})
+Plug("tami5/sqlite.lua")
+Plug("AckslD/nvim-neoclip.lua", {
+	config = function()
+		require("neoclip").setup()
+		require("telescope._extensions").load("neoclip")
+	end,
+})
+Plug("nvim-telescope/telescope-frecency.nvim", {
+	config = function()
+		require("telescope._extensions.frecency").setup({
+			show_scores = false,
+			show_unindexed = true,
+			ignore_patterns = { "*.git/*", "*/tmp/*" },
+			workspaces = {
+				["c"] = ("%s/dotfiles"):format(vim.env.HOME),
+				["p"] = ("%s/.local/share/nvim/site/pluggins"):format(vim.env.HOME),
+			},
+		})
+		require("telescope._extensions").load("frecency")
+
+		-- map("n", "<leader>e", function()
+		-- 	require("telescope").extensions.frecency.frecency({
+		-- 		default_text = ":c:",
+		-- 	})
+		-- end)
+
+		-- map("n", "<c-m-o>", function()
+		-- 	require("telescope").extensions.frecency.frecency()
+		-- end)
+	end,
+})
+Plug("nvim-telescope/telescope-cheat.nvim", {
+	config = function()
+		require("telescope._extensions").load("cheat")
+	end,
+})
 Plug("nvim-telescope/telescope.nvim", {
 	config = function()
 		local actions = require("telescope.actions")
-		local fb_actions = require("telescope").extensions.file_browser.actions
-		local full = 0.99
-		local myactions = require("telescope.actions.mt").transform_mod({
-			select_tab_drop = function(prompt_bufnr)
-				return require("telescope.actions.set").edit(prompt_bufnr, "Tabdrop")
-			end,
-		})
+		local select_to_edit_map = {
+			default = "edit",
+			horizontal = "new",
+			vertical = "vnew",
+			tab = "Tabdrop",
+		}
+		require("telescope.actions.state").select_key_to_edit_key = function(type)
+			return select_to_edit_map[type]
+		end
+		local full = 9999
 		require("telescope").setup({
 			defaults = {
 				scroll_strategy = "limit",
 				winblend = 10,
-				border = false,
 				sorting_strategy = "ascending",
 				multi_icon = "* ",
 				path_display = { "truncate" },
 				layout_strategy = "vertical",
+				borderchars = {
+					prompt = { "─", " ", " ", " ", " ", " ", " ", " " },
+					results = { "─", " ", " ", " ", " ", " ", " ", " " },
+					preview = { "─", " ", " ", " ", " ", " ", " ", " " },
+				},
 				layout_config = {
 					horizontal = {
 						height = full,
@@ -163,11 +239,13 @@ Plug("nvim-telescope/telescope.nvim", {
 						height = full,
 						width = full,
 						prompt_position = "top",
+						preview_height = 0.6,
+						preview_cutoff = 0,
 					},
 				},
 				mappings = {
 					i = {
-						["<cr>"] = myactions.select_tab_drop,
+						["<cr>"] = actions.select_tab,
 						["<c-e>"] = actions.select_default,
 						["<c-j>"] = actions.move_selection_next,
 						["<c-k>"] = actions.move_selection_previous,
@@ -175,11 +253,14 @@ Plug("nvim-telescope/telescope.nvim", {
 						["<c-f>"] = actions.results_scrolling_down,
 						["<c-n>"] = actions.cycle_history_next,
 						["<c-p>"] = actions.cycle_history_prev,
+						["<c-u>"] = function()
+							vim.cmd([[normal! "_dd]])
+						end,
 					},
 					n = {
-						["<cr>"] = myactions.select_tab_drop,
-						["<C-c>"] = actions.close,
+						["<cr>"] = actions.select_tab,
 						["<c-e>"] = actions.select_default,
+						["<C-c>"] = actions.close,
 						["<c-b>"] = actions.results_scrolling_up,
 						["<c-f>"] = actions.results_scrolling_down,
 						["<c-n>"] = actions.cycle_history_next,
@@ -187,56 +268,26 @@ Plug("nvim-telescope/telescope.nvim", {
 					},
 				},
 			},
-			extensions = {
-				fzf = {
-					fuzzy = true,
-					override_generic_sorter = true,
-					override_file_sorter = true,
-				},
-				file_browser = {
-					mappings = {
-						["n"] = {
-							o = fb_actions.create,
-							r = fb_actions.rename,
-							yp = fb_actions.copy,
-							dp = fb_actions.move,
-							D = fb_actions.remove,
-							zh = fb_actions.toggle_hidden,
-							l = fb_actions.goto_cwd,
-							h = fb_actions.goto_parent_dir,
-							L = fb_actions.change_cwd,
-						},
-					},
-				},
-			},
 		})
 
 		vim.api.nvim_set_hl(0, "TelescopeSelection", { default = true, link = "Pmenu" })
-		require("telescope").load_extension("fzf")
-		require("telescope").load_extension("file_browser")
+		vim.api.nvim_set_hl(0, "TelescopeBorder", { default = true, link = "Label" })
 
 		local pickers = require("telescope.pickers")
 		local finders = require("telescope.finders")
 		local conf = require("telescope.config").values
-		local sorters = require("telescope.sorters")
 		local builtin = require("telescope.builtin")
+
+		vim.cmd("cnoreabbrev help lua require'telescope.builtin'.help_tags({default_text=''})<left><left><left>")
 		map("n", "<c-o>", function()
 			builtin.fd({ cwd = vim.fn.FindRootDirectory() })
-		end, { desc = "open file from project root" })
+		end)
 
-		vim.cmd("cnoreabbrev help lua require'telescope.builtin'.help_tags()")
-		-- map("n", "/", function()
-		-- 	builtin.current_buffer_fuzzy_find({
-		-- 		previewer = false,
-		-- 		layout_config = {
-		-- 			horizontal = {
-		-- 				prompt_position = "top",
-		-- 				height = full,
-		-- 				width = full,
-		-- 			},
-		-- 		},
-		-- 	})
-		-- end)
+		map("n", "/", function()
+			builtin.current_buffer_fuzzy_find({
+				previewer = false,
+			})
+		end)
 
 		map("n", "zs", function()
 			builtin.spell_suggest()
@@ -248,7 +299,17 @@ Plug("nvim-telescope/telescope.nvim", {
 				finder = finders.new_table({
 					results = vim.fn.systemlist("$HOME/dotfiles/misc/watchfiles.sh nvim"),
 				}),
-				-- previewer = conf.file_previewer(opts),
+				previewer = conf.file_previewer(opts),
+				sorter = conf.generic_sorter(opts),
+			}):find()
+		end)
+		map("n", "<c-m-o>", function()
+			local opts = {}
+			pickers.new(opts, {
+				finder = finders.new_table({
+					results = require("oldfiles").oldfiles(),
+				}),
+				previewer = conf.file_previewer(opts),
 				sorter = conf.generic_sorter(opts),
 			}):find()
 		end)
@@ -256,11 +317,6 @@ Plug("nvim-telescope/telescope.nvim", {
 })
 
 Plug("junegunn/fzf", { run = "call fzf#install()" })
-Plug("junegunn/fzf.vim", {
-	config = function()
-		require("fzf_cfg")
-	end,
-})
 
 Plug("j-hui/fidget.nvim", {
 	branch = "main",

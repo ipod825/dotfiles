@@ -1,13 +1,37 @@
 local M = _G.fuzzy_menu or {}
 _G.fuzzy_menu = M
 local map = vim.keymap.set
-local fuzzy_run = require("fzf_cfg").fzf
 
-M.actions = M.actions or { default = {} }
+local pickers = require("telescope.pickers")
+local finders = require("telescope.finders")
+local actions = require("telescope.actions")
+local action_set = require("telescope.actions.set")
+local action_state = require("telescope.actions.state")
+local conf = require("telescope.config").values
+
+function M.telescope_pick(content, cb)
+	local opts = {}
+	pickers.new(opts, {
+		finder = finders.new_table({
+			results = content,
+		}),
+		sorter = conf.generic_sorter(opts),
+		attach_mappings = function(prompt_bufnr)
+			action_set.select:replace(function()
+				actions.close(prompt_bufnr)
+				cb(action_state.get_selected_entry().value)
+			end)
+
+			return true
+		end,
+	}):find()
+end
+
+M.menu_actions = M.menu_actions or { default = {} }
 function M.add_util_menu(name, fn, id)
 	id = id or "default"
-	M.actions[id] = M.actions[id] or {}
-	M.actions[id][name] = fn
+	M.menu_actions[id] = M.menu_actions[id] or {}
+	M.menu_actions[id][name] = fn
 end
 
 function M.select(ids)
@@ -15,47 +39,19 @@ function M.select(ids)
 	if type(ids) == "string" then
 		ids = { ids }
 	end
-	local actions = {}
+	local menu_actions = {}
 	for _, id in pairs(ids) do
-		actions = vim.tbl_extend("force", actions, M.actions[id] or {})
+		menu_actions = vim.tbl_extend("force", menu_actions, M.menu_actions[id] or {})
 	end
-	local names = vim.tbl_keys(actions)
+	local names = vim.tbl_keys(menu_actions)
 	table.sort(names)
-	fuzzy_run(names, function(e)
-		if type(actions[e]) == "table" then
-			actions[e].fn(actions[e].context_fn())
-		else
-			actions[e]()
-		end
+
+	M.telescope_pick(names, function(value)
+		menu_actions[value]()
 	end)
 end
+
 map("n", "<leader><cr>", M.select)
-
-map("n", "/", function()
-	local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-	for k, v in pairs(lines) do
-		lines[k] = string.format(" %4d %s", k, v)
-	end
-	fuzzy_run(lines, function(l)
-		local lineno
-		_, _, lineno = string.find(l, "(%d+)%s*")
-		vim.cmd(lineno)
-		vim.g.fzf_ft = ""
-	end, {
-		"--ansi",
-		"--multi",
-		"--no-sort",
-		"--exact",
-		"--nth",
-		"2..",
-		"--color",
-		"hl:reverse:underline:-1:reverse:underline:-1",
-	})
-end, { desc = "search word" })
-
-map("n", "<c-m-o>", function()
-	fuzzy_run(require("oldfiles").oldfiles())
-end, { desc = "open recent files" })
 
 M.add_util_menu("CopyAbsPath", function()
 	local path = vim.fn.expand("%:p")
@@ -76,24 +72,22 @@ M.add_util_menu("SelectYank", function()
 	yank_history = vim.tbl_filter(function(e)
 		return #e > 1
 	end, yank_history)
-	fuzzy_run(yank_history, function(l)
-		vim.fn.setreg('"', l)
+
+	M.telescope_pick(yank_history, function(value)
+		vim.fn.setreg('"', value)
 		vim.cmd("normal! p")
 	end)
 end)
 
 M.add_util_menu("DoAbolish", function()
-	fuzzy_run({
+	M.telescope_pick({
 		"camelCase:c",
 		"MixedCase:m",
 		"snake_case:s",
 		"SNAKE_UPPERCASE:u",
-	}, function(l)
-		local cmd
-		_, _, cmd = string.find(l, ":(.+)")
-		vim.defer_fn(function()
-			vim.cmd(string.format("normal cr%s", cmd))
-		end, 0)
+	}, function(value)
+		local _, _, cmd = string.find(value, ":(.+)")
+		vim.cmd(string.format("normal cr%s", cmd))
 	end)
 end)
 
@@ -114,9 +108,7 @@ M.add_util_menu("BinEdit", function()
 end)
 
 M.add_util_menu("RelatedFile", function()
-	local name = vim.fn.expand("%:t:r")
-	vim.cmd(string.format("Files %s", vim.fn.FindRootDirectory()))
-	vim.api.nvim_input(name)
+	require("telescope.builtin").fd({ default_text = vim.fn.expand("%:t:r"), cwd = vim.fn.FindRootDirectory() })
 end)
 
 function M.cheat_sheet()
@@ -125,16 +117,17 @@ function M.cheat_sheet()
 		vim.fn.systemlist(string.format("cat %s/dotfiles/misc/cheatsheet", vim.env.HOME)),
 		vim.fn.systemlist(string.format("cat %s/.local/share/cheatsheet", vim.env.HOME))
 	)
-	fuzzy_run(cheats, function(l)
+
+	M.telescope_pick(cheats, function(value)
 		if id then
-			vim.fn.chansend(id, l)
+			vim.fn.chansend(id, value)
 			vim.defer_fn(function()
 				vim.cmd("normal! i")
 			end, 50)
 		else
-			vim.fn.setreg('"', l)
+			vim.fn.setreg('"', value)
 		end
-	end, { "--exact" })
+	end)
 end
 map("t", "<m-c>", M.cheat_sheet)
 map("n", "<m-c>", M.cheat_sheet)
