@@ -194,7 +194,6 @@ function M.close_float_windows()
 end
 
 vim.env.SUDO_ASKPASS = "/usr/bin/ssh-askpass"
-vim.cmd("cnoreabbrev help tab help")
 vim.cmd("cnoreabbrev te Tabdrop")
 vim.cmd("cnoreabbrev tc tabclose")
 vim.cmd("cnoreabbrev sudow w !sudo -A tee % > /dev/null")

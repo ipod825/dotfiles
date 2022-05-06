@@ -95,8 +95,6 @@ Plug("nvim-treesitter/nvim-treesitter-textobjects", {
 	end,
 })
 
-Plug("TaDaa/vimade")
-
 Plug("nvim-treesitter/playground", {
 	on_cmd = "TSPlaygroundToggle",
 	config = function()
@@ -132,10 +130,12 @@ Plug("svermeulen/vim-yoink", {
 
 Plug("tpope/vim-abolish")
 
-Plug("nvim-telescope/telescope-fzf-native.nvim", { run = "make" })
+Plug("nvim-telescope/telescope-fzf-native.nvim", { branch = "main", run = "make" })
+Plug("nvim-telescope/telescope-file-browser.nvim")
 Plug("nvim-telescope/telescope.nvim", {
 	config = function()
 		local actions = require("telescope.actions")
+		local fb_actions = require("telescope").extensions.file_browser.actions
 		local full = 0.99
 		local myactions = require("telescope.actions.mt").transform_mod({
 			select_tab_drop = function(prompt_bufnr)
@@ -145,16 +145,23 @@ Plug("nvim-telescope/telescope.nvim", {
 		require("telescope").setup({
 			defaults = {
 				scroll_strategy = "limit",
-				winblend = 30,
+				winblend = 10,
 				border = false,
 				sorting_strategy = "ascending",
 				multi_icon = "* ",
 				path_display = { "truncate" },
+				layout_strategy = "vertical",
 				layout_config = {
 					horizontal = {
 						height = full,
 						width = full,
-						preview_width = 0.75,
+						preview_width = 0.7,
+						prompt_position = "top",
+					},
+					vertical = {
+						mirror = true,
+						height = full,
+						width = full,
 						prompt_position = "top",
 					},
 				},
@@ -171,6 +178,7 @@ Plug("nvim-telescope/telescope.nvim", {
 					},
 					n = {
 						["<cr>"] = myactions.select_tab_drop,
+						["<C-c>"] = actions.close,
 						["<c-e>"] = actions.select_default,
 						["<c-b>"] = actions.results_scrolling_up,
 						["<c-f>"] = actions.results_scrolling_down,
@@ -185,11 +193,27 @@ Plug("nvim-telescope/telescope.nvim", {
 					override_generic_sorter = true,
 					override_file_sorter = true,
 				},
+				file_browser = {
+					mappings = {
+						["n"] = {
+							o = fb_actions.create,
+							r = fb_actions.rename,
+							yp = fb_actions.copy,
+							dp = fb_actions.move,
+							D = fb_actions.remove,
+							zh = fb_actions.toggle_hidden,
+							l = fb_actions.goto_cwd,
+							h = fb_actions.goto_parent_dir,
+							L = fb_actions.change_cwd,
+						},
+					},
+				},
 			},
 		})
 
 		vim.api.nvim_set_hl(0, "TelescopeSelection", { default = true, link = "Pmenu" })
 		require("telescope").load_extension("fzf")
+		require("telescope").load_extension("file_browser")
 
 		local pickers = require("telescope.pickers")
 		local finders = require("telescope.finders")
@@ -200,6 +224,7 @@ Plug("nvim-telescope/telescope.nvim", {
 			builtin.fd({ cwd = vim.fn.FindRootDirectory() })
 		end, { desc = "open file from project root" })
 
+		vim.cmd("cnoreabbrev help lua require'telescope.builtin'.help_tags()")
 		-- map("n", "/", function()
 		-- 	builtin.current_buffer_fuzzy_find({
 		-- 		previewer = false,
@@ -238,6 +263,7 @@ Plug("junegunn/fzf.vim", {
 })
 
 Plug("j-hui/fidget.nvim", {
+	branch = "main",
 	config = function()
 		require("fidget").setup()
 	end,
