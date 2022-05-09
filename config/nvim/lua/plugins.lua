@@ -128,6 +128,29 @@ Plug("svermeulen/vim-yoink", {
 	end,
 })
 
+Plug('ldelossa/litee-calltree.nvim', {config=function()
+    require('litee.calltree').setup({})
+end})
+
+Plug("ldelossa/litee.nvim", {
+	config = function()
+		require("litee.lib").setup({
+			tree = {
+				icon_set = "codicons",
+			},
+			panel = {
+				orientation = "left",
+				panel_size = 30,
+			},
+		})
+	end,
+})
+Plug("ldelossa/gh.nvim", {
+	config = function()
+		require("litee.gh").setup()
+	end,
+})
+
 Plug("tpope/vim-abolish")
 
 Plug("nvim-telescope/telescope-fzf-native.nvim", {
@@ -166,12 +189,6 @@ Plug("nvim-telescope/telescope-file-browser.nvim", {
 	end,
 })
 Plug("tami5/sqlite.lua")
-Plug("AckslD/nvim-neoclip.lua", {
-	config = function()
-		require("neoclip").setup()
-		require("telescope._extensions").load("neoclip")
-	end,
-})
 Plug("nvim-telescope/telescope-frecency.nvim", {
 	config = function()
 		require("telescope._extensions.frecency").setup({
