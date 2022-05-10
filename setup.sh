@@ -75,6 +75,18 @@ if [ ! -x $HOME/.local/bin/nvim ]; then
     pip install pynvim --upgrade
 fi
 
+if [ ! -x $HOME/.local/bin/luarocks ]; then
+    echo "==Setting luarocks=="
+    luarocks_version="3.9.0"
+    echo $luarocks_version
+    wget https://luarocks.org/releases/luarocks-${luarocks_version}.tar.gz
+    tar zxpf luarocks-${luarocks_version}.tar.gz
+    pushd luarocks-${luarocks_version}
+    ./configure --prefix=$HOME/.local
+    make && make install
+    luarocks install penlight ldoc
+fi
+
 if [ ! -z $gpg_key ]; then
     gpg-connect-agent KILLAGENT
     gpg --import $gpg_key
