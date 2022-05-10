@@ -128,21 +128,9 @@ Plug("svermeulen/vim-yoink", {
 	end,
 })
 
-Plug('ldelossa/litee-calltree.nvim', {config=function()
-    require('litee.calltree').setup({})
-end})
-
 Plug("ldelossa/litee.nvim", {
 	config = function()
-		require("litee.lib").setup({
-			tree = {
-				icon_set = "codicons",
-			},
-			panel = {
-				orientation = "left",
-				panel_size = 30,
-			},
-		})
+		require("litee.lib").setup()
 	end,
 })
 Plug("ldelossa/gh.nvim", {
@@ -336,6 +324,7 @@ Plug("nvim-telescope/telescope.nvim", {
 Plug("junegunn/fzf", { run = "call fzf#install()" })
 
 Plug("j-hui/fidget.nvim", {
+	disable = true,
 	branch = "main",
 	config = function()
 		require("fidget").setup()
