@@ -133,6 +133,13 @@ Plug("ldelossa/litee.nvim", {
 		require("litee.lib").setup()
 	end,
 })
+
+Plug("ldelossa/litee-filetree.nvim", {
+	config = function()
+		require("litee.filetree").setup({})
+	end,
+})
+
 Plug("ldelossa/gh.nvim", {
 	config = function()
 		require("litee.gh").setup()
