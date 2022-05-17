@@ -101,6 +101,7 @@ function M.set_lsp(name, options)
 	client.setup(options)
 	client.manager.orig_try_add = client.manager.try_add
 	client.manager.try_add = function(bufnr, ...)
+		require("profile").auto_switch_env()
 		if options.profile ~= require("profile").cur_env.name then
 			return
 		end
