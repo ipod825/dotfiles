@@ -1022,12 +1022,6 @@ Plug("skywind3000/asynctasks.vim", {
 	end,
 })
 
--- Plug("akinsho/git-conflict.nvim", {
--- 	branch = "main",
--- 	config = function()
--- 		require("git-conflict").setup()
--- 	end,
--- })
 -- Plug("tanvirtin/vgit.nvim", {
 -- 	diable = true,
 -- 	branch = "main",
@@ -1042,6 +1036,8 @@ Plug("lambdalisue/gina.vim", {
 		vim.cmd(string.format("source %s", vim.fn.stdpath("config") .. "/ginasetup.vim"))
 	end,
 })
+
+Plug("whiteinge/diffconflicts")
 
 Plug("git@github.com:ipod825/libp.nvim", { branch = "main" })
 Plug("git@github.com:ipod825/igit.nvim", {
