@@ -122,12 +122,6 @@ Plug("wellle/context.vim", {
 	end,
 })
 
-Plug("svermeulen/vim-yoink", {
-	config = function()
-		vim.g.yoinkIncludeDeleteOperations = 1
-	end,
-})
-
 Plug("ldelossa/litee.nvim", {
 	config = function()
 		require("litee.lib").setup()
@@ -147,6 +141,21 @@ Plug("ldelossa/gh.nvim", {
 })
 
 Plug("tpope/vim-abolish")
+
+Plug("gbprod/yanky.nvim", {
+	config = function()
+		require("yanky").setup({})
+		vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)", {})
+		vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)", {})
+		vim.keymap.set("x", "p", "<Plug>(YankyPutAfter)", {})
+		vim.keymap.set("x", "P", "<Plug>(YankyPutBefore)", {})
+		vim.keymap.set("n", "gp", "<Plug>(YankyGPutAfter)", {})
+		vim.keymap.set("n", "gP", "<Plug>(YankyGPutBefore)", {})
+		vim.keymap.set("x", "gp", "<Plug>(YankyGPutAfter)", {})
+		vim.keymap.set("x", "gP", "<Plug>(YankyGPutBefore)", {})
+		require("telescope._extensions").load("yank_history")
+	end,
+})
 
 Plug("nvim-telescope/telescope-fzf-native.nvim", {
 	branch = "main",
@@ -722,31 +731,33 @@ Plug("git@github.com:ipod825/war.vim", {
 
 Plug("vim-test/vim-test", { disable = true })
 
-Plug("voldikss/vim-floaterm", {
-	utils = {
-		StartRepl = function()
-			local ori_win = vim.api.nvim_get_current_win()
-			local repl_loopup = { python = "ipython", sh = "zsh", zsh = "zsh" }
-			local ft = vim.api.nvim_buf_get_option(0, "ft")
-			if repl_loopup[ft] then
-				vim.cmd("FloatermNew " .. repl_loopup[ft])
-			else
-				vim.notify("No repl for " .. ft, vim.log.levels.ERROR)
-			end
-			vim.api.nvim_set_current_win(ori_win)
-			vim.cmd("stopinsert")
-		end,
-		SendReplLine = function()
-			vim.cmd(string.format("FloatermSend %s", vim.fn.getline(".")))
-			vim.cmd("normal! j")
-		end,
-	},
+Plug("hkupty/iron.nvim", {
 	config = function()
-		vim.g.floaterm_wintype = "vsplit"
-		vim.g.floaterm_position = "botright"
-		vim.g.floaterm_width = 0.5
-		vim.g.floaterm_height = 0.5
-		map("n", "\\s", "<cmd>lua plug.utils.StartRepl()<cr>")
+		local iron = require("iron.core")
+		iron.setup({
+			config = {
+				-- If iron should expose `<plug>(...)` mappings for the plugins
+				should_map_plug = false,
+				scratch_repl = true,
+				repl_definition = {
+					sh = {
+						command = { "zsh" },
+					},
+					python = {
+						command = { "ipython" },
+					},
+				},
+				repl_open_cmd = "vsplit",
+			},
+			-- Iron doesn't set keymaps by default anymore. Set them here
+			-- or use `should_map_plug = true` and map from you vim files
+			keymaps = {
+				visual_send = "E",
+				send_line = "E",
+				exit = "<space>sq",
+				clear = "<space>cl",
+			},
+		})
 	end,
 })
 
@@ -981,6 +992,8 @@ Plug("eugen0329/vim-esearch", {
 
 Plug("kkoomen/vim-doge", { disable = true })
 Plug("will133/vim-dirdiff", { on_cmd = "DirDiff" })
+
+Plug("mrjones2014/smart-splits.nvim")
 
 Plug("skywind3000/asyncrun.vim", {
 	utils = {

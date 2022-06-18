@@ -66,17 +66,7 @@ M.add_util_menu("CopyBaseName", function()
 end)
 
 M.add_util_menu("SelectYank", function()
-	local yank_history = vim.tbl_map(function(e)
-		return e.text
-	end, vim.fn["yoink#getYankHistory"]())
-	yank_history = vim.tbl_filter(function(e)
-		return #e > 1
-	end, yank_history)
-
-	M.telescope_pick(yank_history, function(value)
-		vim.fn.setreg('"', value)
-		vim.cmd("normal! p")
-	end)
+	vim.cmd("Telescope yank_history")
 end)
 
 M.add_util_menu("DoAbolish", function()

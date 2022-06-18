@@ -224,11 +224,6 @@ function M.yank_to_system_clipboard()
 	end
 end
 map("x", "y", "y`]")
--- consistent paste for visual selection
-map("x", "p", '<esc>:let @0=@"<cr>gvp:let @"=@0<cr>')
--- select last paste
-map("n", "gp", "V'[")
--- wrap long comment that is not automatically done by ale
 map("n", "U", "<cmd>lua mapping.comment_unwrap()<cr>")
 function M.comment_unwrap()
 	if vim.bo.filetype == "python" then
