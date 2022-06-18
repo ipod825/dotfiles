@@ -185,6 +185,7 @@ Plug("nvim-telescope/telescope-file-browser.nvim", {
 })
 Plug("tami5/sqlite.lua")
 Plug("nvim-telescope/telescope-frecency.nvim", {
+	disable = true,
 	config = function()
 		require("telescope._extensions.frecency").setup({
 			show_scores = false,
@@ -319,7 +320,9 @@ Plug("nvim-telescope/telescope.nvim", {
 			local opts = {}
 			pickers.new(opts, {
 				finder = finders.new_table({
-					results = require("oldfiles").oldfiles(),
+					results = vim.tbl_filter(function(e)
+						return vim.fn.filereadable(e) ~= 0
+					end, require("oldfiles").oldfiles()),
 				}),
 				previewer = conf.file_previewer(opts),
 				sorter = conf.generic_sorter(opts),
@@ -343,6 +346,8 @@ Plug("airblade/vim-rooter", {
 		vim.g.rooter_manual_only = 1
 	end,
 })
+
+Plug("glacambre/firenvim", {run = 'lua vim.fn["firenvim#install"](0)'})
 
 Plug("wsdjeg/vim-fetch")
 Plug("git@github.com:ipod825/vim-tabdrop")
