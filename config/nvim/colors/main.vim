@@ -1,1 +1,1 @@
-lua require('colorscheme')
+lua require('colorscheme').load()

@@ -66,6 +66,7 @@ Plug("lewis6991/spellsitter.nvim", {
 })
 
 Plug("ray-x/lsp_signature.nvim")
+Plug("tridactyl/vim-tridactyl")
 
 Plug("nvim-treesitter/nvim-treesitter-textobjects", {
 	config = function()
@@ -356,7 +357,58 @@ Plug("airblade/vim-rooter", {
 	end,
 })
 
-Plug("glacambre/firenvim", {run = 'lua vim.fn["firenvim#install"](0)'})
+Plug("glacambre/firenvim", {
+	run = 'lua vim.fn["firenvim#install"](0)',
+	setup = function()
+		vim.g.firenvim_config = {
+			localSettings = {
+				[".*"] = {
+					takeover = "never",
+				},
+			},
+		}
+	end,
+	config = function()
+		vim.g.firenvim_config = {
+			localSettings = {
+				[".*"] = {
+					takeover = "never",
+				},
+			},
+		}
+		vim.api.nvim_create_autocmd("UIEnter", {
+			group = vim.api.nvim_create_augroup("FIRE_NVIM", {}),
+			callback = function()
+				if not vim.g.started_by_firenvim then
+					return
+				end
+				vim.o.laststatus = 0
+				map("n", "q", "<cmd>x<cr>")
+				-- require("colorscheme").load({ bg = "#f7f7f7", bg_highlight = "#e0e0e0" })
+
+				vim.api.nvim_create_autocmd("BufEnter", {
+					pattern = "*colab.corp.google.com_*",
+					callback = function()
+						vim.bo.filetype = "python"
+					end,
+				})
+			end,
+		})
+	end,
+})
+
+Plug("kevinhwang91/promise-async")
+Plug("kevinhwang91/nvim-ufo", {
+	disable = true,
+	config = function()
+		local capabilities = vim.lsp.protocol.make_client_capabilities()
+		capabilities.textDocument.foldingRange = {
+			dynamicRegistration = false,
+			lineFoldingOnly = true,
+		}
+		require("ufo").setup()
+	end,
+})
 
 Plug("wsdjeg/vim-fetch")
 Plug("git@github.com:ipod825/vim-tabdrop")

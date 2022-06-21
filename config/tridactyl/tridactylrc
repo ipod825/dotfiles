@@ -1,0 +1,66 @@
+sanitise tridactyllocal
+
+setpref browser.aboutConfig.showWarning false
+
+set searchurls.moma https://moma.corp.google.com/search?q=%s
+set searchurls.dr https://drive.google.com/corp/drive/search?q=%s
+set followpagepatterns.next ^(next|newer|prochain)\b|»|>>
+set followpagepatterns.prev ^(prev(ious)?|older|précédent)\b|«|<<
+set hintuppercase false
+set hintshift true
+set editorcmd xterm -e "nvim %f"
+set smoothscroll true
+set scrollduration 150
+set modeindicator false
+command editor_rm composite editor | jsb -p tri.native.run(`rm -f '${JS_ARG[0]}'`)
+command tabuniq jsb browser.tabs.query({}).then(tabs => browser.tabs.remove(tabs.filter((tab, index) => tabs.slice(index + 1).find(t => t.url == tab.url)).map(tab => tab.id)))
+command tabcloseallbykeyword jsb -p browser.tabs.query({}).then(tabs => tabs.forEach( t => { if(t.url.includes(JS_ARG)) browser.tabs.remove(t.id) }))
+
+bind j scrollline 10
+bind k scrollline -10
+unbind <c-f>
+bind / fillcmdline find
+bind ? fillcmdline find -?
+bind n findnext 1
+bind N findnext -1
+bind h back 
+bind l forward
+bind q composite tabclose | tab #
+bind x composite tabclose | tab #
+bind X undo tab
+bind ; fillcmdline_notrail
+bind zt hint -z
+bind zk hint -k
+bind <CS-f> hint -qb
+bind yt tabduplicate
+bind <c-h> tabprev
+bind <c-l> tabnext
+bind d scrollpage 0.5
+bind u scrollpage -0.5
+bind <AC-h> tabmove -1
+bind <AC-l> tabmove +1
+
+bind --mode=input <c-h> text.backward_char
+bind --mode=insert <c-h> text.backward_char
+bind --mode=input <c-l> text.forward_char
+bind --mode=insert <c-l> text.forward_char
+
+bind --mode=ex <c-k> ex.prev_history
+bind --mode=ex <c-j> ex.next_history
+bind --mode=ex <c-c> ex.hide_and_clear
+bind --mode=ex <c-h> text.backward_char
+bind --mode=ex <c-l> text.forward_char
+
+bindurl --mode=insert <C-i> editor_rm
+bindurl --mode=input <C-i> editor_rm
+
+seturl colab.corp.google.com.* editorcmd xterm -e "nvim +'setlocal filetype=python' %f"
+unbindurl colab.corp.google.com --mode=insert <Escape>
+unbindurl colab.corp.google.com --mode=normal j
+unbindurl colab.corp.google.com --mode=normal k
+
+unbindurl mail.google.com --mode=normal j
+unbindurl mail.google.com --mode=normal k
+
+bindurl www.google.com f hint -Jc #search div:not(.action-menu) > a
+bindurl www.google.com F hint -Jbc #search div:not(.action-menu) > a

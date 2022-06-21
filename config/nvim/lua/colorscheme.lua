@@ -1,7 +1,7 @@
 local M = _G.colorscheme or {}
 _G.colorscheme = M
 
-local color = {
+M.color = {
 	base0 = "#1B2229",
 	base1 = "#1c1f24",
 	base2 = "#202328",
@@ -45,7 +45,8 @@ local color = {
 	none = "NONE",
 }
 
-function M.terminal_color()
+function M.terminal_color(color)
+	color = vim.tbl_extend("keep", color or {}, M.color)
 	vim.g.terminal_color_0 = color.bg
 	vim.g.terminal_color_1 = color.red
 	vim.g.terminal_color_2 = color.green
@@ -72,140 +73,145 @@ function M.highlight(group, def)
 	vim.api.nvim_command(string.format("highlight %s gui=%s guifg=%s guibg=%s %s", group, style, fg, bg, sp))
 end
 
-M.syntax = {
-	Normal = { fg = color.fg, bg = color.bg },
-	Terminal = { fg = color.fg, bg = color.bg },
-	SignColumn = { fg = color.fg, bg = color.bg },
-	FoldColumn = { fg = color.fg_alt, bg = color.black },
-	VertSplit = { fg = color.black, bg = color.bg },
-	Folded = { fg = color.grey, bg = color.bg_highlight },
-	EndOfBuffer = { fg = color.bg, bg = color.none },
-	IncSearch = { fg = color.bg1, bg = color.orange, style = color.none },
-	Search = { fg = color.bg, bg = color.orange },
-	ColorColumn = { fg = color.none, bg = color.bg_highlight },
-	Conceal = { fg = color.grey, bg = color.none },
-	Cursor = { fg = color.none, bg = color.none, style = "reverse" },
-	vCursor = { fg = color.none, bg = color.none, style = "reverse" },
-	iCursor = { fg = color.none, bg = color.none, style = "reverse" },
-	lCursor = { fg = color.none, bg = color.none, style = "reverse" },
-	CursorIM = { fg = color.none, bg = color.none, style = "reverse" },
-	CursorColumn = { fg = color.none, bg = color.bg_highlight },
-	CursorLine = { fg = color.none, bg = color.bg_highlight },
-	LineNr = { fg = color.base6 },
-	qfLineNr = { fg = color.cyan },
-	CursorLineNr = { fg = color.blue },
-	DiffAdd = { fg = color.black, bg = color.dark_green },
-	DiffChange = { fg = color.none, bg = color.fg_alt },
-	DiffDelete = { fg = color.redwine, bg = color.none },
-	DiffText = { fg = color.black, bg = color.dark_green },
-	Directory = { fg = color.blue, bg = color.none },
-	ErrorMsg = { fg = color.red, bg = color.none, style = "bold" },
-	WarningMsg = { fg = color.yellow, bg = color.none, style = "bold" },
-	ModeMsg = { fg = color.fg, bg = color.none, style = "bold" },
-	MatchParen = { fg = color.red, bg = color.none },
-	NonText = { fg = color.bg1 },
-	Whitespace = { fg = color.base4 },
-	SpecialKey = { fg = color.bg1 },
-	Pmenu = { fg = color.fg, bg = color.bg_popup },
-	PmenuSel = { fg = color.base0, bg = color.blue },
-	PmenuSelBold = { fg = color.base0, g = color.blue },
-	PmenuSbar = { fg = color.none, bg = color.base4 },
-	PmenuThumb = { fg = color.violet, bg = color.light_green },
-	WildMenu = { fg = color.fg, bg = color.green },
-	Question = { fg = color.yellow },
-	NormalFloat = { fg = color.none, bg = color.base4 },
-	Tabline = { fg = color.base5, bg = color.bg },
-	TabLineSel = { fg = color.base8, bg = color.bg, style = "bold,italic" },
-	TabLineFill = { style = color.none },
-	TabLineSelMod = { fg = color.bg, bg = color.redwine, style = "bold,italic" },
-	TabLineMod = { fg = color.redwine, bg = color.bg },
-	StatusLine = { fg = color.base8, bg = color.base2, style = color.none },
-	StatusLineNC = { fg = color.grey, bg = color.base2, style = color.none },
-	SpellBad = { fg = color.red, bg = color.none, style = "undercurl" },
-	SpellCap = { fg = color.blue, bg = color.none, style = "undercurl" },
-	SpellLocal = { fg = color.cyan, bg = color.none, style = "undercurl" },
-	SpellRare = { fg = color.violet, bg = color.none, style = "undercurl" },
-	Visual = { fg = color.black, bg = color.bg_visual },
-	VisualNOS = { fg = color.black, bg = color.bg_visual },
-	QuickFixLine = { fg = color.violet, style = "bold" },
-	Debug = { fg = color.orange },
-	debugBreakpoint = { fg = color.bg, bg = color.red },
+function M.syntax(color)
+	color = vim.tbl_extend("keep", color or {}, M.color)
+	return {
+		Normal = { fg = color.fg, bg = color.bg },
+		Terminal = { fg = color.fg, bg = color.bg },
+		SignColumn = { fg = color.fg, bg = color.bg },
+		FoldColumn = { fg = color.fg_alt, bg = color.black },
+		VertSplit = { fg = color.black, bg = color.bg },
+		Folded = { fg = color.grey, bg = color.bg_highlight },
+		EndOfBuffer = { fg = color.bg, bg = color.none },
+		IncSearch = { fg = color.bg1, bg = color.orange, style = color.none },
+		Search = { fg = color.bg, bg = color.orange },
+		ColorColumn = { fg = color.none, bg = color.bg_highlight },
+		Conceal = { fg = color.grey, bg = color.none },
+		Cursor = { fg = color.none, bg = color.none, style = "reverse" },
+		vCursor = { fg = color.none, bg = color.none, style = "reverse" },
+		iCursor = { fg = color.none, bg = color.none, style = "reverse" },
+		lCursor = { fg = color.none, bg = color.none, style = "reverse" },
+		CursorIM = { fg = color.none, bg = color.none, style = "reverse" },
+		CursorColumn = { fg = color.none, bg = color.bg_highlight },
+		CursorLine = { fg = color.none, bg = color.bg_highlight },
+		LineNr = { fg = color.base6 },
+		qfLineNr = { fg = color.cyan },
+		CursorLineNr = { fg = color.blue },
+		DiffAdd = { fg = color.black, bg = color.dark_green },
+		DiffChange = { fg = color.none, bg = color.fg_alt },
+		DiffDelete = { fg = color.redwine, bg = color.none },
+		DiffText = { fg = color.black, bg = color.dark_green },
+		Directory = { fg = color.blue, bg = color.none },
+		ErrorMsg = { fg = color.red, bg = color.none, style = "bold" },
+		WarningMsg = { fg = color.yellow, bg = color.none, style = "bold" },
+		ModeMsg = { fg = color.fg, bg = color.none, style = "bold" },
+		MatchParen = { fg = color.red, bg = color.none },
+		NonText = { fg = color.bg1 },
+		Whitespace = { fg = color.base4 },
+		SpecialKey = { fg = color.bg1 },
+		Pmenu = { fg = color.fg, bg = color.bg_popup },
+		PmenuSel = { fg = color.base0, bg = color.blue },
+		PmenuSelBold = { fg = color.base0, g = color.blue },
+		PmenuSbar = { fg = color.none, bg = color.base4 },
+		PmenuThumb = { fg = color.violet, bg = color.light_green },
+		WildMenu = { fg = color.fg, bg = color.green },
+		Question = { fg = color.yellow },
+		NormalFloat = { fg = color.none, bg = color.base4 },
+		Tabline = { fg = color.base5, bg = color.bg },
+		TabLineSel = { fg = color.base8, bg = color.bg, style = "bold,italic" },
+		TabLineFill = { style = color.none },
+		TabLineSelMod = { fg = color.bg, bg = color.redwine, style = "bold,italic" },
+		TabLineMod = { fg = color.redwine, bg = color.bg },
+		StatusLine = { fg = color.base8, bg = color.base2, style = color.none },
+		StatusLineNC = { fg = color.grey, bg = color.base2, style = color.none },
+		SpellBad = { fg = color.red, bg = color.none, style = "undercurl" },
+		SpellCap = { fg = color.blue, bg = color.none, style = "undercurl" },
+		SpellLocal = { fg = color.cyan, bg = color.none, style = "undercurl" },
+		SpellRare = { fg = color.violet, bg = color.none, style = "undercurl" },
+		Visual = { fg = color.black, bg = color.bg_visual },
+		VisualNOS = { fg = color.black, bg = color.bg_visual },
+		QuickFixLine = { fg = color.violet, style = "bold" },
+		Debug = { fg = color.orange },
+		debugBreakpoint = { fg = color.bg, bg = color.red },
 
-	Boolean = { fg = color.orange },
-	Number = { fg = color.brown },
-	Float = { fg = color.brown },
-	PreProc = { fg = color.violet },
-	PreCondit = { fg = color.violet },
-	Include = { fg = color.violet },
-	Define = { fg = color.violet },
-	Conditional = { fg = color.magenta },
-	Repeat = { fg = color.magenta },
-	Keyword = { fg = color.green },
-	Typedef = { fg = color.red },
-	Exception = { fg = color.red },
-	Statement = { fg = color.red },
-	Error = { fg = color.red },
-	StorageClass = { fg = color.orange },
-	Tag = { fg = color.orange },
-	Label = { fg = color.orange },
-	Structure = { fg = color.orange },
-	Operator = { fg = color.redwine },
-	Title = { fg = color.orange, style = "bold" },
-	Special = { fg = color.yellow },
-	SpecialChar = { fg = color.yellow },
-	Type = { fg = color.teal },
-	Function = { fg = color.yellow },
-	String = { fg = color.light_green },
-	Character = { fg = color.green },
-	Constant = { fg = color.cyan },
-	Macro = { fg = color.cyan },
-	Identifier = { fg = color.blue },
+		Boolean = { fg = color.orange },
+		Number = { fg = color.brown },
+		Float = { fg = color.brown },
+		PreProc = { fg = color.violet },
+		PreCondit = { fg = color.violet },
+		Include = { fg = color.violet },
+		Define = { fg = color.violet },
+		Conditional = { fg = color.magenta },
+		Repeat = { fg = color.magenta },
+		Keyword = { fg = color.green },
+		Typedef = { fg = color.red },
+		Exception = { fg = color.red },
+		Statement = { fg = color.red },
+		Error = { fg = color.red },
+		StorageClass = { fg = color.orange },
+		Tag = { fg = color.orange },
+		Label = { fg = color.orange },
+		Structure = { fg = color.orange },
+		Operator = { fg = color.redwine },
+		Title = { fg = color.orange, style = "bold" },
+		Special = { fg = color.yellow },
+		SpecialChar = { fg = color.yellow },
+		Type = { fg = color.teal },
+		Function = { fg = color.yellow },
+		String = { fg = color.light_green },
+		Character = { fg = color.green },
+		Constant = { fg = color.cyan },
+		Macro = { fg = color.cyan },
+		Identifier = { fg = color.blue },
 
-	Comment = { fg = color.base6 },
-	SpecialComment = { fg = color.grey },
-	Todo = { fg = color.violet },
-	Delimiter = { fg = color.fg },
-	Ignore = { fg = color.grey },
-	Underlined = { fg = color.none, style = "underline" },
+		Comment = { fg = color.base6 },
+		SpecialComment = { fg = color.grey },
+		Todo = { fg = color.violet },
+		Delimiter = { fg = color.fg },
+		Ignore = { fg = color.grey },
+		Underlined = { fg = color.none, style = "underline" },
 
-	DashboardShortCut = { fg = color.magenta },
-	DashboardHeader = { fg = color.orange },
-	DashboardCenter = { fg = color.cyan },
-	DashboardFooter = { fg = color.yellow, style = "bold" },
+		DashboardShortCut = { fg = color.magenta },
+		DashboardHeader = { fg = color.orange },
+		DashboardCenter = { fg = color.cyan },
+		DashboardFooter = { fg = color.yellow, style = "bold" },
 
-	TSFunction = { fg = color.cyan },
-	TSMethod = { fg = color.cyan },
-	TSKeywordFunction = { fg = color.red },
-	TSProperty = { fg = color.yellow },
-	TSType = { fg = color.teal },
-	TSVariable = { fg = color.blue },
-	TSPunctBracket = { fg = color.bracket },
+		TSFunction = { fg = color.cyan },
+		TSMethod = { fg = color.cyan },
+		TSKeywordFunction = { fg = color.red },
+		TSProperty = { fg = color.yellow },
+		TSType = { fg = color.teal },
+		TSVariable = { fg = color.blue },
+		TSPunctBracket = { fg = color.bracket },
 
-	LspDiagnosticsSignError = { fg = color.red },
-	LspDiagnosticsSignWarning = { fg = color.yellow },
-	LspDiagnosticsSignInformation = { fg = color.blue },
-	LspDiagnosticsSignHint = { fg = color.cyan },
+		LspDiagnosticsSignError = { fg = color.red },
+		LspDiagnosticsSignWarning = { fg = color.yellow },
+		LspDiagnosticsSignInformation = { fg = color.blue },
+		LspDiagnosticsSignHint = { fg = color.cyan },
 
-	LspDiagnosticsVirtualTextError = { fg = color.red },
-	LspDiagnosticsVirtualTextWarning = { fg = color.yellow },
-	LspDiagnosticsVirtualTextInformation = { fg = color.blue },
-	LspDiagnosticsVirtualTextHint = { fg = color.cyan },
+		LspDiagnosticsVirtualTextError = { fg = color.red },
+		LspDiagnosticsVirtualTextWarning = { fg = color.yellow },
+		LspDiagnosticsVirtualTextInformation = { fg = color.blue },
+		LspDiagnosticsVirtualTextHint = { fg = color.cyan },
 
-	LspDiagnosticsUnderlineError = { style = "undercurl", sp = color.red },
-	LspDiagnosticsUnderlineWarning = { style = "undercurl", sp = color.yellow },
-	LspDiagnosticsUnderlineInformation = { style = "undercurl", sp = color.blue },
-	LspDiagnosticsUnderlineHint = { style = "undercurl", sp = color.cyan },
-}
-
-M.plugin_syntax = {}
-
--- vim.api.nvim_command('hi clear')
-if vim.fn.exists("syntax_on") then
-	vim.api.nvim_command("syntax reset")
+		LspDiagnosticsUnderlineError = { style = "undercurl", sp = color.red },
+		LspDiagnosticsUnderlineWarning = { style = "undercurl", sp = color.yellow },
+		LspDiagnosticsUnderlineInformation = { style = "undercurl", sp = color.blue },
+		LspDiagnosticsUnderlineHint = { style = "undercurl", sp = color.cyan },
+	}
 end
-vim.o.background = "dark"
-vim.o.termguicolors = true
-vim.g.colors_name = "main"
-for group, colors in pairs(M.syntax) do
-	M.highlight(group, colors)
+
+function M.load(color)
+	-- vim.api.nvim_command("hi clear")
+	if vim.fn.exists("syntax_on") then
+		vim.api.nvim_command("syntax reset")
+	end
+	vim.o.background = "dark"
+	vim.o.termguicolors = true
+	vim.g.colors_name = "main"
+	for group, colors in pairs(M.syntax(color)) do
+		M.highlight(group, colors)
+	end
 end
+
+return M
