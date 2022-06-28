@@ -804,7 +804,6 @@ Plug("hkupty/iron.nvim", {
 			-- Iron doesn't set keymaps by default anymore. Set them here
 			-- or use `should_map_plug = true` and map from you vim files
 			keymaps = {
-				visual_send = "E",
 				send_line = "E",
 				exit = "<space>sq",
 				clear = "<space>cl",
