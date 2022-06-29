@@ -77,10 +77,7 @@ function M.lsp_diagnostic_open(line_number)
 		vim.fn.search(string.format("|%d col", line_number), "cw")
 	end, 10)
 end
-add_util_menu("LspDiagnosticOpen", {
-	fn = M.lsp_diagnostic_open,
-	context_fn = require("Vim").current.line_number,
-})
+add_util_menu("LspDiagnosticOpen", vim.lsp.diagnostic.set_loclist)
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 if pcall(require, "cmp_nvim_lsp") then
