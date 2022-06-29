@@ -384,7 +384,6 @@ Plug("glacambre/firenvim", {
 				end
 				vim.o.laststatus = 0
 				map("n", "q", "<cmd>x<cr>")
-				-- require("colorscheme").load({ bg = "#f7f7f7", bg_highlight = "#e0e0e0" })
 
 				vim.api.nvim_create_autocmd("BufEnter", {
 					pattern = "*colab.corp.google.com_*",

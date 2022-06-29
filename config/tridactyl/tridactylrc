@@ -59,6 +59,8 @@ unbindurl colab.corp.google.com --mode=insert <Escape>
 unbindurl colab.corp.google.com --mode=normal j
 unbindurl colab.corp.google.com --mode=normal k
 
+unbindurl source.corp.google.com --mode=normal f
+
 unbindurl mail.google.com --mode=normal j
 unbindurl mail.google.com --mode=normal k
 
