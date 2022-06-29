@@ -32,10 +32,6 @@ function M.list_unique(lst)
 	return res
 end
 
-function M.pwd()
-	return vim.fn.getcwd()
-end
-
 function M.path_join(...)
 	return table.concat({ ... }, "/")
 end
@@ -60,7 +56,7 @@ M.dirctory_register = M.dirctory_register or {}
 function M.find_directory(anchor, name)
 	local res = name and M.dirctory_register[name] or nil
 	if res == nil then
-		local dir = M.pwd()
+		local dir = vim.fn.getcwd()
 		while #dir > 1 do
 			if vim.fn.glob(M.path_join(dir, anchor)) ~= "" then
 				res = dir
