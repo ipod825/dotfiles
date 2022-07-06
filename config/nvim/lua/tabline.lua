@@ -84,7 +84,7 @@ function M.reduce_from_right(total_length, width, labels)
 			local c = last_label.elements[i].content
 			-- todo: handle unicode substr
 			last_label.elements[i].content = c:sub(1, math.max(#c - target_reduce, 0))
-			target_reduce = target_reduce - math.min(#c, target_reduce)
+			target_reduce = target_reduce - math.min(vim.fn.strwidth(c), target_reduce)
 			i = i - 1
 		end
 		l = l - 1
@@ -102,7 +102,7 @@ function M.reduce_from_left(total_length, width, labels)
 			local c = first_label.elements[i].content
 			-- todo: handle unicode substr
 			first_label.elements[i].content = c:sub(target_reduce + 1)
-			target_reduce = target_reduce - math.min(#c, target_reduce)
+			target_reduce = target_reduce - math.min(vim.fn.strwidth(c), target_reduce)
 			i = i + 1
 		end
 		l = l + 1
@@ -110,8 +110,8 @@ function M.reduce_from_left(total_length, width, labels)
 end
 
 function M.gen_tab_line(labels, total_length, left_has_more, right_has_more)
-	local left_more_indicator = left_has_more and "" or ""
-	local right_more_indicator = right_has_more and "" or ""
+	local left_more_indicator = left_has_more and "⮜" or ""
+	local right_more_indicator = right_has_more and "⮞" or ""
 	local width = vim.o.columns - vim.fn.strwidth(left_more_indicator) - vim.fn.strwidth(right_more_indicator)
 
 	if total_length > width then

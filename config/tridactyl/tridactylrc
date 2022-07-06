@@ -4,6 +4,8 @@ setpref browser.aboutConfig.showWarning false
 
 set searchurls.moma https://moma.corp.google.com/search?q=%s
 set searchurls.dr https://drive.google.com/corp/drive/search?q=%s
+set searchurls.ce https://translate.google.com/?sl=zh-TW&tl=en&text=%s
+set searchurls.ec https://translate.google.com/?sl=en&tl=zh-TW&text=%s
 set followpagepatterns.next ^(next|newer|prochain)\b|»|>>
 set followpagepatterns.prev ^(prev(ious)?|older|précédent)\b|«|<<
 set hintuppercase false
