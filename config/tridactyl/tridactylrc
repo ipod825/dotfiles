@@ -1,5 +1,6 @@
 sanitise tridactyllocal
 
+colourscheme tri
 setpref browser.aboutConfig.showWarning false
 
 set searchurls.moma https://moma.corp.google.com/search?q=%s

@@ -5,6 +5,8 @@ local unmap = vim.keymap.del
 local Plug = require("vplug")
 local V = require("Vim")
 
+local root_markers = { ".git", ".hg", ".svn", ".bzr", "_darcs", "OWNERS", ".root" }
+
 Plug.begin()
 
 Plug("kyazdani42/nvim-web-devicons")
@@ -24,10 +26,6 @@ Plug("terrortylor/nvim-comment", {
 Plug("nvim-treesitter/nvim-treesitter", {
 	run = ":TSUpdate",
 	config = function()
-		vim.cmd([[
-            set foldmethod=expr
-            set foldexpr=nvim_treesitter#foldexpr()
-            ]])
 		require("nvim-treesitter.configs").setup({
 			ensure_installed = {
 				"bash",
@@ -129,12 +127,6 @@ Plug("ldelossa/litee.nvim", {
 	end,
 })
 
-Plug("ldelossa/litee-filetree.nvim", {
-	config = function()
-		require("litee.filetree").setup({})
-	end,
-})
-
 Plug("ldelossa/gh.nvim", {
 	config = function()
 		require("litee.gh").setup()
@@ -170,60 +162,7 @@ Plug("nvim-telescope/telescope-fzf-native.nvim", {
 		require("telescope._extensions").load("fzf")
 	end,
 })
-Plug("nvim-telescope/telescope-file-browser.nvim", {
-	config = function()
-		local fb_actions = require("telescope").extensions.file_browser.actions
-		require("telescope._extensions.file_browser").setup({
-			initial_mode = "normal",
-			layout_strategy = "horizontal",
-			mappings = {
-				["n"] = {
-					o = fb_actions.create,
-					r = fb_actions.rename,
-					yp = fb_actions.copy,
-					dp = fb_actions.move,
-					D = fb_actions.remove,
-					zh = fb_actions.toggle_hidden,
-					l = fb_actions.goto_cwd,
-					h = fb_actions.goto_parent_dir,
-					L = fb_actions.change_cwd,
-				},
-			},
-		})
-		require("telescope._extensions").load("file_browser")
-	end,
-})
 Plug("tami5/sqlite.lua")
-Plug("nvim-telescope/telescope-frecency.nvim", {
-	disable = true,
-	config = function()
-		require("telescope._extensions.frecency").setup({
-			show_scores = false,
-			show_unindexed = true,
-			ignore_patterns = { "*.git/*", "*/tmp/*" },
-			workspaces = {
-				["c"] = ("%s/dotfiles"):format(vim.env.HOME),
-				["p"] = ("%s/.local/share/nvim/site/pluggins"):format(vim.env.HOME),
-			},
-		})
-		require("telescope._extensions").load("frecency")
-
-		-- map("n", "<leader>e", function()
-		-- 	require("telescope").extensions.frecency.frecency({
-		-- 		default_text = ":c:",
-		-- 	})
-		-- end)
-
-		-- map("n", "<c-m-o>", function()
-		-- 	require("telescope").extensions.frecency.frecency()
-		-- end)
-	end,
-})
-Plug("nvim-telescope/telescope-cheat.nvim", {
-	config = function()
-		require("telescope._extensions").load("cheat")
-	end,
-})
 Plug("nvim-telescope/telescope.nvim", {
 	config = function()
 		local actions = require("telescope.actions")
@@ -303,7 +242,7 @@ Plug("nvim-telescope/telescope.nvim", {
 
 		vim.cmd("cnoreabbrev help lua require'telescope.builtin'.help_tags({default_text=''})<left><left><left>")
 		map("n", "<c-o>", function()
-			builtin.fd({ cwd = vim.fn.FindRootDirectory() })
+			builtin.fd({ cwd = require("libp.path").find_directory(root_markers) })
 		end)
 
 		map("n", "/", function()
@@ -318,44 +257,34 @@ Plug("nvim-telescope/telescope.nvim", {
 
 		map("n", "<leader>e", function()
 			local opts = {}
-			pickers.new(opts, {
-				finder = finders.new_table({
-					results = vim.fn.systemlist("$HOME/dotfiles/misc/watchfiles.sh nvim"),
-				}),
-				previewer = conf.file_previewer(opts),
-				sorter = conf.generic_sorter(opts),
-			}):find()
+			pickers
+				.new(opts, {
+					finder = finders.new_table({
+						results = vim.fn.systemlist("$HOME/dotfiles/misc/watchfiles.sh nvim"),
+					}),
+					previewer = conf.file_previewer(opts),
+					sorter = conf.generic_sorter(opts),
+				})
+				:find()
 		end)
 		map("n", "<c-m-o>", function()
 			local opts = {}
-			pickers.new(opts, {
-				finder = finders.new_table({
-					results = vim.tbl_filter(function(e)
-						return vim.fn.filereadable(e) ~= 0
-					end, require("oldfiles").oldfiles()),
-				}),
-				previewer = conf.file_previewer(opts),
-				sorter = conf.generic_sorter(opts),
-			}):find()
+			pickers
+				.new(opts, {
+					finder = finders.new_table({
+						results = vim.tbl_filter(function(e)
+							return vim.fn.filereadable(e) ~= 0
+						end, require("oldfiles").oldfiles()),
+					}),
+					previewer = conf.file_previewer(opts),
+					sorter = conf.generic_sorter(opts),
+				})
+				:find()
 		end)
 	end,
 })
 
 Plug("junegunn/fzf", { run = "call fzf#install()" })
-
-Plug("j-hui/fidget.nvim", {
-	disable = true,
-	branch = "main",
-	config = function()
-		require("fidget").setup()
-	end,
-})
-
-Plug("airblade/vim-rooter", {
-	setup = function()
-		vim.g.rooter_manual_only = 1
-	end,
-})
 
 Plug("glacambre/firenvim", {
 	run = 'lua vim.fn["firenvim#install"](0)',
@@ -398,14 +327,57 @@ Plug("glacambre/firenvim", {
 
 Plug("kevinhwang91/promise-async")
 Plug("kevinhwang91/nvim-ufo", {
-	disable = true,
 	config = function()
-		local capabilities = vim.lsp.protocol.make_client_capabilities()
-		capabilities.textDocument.foldingRange = {
-			dynamicRegistration = false,
-			lineFoldingOnly = true,
-		}
-		require("ufo").setup()
+		vim.o.foldlevel = 99
+		vim.o.foldlevelstart = -1
+		vim.o.foldenable = true
+		local handler = function(virtText, lnum, endLnum, width, truncate)
+			local newVirtText = {}
+			local suffix = ("  %d "):format(endLnum - lnum)
+			local sufWidth = vim.fn.strdisplaywidth(suffix)
+			local targetWidth = width - sufWidth
+			local curWidth = 0
+			for _, chunk in ipairs(virtText) do
+				local chunkText = chunk[1]
+				local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+				if targetWidth > curWidth + chunkWidth then
+					table.insert(newVirtText, chunk)
+				else
+					chunkText = truncate(chunkText, targetWidth - curWidth)
+					local hlGroup = chunk[2]
+					table.insert(newVirtText, { chunkText, hlGroup })
+					chunkWidth = vim.fn.strdisplaywidth(chunkText)
+					-- str width returned from truncate() may less than 2nd argument, need padding
+					if curWidth + chunkWidth < targetWidth then
+						suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
+					end
+					break
+				end
+				curWidth = curWidth + chunkWidth
+			end
+			table.insert(newVirtText, { suffix, "MoreMsg" })
+			return newVirtText
+		end
+
+		require("ufo").setup({
+			fold_virt_text_handler = handler,
+			provider_selector = function()
+				return { "treesitter", "indent" }
+			end,
+			preview = {
+				mappings = {
+					scrollU = "<C-u>",
+					scrollD = "<C-d>",
+				},
+			},
+		})
+		vim.keymap.set("n", "K", function()
+			local winid = require("ufo").peekFoldedLinesUnderCursor()
+			if not winid then
+				-- nvimlsp
+				vim.lsp.buf.hover()
+			end
+		end)
 	end,
 })
 
@@ -414,8 +386,8 @@ Plug("git@github.com:ipod825/vim-tabdrop")
 
 Plug("jreybert/vimagit")
 
--- Plug('nvim-lua/plenary.nvim')
-Plug("git@github.com:ipod825/plenary.nvim", {
+Plug("nvim-lua/plenary.nvim", {
+	-- Plug("git@github.com:ipod825/plenary.nvim", {
 	config = function()
 		vim.api.nvim_create_autocmd("Filetype", {
 			group = vim.api.nvim_create_augroup("PLENARY", {}),
@@ -725,22 +697,47 @@ Plug("lervag/vimtex", {
 	end,
 })
 
-Plug("hrsh7th/vim-vsnip-integ")
-Plug("hrsh7th/vim-vsnip", {
-	setup = function()
-		vim.g.vsnip_snippet_dir = vim.fn.stdpath("config") .. "/snippets/vsnip"
-	end,
+-- Plug("hrsh7th/vim-vsnip-integ")
+-- Plug("hrsh7th/vim-vsnip", {
+-- 	setup = function()
+-- 		vim.g.vsnip_snippet_dir = vim.fn.stdpath("config") .. "/snippets/vsnip"
+-- 	end,
+-- 	config = function()
+-- 		map(
+-- 			"i",
+-- 			"<tab>",
+-- 			'vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<tab>"',
+-- 			{ expr = true, remap = true }
+-- 		)
+-- 		map("i", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
+-- 		map("s", "<tab>", 'vsnip#jumpable(1) ? "<Plug>(vsnip-jump-next)" : "<tab>"', { expr = true, remap = true })
+-- 		map("s", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
+-- 	end,
+-- })
+
+Plug("L3MON4D3/LuaSnip", {
 	config = function()
 		map(
 			"i",
 			"<tab>",
-			'vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<tab>"',
-			{ expr = true, remap = true }
+			'luasnip#expand_or_jumpable() ? "<Plug>(luasnip-expand-or-jump)" : "<tab>"',
+			{ expr = true, remap = true, silent = true }
 		)
-		map("i", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
-		map("s", "<tab>", 'vsnip#jumpable(1) ? "<Plug>(vsnip-jump-next)" : "<tab>"', { expr = true, remap = true })
-		map("s", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
-	end,
+		map("i", "<tab>", function()
+				require("luasnip").jump(1)
+			end,{
+			silent = true
+		})
+		map("i", "<s-tab>",function()
+				require("luasnip").jump(-1)
+			end ,{
+			silent = true
+		})
+
+        vim.api.nvim_create_user_command('LuaSnipEdit', function()
+            require("luasnip.loaders").edit_snippet_files()
+        end, {})
+    end
 })
 
 Plug("rhysd/vim-grammarous", { on_cmd = "GrammarousCheck" })
@@ -756,8 +753,6 @@ Plug("junegunn/vim-easy-align", {
 		map("x", "ga", "<Plug>(EasyAlign)", { remap = true })
 	end,
 })
-
-Plug("farmergreg/vim-lastplace")
 
 Plug("git@github.com:ipod825/war.vim", {
 	config = function()
@@ -831,6 +826,10 @@ Plug("kevinhwang91/nvim-bqf", {
 				wrap = true,
 				number = false,
 				relativenumber = false,
+			},
+			func_map={
+			    tabdrop='<cr>',
+			    open='<c-e>'
 			},
 			preview = { win_height = 50 },
 		})
@@ -1003,7 +1002,7 @@ Plug("eugen0329/vim-esearch", {
 			default_mappings = 0,
 			live_update = 0,
 			win_ui_nvim_syntax = 1,
-			root_markers = { ".git", ".hg", ".svn", ".bzr", "_darcs", "OWNERS", ".root" },
+			root_markers = root_markers,
 			remember = {
 				"case",
 				"regex",
