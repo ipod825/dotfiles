@@ -9,3 +9,5 @@ pyflakes
 pydocstyle
 yapf
 isort
+i3-py
+i3-cycle

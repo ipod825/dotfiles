@@ -17,10 +17,10 @@ bindsym XF86AudioLowerVolume exec pulsemixer --change-volume -5 && pkill -RTMIN+
 bindsym XF86AudioMute exec pulsemixer --toggle-mute && pkill -RTMIN+10 i3blocks
 bindsym Print deepin-screenshot
 bindsym $mod+q exec i3-msg kill
-bindsym $mod+h exec i3-msg focus left
-bindsym $mod+l exec i3-msg focus right
-bindsym $mod+j exec i3-msg focus down
-bindsym $mod+k exec i3-msg focus up
+bindsym $mod+h exec i3-cycle left
+bindsym $mod+l exec i3-cycle right
+bindsym $mod+j exec i3-cycle down
+bindsym $mod+k exec i3-cycle up
 bindsym $mod+f exec i3-msg floating toggle
 bindsym $mod+ctrl+h exec i3-msg move left
 bindsym $mod+ctrl+j exec i3-msg move down
@@ -29,6 +29,9 @@ bindsym $mod+ctrl+l exec i3-msg move right
 bindsym $mod+1 workspace number 1 
 bindsym $mod+2 workspace number 2 
 bindsym $mod+3 workspace number 3 
+workspace 1 output DP-0
+workspace 2 output DP-0
+workspace 3 output DP-2
 bindsym $mod+Shift+1 exec "i3-msg move container to workspace number 1;i3-msg workspace number 1"
 bindsym $mod+Shift+2 exec "i3-msg move container to workspace number 2;i3-msg workspace number 2"
 bindsym $mod+Shift+3 exec "i3-msg move container to workspace number 3;i3-msg workspace number 3"
