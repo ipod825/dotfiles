@@ -26,7 +26,7 @@ bind / fillcmdline find
 bind ? fillcmdline find -?
 bind n findnext 1
 bind N findnext -1
-bind h back 
+bind h back
 bind l forward
 bind q composite tabclose | tab #
 bind x composite tabclose | tab #
@@ -34,7 +34,6 @@ bind X undo tab
 bind ; fillcmdline_notrail
 bind zt hint -z
 bind zk hint -k
-bind <CS-f> hint -qb
 bind yt tabduplicate
 bind <c-h> tabprev
 bind <c-l> tabnext

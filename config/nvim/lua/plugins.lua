@@ -353,7 +353,10 @@ Plug("nvim-telescope/telescope.nvim", {
 			pickers
 				.new(opts, {
 					finder = finders.new_table({
-						results = vim.fn.systemlist("$HOME/dotfiles/misc/watchfiles.sh nvim"),
+						results = vim.split(
+							vim.fn.glob("$HOME/dotfiles/**/.[^.]*") .. "\n" .. vim.fn.glob("$HOME/dotfiles/**/*"),
+							"\n"
+						),
 					}),
 					previewer = conf.file_previewer(opts),
 					sorter = conf.generic_sorter(opts),
