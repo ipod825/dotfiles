@@ -97,6 +97,18 @@ ls.add_snippets("cpp", {
 		)
 	),
 	s(
+		"fn",
+		fmta(
+			[[
+        <> <>(<>){
+            <>
+        }
+        <>
+	]],
+			{ i(1, "void"), i(2, "func"), i(3), i(4), i(0) }
+		)
+	),
+	s(
 		"if",
 		fmta(
 			[[

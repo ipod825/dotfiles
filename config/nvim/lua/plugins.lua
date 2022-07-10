@@ -10,9 +10,54 @@ local root_markers = { ".git", ".hg", ".svn", ".bzr", "_darcs", "OWNERS", ".root
 Plug.begin()
 
 Plug("kyazdani42/nvim-web-devicons")
+Plug("tridactyl/vim-tridactyl")
+Plug("glacambre/firenvim", {
+	run = 'lua vim.fn["firenvim#install"](0)',
+	setup = function()
+		vim.g.firenvim_config = {
+			localSettings = {
+				[".*"] = {
+					takeover = "never",
+				},
+			},
+		}
+	end,
+	config = function()
+		vim.g.firenvim_config = {
+			localSettings = {
+				[".*"] = {
+					takeover = "never",
+				},
+			},
+		}
+		vim.api.nvim_create_autocmd("UIEnter", {
+			group = vim.api.nvim_create_augroup("FIRE_NVIM", {}),
+			callback = function()
+				if not vim.g.started_by_firenvim then
+					return
+				end
+				vim.o.laststatus = 0
+				map("n", "q", "<cmd>x<cr>")
 
+				vim.api.nvim_create_autocmd("BufEnter", {
+					pattern = "*colab.corp.google.com_*",
+					callback = function()
+						vim.bo.filetype = "python"
+					end,
+				})
+			end,
+		})
+	end,
+})
+
+Plug("wsdjeg/vim-fetch")
+Plug("farmergreg/vim-lastplace")
+Plug("norcalli/nvim-colorizer.lua", {
+	config = function()
+		require("colorizer").setup()
+	end,
+})
 Plug("terrortylor/nvim-comment", {
-	branch = "main",
 	config = function()
 		require("nvim_comment").setup({
 			comment_empty = true,
@@ -25,32 +70,103 @@ Plug("terrortylor/nvim-comment", {
 	end,
 })
 
+Plug("kevinhwang91/promise-async")
+Plug("kevinhwang91/nvim-ufo", {
+	config = function()
+		vim.o.foldlevel = 99
+		vim.o.foldlevelstart = -1
+		vim.o.foldenable = true
+		local handler = function(virtText, lnum, endLnum, width, truncate)
+			local newVirtText = {}
+			local suffix = ("  %d "):format(endLnum - lnum)
+			local sufWidth = vim.fn.strdisplaywidth(suffix)
+			local targetWidth = width - sufWidth
+			local curWidth = 0
+			for _, chunk in ipairs(virtText) do
+				local chunkText = chunk[1]
+				local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+				if targetWidth > curWidth + chunkWidth then
+					table.insert(newVirtText, chunk)
+				else
+					chunkText = truncate(chunkText, targetWidth - curWidth)
+					local hlGroup = chunk[2]
+					table.insert(newVirtText, { chunkText, hlGroup })
+					chunkWidth = vim.fn.strdisplaywidth(chunkText)
+					-- str width returned from truncate() may less than 2nd argument, need padding
+					if curWidth + chunkWidth < targetWidth then
+						suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
+					end
+					break
+				end
+				curWidth = curWidth + chunkWidth
+			end
+			table.insert(newVirtText, { suffix, "MoreMsg" })
+			return newVirtText
+		end
+
+		require("ufo").setup({
+			fold_virt_text_handler = handler,
+			provider_selector = function()
+				return { "treesitter", "indent" }
+			end,
+			preview = {
+				mappings = {
+					scrollU = "<C-u>",
+					scrollD = "<C-d>",
+				},
+			},
+		})
+		vim.keymap.set("n", "zR", require("ufo").openAllFolds)
+		vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+		vim.keymap.set("n", "K", function()
+			local winid = require("ufo").peekFoldedLinesUnderCursor()
+			if not winid then
+				vim.lsp.buf.hover()
+			end
+		end)
+	end,
+})
+Plug("git@github.com:ipod825/vim-tabdrop")
+Plug("git@github.com:ipod825/msearch.vim", {
+	config = function()
+		map("n", "8", "<Plug>MSToggleAddCword", { remap = true })
+		map("x", "8", "<Plug>MSToggleAddVisual", { remap = true })
+		map("n", "*", "<Plug>MSExclusiveAddCword", { remap = true })
+		map("x", "*", "<Plug>MSExclusiveAddVisual", { remap = true })
+		map("n", "n", "<Plug>MSNext", { remap = true })
+		map("n", "N", "<Plug>MSPrev", { remap = true })
+		map("o", "n", "<Plug>MSNext", { remap = true })
+		map("o", "N", "<Plug>MSPrev", { remap = true })
+		map("n", "<leader>n", "<Plug>MSToggleJump", { remap = true })
+		map("n", "<leader>/", "<Plug>MSClear", { remap = true })
+		map("n", "?", "<Plug>MSAddBySearchForward", { remap = true })
+	end,
+})
+
+Plug("nvim-lua/plenary.nvim", {
+	-- Plug("git@github.com:ipod825/plenary.nvim", {
+	config = function()
+		vim.api.nvim_create_autocmd("Filetype", {
+			group = vim.api.nvim_create_augroup("PLENARY", {}),
+			pattern = "lua",
+			callback = function()
+				map("n", "<F5>", function()
+					require("plenary.test_harness").test_directory(vim.fn.expand("%:p"))
+				end, { desc = "plenary test file" })
+			end,
+		})
+	end,
+})
+
 Plug("nvim-treesitter/nvim-treesitter", {
 	run = ":TSUpdate",
 	config = function()
 		require("nvim-treesitter.configs").setup({
 			ensure_installed = {
 				"bash",
-				"bibtex",
-				"c",
-				"comment",
 				"cpp",
-				"css",
-				"fennel",
-				"go",
-				"html",
-				"java",
-				"javascript",
-				"json",
-				"jsonc",
-				"julia",
-				"latex",
 				"lua",
 				"python",
-				"rust",
-				"toml",
-				"typescript",
-				"yaml",
 			},
 			highlight = { enable = true },
 			incremental_selection = { enable = false },
@@ -61,12 +177,16 @@ Plug("nvim-treesitter/nvim-treesitter", {
 
 Plug("lewis6991/spellsitter.nvim", {
 	config = function()
+		vim.api.nvim_create_autocmd("Filetype", {
+			group = vim.api.nvim_create_augroup("SPELLSITTER", {}),
+			pattern = { "cpp", "lua", "python", "markdown", "tex", "asciidoc", "gitcommit", "hgcommit" },
+			callback = function()
+				vim.cmd("setlocal spell")
+			end,
+		})
 		require("spellsitter").setup({ enable = true })
 	end,
 })
-
-Plug("ray-x/lsp_signature.nvim", { disable = true })
-Plug("tridactyl/vim-tridactyl")
 
 Plug("nvim-treesitter/nvim-treesitter-textobjects", {
 	config = function()
@@ -103,14 +223,13 @@ Plug("nvim-treesitter/playground", {
 			playground = {
 				enable = true,
 				disable = {},
-				updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
-				persist_queries = false, -- Whether the query persists across vim sessions
+				updatetime = 25,
+				persist_queries = false,
 			},
 		})
 	end,
 })
 
--- Plug('romgrk/nvim-treesitter-context')
 Plug("haringsrob/nvim_context_vt")
 Plug("wellle/context.vim", {
 	on_cmd = "ContextPeek",
@@ -123,7 +242,6 @@ Plug("wellle/context.vim", {
 	end,
 })
 
-Plug("farmergreg/vim-lastplace")
 Plug("ldelossa/litee.nvim", {
 	config = function()
 		require("litee.lib").setup()
@@ -138,34 +256,6 @@ Plug("ldelossa/gh.nvim", {
 
 Plug("tpope/vim-abolish")
 
-Plug("gbprod/yanky.nvim", {
-	config = function()
-		require("yanky").setup({})
-		vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)", {})
-		vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)", {})
-		vim.keymap.set("x", "p", "<Plug>(YankyPutAfter)", {})
-		vim.keymap.set("x", "P", "<Plug>(YankyPutBefore)", {})
-		vim.keymap.set("n", "gp", "<Plug>(YankyGPutAfter)", {})
-		vim.keymap.set("n", "gP", "<Plug>(YankyGPutBefore)", {})
-		vim.keymap.set("x", "gp", "<Plug>(YankyGPutAfter)", {})
-		vim.keymap.set("x", "gP", "<Plug>(YankyGPutBefore)", {})
-		require("telescope._extensions").load("yank_history")
-	end,
-})
-
-Plug("nvim-telescope/telescope-fzf-native.nvim", {
-	branch = "main",
-	run = "make",
-	config = function()
-		require("telescope._extensions.fzf").setup({
-			fuzzy = true,
-			override_generic_sorter = true,
-			override_file_sorter = true,
-		}, {})
-		require("telescope._extensions").load("fzf")
-	end,
-})
-Plug("tami5/sqlite.lua")
 Plug("nvim-telescope/telescope.nvim", {
 	config = function()
 		local actions = require("telescope.actions")
@@ -287,122 +377,36 @@ Plug("nvim-telescope/telescope.nvim", {
 	end,
 })
 
+Plug("gbprod/yanky.nvim", {
+	config = function()
+		require("yanky").setup({})
+		vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)", {})
+		vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)", {})
+		vim.keymap.set("x", "p", "<Plug>(YankyPutAfter)", {})
+		vim.keymap.set("x", "P", "<Plug>(YankyPutBefore)", {})
+		vim.keymap.set("n", "gp", "<Plug>(YankyGPutAfter)", {})
+		vim.keymap.set("n", "gP", "<Plug>(YankyGPutBefore)", {})
+		vim.keymap.set("x", "gp", "<Plug>(YankyGPutAfter)", {})
+		vim.keymap.set("x", "gP", "<Plug>(YankyGPutBefore)", {})
+		require("telescope._extensions").load("yank_history")
+	end,
+})
+
+Plug("nvim-telescope/telescope-fzf-native.nvim", {
+	run = "make",
+	config = function()
+		require("telescope._extensions.fzf").setup({
+			fuzzy = true,
+			override_generic_sorter = true,
+			override_file_sorter = true,
+		}, {})
+		require("telescope._extensions").load("fzf")
+	end,
+})
+
 Plug("junegunn/fzf", { run = "call fzf#install()" })
 
-Plug("glacambre/firenvim", {
-	run = 'lua vim.fn["firenvim#install"](0)',
-	setup = function()
-		vim.g.firenvim_config = {
-			localSettings = {
-				[".*"] = {
-					takeover = "never",
-				},
-			},
-		}
-	end,
-	config = function()
-		vim.g.firenvim_config = {
-			localSettings = {
-				[".*"] = {
-					takeover = "never",
-				},
-			},
-		}
-		vim.api.nvim_create_autocmd("UIEnter", {
-			group = vim.api.nvim_create_augroup("FIRE_NVIM", {}),
-			callback = function()
-				if not vim.g.started_by_firenvim then
-					return
-				end
-				vim.o.laststatus = 0
-				map("n", "q", "<cmd>x<cr>")
-
-				vim.api.nvim_create_autocmd("BufEnter", {
-					pattern = "*colab.corp.google.com_*",
-					callback = function()
-						vim.bo.filetype = "python"
-					end,
-				})
-			end,
-		})
-	end,
-})
-
-Plug("kevinhwang91/promise-async")
-Plug("kevinhwang91/nvim-ufo", {
-	config = function()
-		vim.o.foldlevel = 99
-		vim.o.foldlevelstart = -1
-		vim.o.foldenable = true
-		local handler = function(virtText, lnum, endLnum, width, truncate)
-			local newVirtText = {}
-			local suffix = ("  %d "):format(endLnum - lnum)
-			local sufWidth = vim.fn.strdisplaywidth(suffix)
-			local targetWidth = width - sufWidth
-			local curWidth = 0
-			for _, chunk in ipairs(virtText) do
-				local chunkText = chunk[1]
-				local chunkWidth = vim.fn.strdisplaywidth(chunkText)
-				if targetWidth > curWidth + chunkWidth then
-					table.insert(newVirtText, chunk)
-				else
-					chunkText = truncate(chunkText, targetWidth - curWidth)
-					local hlGroup = chunk[2]
-					table.insert(newVirtText, { chunkText, hlGroup })
-					chunkWidth = vim.fn.strdisplaywidth(chunkText)
-					-- str width returned from truncate() may less than 2nd argument, need padding
-					if curWidth + chunkWidth < targetWidth then
-						suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
-					end
-					break
-				end
-				curWidth = curWidth + chunkWidth
-			end
-			table.insert(newVirtText, { suffix, "MoreMsg" })
-			return newVirtText
-		end
-
-		require("ufo").setup({
-			fold_virt_text_handler = handler,
-			provider_selector = function()
-				return { "treesitter", "indent" }
-			end,
-			preview = {
-				mappings = {
-					scrollU = "<C-u>",
-					scrollD = "<C-d>",
-				},
-			},
-		})
-		vim.keymap.set("n", "K", function()
-			local winid = require("ufo").peekFoldedLinesUnderCursor()
-			if not winid then
-				-- nvimlsp
-				vim.lsp.buf.hover()
-			end
-		end)
-	end,
-})
-
-Plug("wsdjeg/vim-fetch")
-Plug("git@github.com:ipod825/vim-tabdrop")
-
 Plug("jreybert/vimagit")
-
-Plug("nvim-lua/plenary.nvim", {
-	-- Plug("git@github.com:ipod825/plenary.nvim", {
-	config = function()
-		vim.api.nvim_create_autocmd("Filetype", {
-			group = vim.api.nvim_create_augroup("PLENARY", {}),
-			pattern = "lua",
-			callback = function()
-				map("n", "<F5>", function()
-					require("plenary.test_harness").test_directory(vim.fn.expand("%:p"))
-				end, { desc = "plenary test file" })
-			end,
-		})
-	end,
-})
 
 Plug("hoob3rt/lualine.nvim", {
 	config = function()
@@ -491,24 +495,6 @@ Plug("hoob3rt/lualine.nvim", {
 		})
 	end,
 })
-
-Plug("git@github.com:ipod825/msearch.vim", {
-	config = function()
-		map("n", "8", "<Plug>MSToggleAddCword", { remap = true })
-		map("x", "8", "<Plug>MSToggleAddVisual", { remap = true })
-		map("n", "*", "<Plug>MSExclusiveAddCword", { remap = true })
-		map("x", "*", "<Plug>MSExclusiveAddVisual", { remap = true })
-		map("n", "n", "<Plug>MSNext", { remap = true })
-		map("n", "N", "<Plug>MSPrev", { remap = true })
-		map("o", "n", "<Plug>MSNext", { remap = true })
-		map("o", "N", "<Plug>MSPrev", { remap = true })
-		map("n", "<leader>n", "<Plug>MSToggleJump", { remap = true })
-		map("n", "<leader>/", "<Plug>MSClear", { remap = true })
-		map("n", "?", "<Plug>MSAddBySearchForward", { remap = true })
-	end,
-})
-
-Plug("fatih/vim-go", { ft = "go" })
 
 Plug("voldikss/vim-translator", { cmd = "TranslateW" })
 
@@ -642,16 +628,15 @@ Plug("lukas-reineke/indent-blankline.nvim", {
 })
 
 Plug("hrsh7th/cmp-nvim-lua")
-Plug("hrsh7th/cmp-nvim-lsp-signature-help", { branch = "main" })
-Plug("hrsh7th/cmp-buffer", { branch = "main" })
-Plug("hrsh7th/cmp-nvim-lsp", { branch = "main" })
-Plug("hrsh7th/cmp-vsnip", { disable = true, branch = "main" })
-Plug("hrsh7th/cmp-path", { branch = "main" })
-Plug("hrsh7th/cmp-nvim-lua", { branch = "main" })
+Plug("hrsh7th/cmp-nvim-lsp-signature-help")
+Plug("hrsh7th/cmp-buffer")
+Plug("hrsh7th/cmp-nvim-lsp")
+Plug("hrsh7th/cmp-vsnip", { disable = true })
+Plug("hrsh7th/cmp-path")
+Plug("hrsh7th/cmp-nvim-lua")
 Plug("f3fora/cmp-spell")
-Plug("hrsh7th/cmp-cmdline", { branch = "main" })
+Plug("hrsh7th/cmp-cmdline")
 Plug("hrsh7th/nvim-cmp", {
-	branch = "main",
 	config = function()
 		local cmp = require("cmp")
 		cmp.setup({
@@ -675,19 +660,13 @@ Plug("hrsh7th/nvim-cmp", {
 			sources = cmp.config.sources({
 				{ name = "luasnip" },
 				-- { name = "vsnip" },
-				-- { name = "nvim_lsp_signature_help" },
+				{ name = "nvim_lsp_signature_help" },
 				{ name = "nvim_lua" },
 				{ name = "nvim_lsp" },
 				{ name = "buffer" },
 				{ name = "spell" },
 			}),
 		})
-	end,
-})
-
-Plug("norcalli/nvim-colorizer.lua", {
-	config = function()
-		require("colorizer").setup()
 	end,
 })
 
@@ -810,8 +789,6 @@ Plug("git@github.com:ipod825/war.vim", {
 	end,
 })
 
-Plug("vim-test/vim-test", { disable = true })
-
 Plug("hkupty/iron.nvim", {
 	config = function()
 		local iron = require("iron.core")
@@ -853,7 +830,6 @@ Plug("kosayoda/nvim-lightbulb", {
 })
 
 Plug("kevinhwang91/nvim-bqf", {
-	branch = "main",
 	ft = "qf",
 	config = function()
 		require("bqf").setup({
@@ -880,9 +856,7 @@ Plug("lukas-reineke/lsp-format.nvim", {
 		})
 	end,
 })
-
 Plug("williamboman/nvim-lsp-installer", {
-	branch = "main",
 	config = function()
 		require("nvim-lsp-installer").setup({})
 	end,
@@ -968,7 +942,6 @@ Plug("git@github.com:ipod825/vim-expand-region", {
 Plug("majutsushi/tagbar")
 
 Plug("git@github.com:ipod825/oldfiles.nvim", {
-	branch = "main",
 	config = function()
 		require("oldfiles").setup()
 	end,
@@ -1061,7 +1034,6 @@ Plug("eugen0329/vim-esearch", {
 	end,
 })
 
-Plug("kkoomen/vim-doge", { disable = true })
 Plug("will133/vim-dirdiff", { on_cmd = "DirDiff" })
 
 Plug("mrjones2014/smart-splits.nvim")
@@ -1113,7 +1085,6 @@ Plug("skywind3000/asynctasks.vim", {
 
 -- Plug("tanvirtin/vgit.nvim", {
 -- 	diable = true,
--- 	branch = "main",
 -- 	config = function()
 -- 		require("vgit").setup({ settings = { live_gutter = { enabled = false } } })
 -- 	end,
@@ -1128,9 +1099,8 @@ Plug("lambdalisue/gina.vim", {
 
 Plug("whiteinge/diffconflicts")
 
-Plug("git@github.com:ipod825/libp.nvim", { branch = "main" })
+Plug("git@github.com:ipod825/libp.nvim")
 Plug("git@github.com:ipod825/igit.nvim", {
-	branch = "main",
 	config = function()
 		vim.cmd("cnoreabbrev G IGit status")
 		vim.cmd("cnoreabbrev gbr IGit branch")

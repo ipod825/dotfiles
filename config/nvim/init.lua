@@ -57,6 +57,7 @@ vim.o.shortmess = vim.o.shortmess .. "c"
 vim.o.undofile = true
 vim.o.undodir = vim.fn.stdpath("cache") .. "/undo"
 vim.o.switchbuf = "usetab"
+vim.o.spell = false
 vim.api.nvim_exec(
 	[[
     set copyindent
@@ -117,15 +118,6 @@ vim.api.nvim_create_autocmd("BufRead", {
 		vim.bo.filetype = "sxhkdrc"
 		vim.bo.commentstring = "#%s"
 		vim.bo.foldmethod = "marker"
-	end,
-})
-
--- Technical writing
-vim.api.nvim_create_autocmd("Filetype", {
-	group = GENERAL,
-	pattern = { "markdown", "tex", "asciidoc" },
-	callback = function()
-		vim.wo.spell = true
 	end,
 })
 
