@@ -8,8 +8,7 @@ vim.g.mapleader = " "
 -- Mode Changing
 map("n", ";", ":")
 map("i", "jk", "<esc>l")
-map("c", "jk", "<esc>")
-map("o", "jk", "<esc>")
+map({ "c", "o", "s" }, "jk", "<esc>")
 map("c", "<m-d>", "<c-f>dwi")
 map("x", "<cr>", "<esc>")
 map("i", "<c-a>", "<esc><c-w>")
@@ -17,10 +16,8 @@ map("i", "<c-a>", "<esc><c-w>")
 -- Moving Around
 map("n", "j", "gj")
 map("n", "k", "gk")
-map("n", "<c-k>", "<cmd> lua mapping.previous_block()<cr>")
-map("n", "<c-j>", "<cmd> lua mapping.next_block()<cr>")
-map("x", "<c-k>", "<cmd> lua mapping.previous_block()<cr>")
-map("x", "<c-j>", "<cmd> lua mapping.next_block()<cr>")
+map({ "n", "x" }, "<c-k>", "<cmd> lua mapping.previous_block()<cr>")
+map({ "n", "x" }, "<c-j>", "<cmd> lua mapping.next_block()<cr>")
 map("i", "<c-h>", "<left>")
 map("i", "<c-l>", "<right>")
 map("i", "<c-j>", "<down>")
@@ -41,12 +38,10 @@ function M.next_window()
 end
 
 -- Moving Around (home,END)
-map("o", "<m-h>", "g^")
-map("o", "<m-l>", "g$")
+map({ "o", "n" }, "<m-h>", "g^")
+map({ "o", "n" }, "<m-l>", "g$")
 map("x", "<m-h>", "g^")
 map("x", "<m-l>", "g$<left>")
-map("n", "<m-h>", "g^")
-map("n", "<m-l>", "g$")
 map("i", "<m-h>", "<Esc>g^i")
 map("i", "<m-l>", "<Esc>g_i")
 map("c", "<m-h>", "<c-b>")
@@ -173,8 +168,7 @@ function M.move_to_next_tab()
 end
 
 -- Window
-map("n", "<c-a>", "<c-w>")
-map("i", "<c-a>", "<Esc><c-w>")
+map({ "i", "n" }, "<c-a>", "<Esc><c-w>")
 map("n", "<c-m-down>", "<c-w>+")
 map("n", "<c-m-up>", "<c-w>-")
 map("n", "<c-m-left>", "<c-w><")

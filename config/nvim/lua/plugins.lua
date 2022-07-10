@@ -20,6 +20,8 @@ Plug("terrortylor/nvim-comment", {
 		})
 		map("n", "<c-/>", "<cmd>CommentToggle<cr>")
 		map("v", "<c-/>", ":<c-u>call CommentOperator(visualmode())<cr>")
+		map("n", "<c-_>", "<cmd>CommentToggle<cr>")
+		map("v", "<c-_>", ":<c-u>call CommentOperator(visualmode())<cr>")
 	end,
 })
 
@@ -63,7 +65,7 @@ Plug("lewis6991/spellsitter.nvim", {
 	end,
 })
 
-Plug("ray-x/lsp_signature.nvim")
+Plug("ray-x/lsp_signature.nvim", { disable = true })
 Plug("tridactyl/vim-tridactyl")
 
 Plug("nvim-treesitter/nvim-treesitter-textobjects", {
@@ -121,6 +123,7 @@ Plug("wellle/context.vim", {
 	end,
 })
 
+Plug("farmergreg/vim-lastplace")
 Plug("ldelossa/litee.nvim", {
 	config = function()
 		require("litee.lib").setup()
@@ -642,7 +645,7 @@ Plug("hrsh7th/cmp-nvim-lua")
 Plug("hrsh7th/cmp-nvim-lsp-signature-help", { branch = "main" })
 Plug("hrsh7th/cmp-buffer", { branch = "main" })
 Plug("hrsh7th/cmp-nvim-lsp", { branch = "main" })
-Plug("hrsh7th/cmp-vsnip", { branch = "main" })
+Plug("hrsh7th/cmp-vsnip", { disable = true, branch = "main" })
 Plug("hrsh7th/cmp-path", { branch = "main" })
 Plug("hrsh7th/cmp-nvim-lua", { branch = "main" })
 Plug("f3fora/cmp-spell")
@@ -655,7 +658,8 @@ Plug("hrsh7th/nvim-cmp", {
 			completion = { completeopt = "menu,menuone,noinsert" },
 			snippet = {
 				expand = function(args)
-					vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+					-- vim.fn["vsnip#anonymous"](args.body)
+					require("luasnip").lsp_expand(args.body)
 				end,
 			},
 			mapping = {
@@ -669,11 +673,12 @@ Plug("hrsh7th/nvim-cmp", {
 				["<cr>"] = cmp.mapping.confirm({ select = true }),
 			},
 			sources = cmp.config.sources({
-				{ name = "nvim_lsp_signature_help" },
+				{ name = "luasnip" },
+				-- { name = "vsnip" },
+				-- { name = "nvim_lsp_signature_help" },
 				{ name = "nvim_lua" },
 				{ name = "nvim_lsp" },
 				{ name = "buffer" },
-				{ name = "vsnip" },
 				{ name = "spell" },
 			}),
 		})
@@ -697,47 +702,77 @@ Plug("lervag/vimtex", {
 	end,
 })
 
--- Plug("hrsh7th/vim-vsnip-integ")
--- Plug("hrsh7th/vim-vsnip", {
--- 	setup = function()
--- 		vim.g.vsnip_snippet_dir = vim.fn.stdpath("config") .. "/snippets/vsnip"
--- 	end,
--- 	config = function()
--- 		map(
--- 			"i",
--- 			"<tab>",
--- 			'vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<tab>"',
--- 			{ expr = true, remap = true }
--- 		)
--- 		map("i", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
--- 		map("s", "<tab>", 'vsnip#jumpable(1) ? "<Plug>(vsnip-jump-next)" : "<tab>"', { expr = true, remap = true })
--- 		map("s", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
--- 	end,
--- })
+Plug("gpanders/nvim-parinfer")
 
-Plug("L3MON4D3/LuaSnip", {
+Plug("hrsh7th/vim-vsnip-integ", { disable = true })
+Plug("hrsh7th/vim-vsnip", {
+	disable = true,
+	setup = function()
+		vim.g.vsnip_snippet_dir = vim.fn.stdpath("config") .. "/snippets/vsnip"
+	end,
 	config = function()
 		map(
 			"i",
 			"<tab>",
-			'luasnip#expand_or_jumpable() ? "<Plug>(luasnip-expand-or-jump)" : "<tab>"',
-			{ expr = true, remap = true, silent = true }
+			'vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<tab>"',
+			{ expr = true, remap = true }
 		)
-		map("i", "<tab>", function()
-				require("luasnip").jump(1)
-			end,{
-			silent = true
-		})
-		map("i", "<s-tab>",function()
-				require("luasnip").jump(-1)
-			end ,{
-			silent = true
-		})
+		map("i", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
+		map("s", "<tab>", 'vsnip#jumpable(1) ? "<Plug>(vsnip-jump-next)" : "<tab>"', { expr = true, remap = true })
+		map("s", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
+	end,
+})
 
-        vim.api.nvim_create_user_command('LuaSnipEdit', function()
-            require("luasnip.loaders").edit_snippet_files()
-        end, {})
-    end
+Plug("saadparwaiz1/cmp_luasnip")
+Plug("L3MON4D3/LuaSnip", {
+	config = function()
+		map(
+			{ "i", "s" },
+			"<tab>",
+			'luasnip#expand_or_jumpable() ? "<Plug>luasnip-expand-or-jump" : "<tab>"',
+			{ expr = true, remap = true }
+		)
+		map({ "i", "s" }, "<s-tab>", '<cmd>lua require"luasnip".jump(-1)<Cr>')
+		map({ "i", "s", "n" }, "<c-s-j>", "<Plug>luasnip-next-choice")
+		map({ "i", "s", "n" }, "<c-s-k>", "<Plug>luasnip-prev-choice")
+		require("luasnip").config.set_config({
+			history = true,
+			-- Update more often, :h events for more info.
+			update_events = "TextChanged,TextChangedI",
+			-- Snippets aren't automatically removed if their text is deleted.
+			-- `delete_check_events` determines on which events (:h events) a check for
+			-- deleted snippets is performed.
+			-- This can be especially useful when `history` is enabled.
+			delete_check_events = "TextChanged",
+			ext_opts = {
+				[require("luasnip.util.types").choiceNode] = {
+					active = {
+						virt_text = { { "choiceNode", "Comment" } },
+					},
+				},
+			},
+			-- treesitter-hl has 100, use something higher (default is 200).
+			ext_base_prio = 300,
+			-- minimal increase in priority.
+			ext_prio_increase = 1,
+			enable_autosnippets = true,
+			-- mapping for cutting selected text so it's usable as SELECT_DEDENT,
+			-- SELECT_RAW or TM_SELECTED_TEXT (mapped via xmap).
+			store_selection_keys = "<Tab>",
+			-- luasnip uses this function to get the currently active filetype. This
+			-- is the (rather uninteresting) default, but it's possible to use
+			-- eg. treesitter for getting the current filetype by setting ft_func to
+			-- require("luasnip.extras.filetype_functions").from_cursor (requires
+			-- `nvim-treesitter/nvim-treesitter`). This allows correctly resolving
+			-- the current filetype in eg. a markdown-code block or `vim.cmd()`.
+			ft_func = require("luasnip.extras.filetype_functions").from_cursor,
+		})
+		require("luasnip.loaders.from_lua").load({ paths = vim.fn.stdpath("config") .. "/snippets" })
+
+		vim.api.nvim_create_user_command("LuaSnipEdit", function()
+			require("luasnip.loaders").edit_snippet_files({})
+		end, {})
+	end,
 })
 
 Plug("rhysd/vim-grammarous", { on_cmd = "GrammarousCheck" })
@@ -827,9 +862,9 @@ Plug("kevinhwang91/nvim-bqf", {
 				number = false,
 				relativenumber = false,
 			},
-			func_map={
-			    tabdrop='<cr>',
-			    open='<c-e>'
+			func_map = {
+				tabdrop = "<cr>",
+				open = "<c-e>",
 			},
 			preview = { win_height = 50 },
 		})
@@ -845,6 +880,7 @@ Plug("lukas-reineke/lsp-format.nvim", {
 		})
 	end,
 })
+
 Plug("williamboman/nvim-lsp-installer", {
 	branch = "main",
 	config = function()
@@ -855,36 +891,22 @@ Plug("neovim/nvim-lspconfig")
 
 Plug("mhartington/formatter.nvim", {
 	config = function()
-		local isort = function()
-			return { exe = "isort", args = { "-", "--quiet" }, stdin = true }
-		end
-		local lua_format = function()
-			return {
-				exe = "stylua",
-				args = {
-					"--search-parent-directories",
-					"-",
-				},
-				stdin = true,
-			}
-		end
 		require("formatter").setup({
-			logging = false,
+			logging = true,
 			filetype = {
-				python = { isort },
-				lua = { lua_format },
+				python = { require("formatter.filetypes.python").isort },
+				lua = {
+					require("formatter.filetypes.lua").stylua,
+				},
+				["*"] = {
+					require("formatter.filetypes.any").remove_trailing_whitespace,
+				},
 			},
 		})
-		local enable_formatter = true
-		vim.api.nvim_create_user_command("ToggleFormatter", function()
-			enable_formatter = not enable_formatter
-		end, {})
 		vim.api.nvim_create_autocmd("BufwritePost", {
 			group = vim.api.nvim_create_augroup("FORMATTER", {}),
 			callback = function()
-				if enable_formatter then
-					vim.cmd("FormatWrite")
-				end
+				vim.cmd("FormatWrite")
 			end,
 		})
 	end,
@@ -1166,19 +1188,19 @@ Plug("git@github.com:ipod825/vim-netranger", {
           function! NETRBookMark()
               BookmarkAdd directory
           endfunction
-      
+
           function! NETRBookMarkGo()
               BookmarkGo directory
           endfunction
-      
+
           function! NETRInit()
               call netranger#api#mapvimfn('yp', "DuplicateNode")
               call netranger#api#mapvimfn('m', "NETRBookMark")
               call netranger#api#mapvimfn("\'", "NETRBookMarkGo")
           endfunction
-      
+
           let g:NETRCustomNopreview={->winnr()==2 && winnr('$')==2}
-      
+
           autocmd! USER NETRInit call NETRInit()
           ]])
 	end,
