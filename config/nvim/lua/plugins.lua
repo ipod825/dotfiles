@@ -179,7 +179,7 @@ Plug("lewis6991/spellsitter.nvim", {
 	config = function()
 		vim.api.nvim_create_autocmd("Filetype", {
 			group = vim.api.nvim_create_augroup("SPELLSITTER", {}),
-			pattern = { "cpp", "lua", "python", "markdown", "tex", "asciidoc", "gitcommit", "hgcommit" },
+			pattern = { "cpp", "lua", "python", "markdown", "tex", "asciidoc", "gitcommit", "hgcommit", "piccolo" },
 			callback = function()
 				vim.cmd("setlocal spell")
 			end,
