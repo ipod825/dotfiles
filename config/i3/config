@@ -1,7 +1,7 @@
 # vim: filetype=i3config
 
 set $mod Mod4
-set $term alacritty
+set $term kitty
 for_window [class="^.*"] border pixel 0
 floating_modifier $mod
 hide_edge_borders both
@@ -17,10 +17,8 @@ bindsym XF86AudioLowerVolume exec pulsemixer --change-volume -5 && pkill -RTMIN+
 bindsym XF86AudioMute exec pulsemixer --toggle-mute && pkill -RTMIN+10 i3blocks
 bindsym Print deepin-screenshot
 bindsym $mod+q exec i3-msg kill
-bindsym $mod+h exec i3-cycle left
-bindsym $mod+l exec i3-cycle right
-bindsym $mod+j exec i3-cycle down
-bindsym $mod+k exec i3-cycle up
+bindsym $mod+h exec $HOME/.pyenv/shims/i3-cycle left
+bindsym $mod+l exec $HOME/.pyenv/shims/i3-cycle right
 bindsym $mod+f exec i3-msg floating toggle
 bindsym $mod+ctrl+h exec i3-msg move left
 bindsym $mod+ctrl+j exec i3-msg move down
@@ -62,5 +60,6 @@ exec --no-startup-id easystroke --config-dir $HOME/dotfiles/home_config/.easystr
 # exec --no-startup-id alttab
 exec libinput-gestures
 
+exec xdotool search --class ".*" behave %@ focus exec 'sxhkdswitch' &
 # Ibus doesn't play well with sxhkd if the following snippet is put in ~/.xinitrc. So it must be put here.
 exec --no-startup-id PYENV_VERSION=system ibus-daemon --xim -d -r

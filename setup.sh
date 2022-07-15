@@ -56,6 +56,10 @@ if [ ! -d $HOME/.pyenv ];then
     pyenv global miniconda3-latest
 fi
 
+if [ ! -x kitty ]; then
+    curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+fi
+
 echo "==Setting neovim=="
 if [ ! -x $HOME/.local/share/fonts ]; then
     mkdir -p $HOME/.local/share/fonts

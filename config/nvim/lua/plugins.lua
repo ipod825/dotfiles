@@ -171,7 +171,18 @@ Plug("nvim-treesitter/nvim-treesitter", {
 			highlight = { enable = true },
 			incremental_selection = { enable = false },
 			indent = { enable = false },
+			endwise = {
+				enable = true,
+			},
 		})
+	end,
+})
+
+Plug("RRethy/nvim-treesitter-endwise")
+
+Plug("windwp/nvim-ts-autotag", {
+	config = function()
+		require("nvim-ts-autotag").setup()
 	end,
 })
 
@@ -518,11 +529,11 @@ Plug("chaoren/vim-wordmotion", {
 
 Plug("windwp/nvim-autopairs", {
 	config = function()
-		require("nvim-autopairs").setup({ fast_wrap = {} })
+		require("nvim-autopairs").setup({
+			ignored_next_char = "[,]",
+		})
 	end,
 })
-
-Plug("tpope/vim-endwise")
 
 Plug("mg979/vim-visual-multi", {
 	branch = "test",
@@ -555,8 +566,8 @@ Plug("mg979/vim-visual-multi", {
 			["Numbers"] = "<leader>n",
 			["Visual Add"] = "<c-n>",
 			["Visual Find"] = "<c-n>",
-			["Add Cursor At Pos"] = "<c-s>",
-			["Visual Cursors"] = "<c-s>",
+			["Add Cursor At Pos"] = "<c-i>",
+			["Visual Cursors"] = "<c-i>",
 			["Visual Reduce"] = "<leader>r",
 			["Visiual Subtract"] = "<leader>s",
 			["Increase"] = "+",
@@ -646,7 +657,6 @@ Plug("hrsh7th/nvim-cmp", {
 			completion = { completeopt = "menu,menuone,noinsert" },
 			snippet = {
 				expand = function(args)
-					-- vim.fn["vsnip#anonymous"](args.body)
 					require("luasnip").lsp_expand(args.body)
 				end,
 			},
@@ -662,7 +672,6 @@ Plug("hrsh7th/nvim-cmp", {
 			},
 			sources = cmp.config.sources({
 				{ name = "luasnip" },
-				-- { name = "vsnip" },
 				{ name = "nvim_lsp_signature_help" },
 				{ name = "nvim_lua" },
 				{ name = "nvim_lsp" },
@@ -866,7 +875,8 @@ Plug("williamboman/nvim-lsp-installer", {
 })
 Plug("neovim/nvim-lspconfig")
 
-Plug("mhartington/formatter.nvim", {
+-- Plug("mhartington/formatter.nvim", {
+Plug("git@github.com:ipod825/formatter.nvim", {
 	config = function()
 		require("formatter").setup({
 			logging = true,
@@ -883,7 +893,7 @@ Plug("mhartington/formatter.nvim", {
 		vim.api.nvim_create_autocmd("BufwritePost", {
 			group = vim.api.nvim_create_augroup("FORMATTER", {}),
 			callback = function()
-				vim.cmd("FormatWrite")
+				vim.cmd("silent! FormatWrite")
 			end,
 		})
 	end,
@@ -977,7 +987,16 @@ Plug("git@github.com:ipod825/vim-bookmark", {
 	end,
 })
 
-Plug("machakann/vim-sandwich")
+Plug("kylechui/nvim-surround", {
+	config = function()
+		require("nvim-surround").setup({
+			keymaps = {
+				visual = "s",
+			},
+		})
+	end,
+})
+
 Plug("justinmk/vim-sneak", {
 	config = function()
 		vim.g["sneak#label"] = 1
