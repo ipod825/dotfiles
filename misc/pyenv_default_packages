@@ -1,13 +1,11 @@
-neovim
+pynvim
 neovim-remote
 ipython
 ipdb
 pudb
-python-lsp-server
 rope
 pyflakes
 pydocstyle
-yapf
 isort
 i3-py
 i3-cycle

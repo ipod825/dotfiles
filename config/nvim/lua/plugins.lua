@@ -364,9 +364,14 @@ Plug("nvim-telescope/telescope.nvim", {
 			pickers
 				.new(opts, {
 					finder = finders.new_table({
-						results = vim.split(
-							vim.fn.glob("$HOME/dotfiles/**/.[^.]*") .. "\n" .. vim.fn.glob("$HOME/dotfiles/**/*"),
-							"\n"
+						results = vim.tbl_filter(
+							function(e)
+								return vim.fn.isdirectory(e) == 0
+							end,
+							vim.split(
+								vim.fn.glob("$HOME/dotfiles/**/.[^.]*") .. "\n" .. vim.fn.glob("$HOME/dotfiles/**/*"),
+								"\n"
+							)
 						),
 					}),
 					previewer = conf.file_previewer(opts),
