@@ -1227,6 +1227,12 @@ Plug("git@github.com:ipod825/vim-netranger", {
 	end,
 })
 
+-- Plug(vim.fn.stdpath("data") .. "/site/pluggins/hg.nvim", {
+-- 	config = function()
+-- 		require("hg").setup({})
+-- 	end,
+-- })
+
 Plug.ends()
 
 return M
