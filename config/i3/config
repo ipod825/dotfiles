@@ -45,6 +45,11 @@ mode "window" {
 }
 bindsym $mod+w mode "window"
 
+mode "passthrough" {
+        bindsym $mod+F12 mode "default"
+}
+bindsym $mod+F12 mode "passthrough"
+
 bar {
 	font pango:mono 11
 	status_command SCRIPT_DIR=~/dotfiles/config/i3blocks/bin i3blocks
@@ -60,6 +65,5 @@ exec --no-startup-id easystroke --config-dir $HOME/dotfiles/home_config/.easystr
 # exec --no-startup-id alttab
 exec libinput-gestures
 
-exec xdotool search --class ".*" behave %@ focus exec 'sxhkdswitch' &
 # Ibus doesn't play well with sxhkd if the following snippet is put in ~/.xinitrc. So it must be put here.
 exec --no-startup-id PYENV_VERSION=system ibus-daemon --xim -d -r
