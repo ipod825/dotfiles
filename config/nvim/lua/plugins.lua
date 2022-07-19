@@ -671,6 +671,7 @@ Plug("lukas-reineke/indent-blankline.nvim", {
 })
 
 Plug("hrsh7th/cmp-nvim-lua")
+Plug("saadparwaiz1/cmp_luasnip")
 Plug("hrsh7th/cmp-nvim-lsp-signature-help")
 Plug("hrsh7th/cmp-buffer")
 Plug("hrsh7th/cmp-nvim-lsp")
@@ -743,16 +744,15 @@ Plug("hrsh7th/vim-vsnip", {
 	end,
 })
 
-Plug("saadparwaiz1/cmp_luasnip")
 Plug("L3MON4D3/LuaSnip", {
 	config = function()
 		map(
-			{ "i", "s" },
+			{ "i", "s", "n" },
 			"<tab>",
 			'luasnip#expand_or_jumpable() ? "<Plug>luasnip-expand-or-jump" : "<tab>"',
 			{ expr = true, remap = true }
 		)
-		map({ "i", "s" }, "<s-tab>", '<cmd>lua require"luasnip".jump(-1)<Cr>')
+		map({ "i", "s", "n" }, "<s-tab>", '<cmd>lua require"luasnip".jump(-1)<Cr>')
 		map({ "i", "s", "n" }, "<c-s-j>", "<Plug>luasnip-next-choice")
 		map({ "i", "s", "n" }, "<c-s-k>", "<Plug>luasnip-prev-choice")
 		require("luasnip").config.set_config({
