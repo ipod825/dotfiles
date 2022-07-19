@@ -53,6 +53,9 @@ Plug("glacambre/firenvim", {
 Plug("wsdjeg/vim-fetch")
 Plug("farmergreg/vim-lastplace")
 Plug("norcalli/nvim-colorizer.lua", {
+	setup = function()
+		vim.o.termguicolors = true
+	end,
 	config = function()
 		require("colorizer").setup()
 	end,
@@ -161,6 +164,16 @@ Plug("nvim-lua/plenary.nvim", {
 Plug("nvim-treesitter/nvim-treesitter", {
 	run = ":TSUpdate",
 	config = function()
+		local color = require("colorscheme").color
+		require("colorscheme").add_plug_hl({
+			TSFunction = { fg = color.cyan },
+			TSMethod = { fg = color.cyan },
+			TSKeywordFunction = { fg = color.red },
+			TSProperty = { fg = color.yellow },
+			TSType = { fg = color.teal },
+			TSVariable = { fg = color.blue },
+			TSPunctBracket = { fg = color.bracket },
+		})
 		require("nvim-treesitter.configs").setup({
 			ensure_installed = {
 				"bash",
@@ -336,8 +349,12 @@ Plug("nvim-telescope/telescope.nvim", {
 			},
 		})
 
-		vim.api.nvim_set_hl(0, "TelescopeSelection", { default = true, link = "Pmenu" })
-		vim.api.nvim_set_hl(0, "TelescopeBorder", { default = true, link = "Label" })
+		-- vim.api.nvim_set_hl(0, "TelescopeSelection", { default = true, link = "Pmenu" })
+		-- vim.api.nvim_set_hl(0, "TelescopeBorder", { default = true, link = "Label" })
+		require("colorscheme").add_plug_hl({
+			TelescopeSelection = { default = true, link = "Pmenu" },
+			TelescopeBorder = { default = true, link = "Label" },
+		})
 
 		local pickers = require("telescope.pickers")
 		local finders = require("telescope.finders")
@@ -643,6 +660,13 @@ Plug("lukas-reineke/indent-blankline.nvim", {
 	config = function()
 		vim.g.indent_blankline_use_treesitter = true
 		vim.g.indentLine_fileTypeExclude = { "tex", "markdown", "txt", "startify", "packer" }
+		require("colorscheme").add_plug_hl({
+			"IndentBlanklineChar",
+			"IndentBlanklineSpaceChar",
+			"IndentBlanklineSpaceCharBlankline",
+			"IndentBlanklineContextChar",
+			"IndentBlanklineContextStart",
+		})
 	end,
 })
 

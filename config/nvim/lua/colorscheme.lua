@@ -73,7 +73,7 @@ function M.highlight(group, def)
 	vim.api.nvim_command(string.format("highlight %s gui=%s guifg=%s guibg=%s %s", group, style, fg, bg, sp))
 end
 
-function M.syntax(color)
+function M.builtin_hl_def(color)
 	color = vim.tbl_extend("keep", color or {}, M.color)
 	return {
 		Normal = { fg = color.fg, bg = color.bg },
@@ -83,15 +83,15 @@ function M.syntax(color)
 		VertSplit = { fg = color.black, bg = color.bg },
 		Folded = { fg = color.grey, bg = color.bg_highlight },
 		EndOfBuffer = { fg = color.bg, bg = color.none },
-		IncSearch = { fg = color.bg1, bg = color.orange, style = color.none },
+		IncSearch = { fg = color.bg1, bg = color.orange },
 		Search = { fg = color.bg, bg = color.orange },
 		ColorColumn = { fg = color.none, bg = color.bg_highlight },
 		Conceal = { fg = color.grey, bg = color.none },
-		Cursor = { fg = color.none, bg = color.none, style = "reverse" },
-		vCursor = { fg = color.none, bg = color.none, style = "reverse" },
-		iCursor = { fg = color.none, bg = color.none, style = "reverse" },
-		lCursor = { fg = color.none, bg = color.none, style = "reverse" },
-		CursorIM = { fg = color.none, bg = color.none, style = "reverse" },
+		Cursor = { fg = color.none, bg = color.none, reverse = true },
+		vCursor = { fg = color.none, bg = color.none, reverse = true },
+		iCursor = { fg = color.none, bg = color.none, reverse = true },
+		lCursor = { fg = color.none, bg = color.none, reverse = true },
+		CursorIM = { fg = color.none, bg = color.none, reverse = true },
 		CursorColumn = { fg = color.none, bg = color.bg_highlight },
 		CursorLine = { fg = color.none, bg = color.bg_highlight },
 		LineNr = { fg = color.base6 },
@@ -102,35 +102,35 @@ function M.syntax(color)
 		DiffDelete = { fg = color.redwine, bg = color.none },
 		DiffText = { fg = color.black, bg = color.dark_green },
 		Directory = { fg = color.blue, bg = color.none },
-		ErrorMsg = { fg = color.red, bg = color.none, style = "bold" },
-		WarningMsg = { fg = color.yellow, bg = color.none, style = "bold" },
-		ModeMsg = { fg = color.fg, bg = color.none, style = "bold" },
+		ErrorMsg = { fg = color.red, bg = color.none, bold = true },
+		WarningMsg = { fg = color.yellow, bg = color.none, bold = true },
+		ModeMsg = { fg = color.fg, bg = color.none, bold = true },
 		MatchParen = { fg = color.red, bg = color.none },
 		NonText = { fg = color.bg1 },
 		Whitespace = { fg = color.base4 },
 		SpecialKey = { fg = color.bg1 },
 		Pmenu = { fg = color.fg, bg = color.bg_popup },
 		PmenuSel = { fg = color.base0, bg = color.blue },
-		PmenuSelBold = { fg = color.base0, g = color.blue },
+		PmenuSelBold = { fg = color.base0, bg = color.blue },
 		PmenuSbar = { fg = color.none, bg = color.base4 },
 		PmenuThumb = { fg = color.violet, bg = color.light_green },
 		WildMenu = { fg = color.fg, bg = color.green },
 		Question = { fg = color.yellow },
 		NormalFloat = { fg = color.none, bg = color.base4 },
 		Tabline = { fg = color.base5, bg = color.bg },
-		TabLineSel = { fg = color.base8, bg = color.bg, style = "bold,italic" },
-		TabLineFill = { style = color.none },
-		TabLineSelMod = { fg = color.bg, bg = color.redwine, style = "bold,italic" },
+		TabLineSel = { fg = color.base8, bg = color.bg, bold = true, italic = true },
+		TabLineFill = {},
+		TabLineSelMod = { fg = color.bg, bg = color.redwine, bold = true, italic = true },
 		TabLineMod = { fg = color.redwine, bg = color.bg },
-		StatusLine = { fg = color.base8, bg = color.base2, style = color.none },
-		StatusLineNC = { fg = color.grey, bg = color.base2, style = color.none },
-		SpellBad = { fg = color.red, bg = color.none, style = "undercurl" },
-		SpellCap = { fg = color.blue, bg = color.none, style = "undercurl" },
-		SpellLocal = { fg = color.cyan, bg = color.none, style = "undercurl" },
-		SpellRare = { fg = color.violet, bg = color.none, style = "undercurl" },
+		StatusLine = { fg = color.base8, bg = color.base2 },
+		StatusLineNC = { fg = color.grey, bg = color.base2 },
+		SpellBad = { fg = color.red, bg = color.none, undercurl = true },
+		SpellCap = { fg = color.blue, bg = color.none, undercurl = true },
+		SpellLocal = { fg = color.cyan, bg = color.none, undercurl = true },
+		SpellRare = { fg = color.violet, bg = color.none, undercurl = true },
 		Visual = { fg = color.black, bg = color.bg_visual },
 		VisualNOS = { fg = color.black, bg = color.bg_visual },
-		QuickFixLine = { fg = color.violet, style = "bold" },
+		QuickFixLine = { fg = color.violet, bold = true },
 		Debug = { fg = color.orange },
 		debugBreakpoint = { fg = color.bg, bg = color.red },
 
@@ -153,7 +153,7 @@ function M.syntax(color)
 		Label = { fg = color.orange },
 		Structure = { fg = color.orange },
 		Operator = { fg = color.redwine },
-		Title = { fg = color.orange, style = "bold" },
+		Title = { fg = color.orange, bold = true },
 		Special = { fg = color.yellow },
 		SpecialChar = { fg = color.yellow },
 		Type = { fg = color.teal },
@@ -169,48 +169,43 @@ function M.syntax(color)
 		Todo = { fg = color.violet },
 		Delimiter = { fg = color.fg },
 		Ignore = { fg = color.grey },
-		Underlined = { fg = color.none, style = "underline" },
-
-		DashboardShortCut = { fg = color.magenta },
-		DashboardHeader = { fg = color.orange },
-		DashboardCenter = { fg = color.cyan },
-		DashboardFooter = { fg = color.yellow, style = "bold" },
-
-		TSFunction = { fg = color.cyan },
-		TSMethod = { fg = color.cyan },
-		TSKeywordFunction = { fg = color.red },
-		TSProperty = { fg = color.yellow },
-		TSType = { fg = color.teal },
-		TSVariable = { fg = color.blue },
-		TSPunctBracket = { fg = color.bracket },
-
-		LspDiagnosticsSignError = { fg = color.red },
-		LspDiagnosticsSignWarning = { fg = color.yellow },
-		LspDiagnosticsSignInformation = { fg = color.blue },
-		LspDiagnosticsSignHint = { fg = color.cyan },
-
-		LspDiagnosticsVirtualTextError = { fg = color.red },
-		LspDiagnosticsVirtualTextWarning = { fg = color.yellow },
-		LspDiagnosticsVirtualTextInformation = { fg = color.blue },
-		LspDiagnosticsVirtualTextHint = { fg = color.cyan },
-
-		LspDiagnosticsUnderlineError = { style = "undercurl", sp = color.red },
-		LspDiagnosticsUnderlineWarning = { style = "undercurl", sp = color.yellow },
-		LspDiagnosticsUnderlineInformation = { style = "undercurl", sp = color.blue },
-		LspDiagnosticsUnderlineHint = { style = "undercurl", sp = color.cyan },
+		Underlined = { fg = color.none, underline = true },
 	}
 end
 
+M.plugin_hl_def = {}
+function M.add_plug_hl(hls)
+	if vim.tbl_islist(hls) then
+		for _, name in ipairs(hls) do
+			M.plugin_hl_def[name] = M.plugin_hl_def[name] or false
+		end
+	else
+		for name, def in pairs(hls) do
+			M.plugin_hl_def[name] = def
+		end
+	end
+end
+
 function M.load(color)
-	-- vim.api.nvim_command("hi clear")
+	vim.api.nvim_command("hi clear")
 	if vim.fn.exists("syntax_on") then
 		vim.api.nvim_command("syntax reset")
 	end
 	vim.o.background = "dark"
 	vim.o.termguicolors = true
 	vim.g.colors_name = "main"
-	for group, colors in pairs(M.syntax(color)) do
-		M.highlight(group, colors)
+	for group, colors in pairs(M.builtin_hl_def(color)) do
+		vim.api.nvim_set_hl(0, group, colors)
+	end
+	for group, colors in pairs(M.plugin_hl_def) do
+		if not colors then
+			vim.defer_fn(function()
+				M.plugin_hl_def[group] = vim.api.nvim_get_hl_by_name(group, 0)
+				vim.api.nvim_set_hl(0, group, M.plugin_hl_def[group])
+			end, 10)
+		else
+			vim.api.nvim_set_hl(0, group, colors)
+		end
 	end
 end
 
