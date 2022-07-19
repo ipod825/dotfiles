@@ -283,6 +283,13 @@ Plug("ldelossa/gh.nvim", {
 
 Plug("tpope/vim-abolish")
 
+Plug("tami5/sqlite.lua")
+Plug("nvim-telescope/telescope-cheat.nvim", {
+	config = function()
+		require("telescope._extensions").load("cheat")
+	end,
+})
+
 Plug("nvim-telescope/telescope.nvim", {
 	config = function()
 		local actions = require("telescope.actions")
@@ -681,7 +688,6 @@ Plug("saadparwaiz1/cmp_luasnip")
 Plug("hrsh7th/cmp-nvim-lsp-signature-help")
 Plug("hrsh7th/cmp-buffer")
 Plug("hrsh7th/cmp-nvim-lsp")
-Plug("hrsh7th/cmp-vsnip", { disable = true })
 Plug("hrsh7th/cmp-path")
 Plug("hrsh7th/cmp-nvim-lua")
 Plug("f3fora/cmp-spell")
@@ -730,25 +736,6 @@ Plug("lervag/vimtex", {
 })
 
 Plug("gpanders/nvim-parinfer")
-
-Plug("hrsh7th/vim-vsnip-integ", { disable = true })
-Plug("hrsh7th/vim-vsnip", {
-	disable = true,
-	setup = function()
-		vim.g.vsnip_snippet_dir = vim.fn.stdpath("config") .. "/snippets/vsnip"
-	end,
-	config = function()
-		map(
-			"i",
-			"<tab>",
-			'vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<tab>"',
-			{ expr = true, remap = true }
-		)
-		map("i", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
-		map("s", "<tab>", 'vsnip#jumpable(1) ? "<Plug>(vsnip-jump-next)" : "<tab>"', { expr = true, remap = true })
-		map("s", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
-	end,
-})
 
 Plug("L3MON4D3/LuaSnip", {
 	config = function()
