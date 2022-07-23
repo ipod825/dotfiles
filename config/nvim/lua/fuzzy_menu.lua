@@ -11,20 +11,22 @@ local conf = require("telescope.config").values
 
 function M.telescope_pick(content, cb)
 	local opts = {}
-	pickers.new(opts, {
-		finder = finders.new_table({
-			results = content,
-		}),
-		sorter = conf.generic_sorter(opts),
-		attach_mappings = function(prompt_bufnr)
-			action_set.select:replace(function()
-				actions.close(prompt_bufnr)
-				cb(action_state.get_selected_entry().value)
-			end)
+	pickers
+		.new(opts, {
+			finder = finders.new_table({
+				results = content,
+			}),
+			sorter = conf.generic_sorter(opts),
+			attach_mappings = function(prompt_bufnr)
+				action_set.select:replace(function()
+					actions.close(prompt_bufnr)
+					cb(action_state.get_selected_entry().value)
+				end)
 
-			return true
-		end,
-	}):find()
+				return true
+			end,
+		})
+		:find()
 end
 
 M.menu_actions = M.menu_actions or { default = {} }
@@ -81,7 +83,7 @@ M.add_util_menu("DoAbolish", function()
 	end)
 end)
 
-M.add_util_menu("BinEdit", function()
+M.add_util_menu("EditBin", function()
 	vim.bo.bin = true
 	vim.api.nvim_exec(
 		[[

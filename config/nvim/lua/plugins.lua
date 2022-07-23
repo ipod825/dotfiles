@@ -5,7 +5,7 @@ local unmap = vim.keymap.del
 local Plug = require("vplug")
 local V = require("Vim")
 
-local root_markers = { ".git", ".hg", ".svn", ".bzr", "_darcs", "OWNERS", ".root" }
+local root_markers = { ".git", ".hg", ".svn", ".bzr", "_darcs", ".root" }
 
 Plug.begin()
 
@@ -201,11 +201,14 @@ Plug("windwp/nvim-ts-autotag", {
 
 Plug("lewis6991/spellsitter.nvim", {
 	config = function()
+		local filetypes =
+			{ "cpp", "lua", "python", "markdown", "tex", "asciidoc", "gitcommit", "hgcommit", "piccolo", "proto" }
 		vim.api.nvim_create_autocmd("Filetype", {
 			group = vim.api.nvim_create_augroup("SPELLSITTER", {}),
-			pattern = { "cpp", "lua", "python", "markdown", "tex", "asciidoc", "gitcommit", "hgcommit", "piccolo" },
+			pattern = filetypes,
 			callback = function()
 				vim.cmd("setlocal spell")
+				vim.bo.spellfile = vim.fn.stdpath("config") .. "/spell/spellsitter.en.utf-8.add"
 			end,
 		})
 		require("spellsitter").setup({ enable = true })
@@ -372,9 +375,11 @@ Plug("nvim-telescope/telescope.nvim", {
 			})
 		end)
 
-		map("n", "zs", function()
+		map("n", "z=", function()
 			builtin.spell_suggest()
 		end)
+
+		map("n", "<leader>b", builtin.buffers)
 
 		map("n", "<leader>e", function()
 			local opts = {}
@@ -553,6 +558,7 @@ Plug("windwp/nvim-autopairs", {
 	config = function()
 		require("nvim-autopairs").setup({
 			ignored_next_char = "[,]",
+			fast_wrap = {},
 		})
 	end,
 })
@@ -1046,7 +1052,7 @@ Plug("eugen0329/vim-esearch", {
 			out = "win",
 			batch_size = 1000,
 			default_mappings = 0,
-			live_update = 0,
+			live_update = 1,
 			win_ui_nvim_syntax = 1,
 			root_markers = root_markers,
 			remember = {
@@ -1227,11 +1233,19 @@ Plug("git@github.com:ipod825/vim-netranger", {
 	end,
 })
 
--- Plug(vim.fn.stdpath("data") .. "/site/pluggins/hg.nvim", {
--- 	config = function()
--- 		require("hg").setup({})
--- 	end,
--- })
+Plug(vim.fn.stdpath("data") .. "/site/pluggins/hg.nvim", {
+	config = function()
+		vim.cmd("cnoreabbrev hg Hg")
+		vim.cmd("cnoreabbrev hlg Hg log")
+		vim.cmd("cnoreabbrev H Hg status")
+		-- vim.cmd('cnoreabbrev HH Hg status --rev "parents(min(tip))"')
+		-- TODO: figure out why quotation mark is not passed through.
+		vim.cmd("cnoreabbrev HH Hg status --rev parents(min(tip))")
+		require("hg").setup({
+			hg_sub_commands = { "uc" },
+		})
+	end,
+})
 
 Plug.ends()
 

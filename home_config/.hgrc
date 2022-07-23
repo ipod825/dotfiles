@@ -1,3 +1,6 @@
+[commands]
+status.relative = False
+
 [ui]
 merge = nvr
 editor = nvr -cc tabe --remote-wait +"setlocal bufhidden=wipe"
@@ -7,10 +10,13 @@ nvr.args = -s -cc tabnew $base -O $other $local
 nvr.gui = False
 
 [pager]
-ignore = log, cls
+ignore = log, cls, .root
+pager = delta
 
 [extensions]
 beautifygraph =
+unsupported.tree =
+pager =
 
 [color]
 desc.here = red bold

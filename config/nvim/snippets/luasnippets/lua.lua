@@ -117,9 +117,9 @@ ls.add_snippets("lua", {
 		"'':",
 		fmt(
 			[[
-        ("{}"):format({}){}
+        ("{}"):{}({}){}
     ]],
-			{ i(1), i(2), i(0) }
+			{ i(1), i(2, "format"), i(3), i(0) }
 		)
 	),
 }, { type = "autosnippets", key = "auto_lua" })
