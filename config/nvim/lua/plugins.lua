@@ -1233,7 +1233,7 @@ Plug("git@github.com:ipod825/vim-netranger", {
 	end,
 })
 
-Plug(vim.fn.stdpath("data") .. "/site/pluggins/hg.nvim", {
+Plug("git@github.com:ipod825/hg.nvim", {
 	config = function()
 		vim.cmd("cnoreabbrev hg Hg")
 		vim.cmd("cnoreabbrev hlg Hg log")
