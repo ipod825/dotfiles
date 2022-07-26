@@ -153,7 +153,7 @@ Plug("nvim-lua/plenary.nvim", {
 			group = vim.api.nvim_create_augroup("PLENARY", {}),
 			pattern = "lua",
 			callback = function()
-				map("n", "<F5>", function()
+				map("n", "<F6>", function()
 					require("plenary.test_harness").test_directory(vim.fn.expand("%:p"))
 				end, { desc = "plenary test file" })
 			end,
@@ -263,6 +263,7 @@ Plug("wellle/context.vim", {
 	setup = function()
 		vim.g.context_add_mappings = 0
 		vim.g.context_enabled = 0
+		vim.g.context_add_autocmds = 0
 	end,
 	config = function()
 		map("n", "<m-i>", "<cmd>ContextPeek<cr>")
@@ -976,12 +977,6 @@ Plug("git@github.com:ipod825/vim-expand-region", {
 
 Plug("majutsushi/tagbar")
 
-Plug("git@github.com:ipod825/oldfiles.nvim", {
-	config = function()
-		require("oldfiles").setup()
-	end,
-})
-
 Plug("git@github.com:ipod825/vim-bookmark", {
 	config = function()
 		vim.g.bookmark_opencmd = "NewTabdrop"
@@ -1144,6 +1139,12 @@ Plug("lambdalisue/gina.vim", {
 Plug("whiteinge/diffconflicts")
 
 Plug("git@github.com:ipod825/libp.nvim")
+Plug("git@github.com:ipod825/oldfiles.nvim", {
+	config = function()
+		require("oldfiles").setup()
+	end,
+})
+
 Plug("git@github.com:ipod825/igit.nvim", {
 	config = function()
 		vim.cmd("cnoreabbrev G IGit status")
@@ -1160,8 +1161,8 @@ Plug("git@github.com:ipod825/igit.nvim", {
 			branch = {
 				confirm_rebase = false,
 			},
-			log = { confirm_rebase = false },
-			status = {},
+			log = { confirm_rebase = false, open_cmd = "Tabdrop" },
+			status = { open_cmd = "Tabdrop" },
 		})
 	end,
 })
@@ -1231,6 +1232,12 @@ Plug("git@github.com:ipod825/hg.nvim", {
 		require("hg").setup({
 			hg_sub_commands = { "uc" },
 		})
+	end,
+})
+
+Plug(vim.fn.stdpath("data") .. "/site/pluggins/ranger.nvim", {
+	config = function()
+		require("ranger").setup({})
 	end,
 })
 

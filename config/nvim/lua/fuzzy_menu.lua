@@ -103,6 +103,17 @@ M.add_util_menu("RelatedFile", function()
 	require("telescope.builtin").fd({ default_text = vim.fn.expand("%:t:r"), cwd = vim.fn.FindRootDirectory() })
 end)
 
+M.add_util_menu("ReloadPlugin", function()
+	local path = require("libp.path")
+	local plugin = vim.split(path.basename(path.find_directory(".git")), "%.")[1]
+
+	for _, buffer in pairs(require("libp.global")("libp").buffers) do
+		require("libp.log").warn("bwipe " .. buffer.id)
+		vim.cmd("bwipe " .. buffer.id)
+	end
+	require("vplug").reload(plugin)
+end)
+
 function M.cheat_sheet()
 	local id = vim.b.terminal_job_id
 	local cheats = vim.list_extend(

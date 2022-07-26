@@ -25,11 +25,12 @@ ls.add_snippets("lua", {
 		)
 	),
 	s("log", fmt('require("libp.log").warn({})', i(0))),
+	s("todo", fmt("-- TODO({}): {}", { i(1, os.getenv("USER")), i(2, "todo") })),
 	s(
 		"fn",
 		fmt(
 			[[
-            function {}({}),
+            function {}({})
                {}
             end
         ]],

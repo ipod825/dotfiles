@@ -228,6 +228,16 @@ function M.comment_unwrap()
 	vim.cmd("normal! vgq")
 	vim.bo.textwidth = 0
 end
+map("n", "<F5>", function()
+	local path = require("libp.path")
+	local plugin = vim.split(path.basename(path.find_directory(".git")), "%.")[1]
+
+	for _, buffer in pairs(require("libp.global")("libp").buffers) do
+		require("libp.log").warn("bwipe " .. buffer.id)
+		vim.cmd("bwipe " .. buffer.id)
+	end
+	require("vplug").reload(plugin)
+end)
 -- folding
 map("n", "<leader><space>", "za", { remap = true })
 map("n", "<leader>z", "zMzvzz")
