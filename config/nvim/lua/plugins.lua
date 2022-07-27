@@ -1235,7 +1235,7 @@ Plug("git@github.com:ipod825/hg.nvim", {
 	end,
 })
 
-Plug(vim.fn.stdpath("data") .. "/site/pluggins/ranger.nvim", {
+Plug("git@github.com:ipod825/ranger.nvim", {
 	config = function()
 		require("ranger").setup({})
 	end,
