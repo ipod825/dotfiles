@@ -293,14 +293,14 @@ Plug("nvim-telescope/telescope-cheat.nvim", {
 Plug("nvim-telescope/telescope.nvim", {
 	config = function()
 		local actions = require("telescope.actions")
-		local select_to_edit_map = {
-			default = "edit",
-			horizontal = "new",
-			vertical = "vnew",
-			tab = "Tabdrop",
-		}
 		require("telescope.actions.state").select_key_to_edit_key = function(type)
-			return select_to_edit_map[type]
+			local action_state = require("telescope.actions.state")
+			local entry = action_state.get_selected_entry()
+			if vim.fn.filereadable(entry[1]) ~= 0 and type == "tab" then
+				return "Tabdrop"
+			else
+				return "edit"
+			end
 		end
 		local full = 9999
 		require("telescope").setup({
