@@ -263,7 +263,6 @@ Plug("wellle/context.vim", {
 	setup = function()
 		vim.g.context_add_mappings = 0
 		vim.g.context_enabled = 0
-		vim.g.context_add_autocmds = 0
 	end,
 	config = function()
 		map("n", "<m-i>", "<cmd>ContextPeek<cr>")
