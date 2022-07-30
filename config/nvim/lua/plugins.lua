@@ -296,7 +296,9 @@ Plug("nvim-telescope/telescope.nvim", {
 		require("telescope.actions.state").select_key_to_edit_key = function(type)
 			local action_state = require("telescope.actions.state")
 			local entry = action_state.get_selected_entry()
-			if vim.fn.filereadable(entry[1]) ~= 0 and type == "tab" then
+			local filepath = entry[1]
+			local cwd = entry.cwd or ""
+			if vim.fn.filereadable(require("libp.path").join(cwd, filepath)) ~= 0 and type == "tab" then
 				return "Tabdrop"
 			else
 				return "edit"
