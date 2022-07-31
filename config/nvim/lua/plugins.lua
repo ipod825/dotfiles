@@ -293,17 +293,38 @@ Plug("nvim-telescope/telescope-cheat.nvim", {
 Plug("nvim-telescope/telescope.nvim", {
 	config = function()
 		local actions = require("telescope.actions")
+		local action_state = require("telescope.actions.state")
+		local action_set = require("telescope.actions.set")
+		local select_to_edit_map = {
+			default = "edit",
+			horizontal = "new",
+			vertical = "vnew",
+			tab = "tabedit",
+			force_edit = "edit",
+		}
 		require("telescope.actions.state").select_key_to_edit_key = function(type)
-			local action_state = require("telescope.actions.state")
 			local entry = action_state.get_selected_entry()
 			local filepath = entry[1]
 			local cwd = entry.cwd or ""
-			if vim.fn.filereadable(require("libp.path").join(cwd, filepath)) ~= 0 and type == "tab" then
+			if vim.fn.filereadable(require("libp.path").join(cwd, filepath)) ~= 0 and type ~= "force_edit" then
 				return "Tabdrop"
 			else
-				return "edit"
+				return select_to_edit_map[type]
 			end
 		end
+		local myactions = require("telescope.actions.mt").transform_mod({
+			select_force_edit = {
+				pre = function(prompt_bufnr)
+					action_state
+						.get_current_history()
+						:append(action_state.get_current_line(), action_state.get_current_picker(prompt_bufnr))
+				end,
+				action = function(prompt_bufnr)
+					return action_set.select(prompt_bufnr, "force_edit")
+				end,
+			},
+		})
+
 		local full = 9999
 		require("telescope").setup({
 			defaults = {
@@ -336,8 +357,8 @@ Plug("nvim-telescope/telescope.nvim", {
 				},
 				mappings = {
 					i = {
-						["<cr>"] = actions.select_tab,
-						["<c-e>"] = actions.select_default,
+						["<cr>"] = actions.select_default,
+						["<c-e>"] = myactions.select_force_edit,
 						["<c-j>"] = actions.move_selection_next,
 						["<c-k>"] = actions.move_selection_previous,
 						["<c-b>"] = actions.results_scrolling_up,
@@ -349,8 +370,8 @@ Plug("nvim-telescope/telescope.nvim", {
 						end,
 					},
 					n = {
-						["<cr>"] = actions.select_tab,
-						["<c-e>"] = actions.select_default,
+						["<cr>"] = actions.select_default,
+						["<c-e>"] = myactions.select_force_edit,
 						["<C-c>"] = actions.close,
 						["<c-b>"] = actions.results_scrolling_up,
 						["<c-f>"] = actions.results_scrolling_down,
@@ -361,8 +382,6 @@ Plug("nvim-telescope/telescope.nvim", {
 			},
 		})
 
-		-- vim.api.nvim_set_hl(0, "TelescopeSelection", { default = true, link = "Pmenu" })
-		-- vim.api.nvim_set_hl(0, "TelescopeBorder", { default = true, link = "Label" })
 		require("colorscheme").add_plug_hl({
 			TelescopeSelection = { default = true, link = "Pmenu" },
 			TelescopeBorder = { default = true, link = "Label" },
@@ -567,7 +586,12 @@ Plug("windwp/nvim-autopairs", {
 	config = function()
 		require("nvim-autopairs").setup({
 			ignored_next_char = "[,]",
-			fast_wrap = {},
+			fast_wrap = {
+				end_key = "l",
+				keys = "hjkgfdsaqwertyuiopzxcvbnm",
+				highlight = "Search",
+				highlight_grey = "Normal",
+			},
 		})
 	end,
 })
@@ -899,8 +923,7 @@ Plug("williamboman/nvim-lsp-installer", {
 })
 Plug("neovim/nvim-lspconfig")
 
--- Plug("mhartington/formatter.nvim", {
-Plug("git@github.com:ipod825/formatter.nvim", {
+Plug("mhartington/formatter.nvim", {
 	config = function()
 		require("formatter").setup({
 			logging = true,
@@ -1035,7 +1058,7 @@ Plug("eugen0329/vim-esearch", {
 			out = "win",
 			batch_size = 1000,
 			default_mappings = 0,
-			live_update = 1,
+			live_update = 0,
 			win_ui_nvim_syntax = 1,
 			root_markers = root_markers,
 			remember = {
