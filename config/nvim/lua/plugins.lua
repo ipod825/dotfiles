@@ -420,20 +420,23 @@ Plug("nvim-telescope/telescope.nvim", {
 
 		map("n", "<leader>b", builtin.buffers)
 
+		local cached_config_files
 		map("n", "<leader>e", function()
 			local opts = {}
+			cached_config_files = cached_config_files
+				or vim.tbl_filter(
+					function(e)
+						return vim.fn.isdirectory(e) == 0
+					end,
+					vim.split(
+						vim.fn.glob("$HOME/dotfiles/**/.[^.]*") .. "\n" .. vim.fn.glob("$HOME/dotfiles/**/*"),
+						"\n"
+					)
+				)
 			pickers
 				.new(opts, {
 					finder = finders.new_table({
-						results = vim.tbl_filter(
-							function(e)
-								return vim.fn.isdirectory(e) == 0
-							end,
-							vim.split(
-								vim.fn.glob("$HOME/dotfiles/**/.[^.]*") .. "\n" .. vim.fn.glob("$HOME/dotfiles/**/*"),
-								"\n"
-							)
-						),
+						results = cached_config_files,
 					}),
 					previewer = conf.file_previewer(opts),
 					sorter = conf.generic_sorter(opts),
