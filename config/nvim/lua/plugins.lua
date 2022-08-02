@@ -324,6 +324,17 @@ Plug("nvim-telescope/telescope.nvim", {
 				end,
 			},
 		})
+		-- Why do we even need this?
+		vim.api.nvim_create_autocmd("Filetype", {
+			group = vim.api.nvim_create_augroup("TELESCOPE", {}),
+			pattern = "TelescopePrompt",
+			callback = function()
+				vim.keymap.set("n", "p", function()
+					local text = vim.fn.getreg('"'):gsub("\n$", "")
+					vim.fn.feedkeys("i" .. text, "n")
+				end, { buffer = 0 })
+			end,
+		})
 
 		local full = 9999
 		require("telescope").setup({
@@ -448,15 +459,32 @@ Plug("nvim-telescope/telescope.nvim", {
 
 Plug("gbprod/yanky.nvim", {
 	config = function()
-		require("yanky").setup({})
+		require("yanky").setup({
+			highlight = {
+				on_put = false,
+				on_yank = false,
+			},
+		})
+		local function visual_paste(key)
+			vim.cmd('normal! "_d')
+			V.feed_plug_keys(key)
+		end
 		vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)", {})
 		vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)", {})
-		vim.keymap.set("x", "p", "<Plug>(YankyPutAfter)", {})
-		vim.keymap.set("x", "P", "<Plug>(YankyPutBefore)", {})
+		vim.keymap.set("x", "p", function()
+			visual_paste("(YankyPutBefore)")
+		end, {})
+		vim.keymap.set("x", "P", function()
+			visual_paste("(YankyPutBefore)")
+		end, {})
 		vim.keymap.set("n", "gp", "<Plug>(YankyGPutAfter)", {})
 		vim.keymap.set("n", "gP", "<Plug>(YankyGPutBefore)", {})
-		vim.keymap.set("x", "gp", "<Plug>(YankyGPutAfter)", {})
-		vim.keymap.set("x", "gP", "<Plug>(YankyGPutBefore)", {})
+		vim.keymap.set("x", "gp", function()
+			visual_paste("(YankyGPutBefore)")
+		end, {})
+		vim.keymap.set("x", "gP", function()
+			visual_paste("(YankyGPutBefore)")
+		end, {})
 		require("telescope._extensions").load("yank_history")
 	end,
 })

@@ -134,6 +134,14 @@ vim.api.nvim_create_autocmd("Filetype", {
 
 vim.api.nvim_create_autocmd("Filetype", {
 	group = GENERAL,
+	pattern = { "help" },
+	callback = function()
+		vim.cmd("wincmd T")
+	end,
+})
+
+vim.api.nvim_create_autocmd("Filetype", {
+	group = GENERAL,
 	pattern = { "markdown", "tex" },
 	callback = function()
 		local map = vim.keymap.set
