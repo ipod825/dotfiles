@@ -1210,7 +1210,7 @@ Plug("git@github.com:ipod825/igit.nvim", {
 		vim.cmd("cnoreabbrev grc IGit rebase --continue")
 		vim.cmd("cnoreabbrev gra IGit rebase --abort")
 		vim.cmd(
-			[[cnoreabbrev glc exec 'IGit log --branches --graph --follow --author="Shih-Ming Wang" -- '.expand("%:p")]]
+			[[cnoreabbrev glc exec 'IGit log --branches --graph  --author="Shih-Ming Wang" --follow -- '.expand("%:p")]]
 		)
 		require("igit").setup({
 			branch = {
@@ -1292,7 +1292,9 @@ Plug("git@github.com:ipod825/hg.nvim", {
 
 Plug("git@github.com:ipod825/ranger.nvim", {
 	config = function()
-		require("ranger").setup({})
+		require("ranger").setup({
+			rifle_path = require("libp.path").join(vim.fn.stdpath("config"), "settings/rifle.conf"),
+		})
 	end,
 })
 

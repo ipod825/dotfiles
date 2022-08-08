@@ -27,3 +27,8 @@ str_cat
 subgraph
 VideoHasVoiceOver
 VideoHasVoiceOverHandler
+tparam
+classmod
+metamethods
+treturn
+metatable
