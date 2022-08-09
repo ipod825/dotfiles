@@ -32,3 +32,4 @@ classmod
 metamethods
 treturn
 metatable
+perftools
