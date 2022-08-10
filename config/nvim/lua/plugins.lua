@@ -369,6 +369,7 @@ Plug("nvim-telescope/telescope.nvim", {
 				multi_icon = "* ",
 				path_display = { "truncate" },
 				layout_strategy = "vertical",
+				-- file_ignore_patterns = { "doc.*html$" },
 				borderchars = {
 					prompt = { "─", " ", " ", " ", " ", " ", " ", " " },
 					results = { "─", " ", " ", " ", " ", " ", " ", " " },
