@@ -643,6 +643,7 @@ Plug("windwp/nvim-autopairs", {
 		require("nvim-autopairs").setup({
 			ignored_next_char = "[,]",
 			fast_wrap = {
+				map = "<m-e>",
 				end_key = "l",
 				keys = "hjkgfdsaqwertyuiopzxcvbnm",
 				highlight = "Search",
