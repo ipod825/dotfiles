@@ -293,18 +293,6 @@ Plug("wellle/context.vim", {
 	end,
 })
 
-Plug("ldelossa/litee.nvim", {
-	config = function()
-		require("litee.lib").setup()
-	end,
-})
-
-Plug("ldelossa/gh.nvim", {
-	config = function()
-		require("litee.gh").setup()
-	end,
-})
-
 Plug("tpope/vim-abolish")
 
 Plug("tami5/sqlite.lua")
