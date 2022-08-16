@@ -1254,7 +1254,17 @@ Plug("AndrewRadev/linediff.vim", { on_cmd = { "LineDiffAdd" } })
 Plug("chrisbra/Colorizer")
 Plug("powerman/vim-plugin-AnsiEsc")
 
+Plug("git@github.com:ipod825/ranger.nvim", {
+	config = function()
+		require("ranger").setup({
+			hijack_netrw = true,
+			rifle_path = require("libp.path").join(vim.fn.stdpath("config"), "settings/rifle.conf"),
+		})
+	end,
+})
+
 Plug("git@github.com:ipod825/vim-netranger", {
+	disable = true,
 	setup = function()
 		vim.g.NETRRifleFile = vim.env.HOME .. "/dotfiles/config/nvim/settings/rifle.conf"
 		vim.g.NETRIgnore = { "__pycache__", "*.pyc", "*.o", "egg-info", "tags" }
@@ -1312,14 +1322,6 @@ Plug("git@github.com:ipod825/hg.nvim", {
 		vim.cmd("cnoreabbrev HH Hg status --rev parents(min(tip))")
 		require("hg").setup({
 			hg_sub_commands = { "uc" },
-		})
-	end,
-})
-
-Plug("git@github.com:ipod825/ranger.nvim", {
-	config = function()
-		require("ranger").setup({
-			rifle_path = require("libp.path").join(vim.fn.stdpath("config"), "settings/rifle.conf"),
 		})
 	end,
 })
