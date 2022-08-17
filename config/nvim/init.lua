@@ -137,6 +137,8 @@ vim.api.nvim_create_autocmd("Filetype", {
 	pattern = { "help" },
 	callback = function()
 		vim.cmd("wincmd T")
+		-- So that filetype will be trigger next time.
+		vim.bo.bufhidden = "wipe"
 	end,
 })
 
