@@ -58,6 +58,7 @@ vim.o.undofile = true
 vim.o.undodir = vim.fn.stdpath("cache") .. "/undo"
 vim.o.switchbuf = "usetab"
 vim.o.spell = false
+vim.o.mouse = ""
 vim.api.nvim_exec(
 	[[
     set copyindent
