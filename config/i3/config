@@ -36,6 +36,11 @@ bindsym $mod+Shift+3 exec "i3-msg move container to workspace number 3;i3-msg wo
 bindsym Mod1+Tab exec i3_cycle_windows --switch
 
 
+bindsym $mod+n exec dunstctl close
+bindsym $mod+shift+n exec dunstctl close-all
+bindsym $mod+shift+i exec dunstctl context
+bindsym $mod+shift+ctrl+n exec dunstctl history-pop
+
 mode "window" {
     bindsym s exec "i3-msg layout toggle split; i3-msg mode default"
     bindsym t exec "i3-msg layout tabbed; i3-msg mode default"
