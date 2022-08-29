@@ -180,6 +180,7 @@ Plug("nvim-treesitter/nvim-treesitter", {
 				"cpp",
 				"lua",
 				"python",
+				"kotlin",
 			},
 			highlight = { enable = true },
 			incremental_selection = { enable = false },
