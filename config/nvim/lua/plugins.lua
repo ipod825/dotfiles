@@ -896,6 +896,7 @@ Plug("git@github.com:ipod825/war.vim", {
 })
 
 Plug("hkupty/iron.nvim", {
+	disable = true,
 	config = function()
 		local iron = require("iron.core")
 		iron.setup({
