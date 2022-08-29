@@ -29,7 +29,7 @@ function M.goto_handler(_, res, _)
 	local range = res[1].range or res[1].targetRange
 	vim.fn["tabdrop#tabdrop"](vim.uri_to_fname(uri), range.start.line + 1, range.start.character + 1)
 	if #res > 1 then
-		vim.lsp.util.set_qflist(vim.lsp.util.locations_to_items(res))
+		vim.fn.setqflist(vim.lsp.util.locations_to_items(res))
 		vim.api.nvim_command("copen")
 	end
 end
