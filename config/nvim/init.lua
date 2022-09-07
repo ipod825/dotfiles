@@ -135,11 +135,18 @@ vim.api.nvim_create_autocmd("Filetype", {
 
 vim.api.nvim_create_autocmd("Filetype", {
 	group = GENERAL,
-	pattern = { "help" },
+	pattern = { "markdown", "tex" },
 	callback = function()
-		vim.cmd("wincmd T")
-		-- So that filetype will be trigger next time.
-		vim.bo.bufhidden = "wipe"
+		local map = vim.keymap.set
+		map("i", "sl", "\\", { buffer = true })
+		map("i", "<m-j>", "_", { buffer = true })
+		map("i", "<m-k>", "&", { buffer = true })
+		map("i", "<m-q>", "{}<Left>", { buffer = true })
+		vim.cmd("inoreabbrev <buffer> an &")
+		vim.cmd("inoreabbrev <buffer> da $$<left>")
+		vim.cmd("inoreabbrev <buffer> pl +")
+		vim.cmd("inoreabbrev <buffer> mi -")
+		vim.cmd("inoreabbrev <buffer> eq =")
 	end,
 })
 
