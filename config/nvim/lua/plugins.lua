@@ -980,6 +980,9 @@ Plug("mhartington/formatter.nvim", {
 				lua = {
 					require("formatter.filetypes.lua").stylua,
 				},
+				json = {
+					require("formatter.filetypes.json").jq,
+				},
 				["*"] = {
 					require("formatter.filetypes.any").remove_trailing_whitespace,
 				},
@@ -1247,9 +1250,22 @@ Plug("powerman/vim-plugin-AnsiEsc")
 
 Plug("git@github.com:ipod825/ranger.nvim", {
 	config = function()
+		local action = require("ranger.action")
 		require("ranger").setup({
 			hijack_netrw = true,
 			rifle_path = require("libp.path").join(vim.fn.stdpath("config"), "settings/rifle.conf"),
+			mappings = {
+				n = {
+					["<leader>f"] = function()
+						local _, node = action.utils.get_cur_buffer_and_node()
+						if node.abspath then
+							vim.fn["esearch#init"]({ paths = node.abspath, root_markers = {} })
+						else
+							vim.fn["esearch#init"]({ paths = vim.fn.getcwd(), root_markers = {} })
+						end
+					end,
+				},
+			},
 		})
 	end,
 })
