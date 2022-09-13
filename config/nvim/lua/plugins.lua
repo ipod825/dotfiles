@@ -216,33 +216,33 @@ Plug("lewis6991/spellsitter.nvim", {
 	end,
 })
 
-Plug("nvim-treesitter/nvim-treesitter-textobjects", {
-	config = function()
-		require("nvim-treesitter.configs").setup({
-			textobjects = {
-				select = {
-					enable = false,
-					keymaps = {
-						["a,"] = "@parameter.outer",
-						["i,"] = "@parameter.inner",
-					},
-				},
-				move = {
-					enable = true,
-					set_jumps = true, -- whether to set jumps in the jumplist
-					goto_next_end = {
-						["]]"] = "@function.outer",
-						["]["] = "@class.outer",
-					},
-					goto_previous_start = {
-						["[["] = "@function.outer",
-						["[]"] = "@class.outer",
-					},
-				},
-			},
-		})
-	end,
-})
+-- Plug("nvim-treesitter/nvim-treesitter-textobjects", {
+-- 	config = function()
+-- 		require("nvim-treesitter.configs").setup({
+-- 			textobjects = {
+-- 				select = {
+-- 					enable = false,
+-- 					keymaps = {
+-- 						["a,"] = "@parameter.outer",
+-- 						["i,"] = "@parameter.inner",
+-- 					},
+-- 				},
+-- 				move = {
+-- 					enable = true,
+-- 					set_jumps = true, -- whether to set jumps in the jumplist
+-- 					goto_next_end = {
+-- 						["]]"] = "@function.outer",
+-- 						["]["] = "@class.outer",
+-- 					},
+-- 					goto_previous_start = {
+-- 						["[["] = "@function.outer",
+-- 						["[]"] = "@class.outer",
+-- 					},
+-- 				},
+-- 			},
+-- 		})
+-- 	end,
+-- })
 
 Plug("p00f/nvim-ts-rainbow", {
 	config = function()
@@ -1214,13 +1214,13 @@ Plug("lambdalisue/gina.vim", {
 Plug("whiteinge/diffconflicts")
 
 Plug("git@github.com:ipod825/libp.nvim", {
-    config = function()
-        require("libp").setup({
-            web_devicon = {
-                alias = { igit = 'git' }
-            }
-        })
-    end
+	config = function()
+		require("libp").setup({
+			web_devicon = {
+				alias = { igit = "git" },
+			},
+		})
+	end,
 })
 Plug("git@github.com:ipod825/oldfiles.nvim", {
 	config = function()
