@@ -24,17 +24,17 @@ map("i", "<c-j>", "<down>")
 map("i", "<c-k>", "<up>")
 map("n", "<cr>", "<cmd>lua mapping.next_window()<cr>")
 function M.next_window()
-    if vim.wo.diff then
-        local ori_w = vim.api.nvim_get_current_win()
-        for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-            if w ~= ori_w and vim.api.nvim_win_get_option(w, "diff") then
-                vim.api.nvim_set_current_win(w)
-                return
-            end
-        end
-    else
-        vim.cmd("wincmd w")
-    end
+	if vim.wo.diff then
+		local ori_w = vim.api.nvim_get_current_win()
+		for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+			if w ~= ori_w and vim.api.nvim_win_get_option(w, "diff") then
+				vim.api.nvim_set_current_win(w)
+				return
+			end
+		end
+	else
+		vim.cmd("wincmd w")
+	end
 end
 
 -- Moving Around (home,END)
@@ -49,33 +49,32 @@ map("c", "<m-l>", "<c-e>")
 map("t", "<m-h>", "<home>")
 map("t", "<m-l>", "<end>")
 function M.previous_block()
-    if vim.bo.buftype ~= "terminal" then
-        local ori_line = V.current.line_number()
-        vim.cmd("normal! {")
-        if V.current.line_number() == ori_line - 1 then
-            vim.cmd("normal! {")
-        end
-        if V.current.line_number() ~= 1 then
-            vim.cmd("normal! j")
-        end
-    else
-        vim.fn.search(vim.env.USER, "Wbz")
-    end
+	if vim.bo.buftype ~= "terminal" then
+		local ori_line = V.current.line_number()
+		vim.cmd("normal! {")
+		if V.current.line_number() == ori_line - 1 then
+			vim.cmd("normal! {")
+		end
+		if V.current.line_number() ~= 1 then
+			vim.cmd("normal! j")
+		end
+	else
+		vim.fn.search(vim.env.USER, "Wbz")
+	end
 end
-
 function M.next_block()
-    if vim.bo.buftype ~= "terminal" then
-        local ori_line = V.current.line_number()
-        vim.cmd("normal! }")
-        if V.current.line_number() == ori_line + 1 then
-            vim.cmd("normal! }")
-        end
-        if V.current.line_number() ~= vim.fn.line("$") then
-            vim.cmd("normal! k")
-        end
-    else
-        vim.fn.search(vim.env.USER, "Wbz")
-    end
+	if vim.bo.buftype ~= "terminal" then
+		local ori_line = V.current.line_number()
+		vim.cmd("normal! }")
+		if V.current.line_number() == ori_line + 1 then
+			vim.cmd("normal! }")
+		end
+		if V.current.line_number() ~= vim.fn.line("$") then
+			vim.cmd("normal! k")
+		end
+	else
+		vim.fn.search(vim.env.USER, "Wbz")
+	end
 end
 
 -- Terminal
@@ -95,42 +94,40 @@ map("t", "<c-j>", "<down>")
 map("c", "<c-k>", "<up>")
 map("c", "<c-j>", "<down>")
 vim.api.nvim_exec(
-    "command! ToggleTermInsert let b:auto_term_insert=1-b:auto_term_insert | if b:auto_term_insert | startinsert | endif",
-    false
+	"command! ToggleTermInsert let b:auto_term_insert=1-b:auto_term_insert | if b:auto_term_insert | startinsert | endif",
+	false
 )
 function M.open_term(open_cmd)
-    vim.cmd(open_cmd)
-    vim.cmd("term")
-    vim.b.auto_term_insert = 1
-    vim.cmd("autocmd BufEnter <buffer> if b:auto_term_insert==1 | startinsert | endif")
-    vim.cmd("startinsert")
+	vim.cmd(open_cmd)
+	vim.cmd("term")
+	vim.b.auto_term_insert = 1
+	vim.cmd("autocmd BufEnter <buffer> if b:auto_term_insert==1 | startinsert | endif")
+	vim.cmd("startinsert")
 end
-
 M.id_to_term = M.id_to_term or {}
 function M.reuse_term(open_cmd, id)
-    id = id or "default"
-    if M.id_to_term[id] == nil then
-        M.open_term(open_cmd)
-        M.id_to_term[id] = vim.api.nvim_buf_get_name(0)
-        vim.cmd(string.format('autocmd BufUnload <buffer> lua mapping.id_to_term["%s"] = nil', id))
-        map("t", "<c-d>", [[<c-\><c-n>:quit<cr>]], { buffer = true })
-        return false
-    else
-        vim.cmd(string.format("%s %s", open_cmd, M.id_to_term[id]))
-        return true
-    end
+	id = id or "default"
+	if M.id_to_term[id] == nil then
+		M.open_term(open_cmd)
+		M.id_to_term[id] = vim.api.nvim_buf_get_name(0)
+		vim.cmd(string.format('autocmd BufUnload <buffer> lua mapping.id_to_term["%s"] = nil', id))
+		map("t", "<c-d>", [[<c-\><c-n>:quit<cr>]], { buffer = true })
+		return false
+	else
+		vim.cmd(string.format("%s %s", open_cmd, M.id_to_term[id]))
+		return true
+	end
 end
-
 function M.toggle_term_nojk()
-    if vim.b.timeoutlen == nil then
-        vim.b.timeoutlen = 10
-        vim.cmd("set timeoutlen=10")
-        vim.cmd('autocmd BufEnter <buffer> if exists("b:timeoutlen") | execute("set timeoutlen=".b:timeoutlen) | endif')
-        vim.cmd("autocmd BufLeave <buffer> set timeoutlen=500")
-    else
-        vim.b.timeoutlen = nil
-        vim.cmd("set timeoutlen=500")
-    end
+	if vim.b.timeoutlen == nil then
+		vim.b.timeoutlen = 10
+		vim.cmd("set timeoutlen=10")
+		vim.cmd('autocmd BufEnter <buffer> if exists("b:timeoutlen") | execute("set timeoutlen=".b:timeoutlen) | endif')
+		vim.cmd("autocmd BufLeave <buffer> set timeoutlen=500")
+	else
+		vim.b.timeoutlen = nil
+		vim.cmd("set timeoutlen=500")
+	end
 end
 
 -- Tab switching
@@ -143,32 +140,31 @@ map("t", "<c-l>", "jkgt", { remap = true })
 map("n", "<c-m-j>", [[<c-\><c-n><cmd>lua mapping.move_to_previous_tab()<cr>]])
 map("n", "<c-m-k>", [[<c-\><c-n><cmd>lua mapping.move_to_next_tab()<cr>]])
 function M.move_to_previous_tab()
-    if vim.api.nvim_tabpage_get_number(vim.api.nvim_get_current_tabpage()) == 1 then
-        vim.cmd("wincmd T")
-        vim.cmd("silent! tabmove -1")
-    else
-        local current_buf = vim.api.nvim_get_current_buf()
-        vim.cmd("normal! gT")
-        local target_tab_page = vim.api.nvim_get_current_tabpage()
-        vim.cmd("normal! gt")
-        vim.cmd("close")
-        vim.api.nvim_set_current_tabpage(target_tab_page)
-        vim.cmd(string.format("vsplit | wincmd L | b%d", current_buf))
-    end
+	if vim.api.nvim_tabpage_get_number(vim.api.nvim_get_current_tabpage()) == 1 then
+		vim.cmd("wincmd T")
+		vim.cmd("silent! tabmove -1")
+	else
+		local current_buf = vim.api.nvim_get_current_buf()
+		vim.cmd("normal! gT")
+		local target_tab_page = vim.api.nvim_get_current_tabpage()
+		vim.cmd("normal! gt")
+		vim.cmd("close")
+		vim.api.nvim_set_current_tabpage(target_tab_page)
+		vim.cmd(string.format("vsplit | wincmd L | b%d", current_buf))
+	end
 end
-
 function M.move_to_next_tab()
-    if vim.api.nvim_tabpage_get_number(vim.api.nvim_get_current_tabpage()) == #vim.api.nvim_list_tabpages() then
-        vim.cmd("wincmd T")
-    else
-        local current_buf = vim.api.nvim_get_current_buf()
-        vim.cmd("normal! gt")
-        local target_tab_page = vim.api.nvim_get_current_tabpage()
-        vim.cmd("normal! gT")
-        vim.cmd("close")
-        vim.api.nvim_set_current_tabpage(target_tab_page)
-        vim.cmd(string.format("vsplit | wincmd L | b%d", current_buf))
-    end
+	if vim.api.nvim_tabpage_get_number(vim.api.nvim_get_current_tabpage()) == #vim.api.nvim_list_tabpages() then
+		vim.cmd("wincmd T")
+	else
+		local current_buf = vim.api.nvim_get_current_buf()
+		vim.cmd("normal! gt")
+		local target_tab_page = vim.api.nvim_get_current_tabpage()
+		vim.cmd("normal! gT")
+		vim.cmd("close")
+		vim.api.nvim_set_current_tabpage(target_tab_page)
+		vim.cmd(string.format("vsplit | wincmd L | b%d", current_buf))
+	end
 end
 
 -- Window
@@ -182,13 +178,13 @@ map("n", "Q", "q")
 map("n", "<m-w>", "<cmd>lua vim.wo.wrap = not vim.wo.wrap<cr>")
 
 function M.close_float_windows()
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-        local config = vim.api.nvim_win_get_config(win)
-        if config.relative ~= "" then
-            vim.api.nvim_win_close(win, false)
-            print("Closing window", win)
-        end
-    end
+	for _, win in ipairs(vim.api.nvim_list_wins()) do
+		local config = vim.api.nvim_win_get_config(win)
+		if config.relative ~= "" then
+			vim.api.nvim_win_close(win, false)
+			print("Closing window", win)
+		end
+	end
 end
 
 vim.env.SUDO_ASKPASS = "/usr/bin/ssh-askpass"
@@ -206,42 +202,40 @@ map("c", "<m-f>", "<c-r>%<c-f>")
 -- yank to system clipboard
 map("x", "<m-y>", "<cmd>lua mapping.yank_to_system_clipboard()<cr>")
 function M.yank_to_system_clipboard()
-    local should_strip = vim.bo.buftype == "terminal" and vim.fn.mode() == "V"
-    vim.cmd('silent! normal! "+y')
-    if should_strip then
-        local src = vim.fn.getreg("+")
-        local w = vim.api.nvim_win_get_width(0)
-        local res, _ = string.gsub(src, "([^\n]+)\n", function(s)
-            if #s == w then
-                return s
-            else
-                return s .. "\n"
-            end
-        end)
-        vim.fn.setreg("+", res)
-    end
+	local should_strip = vim.bo.buftype == "terminal" and vim.fn.mode() == "V"
+	vim.cmd('silent! normal! "+y')
+	if should_strip then
+		local src = vim.fn.getreg("+")
+		local w = vim.api.nvim_win_get_width(0)
+		local res, _ = string.gsub(src, "([^\n]+)\n", function(s)
+			if #s == w then
+				return s
+			else
+				return s .. "\n"
+			end
+		end)
+		vim.fn.setreg("+", res)
+	end
 end
-
 map("x", "y", "y`]")
 map("n", "U", "<cmd>lua mapping.comment_unwrap()<cr>")
 function M.comment_unwrap()
-    if vim.bo.filetype == "python" then
-        vim.bo.textwidth = 79
-    else
-        vim.bo.textwidth = 80
-    end
-    vim.cmd("normal! vgq")
-    vim.bo.textwidth = 0
+	if vim.bo.filetype == "python" then
+		vim.bo.textwidth = 79
+	else
+		vim.bo.textwidth = 80
+	end
+	vim.cmd("normal! vgq")
+	vim.bo.textwidth = 0
 end
-
 map("n", "<F5>", function()
-    local path = require("libp.path")
-    local plugin = vim.split(path.basename(path.find_directory(".git")), "%.")[1]
+	local path = require("libp.path")
+	local plugin = vim.split(path.basename(path.find_directory(".git")), "%.")[1]
 
-    for _, buffer in pairs(require("libp.global")("libp").buffers) do
-        vim.cmd("bwipe " .. buffer.id)
-    end
-    require("vplug").reload(plugin)
+	for _, buffer in pairs(require("libp.global")("libp").buffers) do
+		vim.cmd("bwipe " .. buffer.id)
+	end
+	require("vplug").reload(plugin)
 end)
 -- folding
 map("n", "<leader><space>", "za", { remap = true })
@@ -258,27 +252,26 @@ map("n", "<leader>l", "<cmd>lua mapping.diff_put()<cr>")
 map("x", "<leader>h", ":call v:lua.mapping.diff_get()<cr>")
 map("x", "<leader>l", ":call v:lua.mapping.diff_put()<cr>")
 function M.diff_get()
-    if #vim.api.nvim_tabpage_list_wins(0) == 3 then
-        vim.cmd("diffget 3:")
-    else
-        if vim.fn.winnr() == 1 then
-            vim.cmd("diffget")
-        else
-            vim.cmd("diffput")
-        end
-    end
+	if #vim.api.nvim_tabpage_list_wins(0) == 3 then
+		vim.cmd("diffget 3:")
+	else
+		if vim.fn.winnr() == 1 then
+			vim.cmd("diffget")
+		else
+			vim.cmd("diffput")
+		end
+	end
 end
-
 function M.diff_put()
-    if #vim.api.nvim_tabpage_list_wins(0) == 3 then
-        vim.cmd("diffget 2:")
-    else
-        if vim.fn.winnr() == 2 then
-            vim.cmd("diffget")
-        else
-            vim.cmd("diffput")
-        end
-    end
+	if #vim.api.nvim_tabpage_list_wins(0) == 3 then
+		vim.cmd("diffget 2:")
+	else
+		if vim.fn.winnr() == 2 then
+			vim.cmd("diffget")
+		else
+			vim.cmd("diffput")
+		end
+	end
 end
 
 return M
