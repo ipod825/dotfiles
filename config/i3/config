@@ -15,7 +15,7 @@ bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym XF86AudioRaiseVolume exec pulsemixer --change-volume +5 && pkill -RTMIN+10 i3blocks
 bindsym XF86AudioLowerVolume exec pulsemixer --change-volume -5 && pkill -RTMIN+10 i3blocks
 bindsym XF86AudioMute exec pulsemixer --toggle-mute && pkill -RTMIN+10 i3blocks
-bindsym Print deepin-screenshot
+bindsym Print exec deepin-screenshot
 bindsym $mod+q exec i3-msg kill
 bindsym $mod+h exec $HOME/.pyenv/shims/i3-cycle left
 bindsym $mod+l exec $HOME/.pyenv/shims/i3-cycle right
@@ -34,6 +34,7 @@ bindsym $mod+Shift+1 exec "i3-msg move container to workspace number 1;i3-msg wo
 bindsym $mod+Shift+2 exec "i3-msg move container to workspace number 2;i3-msg workspace number 2"
 bindsym $mod+Shift+3 exec "i3-msg move container to workspace number 3;i3-msg workspace number 3"
 bindsym Mod1+Tab exec i3_cycle_windows --switch
+bindsym F11 exec i3-msg fullscreen toggle
 
 
 bindsym $mod+n exec dunstctl close
