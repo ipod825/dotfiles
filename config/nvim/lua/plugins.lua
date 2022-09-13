@@ -1213,7 +1213,15 @@ Plug("lambdalisue/gina.vim", {
 
 Plug("whiteinge/diffconflicts")
 
-Plug("git@github.com:ipod825/libp.nvim")
+Plug("git@github.com:ipod825/libp.nvim", {
+    config = function()
+        require("libp").setup({
+            web_devicon = {
+                alias = { igit = 'git' }
+            }
+        })
+    end
+})
 Plug("git@github.com:ipod825/oldfiles.nvim", {
 	config = function()
 		require("oldfiles").setup()
