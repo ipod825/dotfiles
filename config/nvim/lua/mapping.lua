@@ -1,10 +1,9 @@
-local M = _G.mapping or {}
-_G.mapping = M
+local M = {}
 
 local map = vim.keymap.set
-local V = require("Vim")
+local vimfn = require("libp.utils.vimfn")
+local functional = require("libp.functional")
 
-vim.g.mapleader = " "
 -- Mode Changing
 map("n", ";", ":")
 map("i", "jk", "<esc>l")
@@ -16,14 +15,11 @@ map("i", "<c-a>", "<esc><c-w>")
 -- Moving Around
 map("n", "j", "gj")
 map("n", "k", "gk")
-map({ "n", "x" }, "<c-k>", "<cmd> lua mapping.previous_block()<cr>")
-map({ "n", "x" }, "<c-j>", "<cmd> lua mapping.next_block()<cr>")
 map("i", "<c-h>", "<left>")
 map("i", "<c-l>", "<right>")
 map("i", "<c-j>", "<down>")
 map("i", "<c-k>", "<up>")
-map("n", "<cr>", "<cmd>lua mapping.next_window()<cr>")
-function M.next_window()
+map("n", "<cr>", function()
 	if vim.wo.diff then
 		local ori_w = vim.api.nvim_get_current_win()
 		for _, w in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
@@ -35,7 +31,35 @@ function M.next_window()
 	else
 		vim.cmd("wincmd w")
 	end
-end
+end, { desc = "next window" })
+map({ "n", "x" }, "<c-k>", function()
+	if vim.bo.buftype ~= "terminal" then
+		local ori_line = vimfn.getrow()
+		vim.cmd("normal! {")
+		if vimfn.getrow() == ori_line - 1 then
+			vim.cmd("normal! {")
+		end
+		if vimfn.getrow() ~= 1 then
+			vim.cmd("normal! j")
+		end
+	else
+		vim.fn.search(vim.env.USER, "Wbz")
+	end
+end, { desc = "previous _block" })
+map({ "n", "x" }, "<c-j>", function()
+	if vim.bo.buftype ~= "terminal" then
+		local ori_line = vimfn.getrow()
+		vim.cmd("normal! }")
+		if vimfn.getrow() == ori_line + 1 then
+			vim.cmd("normal! }")
+		end
+		if vimfn.getrow() ~= vim.fn.line("$") then
+			vim.cmd("normal! k")
+		end
+	else
+		vim.fn.search(vim.env.USER, "Wbz")
+	end
+end, { desc = "next block" })
 
 -- Moving Around (home,END)
 map({ "o", "n" }, "<m-h>", "g^")
@@ -50,27 +74,13 @@ map("t", "<m-h>", "<home>")
 map("t", "<m-l>", "<end>")
 function M.previous_block()
 	if vim.bo.buftype ~= "terminal" then
-		local ori_line = V.current.line_number()
+		local ori_line = vimfn.getrow()
 		vim.cmd("normal! {")
-		if V.current.line_number() == ori_line - 1 then
+		if vimfn.getrow() == ori_line - 1 then
 			vim.cmd("normal! {")
 		end
-		if V.current.line_number() ~= 1 then
+		if vimfn.getrow() ~= 1 then
 			vim.cmd("normal! j")
-		end
-	else
-		vim.fn.search(vim.env.USER, "Wbz")
-	end
-end
-function M.next_block()
-	if vim.bo.buftype ~= "terminal" then
-		local ori_line = V.current.line_number()
-		vim.cmd("normal! }")
-		if V.current.line_number() == ori_line + 1 then
-			vim.cmd("normal! }")
-		end
-		if V.current.line_number() ~= vim.fn.line("$") then
-			vim.cmd("normal! k")
 		end
 	else
 		vim.fn.search(vim.env.USER, "Wbz")
@@ -78,31 +88,25 @@ function M.next_block()
 end
 
 -- Terminal
-map("n", "<m-t>", '<cmd>call v:lua.mapping.reuse_term("Tabdrop", getcwd())<cr>')
-map("n", "<m-o>", '<cmd>call v:lua.mapping.reuse_term("split", getcwd())<cr>')
-map("n", "<m-e>", '<cmd>call v:lua.mapping.reuse_term("vsplit", getcwd())<cr>')
-map("n", "<m-s-t>", '<cmd>lua mapping.open_term("Tabdrop")<cr>')
-map("n", "<m-s-o>", '<cmd>lua mapping.open_term("split")<cr>')
-map("n", "<m-s-e>", '<cmd>lua mapping.open_term("vsplit")<cr>')
-map("t", "jk", [[<c-\><c-n>]])
-map("t", "<esc>", [[<c-\><c-n>]])
-map("t", "<m-j>", [[<c-\><c-n><cmd>lua mapping.toggle_term_nojk()<cr>i]])
-map("t", "<c-a>", [[<c-\><c-n><c-w>]])
-map("t", "<c-z>", "<c-v><c-z>")
-map("t", "<c-k>", "<up>")
-map("t", "<c-j>", "<down>")
-map("c", "<c-k>", "<up>")
-map("c", "<c-j>", "<down>")
-vim.api.nvim_exec(
-	"command! ToggleTermInsert let b:auto_term_insert=1-b:auto_term_insert | if b:auto_term_insert | startinsert | endif",
-	false
-)
+vim.api.nvim_create_user_command("ToggleTermInsert", function()
+	vim.b.auto_term_insert = not vim.b.auto_term_insert
+	if vim.b.auto_term_insert then
+		vim.cmd("startinsert")
+	end
+end, {})
 function M.open_term(open_cmd)
 	vim.cmd(open_cmd)
 	vim.cmd("term")
-	vim.b.auto_term_insert = 1
-	vim.cmd("autocmd BufEnter <buffer> if b:auto_term_insert==1 | startinsert | endif")
+	vim.b.auto_term_insert = true
 	vim.cmd("startinsert")
+	vim.api.nvim_create_autocmd("BufEnter", {
+		buffer = 0,
+		callback = function()
+			if vim.b.auto_term_insert then
+				vim.cmd("startinsert")
+			end
+		end,
+	})
 end
 M.id_to_term = M.id_to_term or {}
 function M.reuse_term(open_cmd, id)
@@ -110,7 +114,12 @@ function M.reuse_term(open_cmd, id)
 	if M.id_to_term[id] == nil then
 		M.open_term(open_cmd)
 		M.id_to_term[id] = vim.api.nvim_buf_get_name(0)
-		vim.cmd(string.format('autocmd BufUnload <buffer> lua mapping.id_to_term["%s"] = nil', id))
+		vim.api.nvim_create_autocmd("BufUnload", {
+			buffer = 0,
+			callback = function()
+				M.id_to_term[id] = nil
+			end,
+		})
 		map("t", "<c-d>", [[<c-\><c-n>:quit<cr>]], { buffer = true })
 		return false
 	else
@@ -118,17 +127,56 @@ function M.reuse_term(open_cmd, id)
 		return true
 	end
 end
-function M.toggle_term_nojk()
-	if vim.b.timeoutlen == nil then
-		vim.b.timeoutlen = 10
-		vim.cmd("set timeoutlen=10")
-		vim.cmd('autocmd BufEnter <buffer> if exists("b:timeoutlen") | execute("set timeoutlen=".b:timeoutlen) | endif')
-		vim.cmd("autocmd BufLeave <buffer> set timeoutlen=500")
-	else
-		vim.b.timeoutlen = nil
-		vim.cmd("set timeoutlen=500")
+map("n", "<m-t>", function()
+	M.reuse_term("Tabdrop", vim.fn.getcwd())
+end)
+map("n", "<m-o>", function()
+	M.reuse_term("split", vim.fn.getcwd())
+end)
+map("n", "<m-e>", function()
+	M.reuse_term("vsplit", vim.fn.getcwd())
+end)
+map("n", "<m-s-t>", functional.bind(M.open_term, "Tabdrop"))
+map("n", "<m-s-o>", functional.bind(M.open_term, "split"))
+map("n", "<m-s-e>", functional.bind(M.open_term, "vsplit"))
+map("t", "jk", [[<c-\><c-n>]])
+map("t", "<esc>", [[<c-\><c-n>]])
+map("t", "<c-a>", [[<c-\><c-n><c-w>]])
+map("t", "<c-z>", "<c-v><c-z>")
+map("t", "<c-k>", "<up>")
+map("t", "<c-j>", "<down>")
+map("c", "<c-k>", "<up>")
+map("c", "<c-j>", "<down>")
+
+local ori_timeout_len = vim.o.timeoutlen
+map("t", "<m-j>", function()
+	if vim.b.no_jk == nil then
+		require("libp.log").warn("in")
+		vim.api.nvim_create_autocmd("BufEnter", {
+			buffer = 0,
+			callback = function()
+				if vim.b.no_jk then
+					vim.o.timeoutlen = 10
+				end
+			end,
+		})
+		vim.api.nvim_create_autocmd("BufLeave", {
+			buffer = 0,
+			callback = function()
+				if vim.b.no_jk then
+					vim.o.timeoutlen = ori_timeout_len
+				end
+			end,
+		})
 	end
-end
+	vim.b.no_jk = not vim.b.no_jk
+
+	if vim.b.no_jk then
+		vim.o.timeoutlen = 10
+	else
+		vim.o.timeoutlen = ori_timeout_len
+	end
+end, { desc = "toggle term nojk" })
 
 -- Tab switching
 map("n", "<c-h>", "gT")
@@ -137,9 +185,7 @@ map("n", "<c-m-h>", ":tabmove -1<cr>")
 map("n", "<c-m-l>", ":tabmove +1<cr>")
 map("t", "<c-h>", "jkgT", { remap = true })
 map("t", "<c-l>", "jkgt", { remap = true })
-map("n", "<c-m-j>", [[<c-\><c-n><cmd>lua mapping.move_to_previous_tab()<cr>]])
-map("n", "<c-m-k>", [[<c-\><c-n><cmd>lua mapping.move_to_next_tab()<cr>]])
-function M.move_to_previous_tab()
+map("n", "<c-m-j>", function()
 	if vim.api.nvim_tabpage_get_number(vim.api.nvim_get_current_tabpage()) == 1 then
 		vim.cmd("wincmd T")
 		vim.cmd("silent! tabmove -1")
@@ -152,8 +198,9 @@ function M.move_to_previous_tab()
 		vim.api.nvim_set_current_tabpage(target_tab_page)
 		vim.cmd(string.format("vsplit | wincmd L | b%d", current_buf))
 	end
-end
-function M.move_to_next_tab()
+end, { desc = "move to previous tab" })
+
+map("n", "<c-m-k>", function()
 	if vim.api.nvim_tabpage_get_number(vim.api.nvim_get_current_tabpage()) == #vim.api.nvim_list_tabpages() then
 		vim.cmd("wincmd T")
 	else
@@ -165,7 +212,7 @@ function M.move_to_next_tab()
 		vim.api.nvim_set_current_tabpage(target_tab_page)
 		vim.cmd(string.format("vsplit | wincmd L | b%d", current_buf))
 	end
-end
+end, { desc = "move to next tab" })
 
 -- Window
 map({ "i", "n" }, "<c-a>", "<Esc><c-w>")
@@ -175,7 +222,7 @@ map("n", "<c-m-left>", "<c-w><")
 map("n", "<c-m-right>", "<c-w>>")
 map("n", "q", "<cmd>quit<cr>")
 map("n", "Q", "q")
-map("n", "<m-w>", "<cmd>lua vim.wo.wrap = not vim.wo.wrap<cr>")
+map("n", "<m-w>", "<cmd>setlocal wrap!<cr>")
 
 function M.close_float_windows()
 	for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -200,8 +247,7 @@ map("c", "<m-p>", '<c-r>"')
 -- paste current file name in command line
 map("c", "<m-f>", "<c-r>%<c-f>")
 -- yank to system clipboard
-map("x", "<m-y>", "<cmd>lua mapping.yank_to_system_clipboard()<cr>")
-function M.yank_to_system_clipboard()
+map("x", "<m-y>", function()
 	local should_strip = vim.bo.buftype == "terminal" and vim.fn.mode() == "V"
 	vim.cmd('silent! normal! "+y')
 	if should_strip then
@@ -216,10 +262,9 @@ function M.yank_to_system_clipboard()
 		end)
 		vim.fn.setreg("+", res)
 	end
-end
+end, { desc = "yank to system clipboard" })
 map("x", "y", "y`]")
-map("n", "U", "<cmd>lua mapping.comment_unwrap()<cr>")
-function M.comment_unwrap()
+map("n", "U", function()
 	if vim.bo.filetype == "python" then
 		vim.bo.textwidth = 79
 	else
@@ -227,7 +272,7 @@ function M.comment_unwrap()
 	end
 	vim.cmd("normal! vgq")
 	vim.bo.textwidth = 0
-end
+end, { desc = "comment_unwrap" })
 map("n", "<F5>", function()
 	local path = require("libp.path")
 	local plugin = vim.split(path.basename(path.find_directory(".git")), "%.")[1]
@@ -246,32 +291,44 @@ map("n", "<", "<<")
 map("x", ">", ">gv")
 map("x", "<", "<gv")
 
+local function exec_diff_cmd(cmd, beg, ends)
+	if beg ~= ends then
+		vim.cmd(("%d,%d %s"):format(beg, ends, cmd))
+	else
+		vim.cmd(cmd)
+	end
+end
+
 -- Diff
-map("n", "<leader>h", "<cmd>lua mapping.diff_get()<cr>")
-map("n", "<leader>l", "<cmd>lua mapping.diff_put()<cr>")
-map("x", "<leader>h", ":call v:lua.mapping.diff_get()<cr>")
-map("x", "<leader>l", ":call v:lua.mapping.diff_put()<cr>")
 function M.diff_get()
+	local beg, ends = vimfn.visual_rows()
 	if #vim.api.nvim_tabpage_list_wins(0) == 3 then
-		vim.cmd("diffget 3:")
+		exec_diff_cmd("diffget 3:", beg, ends)
 	else
 		if vim.fn.winnr() == 1 then
-			vim.cmd("diffget")
+			exec_diff_cmd("diffget", beg, ends)
 		else
-			vim.cmd("diffput")
+			exec_diff_cmd("diffput", beg, ends)
 		end
 	end
+	vimfn.ensure_exit_visual_mode()
 end
 function M.diff_put()
+	local beg, ends = vimfn.visual_rows()
 	if #vim.api.nvim_tabpage_list_wins(0) == 3 then
-		vim.cmd("diffget 2:")
+		exec_diff_cmd("diffget 2:", beg, ends)
 	else
 		if vim.fn.winnr() == 2 then
-			vim.cmd("diffget")
+			exec_diff_cmd("diffget", beg, ends)
 		else
-			vim.cmd("diffput")
+			exec_diff_cmd("diffput", beg, ends)
 		end
 	end
+	vimfn.ensure_exit_visual_mode()
 end
+map("n", "<leader>h", M.diff_get)
+map("n", "<leader>l", M.diff_put)
+map("x", "<leader>h", M.diff_get)
+map("x", "<leader>l", M.diff_put)
 
 return M

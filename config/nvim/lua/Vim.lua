@@ -1,11 +1,6 @@
-local M = _G.Vim or {}
-_G.Vim = M
+local M = {}
 
 M.current = {}
-function M.current.line_number()
-	return vim.api.nvim_win_get_cursor(0)[1]
-end
-
 function M.current.col_number()
 	return vim.api.nvim_win_get_cursor(0)[2]
 end

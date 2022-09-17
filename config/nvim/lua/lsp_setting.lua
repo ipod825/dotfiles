@@ -1,5 +1,4 @@
-local M = _G.lsp or {}
-_G.lsp = M
+local M = {}
 
 local map = vim.keymap.set
 local add_util_menu = require("fuzzy_menu").add_util_menu

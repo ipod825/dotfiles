@@ -23,7 +23,7 @@ end
 function M.tab_label(tab_id, current_tab_id)
 	local win_id = api.nvim_tabpage_get_win(tab_id)
 	local buf_id = api.nvim_win_get_buf(win_id)
-	local content = string.format("%s", utils.basename(api.nvim_buf_get_name(buf_id)))
+	local content = string.format("%s", vim.fs.basename(api.nvim_buf_get_name(buf_id)))
 	local current_tab_nr = api.nvim_tabpage_get_number(current_tab_id)
 	local tab_nr = api.nvim_tabpage_get_number(tab_id)
 	local is_current = (tab_id == current_tab_id)

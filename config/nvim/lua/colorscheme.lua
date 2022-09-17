@@ -1,5 +1,4 @@
-local M = _G.colorscheme or {}
-_G.colorscheme = M
+local M = {}
 
 M.color = {
 	base0 = "#1B2229",

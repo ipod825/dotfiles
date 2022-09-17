@@ -1,5 +1,4 @@
-local M = _G.plugins or {}
-_G.plugins = M
+local M = {}
 local map = vim.keymap.set
 local unmap = vim.keymap.del
 local Plug = require("vplug")
@@ -484,24 +483,20 @@ Plug("gbprod/yanky.nvim", {
 		})
 		local function visual_paste(key)
 			vim.cmd('normal! "_d')
-			V.feed_plug_keys(key)
+			vim.fn.setreg('"', vim.trim(vim.fn.getreg('"')))
+			vim.cmd("normal! " .. key)
+			-- V.feed_plug_keys(key)
 		end
-		vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)", {})
-		vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)", {})
+		vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)")
+		vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)")
 		vim.keymap.set("x", "p", function()
-			visual_paste("(YankyPutBefore)")
-		end, {})
-		vim.keymap.set("x", "P", function()
-			visual_paste("(YankyPutBefore)")
-		end, {})
-		vim.keymap.set("n", "gp", "<Plug>(YankyGPutAfter)", {})
-		vim.keymap.set("n", "gP", "<Plug>(YankyGPutBefore)", {})
+			visual_paste("P")
+		end)
+		vim.keymap.set("n", "gp", "<Plug>(YankyGPutAfter)")
+		vim.keymap.set("n", "gP", "<Plug>(YankyGPutBefore)")
 		vim.keymap.set("x", "gp", function()
-			visual_paste("(YankyGPutBefore)")
-		end, {})
-		vim.keymap.set("x", "gP", function()
-			visual_paste("(YankyGPutBefore)")
-		end, {})
+			visual_paste("gP")
+		end)
 		require("telescope._extensions").load("yank_history")
 	end,
 })
@@ -812,12 +807,13 @@ Plug("gpanders/nvim-parinfer")
 
 Plug("L3MON4D3/LuaSnip", {
 	config = function()
-		map(
-			{ "i", "s", "n" },
-			"<tab>",
-			'luasnip#expand_or_jumpable() ? "<Plug>luasnip-expand-or-jump" : "<tab>"',
-			{ expr = true, remap = true }
-		)
+		map({ "i", "s", "n" }, "<tab>", function()
+			if vim.fn["luasnip#expand_or_jumpable"]() then
+				V.feed_plug_keys("luasnip-expand-or-jump")
+			else
+				return "\t"
+			end
+		end, { expr = true })
 		map({ "i", "s", "n" }, "<s-tab>", '<cmd>lua require"luasnip".jump(-1)<Cr>')
 		map({ "i", "s", "n" }, "<c-s-j>", "<Plug>luasnip-next-choice")
 		map({ "i", "s", "n" }, "<c-s-k>", "<Plug>luasnip-prev-choice")
@@ -853,10 +849,10 @@ Plug("L3MON4D3/LuaSnip", {
 			-- the current filetype in eg. a markdown-code block or `vim.cmd()`.
 			ft_func = require("luasnip.extras.filetype_functions").from_cursor,
 		})
-		require("luasnip.loaders.from_lua").load({ paths = vim.fn.stdpath("config") .. "/snippets" })
+		require("luasnip.loaders.from_lua").lazy_load({ paths = vim.fn.stdpath("config") .. "/snippets/luasnippets" })
 
 		vim.api.nvim_create_user_command("LuaSnipEdit", function()
-			require("luasnip.loaders").edit_snippet_files({})
+			require("luasnip.loaders").edit_snippet_files(nil)
 		end, {})
 	end,
 })

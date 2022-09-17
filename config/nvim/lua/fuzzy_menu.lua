@@ -1,5 +1,4 @@
-local M = _G.fuzzy_menu or {}
-_G.fuzzy_menu = M
+local M = {}
 local map = vim.keymap.set
 
 local pickers = require("telescope.pickers")

@@ -67,7 +67,7 @@ local meta = {
 		end
 
 		if type(opts.config) == "function" then
-			local plugin = opts.as or utils.basename(repo)
+			local plugin = opts.as or vim.fs.basename(repo)
 
 			if opts["for"] == nil and opts.on == nil then
 				M.configs.start[plugin] = opts.config

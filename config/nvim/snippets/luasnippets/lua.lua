@@ -34,7 +34,7 @@ ls.add_snippets("lua", {
                {}
             end
         ]],
-			{ i(1, "name"), i(2), i(0) }
+			{ i(1, ""), i(2), i(0) }
 		)
 	),
 	s(
