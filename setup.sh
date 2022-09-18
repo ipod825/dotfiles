@@ -56,16 +56,16 @@ if [ ! -d $HOME/.pyenv ];then
     pyenv global miniconda3-latest
 fi
 
-if [ ! -x kitty ]; then
+if [[ ! -x $HOME/.local/kitty.app/bin/kitty ]]; then
     curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
 fi
 
 echo "==Setting neovim=="
-if [ ! -x $HOME/.local/share/fonts ]; then
+if [[ ! -d $HOME/.local/share/fonts ]]; then
     mkdir -p $HOME/.local/share/fonts
     cd $HOME/.local/share/fonts &&curl -fLo "Hack Regular Nerd Font Complete.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Hack/Regular/complete/Hack%20Regular%20Nerd%20Font%20Complete%20Mono.ttf
 fi
-if [ ! -x $HOME/.local/bin/nvim ]; then
+if [[ ! -x $HOME/.local/bin/nvim ]]; then
     mkdir -p $HOME/.local/bin
     if [[ "$OSTYPE" == "darwin"* ]]; then
         wget -O /tmp/nvim-macos.tar.gz https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
@@ -76,10 +76,11 @@ if [ ! -x $HOME/.local/bin/nvim ]; then
         wget -O $HOME/.local/bin/nvim https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
     fi
     chmod u+x $HOME/.local/bin/nvim
+    nvim -u $HOME/dotfiles/config/nvim/lua/plugins.lua +PlugInstall +qall
     pip install pynvim --upgrade
 fi
 
-if [ ! -x $HOME/.local/bin/luarocks ]; then
+if [[ ! -x $HOME/.local/bin/luarocks ]]; then
     echo "==Setting luarocks=="
     luarocks_version="3.9.0"
     echo $luarocks_version
@@ -91,7 +92,7 @@ if [ ! -x $HOME/.local/bin/luarocks ]; then
     luarocks install penlight ldoc
 fi
 
-if [ ! -z $gpg_key ]; then
+if [[ ! -z $gpg_key ]]; then
     gpg-connect-agent KILLAGENT
     gpg --import $gpg_key
     echo "==Setting git-crypt=="
@@ -104,9 +105,3 @@ if [ ! -z $gpg_key ]; then
     fi
     git-crypt unlock
 fi
-
-# echo "==Setting kitty=="
-# mkdir -p $HOME/.local
-# if [ ! -d $HOME/.local/kitty.app ]; then
-#     curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin dest=$HOME/.local
-# fi

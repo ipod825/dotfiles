@@ -1,5 +1,4 @@
-local M = _G.plug or {}
-_G.plug = M
+local M = {}
 
 local install_path = vim.fn.stdpath("data") .. "/site/autoload/plug.vim"
 if vim.fn.filereadable(install_path) == 0 then
@@ -33,7 +32,6 @@ end
 function M.ends()
 	vim.fn["plug#end"]()
 	for _, config in pairs(M.configs.start) do
-		-- pcall(config)
 		config()
 	end
 end
