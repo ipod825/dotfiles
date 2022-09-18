@@ -1,5 +1,5 @@
 local M = {}
-local V = require("Vim")
+local utils = require("utils")
 
 M.name = "default"
 M.envs = {}
@@ -8,26 +8,12 @@ M.cur_env = M
 local nil_table_value = {}
 
 function M.register_env(opts)
-	vim.validate({ env = { opts.env, "t" }, mode_mappings = { opts.mode_mappings, "t", true } })
+	vim.validate({ env = { opts.env, "t" }, keymaps = { opts.keymaps, "t", true } })
 	local env = opts.env
-	local mode_mappings = opts.mode_mappings or {}
 	local default_env = M
 	M.envs[env.name] = env
-	env.mappings = {}
-	for mode, mappings in pairs(mode_mappings) do
-		local saved_mappings = V.save_keymap(
-			vim.tbl_map(function(e)
-				return e.lhs
-			end, vim.tbl_values(mappings)),
-			mode
-		)
-		default_env.mappings = vim.tbl_extend("force", default_env.mappings, saved_mappings)
-		for _, mapping in pairs(mappings) do
-			mapping.mode = mode
-			mapping.buffer = -1
-			table.insert(env.mappings, mapping)
-		end
-	end
+	env.mappings = opts.keymaps or {}
+	default_env.mappings = vim.tbl_extend("keep", default_env.mappings or {}, utils.save_keymap(env.mappings))
 
 	env.g = env.g or {}
 	default_env.g = default_env.g or {}
@@ -46,16 +32,6 @@ function M.register_env(opts)
 	end
 end
 
-function M.auto_switch_env()
-	for _, env in pairs(M.envs) do
-		if env.is_in and env.is_in() then
-			M.switch_env(env)
-			return
-		end
-	end
-	M.switch_env(M)
-end
-
 function M.switch_env(env)
 	if M.cur_env == env then
 		return
@@ -64,8 +40,10 @@ function M.switch_env(env)
 	local default_env = M
 
 	-- Restore default mappings and then apply current env mappings.
-	V.restore_keymap(default_env.mappings)
-	V.restore_keymap(M.cur_env.mappings)
+	utils.restore_keymap(default_env.mappings)
+	if M.cur_env ~= default_env then
+		utils.restore_keymap_with_mode_key(M.cur_env.mappings)
+	end
 
 	for k, v in pairs(default_env.g) do
 		if v == nil_table_value then
@@ -83,17 +61,16 @@ M.register_env({ env = M })
 vim.api.nvim_create_autocmd("BufEnter", {
 	group = vim.api.nvim_create_augroup("PROFILE", {}),
 	callback = function()
-		M.auto_switch_env()
+		for _, env in pairs(M.envs) do
+			if env.is_in and env.is_in() then
+				M.switch_env(env)
+				return
+			end
+		end
+		M.switch_env(M)
+		-- vim.defer_fn(function()
+		-- end, 10)
 	end,
 })
--- vim.api.nvim_exec(
--- 	[[
--- augroup PROFILE
---     autocmd!
---     autocmd BufEnter * lua vim.defer_fn(M.auto_switch_env, 10)
--- augroup END
--- ]],
--- 	false
--- )
 
 return M

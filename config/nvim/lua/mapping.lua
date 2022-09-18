@@ -151,7 +151,6 @@ map("c", "<c-j>", "<down>")
 local ori_timeout_len = vim.o.timeoutlen
 map("t", "<m-j>", function()
 	if vim.b.no_jk == nil then
-		require("libp.log").warn("in")
 		vim.api.nvim_create_autocmd("BufEnter", {
 			buffer = 0,
 			callback = function()

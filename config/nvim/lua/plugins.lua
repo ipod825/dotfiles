@@ -2,7 +2,7 @@ local M = {}
 local map = vim.keymap.set
 local unmap = vim.keymap.del
 local Plug = require("vplug")
-local V = require("Vim")
+local utils = require("utils")
 
 local root_markers = { ".git", ".hg", ".svn", ".bzr", "_darcs", ".root" }
 
@@ -485,7 +485,7 @@ Plug("gbprod/yanky.nvim", {
 			vim.cmd('normal! "_d')
 			vim.fn.setreg('"', vim.trim(vim.fn.getreg('"')))
 			vim.cmd("normal! " .. key)
-			-- V.feed_plug_keys(key)
+			-- utils.feed_plug_keys(key)
 		end
 		vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)")
 		vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)")
@@ -643,8 +643,8 @@ Plug("mg979/vim-visual-multi", {
 		vim.g.VM_default_mappings = 0
 		map("n", "<leader>r", function()
 			vim.cmd("VMSearch " .. vim.fn["msearch#joint_pattern"]())
-			V.feed_plug_keys("(VM-Select-All)")
-			V.feed_plug_keys("(VM-Goto-Prev)")
+			utils.feed_plug_keys("(VM-Select-All)")
+			utils.feed_plug_keys("(VM-Goto-Prev)")
 		end, { desc = "select all marks" })
 		map("x", "<leader>r", function()
 			local beg, ends = require("libp.utils.vimfn").visual_rows()
@@ -804,7 +804,7 @@ Plug("L3MON4D3/LuaSnip", {
 	config = function()
 		map({ "i", "s", "n" }, "<tab>", function()
 			if vim.fn["luasnip#expand_or_jumpable"]() then
-				V.feed_plug_keys("luasnip-expand-or-jump")
+				utils.feed_plug_keys("luasnip-expand-or-jump")
 			else
 				return "\t"
 			end

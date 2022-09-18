@@ -1,51 +1,20 @@
 local M = {}
+local KVIter = require("libp.datatype.KVIter")
 
-M.current = {}
+function M.save_keymap(keymaps)
+	local res = {}
+	for mode, mappings in KVIter(keymaps) do
+		for key, _ in KVIter(mappings) do
+			local mapping = vim.fn.maparg(key, mode, false, true)
+			if mapping.buffer == 0 then
+				mapping.buffer = false
+			else
+				mapping.buffer = vim.api.nvim_get_current_buf()
+			end
 
-function M.save_keymap(keys, mode, is_global)
-	mode = mode or "n"
-	if is_global == nil then
-		is_global = true
-	end
-
-	if type(keys) ~= "table" then
-		keys = { keys }
-	end
-
-	local not_mapped_keys = {}
-	-- normalize keys
-	keys = vim.tbl_map(function(e)
-		local mapping = vim.fn.maparg(e, mode, false, true)
-		local res = mapping.lhs
-		if res == nil or (not is_global and mapping.buffer == 0) then
-			table.insert(not_mapped_keys, { lhs = e, mode = mode })
-		else
-			res = string.gsub(res, "<Space>", " ")
+			res[key] = mapping
 		end
-		return res
-	end, keys)
-
-	local res = nil
-	if is_global then
-		res = vim.list_extend(
-			not_mapped_keys,
-			vim.tbl_filter(function(e)
-				return vim.tbl_contains(keys, e.lhs)
-			end, vim.api.nvim_get_keymap(mode))
-		)
-	else
-		res = vim.list_extend(
-			not_mapped_keys,
-			vim.tbl_filter(function(e)
-				return vim.tbl_contains(keys, e.lhs)
-			end, vim.api.nvim_buf_get_keymap(0, mode))
-		)
 	end
-	local buffer_nr = is_global and -1 or vim.api.nvim_get_current_buf()
-	res = vim.tbl_map(function(e)
-		e.buffer = buffer_nr
-		return e
-	end, res)
 	return res
 end
 
