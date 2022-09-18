@@ -1,42 +1,6 @@
 local M = {}
 
 M.current = {}
-function M.current.col_number()
-	return vim.api.nvim_win_get_cursor(0)[2]
-end
-
-function M.current.filename()
-	return vim.fn.expand("%:p")
-end
-
-function M.current.line()
-	return vim.api.nvim_get_current_line()
-end
-
-function M.current.word()
-	return vim.fn.expand("<cword>")
-end
-
-function M.current.char()
-	return vim.fn.strcharpart(vim.fn.strpart(M.current.line(), M.current.col_number()), 0, 1)
-end
-
-function M.visual_range()
-	local line_beg, line_end, column_beg, column_end
-	_, line_beg, column_beg = unpack(vim.fn.getpos("'<"))
-	_, line_end, column_end = unpack(vim.fn.getpos("'>"))
-	return {
-		line_beg = line_beg,
-		column_beg = column_beg,
-		line_end = line_end,
-		column_end = column_end,
-	}
-end
-
-function M.current.textobject(mark)
-	vim.cmd('noautocmd normal! "ayi' .. mark)
-	return vim.fn.getreg("a")
-end
 
 function M.save_keymap(keys, mode, is_global)
 	mode = mode or "n"
@@ -105,11 +69,6 @@ end
 
 function M.term_feed(str)
 	vim.fn.chansend(vim.b.terminal_job_id, string.gsub(str, "%s+", " ") .. "\r")
-end
-
-function M.feedkeys(key, mode)
-	key = vim.api.nvim_replace_termcodes(key, true, false, true)
-	vim.api.nvim_feedkeys(key, mode, true)
 end
 
 function M.feed_plug_keys(key)

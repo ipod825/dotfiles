@@ -639,14 +639,6 @@ Plug("windwp/nvim-autopairs", {
 
 Plug("mg979/vim-visual-multi", {
 	branch = "test",
-	utils = {
-		VSelectAllMark = function()
-			local range = V.visual_range()
-			vim.cmd(
-				string.format("%d,%d VMSearch %s", range.line_beg, range.line_end, vim.fn["msearch#joint_pattern"]())
-			)
-		end,
-	},
 	setup = function()
 		vim.g.VM_default_mappings = 0
 		map("n", "<leader>r", function()
@@ -654,7 +646,10 @@ Plug("mg979/vim-visual-multi", {
 			V.feed_plug_keys("(VM-Select-All)")
 			V.feed_plug_keys("(VM-Goto-Prev)")
 		end, { desc = "select all marks" })
-		map("x", "<leader>r", ":<c-u>lua plug.utils.VSelectAllMark()<cr>")
+		map("x", "<leader>r", function()
+			local beg, ends = require("libp.utils.vimfn").visual_rows()
+			vim.cmd(string.format("%d,%d VMSearch %s", beg, ends, vim.fn["msearch#joint_pattern"]()))
+		end)
 		vim.g.VM_maps = {
 			["Switch Mode"] = "v",
 			["Find Word"] = "<c-n>",
@@ -1174,7 +1169,23 @@ Plug("skywind3000/asyncrun.vim", {
 	config = function()
 		vim.g.asyncrun_pathfix = 1
 		vim.g.asyncrun_open = 6
-		vim.g.asyncrun_exit = "lua plug.utils.AsyncrunCallback()"
+		vim.g.asyncrun_exit = [[
+            lua.function()
+			vim.api.nvim_set_current_win(vim.g.asyncrun_win)
+			if vim.g.asyncrun_code == 0 then
+				vim.cmd("cclose")
+			else
+				vim.fn.setqflist(
+					vim.tbl_filter(function(e)
+						return e.valid ~= 0
+					end, vim.fn.getqflist()),
+					"r"
+				)
+				vim.cmd("botright copen")
+			end
+			vim.fn.system("zenity --info --text Done --display=$DISPLAY")
+		end()]]
+		-- vim.fn.system([[notify-send -u critical -t 5000 'Job Finished' `printf '~%.0s' {1..100}`]])
 		vim.api.nvim_create_autocmd("User", {
 			group = vim.api.nvim_create_augroup("ASYNCRUN", {}),
 			pattern = "AsyncRunPre",
@@ -1271,55 +1282,6 @@ Plug("git@github.com:ipod825/ranger.nvim", {
 				},
 			},
 		})
-	end,
-})
-
-Plug("git@github.com:ipod825/vim-netranger", {
-	disable = true,
-	setup = function()
-		vim.g.NETRRifleFile = vim.env.HOME .. "/dotfiles/config/nvim/settings/rifle.conf"
-		vim.g.NETRIgnore = { "__pycache__", "*.pyc", "*.o", "egg-info", "tags" }
-		vim.g.NETRColors = { dir = 39, footer = 35, exe = 35 }
-		vim.g.NETRGuiColors = {
-			dir = "#00afff",
-			footer = "#00af5f",
-			exe = "#00af5f",
-		}
-		vim.g.NETRRifleDisplayError = false
-		vim.g.NETRDefaultMapSkip = { "<cr>" }
-	end,
-	config = function()
-		vim.cmd([[
-          function! DuplicateNode()
-              let path = netranger#api#cur_node_path()
-              if isdirectory(path)
-                  let dir = fnamemodify(path, ':p:h:h')
-                  let newname = 'DUP'.fnamemodify(path[:-1], ':t')
-              else
-                  let dir = fnamemodify(path, ':p:h')
-                  let newname = 'DUP'.fnamemodify(path, ':p:t')
-              endif
-              echom dir
-              call netranger#api#cp(path, dir.'/'.newname)
-          endfunction
-          function! NETRBookMark()
-              BookmarkAdd directory
-          endfunction
-
-          function! NETRBookMarkGo()
-              BookmarkGo directory
-          endfunction
-
-          function! NETRInit()
-              call netranger#api#mapvimfn('yp', "DuplicateNode")
-              call netranger#api#mapvimfn('m', "NETRBookMark")
-              call netranger#api#mapvimfn("\'", "NETRBookMarkGo")
-          endfunction
-
-          let g:NETRCustomNopreview={->winnr()==2 && winnr('$')==2}
-
-          autocmd! USER NETRInit call NETRInit()
-          ]])
 	end,
 })
 

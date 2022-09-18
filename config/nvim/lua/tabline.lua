@@ -1,7 +1,5 @@
-local M = _G.tabline or {}
-_G.tabline = M
+local M = {}
 local api = vim.api
-local utils = require("utils")
 local devicon = require("libp.integration.web_devicon")
 
 function M.get_file_icon(buf_id)
@@ -147,5 +145,5 @@ function M.tabline()
 	return M.gen_tab_line(labels, total_length, left_has_more, right_has_more)
 end
 
-vim.o.tabline = "%!v:lua.tabline.tabline()"
+vim.o.tabline = "%!v:lua.require('tabline').tabline()"
 return M

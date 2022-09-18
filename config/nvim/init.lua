@@ -1,4 +1,4 @@
-function prequire(...)
+function _G.prequire(...)
 	local status, lib = pcall(require, ...)
 	if status then
 		return lib

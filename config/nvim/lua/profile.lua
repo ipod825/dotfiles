@@ -1,5 +1,4 @@
-local M = _G.profile or {}
-_G.profile = M
+local M = {}
 local V = require("Vim")
 
 M.name = "default"
@@ -81,14 +80,20 @@ function M.switch_env(env)
 end
 
 M.register_env({ env = M })
-vim.api.nvim_exec(
-	[[
-augroup PROFILE
-    autocmd!
-    autocmd BufEnter * lua vim.defer_fn(profile.auto_switch_env, 10)
-augroup END
-]],
-	false
-)
+vim.api.nvim_create_autocmd("BufEnter", {
+	group = vim.api.nvim_create_augroup("PROFILE", {}),
+	callback = function()
+		M.auto_switch_env()
+	end,
+})
+-- vim.api.nvim_exec(
+-- 	[[
+-- augroup PROFILE
+--     autocmd!
+--     autocmd BufEnter * lua vim.defer_fn(M.auto_switch_env, 10)
+-- augroup END
+-- ]],
+-- 	false
+-- )
 
 return M

@@ -2,7 +2,6 @@ local M = {}
 
 local map = vim.keymap.set
 local add_util_menu = require("fuzzy_menu").add_util_menu
-local Vim = require("Vim")
 
 function M.goto_tag_or_lsp_fn(target_fn)
 	local succ, tags = pcall(vim.fn.taglist, vim.fn.expand("<cword>"))

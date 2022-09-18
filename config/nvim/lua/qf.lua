@@ -1,5 +1,4 @@
-local M = _G.qf or {}
-_G.qf = M
+local M = {}
 local map = vim.keymap.set
 
 vim.api.nvim_exec(
