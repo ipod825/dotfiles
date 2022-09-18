@@ -5,15 +5,11 @@ local devicon = require("libp.integration.web_devicon")
 function M.get_file_icon(buf_id)
 	local filetype = api.nvim_buf_get_option(buf_id, "ft")
 	local icon
-	if filetype == "netranger" then
+	if filetype == "ranger" then
 		icon = ""
 	else
 		local path = api.nvim_buf_get_name(buf_id)
 		icon = devicon.get(path).icon
-	end
-
-	if icon == nil then
-		icon = ""
 	end
 	return icon .. " "
 end

@@ -57,19 +57,21 @@ function M.switch_env(env)
 	end
 end
 
+function M.auto_switch_env()
+	for _, env in pairs(M.envs) do
+		if env.is_in and env.is_in() then
+			M.switch_env(env)
+			return
+		end
+	end
+	M.switch_env(M)
+end
+
 M.register_env({ env = M })
 vim.api.nvim_create_autocmd("BufEnter", {
 	group = vim.api.nvim_create_augroup("PROFILE", {}),
 	callback = function()
-		for _, env in pairs(M.envs) do
-			if env.is_in and env.is_in() then
-				M.switch_env(env)
-				return
-			end
-		end
-		M.switch_env(M)
-		-- vim.defer_fn(function()
-		-- end, 10)
+		vim.defer_fn(M.auto_switch_env, 10)
 	end,
 })
 
