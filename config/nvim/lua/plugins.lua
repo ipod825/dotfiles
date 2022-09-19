@@ -1224,7 +1224,7 @@ Plug("git@github.com:ipod825/libp.nvim", {
 	config = function()
 		require("libp").setup({
 			web_devicon = {
-				alias = { igit = "git" },
+				alias = { igit = "git", hg = "git" },
 			},
 		})
 	end,
