@@ -5,6 +5,7 @@ local List = require("libp.datatype.List")
 local itt = require("libp.itertools")
 local path = require("libp.path")
 
+local scratch_name = "[Scratch]"
 function M.get_file_icon(buf_id)
 	local filetype = api.nvim_buf_get_option(buf_id, "ft")
 	local icon
@@ -21,6 +22,23 @@ function M.tab_label(tab_id, current_tab_id)
 	local win_id = api.nvim_tabpage_get_win(tab_id)
 	local buf_id = api.nvim_win_get_buf(win_id)
 	local abspath = api.nvim_buf_get_name(buf_id)
+	if abspath == "" then
+		for win in itt.values(api.nvim_tabpage_list_wins(tab_id)) do
+			if win ~= win_id then
+				buf_id = api.nvim_win_get_buf(win)
+				abspath = api.nvim_buf_get_name(buf_id)
+			end
+
+			if abspath ~= "" then
+				break
+			end
+		end
+	end
+
+	if abspath == "" then
+		abspath = scratch_name
+	end
+
 	local basename = string.format("%s", vim.fs.basename(abspath))
 	local current_tab_nr = api.nvim_tabpage_get_number(current_tab_id)
 	local tab_nr = api.nvim_tabpage_get_number(tab_id)
@@ -184,7 +202,9 @@ function M.tabline()
 	for _, tab_id in pairs(api.nvim_list_tabpages()) do
 		local label = M.tab_label(tab_id, current_tab_id)
 		table.insert(labels, label)
-		content_dedup[label.content]:append(label)
+		if label.content ~= scratch_name then
+			content_dedup[label.content]:append(label)
+		end
 	end
 
 	for _, dup_labels in pairs(content_dedup) do
