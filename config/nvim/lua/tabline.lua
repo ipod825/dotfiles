@@ -1,6 +1,9 @@
 local M = {}
 local api = vim.api
 local devicon = require("libp.integration.web_devicon")
+local List = require("libp.datatype.List")
+local itt = require("libp.itertools")
+local path = require("libp.path")
 
 function M.get_file_icon(buf_id)
 	local filetype = api.nvim_buf_get_option(buf_id, "ft")
@@ -8,8 +11,8 @@ function M.get_file_icon(buf_id)
 	if filetype == "ranger" then
 		icon = ""
 	else
-		local path = api.nvim_buf_get_name(buf_id)
-		icon = devicon.get(path).icon
+		local abspath = api.nvim_buf_get_name(buf_id)
+		icon = devicon.get(abspath).icon
 	end
 	return icon .. " "
 end
@@ -17,20 +20,21 @@ end
 function M.tab_label(tab_id, current_tab_id)
 	local win_id = api.nvim_tabpage_get_win(tab_id)
 	local buf_id = api.nvim_win_get_buf(win_id)
-	local content = string.format("%s", vim.fs.basename(api.nvim_buf_get_name(buf_id)))
+	local abspath = api.nvim_buf_get_name(buf_id)
+	local basename = string.format("%s", vim.fs.basename(abspath))
 	local current_tab_nr = api.nvim_tabpage_get_number(current_tab_id)
 	local tab_nr = api.nvim_tabpage_get_number(tab_id)
 	local is_current = (tab_id == current_tab_id)
 	local is_left_to_current = (tab_nr == current_tab_nr - 1)
 	local mod = api.nvim_buf_get_option(buf_id, "mod") and "Mod" or ""
-	local basnem_hl = (is_current and "TabLineSel" or "TabLine") .. mod
+	local basename_hl = (is_current and "TabLineSel" or "TabLine") .. mod
 	return {
-		elements = {
-			{ highlight = "Directory", content = is_current and "|" or "" },
-			{ highlight = "Directory", content = M.get_file_icon(buf_id) },
-			{ highlight = basnem_hl, content = content },
-			{ highlight = "NonText", content = is_left_to_current and "" or "|" },
-		},
+		abspath = abspath,
+		content = basename,
+		is_current = is_current,
+		buf_id = buf_id,
+		is_left_to_current = is_left_to_current,
+		basename_hl = basename_hl,
 	}
 end
 
@@ -128,14 +132,67 @@ function M.gen_tab_line(labels, total_length, left_has_more, right_has_more)
 	)
 end
 
+function M.dedup(labels)
+	for label in itt.values(labels) do
+		label.segs = vim.split(label.abspath, "/")
+		label.ind = #label.segs - 1
+	end
+
+	while true do
+		local content_count = vim.defaulttable(function()
+			return 0
+		end)
+		for label in itt.values(labels) do
+			if not label.unique then
+				label.content = path.join(label.segs[label.ind], label.content)
+				label.ind = label.ind - 1
+				content_count[label.content] = content_count[label.content] + 1
+			end
+		end
+
+		local unique_count = 0
+		for label in itt.values(labels) do
+			if content_count[label.content] == 1 then
+				label.unique = true
+				unique_count = unique_count + 1
+			end
+		end
+
+		if unique_count == #labels then
+			break
+		end
+	end
+end
+
+function M.build_elements(labels)
+	for label in itt.values(labels) do
+		label.elements = {
+			{ highlight = "Directory", content = label.is_current and "|" or "" },
+			{ highlight = "Directory", content = M.get_file_icon(label.buf_id) },
+			{ highlight = label.basename_hl, content = label.content },
+			{ highlight = "NonText", content = label.is_left_to_current and "" or "|" },
+		}
+	end
+end
+
 function M.tabline()
 	local labels = {}
 	local total_length, left_has_more, right_has_more
 
 	local current_tab_id = api.nvim_get_current_tabpage()
+	local content_dedup = vim.defaulttable(List)
 	for _, tab_id in pairs(api.nvim_list_tabpages()) do
-		table.insert(labels, M.tab_label(tab_id, current_tab_id))
+		local label = M.tab_label(tab_id, current_tab_id)
+		table.insert(labels, label)
+		content_dedup[label.content]:append(label)
 	end
+
+	for _, dup_labels in pairs(content_dedup) do
+		if #dup_labels ~= 1 then
+			M.dedup(dup_labels)
+		end
+	end
+	M.build_elements(labels)
 
 	labels, total_length, left_has_more, right_has_more = M.filter(labels)
 	return M.gen_tab_line(labels, total_length, left_has_more, right_has_more)
