@@ -117,7 +117,7 @@ function M.builtin_hl_def(color)
 		Question = { fg = color.yellow },
 		NormalFloat = { fg = color.none, bg = color.base4 },
 		Tabline = { fg = color.base5, bg = color.bg },
-		TabLineSel = { fg = color.base8, bg = color.bg, bold = true, italic = true },
+		TabLineSel = { fg = color.base8, bg = color.bg1, bold = true, italic = true },
 		TabLineFill = {},
 		TabLineSelMod = { fg = color.bg, bg = color.redwine, bold = true, italic = true },
 		TabLineMod = { fg = color.redwine, bg = color.bg },

@@ -9,13 +9,16 @@ local scratch_name = "[Scratch]"
 function M.get_file_icon(buf_id)
 	local filetype = api.nvim_buf_get_option(buf_id, "ft")
 	local icon
+	local icon_hl = "Directory"
 	if filetype == "ranger" then
 		icon = ""
 	else
 		local abspath = api.nvim_buf_get_name(buf_id)
-		icon = devicon.get(abspath).icon
+		local devicon_res = devicon.get(abspath)
+		icon = devicon_res.icon
+		icon_hl = devicon_res.hl_group
 	end
-	return icon .. " "
+	return icon .. " ", icon_hl
 end
 
 function M.tab_label(tab_id, current_tab_id)
@@ -45,14 +48,14 @@ function M.tab_label(tab_id, current_tab_id)
 	local is_current = (tab_id == current_tab_id)
 	local is_left_to_current = (tab_nr == current_tab_nr - 1)
 	local mod = api.nvim_buf_get_option(buf_id, "mod") and "Mod" or ""
-	local basename_hl = (is_current and "TabLineSel" or "TabLine") .. mod
+	local content_hl = (is_current and "TabLineSel" or "TabLine") .. mod
 	return {
 		abspath = abspath,
 		content = basename,
 		is_current = is_current,
 		buf_id = buf_id,
 		is_left_to_current = is_left_to_current,
-		basename_hl = basename_hl,
+		content_hl = content_hl,
 	}
 end
 
@@ -151,6 +154,22 @@ function M.gen_tab_line(labels, total_length, left_has_more, right_has_more)
 end
 
 function M.dedup(labels)
+	-- Only consider different buffers containing common substring as duplicate. For same buffer, just show the same basename.
+	local buf_id_count = vim.defaulttable(function()
+		return 0
+	end)
+	for label in itt.values(labels) do
+		buf_id_count[label.buf_id] = buf_id_count[label.buf_id] + 1
+	end
+	labels = labels:filter(function(e)
+		return buf_id_count[e.buf_id] == 1
+	end)
+
+	if #labels == 0 then
+		return
+	end
+
+	-- Join the full path segment by segment until each path is unique among all tabs.
 	for label in itt.values(labels) do
 		label.segs = vim.split(label.abspath, "/")
 		label.ind = #label.segs - 1
@@ -184,24 +203,25 @@ end
 
 function M.build_elements(labels)
 	for label in itt.values(labels) do
+		local icon, icon_hl = M.get_file_icon(label.buf_id)
 		label.elements = {
 			{ highlight = "Directory", content = label.is_current and "|" or "" },
-			{ highlight = "Directory", content = M.get_file_icon(label.buf_id) },
-			{ highlight = label.basename_hl, content = label.content },
+			{ highlight = icon_hl, content = icon },
+			{ highlight = label.content_hl, content = label.content },
 			{ highlight = "NonText", content = label.is_left_to_current and "" or "|" },
 		}
 	end
 end
 
 function M.tabline()
-	local labels = {}
+	local labels = List()
 	local total_length, left_has_more, right_has_more
 
 	local current_tab_id = api.nvim_get_current_tabpage()
 	local content_dedup = vim.defaulttable(List)
 	for _, tab_id in pairs(api.nvim_list_tabpages()) do
 		local label = M.tab_label(tab_id, current_tab_id)
-		table.insert(labels, label)
+		labels:append(label)
 		if label.content ~= scratch_name then
 			content_dedup[label.content]:append(label)
 		end
