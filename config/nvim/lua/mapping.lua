@@ -269,7 +269,7 @@ map("n", "U", function()
 	else
 		vim.bo.textwidth = 80
 	end
-	vim.cmd("normal! vgq")
+	vim.cmd("normal! gwj")
 	vim.bo.textwidth = 0
 end, { desc = "comment_unwrap" })
 map("n", "<F5>", function()
