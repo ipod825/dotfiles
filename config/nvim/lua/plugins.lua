@@ -1261,6 +1261,11 @@ Plug("andymass/vim-matchup")
 Plug("AndrewRadev/linediff.vim", { on_cmd = { "LineDiffAdd" } })
 
 Plug("chrisbra/Colorizer")
+Plug("ziontee113/color-picker.nvim", {
+	config = function()
+		require("color-picker")
+	end,
+})
 Plug("powerman/vim-plugin-AnsiEsc")
 
 Plug("git@github.com:ipod825/ranger.nvim", {
