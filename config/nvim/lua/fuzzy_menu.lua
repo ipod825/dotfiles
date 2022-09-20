@@ -103,8 +103,8 @@ M.add_util_menu("RelatedFile", function()
 end)
 
 M.add_util_menu("ReloadPlugin", function()
-	local path = require("libp.path")
-	local plugin = vim.split(path.basename(path.find_directory(".git")), "%.")[1]
+	local pathfn = require("libp.utils.pathfn")
+	local plugin = vim.split(pathfn.basename(pathfn.find_directory(".git")), "%.")[1]
 
 	for _, buffer in pairs(require("libp.global")("libp").buffers) do
 		vim.cmd("bwipe " .. buffer.id)

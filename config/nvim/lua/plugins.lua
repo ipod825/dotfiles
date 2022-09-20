@@ -318,7 +318,7 @@ Plug("nvim-telescope/telescope.nvim", {
 			local entry = action_state.get_selected_entry()
 			local filepath = entry[1]
 			local cwd = entry.cwd or ""
-			if vim.fn.filereadable(require("libp.path").join(cwd, filepath)) ~= 0 and type ~= "force_edit" then
+			if vim.fn.filereadable(require("libp.utils.pathfn").join(cwd, filepath)) ~= 0 and type ~= "force_edit" then
 				return "Tabdrop"
 			else
 				return select_to_edit_map[type]
@@ -418,7 +418,7 @@ Plug("nvim-telescope/telescope.nvim", {
 
 		vim.cmd("cnoreabbrev help lua require'telescope.builtin'.help_tags({default_text=''})<left><left><left>")
 		map("n", "<c-o>", function()
-			builtin.fd({ cwd = require("libp.path").find_directory(root_markers) })
+			builtin.fd({ cwd = require("libp.utils.pathfn").find_directory(root_markers) })
 		end)
 
 		map("n", "/", function()
@@ -1273,7 +1273,7 @@ Plug("git@github.com:ipod825/ranger.nvim", {
 		local action = require("ranger.action")
 		require("ranger").setup({
 			hijack_netrw = true,
-			rifle_path = require("libp.path").join(vim.fn.stdpath("config"), "settings/rifle.conf"),
+			rifle_path = require("libp.utils.pathfn").join(vim.fn.stdpath("config"), "settings/rifle.conf"),
 			mappings = {
 				n = {
 					["<leader>f"] = function()

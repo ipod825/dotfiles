@@ -3,7 +3,7 @@ local api = vim.api
 local devicon = require("libp.integration.web_devicon")
 local List = require("libp.datatype.List")
 local itt = require("libp.itertools")
-local path = require("libp.path")
+local pathfn = require("libp.utils.pathfn")
 
 local scratch_name = "[Scratch]"
 function M.get_file_icon(buf_id)
@@ -181,7 +181,7 @@ function M.dedup(labels)
 		end)
 		for label in itt.values(labels) do
 			if not label.unique then
-				label.content = path.join(label.segs[label.ind], label.content)
+				label.content = pathfn.join(label.segs[label.ind], label.content)
 				label.ind = label.ind - 1
 				content_count[label.content] = content_count[label.content] + 1
 			end
