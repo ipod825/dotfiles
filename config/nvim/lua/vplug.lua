@@ -72,7 +72,7 @@ local meta = {
 			else
 				M.configs.lazy[plugin] = opts.config
 
-				local user_cmd = [[ autocmd! User %s ++once lua plug.ApplyConfig('%s') ]]
+				local user_cmd = [[ autocmd! User %s ++once lua require'vplug'.ApplyConfig('%s') ]]
 				vim.cmd(user_cmd:format(plugin, plugin))
 			end
 		end

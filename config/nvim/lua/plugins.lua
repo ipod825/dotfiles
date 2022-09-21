@@ -745,6 +745,61 @@ Plug("lukas-reineke/indent-blankline.nvim", {
 	end,
 })
 
+Plug("onsails/lspkind.nvim")
+Plug("folke/trouble.nvim", {
+	config = function()
+		require("trouble").setup({
+			require("trouble").setup({
+				position = "bottom", -- position of the list can be: bottom, top, left, right
+				height = 10, -- height of the trouble list when position is top or bottom
+				width = 50, -- width of the list when position is left or right
+				icons = true, -- use devicons for filenames
+				mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
+				fold_open = "", -- icon used for open folds
+				fold_closed = "", -- icon used for closed folds
+				group = true, -- group results by file
+				padding = true, -- add an extra new line on top of the list
+				action_keys = { -- key mappings for actions in the trouble list
+					-- map to {} to remove a mapping, for example:
+					-- close = {},
+					close = "q", -- close the list
+					cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
+					refresh = "r", -- manually refresh
+					jump = { "<cr>", "<tab>" }, -- jump to the diagnostic or open / close folds
+					open_split = { "<c-x>" }, -- open buffer in new split
+					open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
+					open_tab = { "<c-t>" }, -- open buffer in new tab
+					jump_close = { "o" }, -- jump to the diagnostic and close the list
+					toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
+					toggle_preview = "P", -- toggle auto_preview
+					hover = "K", -- opens a small popup with the full multiline message
+					preview = "p", -- preview the diagnostic location
+					close_folds = { "zM", "zm" }, -- close all folds
+					open_folds = { "zR", "zr" }, -- open all folds
+					toggle_fold = { "zA", "za" }, -- toggle fold of current file
+					previous = "k", -- preview item
+					next = "j", -- next item
+				},
+				indent_lines = true, -- add an indent guide below the fold icons
+				auto_open = false, -- automatically open the list when you have diagnostics
+				auto_close = false, -- automatically close the list when you have no diagnostics
+				auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+				auto_fold = false, -- automatically fold a file trouble list at creation
+				auto_jump = { "lsp_definitions" }, -- for the given modes, automatically jump if there is only a single result
+				signs = {
+					-- icons / text used for a diagnostic
+					error = "",
+					warning = "",
+					hint = "",
+					information = "",
+					other = "﫠",
+				},
+				use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
+			}),
+		})
+	end,
+})
+
 Plug("hrsh7th/cmp-nvim-lua")
 Plug("saadparwaiz1/cmp_luasnip")
 Plug("hrsh7th/cmp-nvim-lsp-signature-help")
@@ -783,6 +838,18 @@ Plug("hrsh7th/nvim-cmp", {
 				{ name = "path" },
 				{ name = "spell" },
 			}),
+			formatting = {
+				format = require("lspkind").cmp_format({
+					mode = "symbol", -- show only symbol annotations
+					maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+
+					-- The function below will be called before any actual modifications from lspkind
+					-- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
+					before = function(entry, vim_item)
+						return vim_item
+					end,
+				}),
+			},
 		})
 	end,
 })
@@ -1143,6 +1210,22 @@ Plug("will133/vim-dirdiff", { on_cmd = "DirDiff" })
 
 Plug("mrjones2014/smart-splits.nvim")
 
+AsyncrunCallback = function()
+	vim.api.nvim_set_current_win(vim.g.asyncrun_win)
+	if vim.g.asyncrun_code == 0 then
+		vim.cmd("cclose")
+	else
+		vim.fn.setqflist(
+			vim.tbl_filter(function(e)
+				return e.valid ~= 0
+			end, vim.fn.getqflist()),
+			"r"
+		)
+		vim.cmd("botright copen")
+	end
+	vim.fn.system([[zenity --info --text Done --display=$DISPLAY]])
+	vim.fn.system([[notify-send -u critical -t 5000 'Job Finished' `printf '~%.0s' {1..100}`]])
+end
 Plug("skywind3000/asyncrun.vim", {
 	utils = {
 		AsyncrunPre = function()
@@ -1169,22 +1252,7 @@ Plug("skywind3000/asyncrun.vim", {
 	config = function()
 		vim.g.asyncrun_pathfix = 1
 		vim.g.asyncrun_open = 6
-		vim.g.asyncrun_exit = [[
-            lua.function()
-			vim.api.nvim_set_current_win(vim.g.asyncrun_win)
-			if vim.g.asyncrun_code == 0 then
-				vim.cmd("cclose")
-			else
-				vim.fn.setqflist(
-					vim.tbl_filter(function(e)
-						return e.valid ~= 0
-					end, vim.fn.getqflist()),
-					"r"
-				)
-				vim.cmd("botright copen")
-			end
-			vim.fn.system("zenity --info --text Done --display=$DISPLAY")
-		end()]]
+		vim.g.asyncrun_exit = [[call v:lua.AsyncrunCallback()]]
 		-- vim.fn.system([[notify-send -u critical -t 5000 'Job Finished' `printf '~%.0s' {1..100}`]])
 		vim.api.nvim_create_autocmd("User", {
 			group = vim.api.nvim_create_augroup("ASYNCRUN", {}),
