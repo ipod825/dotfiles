@@ -17,3 +17,27 @@
 -- 		map("s", "<s-tab>", 'vsnip#jumpable(-1) ? "<Plug>(vsnip-jump-prev)" : "<s-tab>"', { expr = true, remap = true })
 -- 	end,
 -- })
+-- Plug("p00f/nvim-ts-rainbow", {
+-- 	config = function()
+-- 		local color = require("colorscheme").color
+-- 		require("colorscheme").add_plug_hl({
+-- 			rainbowcol1 = { fg = color.red },
+-- 			rainbowcol2 = { fg = color.green },
+-- 			rainbowcol3 = { fg = color.blue },
+-- 			rainbowcol4 = { fg = color.yellow },
+-- 			rainbowcol5 = { fg = color.cyan },
+-- 			rainbowcol6 = { fg = color.magenta },
+-- 			rainbowcol7 = { fg = color.orange },
+-- 		})
+-- 		require("nvim-treesitter.configs").setup({
+-- 			rainbow = {
+-- 				enable = true,
+-- 				disable = {},
+-- 				-- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+-- 				extended_mode = true,
+-- 				-- Do not enable for files with more than n lines, int
+-- 				max_file_lines = nil,
+-- 			},
+-- 		})
+-- 	end,
+-- })

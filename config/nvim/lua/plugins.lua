@@ -201,8 +201,19 @@ Plug("windwp/nvim-ts-autotag", {
 
 Plug("lewis6991/spellsitter.nvim", {
 	config = function()
-		local filetypes =
-			{ "cpp", "lua", "python", "markdown", "tex", "asciidoc", "gitcommit", "hgcommit", "piccolo", "proto" }
+		local filetypes = {
+			"cpp",
+			"java",
+			"lua",
+			"python",
+			"markdown",
+			"tex",
+			"asciidoc",
+			"gitcommit",
+			"hgcommit",
+			"piccolo",
+			"proto",
+		}
 		vim.api.nvim_create_autocmd("Filetype", {
 			group = vim.api.nvim_create_augroup("SPELLSITTER", {}),
 			pattern = filetypes,
@@ -243,30 +254,6 @@ Plug("lewis6991/spellsitter.nvim", {
 -- 	end,
 -- })
 
-Plug("p00f/nvim-ts-rainbow", {
-	config = function()
-		local color = require("colorscheme").color
-		require("colorscheme").add_plug_hl({
-			rainbowcol1 = { fg = color.red },
-			rainbowcol2 = { fg = color.green },
-			rainbowcol3 = { fg = color.blue },
-			rainbowcol4 = { fg = color.yellow },
-			rainbowcol5 = { fg = color.cyan },
-			rainbowcol6 = { fg = color.magenta },
-			rainbowcol7 = { fg = color.orange },
-		})
-		require("nvim-treesitter.configs").setup({
-			rainbow = {
-				enable = true,
-				disable = {},
-				-- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
-				extended_mode = true,
-				-- Do not enable for files with more than n lines, int
-				max_file_lines = nil,
-			},
-		})
-	end,
-})
 Plug("nvim-treesitter/playground", {
 	on_cmd = "TSPlaygroundToggle",
 	config = function()
@@ -1371,6 +1358,12 @@ Plug("git@github.com:ipod825/hg.nvim", {
 		})
 	end,
 })
+
+Plug("j-hui/fidget.nvim", { config = {
+	function()
+		require("fidget").setup({})
+	end,
+} })
 
 Plug.ends()
 
