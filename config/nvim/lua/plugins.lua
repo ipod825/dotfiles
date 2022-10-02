@@ -769,7 +769,6 @@ Plug("hrsh7th/cmp-buffer")
 Plug("hrsh7th/cmp-nvim-lsp")
 Plug("hrsh7th/cmp-path")
 Plug("hrsh7th/cmp-nvim-lua")
-Plug("f3fora/cmp-spell")
 Plug("hrsh7th/cmp-cmdline")
 Plug("hrsh7th/nvim-cmp", {
 	config = function()
@@ -798,11 +797,10 @@ Plug("hrsh7th/nvim-cmp", {
 				{ name = "nvim_lsp" },
 				{ name = "buffer" },
 				{ name = "path" },
-				{ name = "spell" },
 			}),
 			formatting = {
 				format = require("lspkind").cmp_format({
-					mode = "symbol", -- show only symbol annotations
+					mode = "symbol_text", -- show only symbol annotations
 					maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
 
 					-- The function below will be called before any actual modifications from lspkind

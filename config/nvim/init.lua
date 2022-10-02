@@ -204,7 +204,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 -- Disable spell on filetype
-local no_spell_filetype = { igit = true, ranger = true }
+local no_spell_filetype = { igit = true, ranger = true, bookmark = true }
 vim.api.nvim_create_autocmd("BufEnter", {
 	group = GENERAL,
 	callback = function()
