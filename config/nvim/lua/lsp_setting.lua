@@ -4,12 +4,17 @@ local map = vim.keymap.set
 local add_util_menu = require("fuzzy_menu").add_util_menu
 
 function M.goto_tag_or_lsp_fn(target_fn)
-	local succ, tags = pcall(vim.fn.taglist, vim.fn.expand("<cword>"))
-	if succ and #tags > 0 then
-		vim.cmd("TabdropPushTag")
-		vim.api.nvim_exec("silent! TagTabdrop", true)
-	else
+	local active_lsp_clients = 0
+
+	vim.lsp.for_each_buffer_client(0, function()
+		active_lsp_clients = active_lsp_clients + 1
+	end)
+
+	vim.cmd("TabdropPushTag")
+	if active_lsp_clients > 0 then
 		target_fn()
+	else
+		vim.api.nvim_exec("silent! TagTabdrop", true)
 	end
 end
 map("n", "<m-d>", function()
