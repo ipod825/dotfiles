@@ -1,15 +1,13 @@
 local M = {}
 local map = vim.keymap.set
 
-vim.api.nvim_exec(
-	[[
-augroup QF
-    autocmd!
-    autocmd FileType qf lua require'qf'.setup()
-augroup END
-]],
-	false
-)
+vim.api.nvim_create_autocmd("FileType", {
+	group = vim.api.nvim_create_augroup("QF", {}),
+	pattern = { "qf" },
+	callback = function()
+		require("qf").setup()
+	end,
+})
 
 function M.open()
 	require("bqf.qfwin.handler").open(false)
@@ -19,7 +17,12 @@ function M.setup()
 	vim.cmd("silent! wincmd J")
 	map("n", "j", "<down>", { buffer = true })
 	map("n", "k", "<up>", { buffer = true })
-	map("n", "<cr>", "<cmd>lua require'qf'.open()<cr>", { buffer = true })
+	map("n", "<cr>", function()
+		require("qf").open()
+	end, { buffer = true })
+	map("n", "/", function()
+		require("bqf.filter.fzf").run()
+	end, { buffer = true })
 end
 
 return M

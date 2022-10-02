@@ -209,7 +209,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	group = GENERAL,
 	callback = function()
 		vim.defer_fn(function()
-			vim.wo.spell = not no_spell_filetype[vim.bo.filetype]
+			vim.wo.spell = not no_spell_filetype[vim.bo.filetype] and (vim.bo.buftype ~= "terminal")
 		end, 0)
 	end,
 })

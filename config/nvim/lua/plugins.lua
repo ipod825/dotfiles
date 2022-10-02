@@ -177,6 +177,7 @@ Plug("nvim-treesitter/nvim-treesitter", {
 			ensure_installed = {
 				"bash",
 				"cpp",
+				"java",
 				"lua",
 				"python",
 				"kotlin",
@@ -199,33 +200,34 @@ Plug("windwp/nvim-ts-autotag", {
 	end,
 })
 
--- Plug("nvim-treesitter/nvim-treesitter-textobjects", {
--- 	config = function()
--- 		require("nvim-treesitter.configs").setup({
--- 			textobjects = {
--- 				select = {
--- 					enable = false,
--- 					keymaps = {
--- 						["a,"] = "@parameter.outer",
--- 						["i,"] = "@parameter.inner",
--- 					},
--- 				},
--- 				move = {
--- 					enable = true,
--- 					set_jumps = true, -- whether to set jumps in the jumplist
--- 					goto_next_end = {
--- 						["]]"] = "@function.outer",
--- 						["]["] = "@class.outer",
--- 					},
--- 					goto_previous_start = {
--- 						["[["] = "@function.outer",
--- 						["[]"] = "@class.outer",
--- 					},
--- 				},
--- 			},
--- 		})
--- 	end,
--- })
+Plug("nvim-treesitter/nvim-treesitter-textobjects", {
+	disable = true,
+	config = function()
+		require("nvim-treesitter.configs").setup({
+			textobjects = {
+				select = {
+					enable = false,
+					keymaps = {
+						["a,"] = "@parameter.outer",
+						["i,"] = "@parameter.inner",
+					},
+				},
+				move = {
+					enable = true,
+					set_jumps = true, -- whether to set jumps in the jumplist
+					goto_next_end = {
+						["]]"] = "@function.outer",
+						["]["] = "@class.outer",
+					},
+					goto_previous_start = {
+						["[["] = "@function.outer",
+						["[]"] = "@class.outer",
+					},
+				},
+			},
+		})
+	end,
+})
 
 Plug("nvim-treesitter/playground", {
 	on_cmd = "TSPlaygroundToggle",
@@ -646,7 +648,7 @@ Plug("mg979/vim-visual-multi", {
 		vim.g.VM_custom_motions = { ["<m-h>"] = "^", ["<m-l>"] = "$" }
 		vim.g.VM_custom_noremaps = {
 			["])"] = "])",
-			["]]"] = "]]",
+			-- ["]]"] = "]]",
 			["]}"] = "])",
 			["w"] = "e",
 		}
@@ -1313,6 +1315,7 @@ Plug("git@github.com:ipod825/hg.nvim", {
 	config = function()
 		vim.cmd("cnoreabbrev hg Hg")
 		vim.cmd("cnoreabbrev hlg Hg log")
+		vim.cmd("cnoreabbrev hlgm Hg log -G -f -u " .. vim.env.USER)
 		vim.cmd("cnoreabbrev H Hg status")
 		-- vim.cmd('cnoreabbrev HH Hg status --rev "parents(min(tip))"')
 		-- TODO: figure out why quotation mark is not passed through.

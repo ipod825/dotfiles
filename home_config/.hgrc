@@ -11,7 +11,7 @@ nvr.gui = False
 
 [pager]
 ignore = log, cls, .root
-pager = delta
+# pager = delta
 
 [extensions]
 beautifygraph =
