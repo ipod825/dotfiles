@@ -1,3 +1,13 @@
+-- Plug("lukas-reineke/lsp-format.nvim", {
+-- 	config = function()
+-- 		require("lsp-format").setup({
+-- 			lua = {
+-- 				exclude = { "sumneko_lua" },
+-- 			},
+-- 		})
+-- 	end,
+-- })
+
 -- Plug("hrsh7th/cmp-vsnip", { disable = true })
 -- Plug("hrsh7th/vim-vsnip-integ", { disable = true })
 -- Plug("hrsh7th/vim-vsnip", {

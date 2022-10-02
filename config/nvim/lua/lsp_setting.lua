@@ -88,7 +88,6 @@ function M.set_lsp(name, options)
 		profile = "default",
 		capabilities = capabilities,
 		on_attach = function(client)
-			require("lsp-format").on_attach(client)
 			local lsp_signature = prequire("lsp_signature")
 			if lsp_signature then
 				lsp_signature.on_attach()
