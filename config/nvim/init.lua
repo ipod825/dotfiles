@@ -50,6 +50,7 @@ vim.o.tabstop = 4
 vim.o.expandtab = true
 vim.o.scrolloff = 2
 vim.o.cmdheight = 0
+vim.o.spell = true
 
 require("utils")
 require("plugins")

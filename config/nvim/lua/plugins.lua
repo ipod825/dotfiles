@@ -199,33 +199,6 @@ Plug("windwp/nvim-ts-autotag", {
 	end,
 })
 
-Plug("lewis6991/spellsitter.nvim", {
-	config = function()
-		local filetypes = {
-			"cpp",
-			"java",
-			"lua",
-			"python",
-			"markdown",
-			"tex",
-			"asciidoc",
-			"gitcommit",
-			"hgcommit",
-			"piccolo",
-			"proto",
-		}
-		vim.api.nvim_create_autocmd("Filetype", {
-			group = vim.api.nvim_create_augroup("SPELLSITTER", {}),
-			pattern = filetypes,
-			callback = function()
-				vim.cmd("setlocal spell")
-				vim.bo.spellfile = vim.fn.stdpath("config") .. "/spell/spellsitter.en.utf-8.add"
-			end,
-		})
-		require("spellsitter").setup({ enable = true })
-	end,
-})
-
 -- Plug("nvim-treesitter/nvim-treesitter-textobjects", {
 -- 	config = function()
 -- 		require("nvim-treesitter.configs").setup({
