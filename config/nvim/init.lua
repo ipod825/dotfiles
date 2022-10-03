@@ -34,7 +34,6 @@ vim.o.lazyredraw = true
 vim.o.showmode = false
 vim.o.shortmess = vim.o.shortmess .. "c"
 vim.o.switchbuf = "usetab"
-vim.o.spell = false
 vim.o.mouse = ""
 vim.o.backup = false
 vim.o.swapfile = false
@@ -50,7 +49,7 @@ vim.o.tabstop = 4
 vim.o.expandtab = true
 vim.o.scrolloff = 2
 vim.o.cmdheight = 0
-vim.o.spell = true
+vim.o.spell = false
 
 require("utils")
 require("plugins")
@@ -200,16 +199,5 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 		if vim.bo.filetype ~= "lua" then
 			vim.lsp.buf.format()
 		end
-	end,
-})
-
--- Disable spell on filetype
-local no_spell_filetype = { igit = true, ranger = true, bookmark = true }
-vim.api.nvim_create_autocmd("BufEnter", {
-	group = GENERAL,
-	callback = function()
-		vim.defer_fn(function()
-			vim.wo.spell = not no_spell_filetype[vim.bo.filetype] and (vim.bo.buftype ~= "terminal")
-		end, 0)
 	end,
 })

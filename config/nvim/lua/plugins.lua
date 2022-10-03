@@ -164,6 +164,17 @@ Plug("nvim-treesitter/nvim-treesitter", {
 	run = ":TSUpdate",
 	config = function()
 		local color = require("colorscheme").color
+		local languages = {
+			"bash",
+			"cpp",
+			"java",
+			"lua",
+			"python",
+			"kotlin",
+		}
+		local languages_spell_set = vim.list_extend({ "gitcommit", "proto" }, languages)
+		vim.tbl_add_reverse_lookup(languages_spell_set)
+
 		require("colorscheme").add_plug_hl({
 			TSFunction = { fg = color.cyan },
 			TSMethod = { fg = color.cyan },
@@ -174,20 +185,22 @@ Plug("nvim-treesitter/nvim-treesitter", {
 			TSPunctBracket = { fg = color.bracket },
 		})
 		require("nvim-treesitter.configs").setup({
-			ensure_installed = {
-				"bash",
-				"cpp",
-				"java",
-				"lua",
-				"python",
-				"kotlin",
-			},
+			ensure_installed = languages,
 			highlight = { enable = true },
 			incremental_selection = { enable = false },
 			indent = { enable = false },
 			endwise = {
 				enable = true,
 			},
+		})
+		vim.api.nvim_create_autocmd("BufEnter", {
+			group = vim.api.nvim_create_augroup("TREESITTER_SPELL", {}),
+			callback = function()
+				vim.defer_fn(function()
+					_G.p(vim.bo.filetype, languages_spell_set[vim.bo.filetype])
+					vim.wo.spell = languages_spell_set[vim.bo.filetype] ~= nil
+				end, 0)
+			end,
 		})
 	end,
 })
@@ -424,7 +437,17 @@ Plug("nvim-telescope/telescope.nvim", {
 				.new(opts, {
 					finder = finders.new_table({
 						results = vim.tbl_filter(function(e)
-							return vim.fn.filereadable(e) ~= 0
+							local g4 = require("profile").envs.g4
+							if g4 then
+								local root = g4.root()
+								if not vim.startswith(e, root) then
+									return vim.fn.filereadable(e) ~= 0
+								else
+									return true
+								end
+							else
+								return vim.fn.filereadable(e) ~= 0
+							end
 						end, require("oldfiles").oldfiles()),
 					}),
 					previewer = conf.file_previewer(opts),
@@ -449,6 +472,7 @@ Plug("gbprod/yanky.nvim", {
 			vim.cmd("normal! " .. key)
 			-- utils.feed_plug_keys(key)
 		end
+
 		vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)")
 		vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)")
 		vim.keymap.set("x", "p", function()
@@ -1323,12 +1347,6 @@ Plug("git@github.com:ipod825/hg.nvim", {
 		})
 	end,
 })
-
-Plug("j-hui/fidget.nvim", { config = {
-	function()
-		require("fidget").setup({})
-	end,
-} })
 
 Plug.ends()
 
