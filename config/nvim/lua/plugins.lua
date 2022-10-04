@@ -197,7 +197,6 @@ Plug("nvim-treesitter/nvim-treesitter", {
 			group = vim.api.nvim_create_augroup("TREESITTER_SPELL", {}),
 			callback = function()
 				vim.defer_fn(function()
-					_G.p(vim.bo.filetype, languages_spell_set[vim.bo.filetype])
 					vim.wo.spell = languages_spell_set[vim.bo.filetype] ~= nil
 				end, 0)
 			end,

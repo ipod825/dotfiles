@@ -1,13 +1,13 @@
 function _G.prequire(...)
-	local status, lib = pcall(require, ...)
-	if status then
-		return lib
-	end
-	return nil
+    local status, lib = pcall(require, ...)
+    if status then
+        return lib
+    end
+    return nil
 end
 
 function _G.p(...)
-	vim.pretty_print(...)
+    vim.pretty_print(...)
 end
 
 vim.g.mapleader = " "
@@ -48,8 +48,9 @@ vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 vim.o.expandtab = true
 vim.o.scrolloff = 2
-vim.o.cmdheight = 0
+-- vim.o.cmdheight = 0
 vim.o.spell = false
+vim.o.updatetime = 1000
 
 require("utils")
 require("plugins")
@@ -67,137 +68,155 @@ local GENERAL = vim.api.nvim_create_augroup("GENERAL", {})
 
 -- auto reload config files
 vim.api.nvim_create_autocmd("BufWritePost", {
-	group = GENERAL,
-	pattern = vim.split(vim.fn.glob("$HOME/dotfiles/config/nvim/**/*.lua"), "\n"),
-	callback = function(arg)
-		vim.defer_fn(function()
-			package.loaded[vim.split(vim.fs.basename(arg.file), "%.")[1]] = nil
-			vim.cmd("source " .. arg.file)
-			if arg.file == "init.lua" then
-				vim.cmd("edit")
-			end
-		end, 500)
-	end,
+    group = GENERAL,
+    pattern = vim.split(vim.fn.glob("$HOME/dotfiles/config/nvim/**/*.lua"), "\n"),
+    callback = function(arg)
+        vim.defer_fn(function()
+            package.loaded[vim.split(vim.fs.basename(arg.file), "%.")[1]] = nil
+            vim.cmd("source " .. arg.file)
+            if arg.file == "init.lua" then
+                vim.cmd("edit")
+            end
+        end, 500)
+    end,
 })
 
 vim.api.nvim_create_autocmd("BufWritePost", {
-	group = GENERAL,
-	pattern = "*sxhkdrc*",
-	command = "silent !pkill -USR1 sxhkd",
+    group = GENERAL,
+    pattern = "*sxhkdrc*",
+    command = "silent !pkill -USR1 sxhkd",
 })
 
 vim.api.nvim_create_autocmd("BufWritePost", {
-	group = GENERAL,
-	pattern = { ".Xresources", "*Xdefaults" },
-	command = "!xrdb %",
+    group = GENERAL,
+    pattern = { ".Xresources", "*Xdefaults" },
+    command = "!xrdb %",
 })
 
 -- Filetype correction
 vim.api.nvim_create_autocmd("BufRead", {
-	group = GENERAL,
-	pattern = ".xinitrc",
-	callback = function()
-		vim.bo.filetype = "sh"
-	end,
+    group = GENERAL,
+    pattern = ".xinitrc",
+    callback = function()
+        vim.bo.filetype = "sh"
+    end,
 })
 
 vim.api.nvim_create_autocmd("BufRead", {
-	group = GENERAL,
-	pattern = "*sxhkdrc*",
-	callback = function()
-		vim.bo.filetype = "sxhkdrc"
-		vim.bo.commentstring = "#%s"
-		vim.bo.foldmethod = "marker"
-	end,
+    group = GENERAL,
+    pattern = "*sxhkdrc*",
+    callback = function()
+        vim.bo.filetype = "sxhkdrc"
+        vim.bo.commentstring = "#%s"
+        vim.bo.foldmethod = "marker"
+    end,
 })
 
 vim.api.nvim_create_autocmd("Filetype", {
-	group = GENERAL,
-	pattern = { "tex" },
-	callback = function()
-		vim.wo.cursorline = false
-		vim.opt.wildignor:append({ "*.aux", "*.fls", "*.blg", "*.pdf", "*.log", "*.out", "*.bbl", "*.fdb_latexmk" })
-	end,
+    group = GENERAL,
+    pattern = { "tex" },
+    callback = function()
+        vim.wo.cursorline = false
+        vim.opt.wildignor:append({ "*.aux", "*.fls", "*.blg", "*.pdf", "*.log", "*.out", "*.bbl", "*.fdb_latexmk" })
+    end,
 })
 
 vim.api.nvim_create_autocmd("Filetype", {
-	group = GENERAL,
-	pattern = { "markdown", "tex" },
-	callback = function()
-		local map = vim.keymap.set
-		map("i", "sl", "\\", { buffer = true })
-		map("i", "<m-j>", "_", { buffer = true })
-		map("i", "<m-k>", "&", { buffer = true })
-		map("i", "<m-q>", "{}<Left>", { buffer = true })
-		vim.cmd("inoreabbrev <buffer> an &")
-		vim.cmd("inoreabbrev <buffer> da $$<left>")
-		vim.cmd("inoreabbrev <buffer> pl +")
-		vim.cmd("inoreabbrev <buffer> mi -")
-		vim.cmd("inoreabbrev <buffer> eq =")
-	end,
+    group = GENERAL,
+    pattern = { "markdown", "tex" },
+    callback = function()
+        local map = vim.keymap.set
+        map("i", "sl", "\\", { buffer = true })
+        map("i", "<m-j>", "_", { buffer = true })
+        map("i", "<m-k>", "&", { buffer = true })
+        map("i", "<m-q>", "{}<Left>", { buffer = true })
+        vim.cmd("inoreabbrev <buffer> an &")
+        vim.cmd("inoreabbrev <buffer> da $$<left>")
+        vim.cmd("inoreabbrev <buffer> pl +")
+        vim.cmd("inoreabbrev <buffer> mi -")
+        vim.cmd("inoreabbrev <buffer> eq =")
+    end,
 })
 
 vim.api.nvim_create_autocmd("Filetype", {
-	group = GENERAL,
-	pattern = { "markdown", "tex" },
-	callback = function()
-		local map = vim.keymap.set
-		map("i", "sl", "\\", { buffer = true })
-		map("i", "<m-j>", "_", { buffer = true })
-		map("i", "<m-k>", "&", { buffer = true })
-		map("i", "<m-q>", "{}<Left>", { buffer = true })
-		vim.cmd("inoreabbrev <buffer> an &")
-		vim.cmd("inoreabbrev <buffer> da $$<left>")
-		vim.cmd("inoreabbrev <buffer> pl +")
-		vim.cmd("inoreabbrev <buffer> mi -")
-		vim.cmd("inoreabbrev <buffer> eq =")
-	end,
+    group = GENERAL,
+    pattern = { "markdown", "tex" },
+    callback = function()
+        local map = vim.keymap.set
+        map("i", "sl", "\\", { buffer = true })
+        map("i", "<m-j>", "_", { buffer = true })
+        map("i", "<m-k>", "&", { buffer = true })
+        map("i", "<m-q>", "{}<Left>", { buffer = true })
+        vim.cmd("inoreabbrev <buffer> an &")
+        vim.cmd("inoreabbrev <buffer> da $$<left>")
+        vim.cmd("inoreabbrev <buffer> pl +")
+        vim.cmd("inoreabbrev <buffer> mi -")
+        vim.cmd("inoreabbrev <buffer> eq =")
+    end,
 })
 
 -- Better diff
 vim.api.nvim_create_autocmd("BufWritePost", {
-	group = GENERAL,
-	callback = function()
-		if vim.wo.diff then
-			vim.cmd("diffupdate")
-		end
-	end,
+    group = GENERAL,
+    callback = function()
+        if vim.wo.diff then
+            vim.cmd("diffupdate")
+        end
+    end,
 })
 
 vim.api.nvim_create_autocmd("OptionSet", {
-	group = GENERAL,
-	callback = function(arg)
-		if arg.match == "diff" then
-			vim.keymap.set("n", "<c-j>", "]c", { buffer = true })
-			vim.keymap.set("n", "<c-k>", "[c", { buffer = true })
-		end
-	end,
+    group = GENERAL,
+    callback = function(arg)
+        if arg.match == "diff" then
+            vim.keymap.set("n", "<c-j>", "]c", { buffer = true })
+            vim.keymap.set("n", "<c-k>", "[c", { buffer = true })
+        end
+    end,
 })
 
 -- Automatically change directory (avoid quickfix)
 vim.api.nvim_create_autocmd("BufEnter", {
-	group = GENERAL,
-	callback = function()
-		if vim.bo.filetype ~= "qf" then
-			vim.cmd("silent! lcd %:p:h")
-		end
-	end,
+    group = GENERAL,
+    callback = function()
+        if vim.bo.filetype ~= "qf" then
+            vim.cmd("silent! lcd %:p:h")
+        end
+    end,
 })
 
 -- Disables automatic commenting on newline:
 vim.api.nvim_create_autocmd("Filetype", {
-	group = GENERAL,
-	callback = function()
-		vim.opt.formatoptions:remove({ "c", "r", "o" })
-	end,
+    group = GENERAL,
+    callback = function()
+        vim.opt.formatoptions:remove({ "c", "r", "o" })
+    end,
 })
 
 -- Format on write
 vim.api.nvim_create_autocmd("BufWritePost", {
-	group = GENERAL,
-	callback = function(arg)
-		if vim.bo.filetype ~= "lua" then
-			vim.lsp.buf.format()
-		end
-	end,
+    group = GENERAL,
+    callback = function(arg)
+        if vim.bo.filetype ~= "lua" then
+            vim.lsp.buf.format()
+        end
+    end,
 })
+
+-- -- Show long line
+-- vim.api.nvim_create_autocmd("CursorHold", {
+--     group = GENERAL,
+--     callback = function(arg)
+--         local cur_line = vim.api.nvim_get_current_line()
+--         local width = vim.api.nvim_win_get_width(-1)
+--         local inner_width = width - 1
+--         if not vim.wo.wrap and #cur_line > width then
+--             local content = require("libp.datatype.List")()
+--             while cur_line and #cur_line > -1 do
+--                 content:append(cur_line:sub(0, inner_width))
+--                 cur_line = cur_line:sub(inner_width + 0)
+--             end
+--             require("libp.ui.InfoBox")({ content = content, wo = { wrap = false, number = false } }):show()
+--         end
+--     end,
+-- })
