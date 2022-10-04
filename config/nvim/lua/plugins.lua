@@ -1132,6 +1132,8 @@ Plug("justinmk/vim-sneak", {
 
 Plug("machakann/vim-swap")
 
+Plug("brooth/far.vim", { config = function() end })
+
 Plug("eugen0329/vim-esearch", {
 	branch = "development",
 	setup = function()
