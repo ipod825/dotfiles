@@ -1125,8 +1125,15 @@ Plug("justinmk/vim-sneak", {
 	config = function()
 		vim.g["sneak#label"] = 1
 		vim.g["sneak#absolute_dir"] = -4
-		map("n", "f", "<Plug>Sneak_s", { remap = true })
-		map("n", "F", "<Plug>Sneak_S", { remap = true })
+		map("n", "f", "<Plug>Sneak_f", { remap = true })
+		map("n", "F", "<Plug>Sneak_F", { remap = true })
+		map("n", "L", "<Plug>Sneak_;")
+		map("n", "H", "<Plug>Sneak_,")
+
+		vim.api.nvim_create_autocmd("ColorScheme", {
+			group = vim.api.nvim_create_augroup("SNEAK", {}),
+			command = "highlight link Sneak None",
+		})
 	end,
 })
 
@@ -1141,7 +1148,7 @@ Plug("ipod825/vim-esearch", {
 			out = "win",
 			batch_size = 1000,
 			default_mappings = 0,
-			live_update = 0,
+			live_update = 1,
 			win_ui_nvim_syntax = 1,
 			root_markers = root_markers,
 			remember = {
