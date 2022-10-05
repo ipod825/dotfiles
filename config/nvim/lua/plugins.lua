@@ -1191,56 +1191,38 @@ Plug("will133/vim-dirdiff", { on_cmd = "DirDiff" })
 
 Plug("mrjones2014/smart-splits.nvim")
 
-AsyncrunCallback = function()
-	vim.api.nvim_set_current_win(vim.g.asyncrun_win)
-	if vim.g.asyncrun_code == 0 then
-		vim.cmd("cclose")
-	else
-		vim.fn.setqflist(
-			vim.tbl_filter(function(e)
-				return e.valid ~= 0
-			end, vim.fn.getqflist()),
-			"r"
-		)
-		vim.cmd("botright copen")
-	end
-	vim.fn.system([[zenity --info --text Done --display=$DISPLAY]])
-	vim.fn.system([[notify-send -u critical -t 5000 'Job Finished' `printf '~%.0s' {1..100}`]])
-end
 Plug("skywind3000/asyncrun.vim", {
 	utils = {
 		AsyncrunPre = function()
 			vim.cmd("wincmd o")
 			vim.g.asyncrun_win = vim.api.nvim_get_current_win()
 		end,
-		AsyncrunCallback = function()
-			vim.api.nvim_set_current_win(vim.g.asyncrun_win)
-			if vim.g.asyncrun_code == 0 then
-				vim.cmd("cclose")
-			else
-				vim.fn.setqflist(
-					vim.tbl_filter(function(e)
-						return e.valid ~= 0
-					end, vim.fn.getqflist()),
-					"r"
-				)
-				vim.cmd("botright copen")
-			end
-			vim.fn.system([[zenity --info --text Done --display=$DISPLAY]])
-			vim.fn.system([[notify-send -u critical -t 5000 'Job Finished' `printf '~%.0s' {1..100}`]])
-		end,
 	},
 	config = function()
 		vim.g.asyncrun_pathfix = 1
 		vim.g.asyncrun_open = 6
-		vim.g.asyncrun_exit = [[call v:lua.AsyncrunCallback()]]
-		-- vim.fn.system([[notify-send -u critical -t 5000 'Job Finished' `printf '~%.0s' {1..100}`]])
+		local ASYNCRUN = vim.api.nvim_create_augroup("ASYNCRUN", {})
 		vim.api.nvim_create_autocmd("User", {
-			group = vim.api.nvim_create_augroup("ASYNCRUN", {}),
+			group = ASYNCRUN,
 			pattern = "AsyncRunPre",
 			callback = function()
 				vim.cmd("wincmd o")
 				vim.g.asyncrun_win = vim.api.nvim_get_current_win()
+			end,
+		})
+		vim.api.nvim_create_autocmd("User", {
+			group = ASYNCRUN,
+			pattern = "AsyncRunStop",
+			callback = function()
+				vim.api.nvim_set_current_win(vim.g.asyncrun_win)
+				if vim.g.asyncrun_code == 0 then
+					vim.cmd("cclose")
+				else
+					vim.fn.setqflist(vim.tbl_filter(function(e)
+						return e.valid ~= 0
+					end, vim.fn.getqflist()))
+					vim.cmd("botright copen")
+				end
 			end,
 		})
 	end,
