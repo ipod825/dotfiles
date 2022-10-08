@@ -610,6 +610,7 @@ Plug("chaoren/vim-wordmotion", {
 Plug("windwp/nvim-autopairs", {
 	config = function()
 		require("nvim-autopairs").setup({
+			enable_moveright = false,
 			ignored_next_char = "[,]",
 			fast_wrap = {
 				map = "<m-e>",
@@ -1329,7 +1330,7 @@ Plug("git@github.com:ipod825/hg.nvim", {
 		vim.cmd("cnoreabbrev H Hg status")
 		-- vim.cmd('cnoreabbrev HH Hg status --rev "parents(min(tip))"')
 		-- TODO: figure out why quotation mark is not passed through.
-		vim.cmd("cnoreabbrev HH Hg status --rev parents(min(tip))")
+		vim.cmd("cnoreabbrev HH Hg status --rev parents(min(.))")
 		require("hg").setup({
 			hg_sub_commands = { "uc" },
 		})
