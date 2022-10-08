@@ -1,16 +1,32 @@
-source  ~/dotfiles/config/nvim/init.vim
-source ~/dotfiles/config/nvim/mapping.vim
-source ~/dotfiles/config/nvim/func.vim
+" source ~/dotfiles/config/nvim/init.vim
+" source ~/dotfiles/config/nvim/mapping.vim
+" source ~/dotfiles/config/nvim/func.vim
 
 set timeoutlen=500
 set clipboard=unnamed
-nmap <c-o> :action ActivateProjectToolWindow<cr>
+set NERDTree
+set surround
+let mapleader = "\<SPACE>"
+
+nmap <c-o> :action SearchEverywhere<cr>
+nmap <c-a-o> :action RecentFiles<cr>
 nmap <A-d> :action GotoDeclaration<cr>
+nmap <A-s> :action JumpToLastChange<Enter>
 nmap <A-k> :action FindUsages<cr>
 nmap <A-h> :action EditorLineStart<cr>
 nmap <A-l> :action EditorLineEnd<cr>
+nmap <c-j> :action EditorCodeBlockEnd<cr>
+nmap <c-k> :action EditorCodeBlockStart<cr>
+nmap <c-l> gt
+nmap <c-h> gT
+nmap q :quit<cr>
+vmap <c-j> :action EditorCodeBlockEndWithSelection<cr>
+vmap <c-k> :action EditorCodeBlockStartWithSelection<cr>
+vmap <A-y> "+y
 imap <A-h> <Esc>:action EditorLineStart<cr>i
 imap <A-l> <Esc>:action EditorLineEnd<cr>i
+imap <c-s-v> <esc>"+Pi
+imap jk <Esc>
 vmap <A-h> g^
 vmap <A-l> g$
 nmap / :action Find<cr>
@@ -20,6 +36,9 @@ nmap <leader>r :action ChooseRunConfiguration<cr>
 nmap <leader>d :action Debug<cr>
 nmap za :action CollapseRegion<cr>
 nmap zo :action ExpandRegion<cr>
+cmap <c-k> <up>
+cmap <c-j> <down>
+cnoremap <c-s-v> <s-Inssert>
 
 nnoremap \d :action ActivateDebugToolWindow<cr>
 nnoremap \b :action ToggleLineBreakpoint<cr>

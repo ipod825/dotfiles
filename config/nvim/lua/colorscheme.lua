@@ -96,7 +96,7 @@ function M.builtin_hl_def(color)
 		LineNr = { fg = color.base6 },
 		qfLineNr = { fg = color.cyan },
 		CursorLineNr = { fg = color.blue },
-		DiffAdd = { fg = color.black, bg = color.dark_green },
+		DiffAdd = { fg = color.normal, bg = color.fg_alt },
 		DiffChange = { fg = color.none, bg = color.fg_alt },
 		DiffDelete = { fg = color.redwine, bg = color.none },
 		DiffText = { fg = color.black, bg = color.dark_green },
