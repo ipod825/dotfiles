@@ -466,8 +466,11 @@ Plug("gbprod/yanky.nvim", {
 			},
 		})
 		local function visual_paste(key)
+			local ori_mode = vim.fn.mode()
 			vim.cmd('normal! "_d')
-			vim.fn.setreg('"', vim.trim(vim.fn.getreg('"')))
+			if ori_mode ~= "V" then
+				vim.fn.setreg('"', vim.trim(vim.fn.getreg('"')))
+			end
 			vim.cmd("normal! " .. key)
 			-- utils.feed_plug_keys(key)
 		end
@@ -504,51 +507,20 @@ Plug("jreybert/vimagit")
 
 Plug("hoob3rt/lualine.nvim", {
 	config = function()
-		SkipStatusHeavyFns = SkipStatusHeavyFns or {}
-		local enable_fn = function()
-			for _, skip in pairs(SkipStatusHeavyFns) do
-				if skip() then
-					return false
-				end
-			end
-			return true
-		end
-		local lualine_netranger = {
-			sections = {
-				lualine_a = { "mode" },
-				lualine_b = { { "filename", file_status = false } },
-				lualine_c = { { "branch", condition = enable_fn } },
-			},
-			filetypes = { "netranger" },
-		}
-		local lualine_gina = {
-			sections = {
-				lualine_a = { "mode" },
-				lualine_b = { { "filename", file_status = false } },
-				lualine_c = {
-					{
-						function()
-							return " " .. vim.fn.trim(vim.fn.system("git branch --show-current"))
-						end,
-						condition = enable_fn,
-					},
-				},
-			},
-			filetypes = { "gina-status" },
-		}
 		require("lualine").setup({
 			options = {
 				icons_enabled = true,
 				theme = "onedark",
-				component_separators = { "", "" },
-				section_separators = { "", "" },
+				component_separators = { left = "", right = "" },
+				section_separators = { left = "", right = "" },
 				disabled_filetypes = {},
+				globalstatus = true,
 			},
 			sections = {
 				lualine_a = { "mode" },
 				lualine_b = { "filename" },
 				lualine_c = {
-					{ "branch", condition = enable_fn },
+					{ "branch" },
 					{
 						"diagnostics",
 						sources = { "nvim_lsp" },
@@ -585,7 +557,7 @@ Plug("hoob3rt/lualine.nvim", {
 				lualine_z = {},
 			},
 			tabline = {},
-			extensions = { lualine_netranger, "quickfix" },
+			extensions = { "quickfix" },
 		})
 	end,
 })
@@ -1126,8 +1098,8 @@ Plug("justinmk/vim-sneak", {
 	config = function()
 		vim.g["sneak#label"] = 1
 		vim.g["sneak#absolute_dir"] = -4
-		map("n", "f", "<Plug>Sneak_f", { remap = true })
-		map("n", "F", "<Plug>Sneak_F", { remap = true })
+		map("n", "f", "<Plug>Sneak_s", { remap = true })
+		map("n", "F", "<Plug>Sneak_S", { remap = true })
 		map("n", "L", "<Plug>Sneak_;")
 		map("n", "H", "<Plug>Sneak_,")
 
