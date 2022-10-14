@@ -82,6 +82,7 @@ function M.lsp_diagnostic_open(line_number)
 	end, 10)
 end
 add_util_menu("LspDiagnosticOpen", vim.diagnostic.setloclist)
+map("n", "<leader>k", vim.diagnostic.open_float)
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 if pcall(require, "cmp_nvim_lsp") then

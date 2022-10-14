@@ -302,7 +302,7 @@ end
 function M.diff_get()
 	local beg, ends = vimfn.visual_rows()
 	if #vim.api.nvim_tabpage_list_wins(0) == 3 then
-		exec_diff_cmd("diffget 3:", beg, ends)
+		exec_diff_cmd("diffget ~other", beg, ends)
 	else
 		if vim.fn.winnr() == 1 then
 			exec_diff_cmd("diffget", beg, ends)
@@ -315,7 +315,7 @@ end
 function M.diff_put()
 	local beg, ends = vimfn.visual_rows()
 	if #vim.api.nvim_tabpage_list_wins(0) == 3 then
-		exec_diff_cmd("diffget 2:", beg, ends)
+		exec_diff_cmd("diffget ~base", beg, ends)
 	else
 		if vim.fn.winnr() == 2 then
 			exec_diff_cmd("diffget", beg, ends)

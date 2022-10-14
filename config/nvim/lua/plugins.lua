@@ -172,7 +172,7 @@ Plug("nvim-treesitter/nvim-treesitter", {
 			"python",
 			"kotlin",
 		}
-		local languages_spell_set = vim.list_extend({ "gitcommit", "proto" }, languages)
+		local languages_spell_set = vim.list_extend({ "gitcommit", "proto", "sdl", "hgcommit" }, languages)
 		vim.tbl_add_reverse_lookup(languages_spell_set)
 
 		require("colorscheme").add_plug_hl({
@@ -781,8 +781,8 @@ Plug("hrsh7th/nvim-cmp", {
 				["<c-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
 				["<c-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
 				["<c-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-				["<c-d>"] = cmp.mapping.scroll_docs(-4),
-				["<c-f>"] = cmp.mapping.scroll_docs(4),
+				["<c-e>"] = cmp.mapping.scroll_docs(4),
+				["<c-y>"] = cmp.mapping.scroll_docs(-4),
 				["<c-c>"] = cmp.mapping.close(),
 				["<cr>"] = cmp.mapping.confirm({ select = true }),
 			},
@@ -791,9 +791,14 @@ Plug("hrsh7th/nvim-cmp", {
 				{ name = "nvim_lsp_signature_help" },
 				{ name = "nvim_lua" },
 				{ name = "nvim_lsp" },
+				{ name = "nvim_lsp_signature_help" },
 				{ name = "buffer" },
 				{ name = "path" },
 			}),
+			window = {
+				completion = cmp.config.window.bordered(),
+				documentation = cmp.config.window.bordered(),
+			},
 			formatting = {
 				format = require("lspkind").cmp_format({
 					mode = "symbol_text", -- show only symbol annotations
@@ -1098,8 +1103,8 @@ Plug("justinmk/vim-sneak", {
 	config = function()
 		vim.g["sneak#label"] = 1
 		vim.g["sneak#absolute_dir"] = -4
-		map("n", "f", "<Plug>Sneak_s", { remap = true })
-		map("n", "F", "<Plug>Sneak_S", { remap = true })
+		map("n", "f", "<Plug>Sneak_f", { remap = true })
+		map("n", "F", "<Plug>Sneak_F", { remap = true })
 		map("n", "L", "<Plug>Sneak_;")
 		map("n", "H", "<Plug>Sneak_,")
 
@@ -1149,8 +1154,19 @@ Plug("ipod825/vim-esearch", {
 		}
 	end,
 	config = function()
+		local ESEARCH = vim.api.nvim_create_augroup("ESEARCH", {})
+		vim.api.nvim_create_autocmd("Filetype", {
+			group = ESEARCH,
+			pattern = "esearch",
+			callback = function()
+				map("n", "yy", function()
+					vim.cmd("normal! yy")
+					vim.fn.setreg('"', vim.fn.getreg('"'):gsub("^%s*%d*%s*", ""))
+				end)
+			end,
+		})
 		vim.api.nvim_create_autocmd("ColorScheme", {
-			group = vim.api.nvim_create_augroup("ESEARCH", {}),
+			group = ESEARCH,
 			command = "highlight! link esearchMatch Cursor",
 		})
 		map("n", "<leader>f", "<Plug>(operator-esearch-prefill)iw", { remap = true })

@@ -6,12 +6,12 @@ merge = nvr
 editor = nvr -cc tabe --remote-wait +"setlocal bufhidden=wipe"
 
 [merge-tools]
-nvr.args = -s -cc tabnew $base -O $other $local
+nvr.args = -s -cc tabnew -o $base -O $other $local +"windo diffthis"
 nvr.gui = False
 
 [pager]
 ignore = log, cls, .root
-# pager = delta
+pager = delta
 
 [extensions]
 beautifygraph =
