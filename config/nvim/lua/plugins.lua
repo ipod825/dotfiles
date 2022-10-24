@@ -171,6 +171,7 @@ Plug("nvim-treesitter/nvim-treesitter", {
 			"lua",
 			"python",
 			"kotlin",
+			"org",
 		}
 		local languages_spell_set = vim.list_extend({ "gitcommit", "proto", "sdl", "hgcommit" }, languages)
 		vim.tbl_add_reverse_lookup(languages_spell_set)
@@ -186,7 +187,7 @@ Plug("nvim-treesitter/nvim-treesitter", {
 		})
 		require("nvim-treesitter.configs").setup({
 			ensure_installed = languages,
-			highlight = { enable = true },
+			highlight = { enable = true, additional_vim_regex_highlighting = { "org" } },
 			incremental_selection = { enable = false },
 			indent = { enable = false },
 			endwise = {
@@ -200,6 +201,29 @@ Plug("nvim-treesitter/nvim-treesitter", {
 					vim.wo.spell = languages_spell_set[vim.bo.filetype] ~= nil
 				end, 0)
 			end,
+		})
+	end,
+})
+
+Plug("p00f/nvim-ts-rainbow", {
+	config = function()
+		require("nvim-treesitter.configs").setup({
+			rainbow = {
+				enable = true,
+				-- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
+				extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+				max_file_lines = nil, -- Do not enable for files with more than n lines, int
+				-- colors = {}, -- table of hex strings
+				-- termcolors = {} -- table of colour name strings
+			},
+			require("colorscheme").add_plug_hl({
+				rainbowcol1 = { fg = "#e5c07b", bold = true },
+				rainbowcol2 = { fg = "#8CCBEA", bold = true },
+				rainbowcol3 = { fg = "#A4E57E", bold = true },
+				rainbowcol4 = { fg = "#FF7272", bold = true },
+				rainbowcol5 = { fg = "#FFB3FF", bold = true },
+				rainbowcol6 = { fg = "#9999FF", bold = true },
+			}),
 		})
 	end,
 })
@@ -329,7 +353,15 @@ Plug("nvim-telescope/telescope.nvim", {
 				winblend = 10,
 				sorting_strategy = "ascending",
 				multi_icon = "* ",
-				path_display = { "truncate" },
+				path_display = function(opts, path)
+					path = path:gsub(vim.env.HOME, "~")
+					for _, env in pairs(require("profile").envs) do
+						if env.telescope_path_display then
+							path = env.telescope_path_display(path)
+						end
+					end
+					return path
+				end,
 				layout_strategy = "vertical",
 				-- file_ignore_patterns = { "doc.*html$" },
 				borderchars = {
@@ -390,7 +422,8 @@ Plug("nvim-telescope/telescope.nvim", {
 		local conf = require("telescope.config").values
 		local builtin = require("telescope.builtin")
 
-		vim.cmd("cnoreabbrev help lua require'telescope.builtin'.help_tags({default_text=''})<left><left><left>")
+		utils.cmdabbrev("help", "lua require'telescope.builtin'.help_tags({default_text=''})<left><left><left>")
+
 		map("n", "<c-o>", function()
 			builtin.fd({ cwd = require("libp.utils.pathfn").find_directory(root_markers) })
 		end)
@@ -426,7 +459,7 @@ Plug("nvim-telescope/telescope.nvim", {
 						results = cached_config_files,
 					}),
 					previewer = conf.file_previewer(opts),
-					sorter = conf.generic_sorter(opts),
+					sorter = conf.file_sorter(opts),
 				})
 				:find()
 		end)
@@ -435,27 +468,37 @@ Plug("nvim-telescope/telescope.nvim", {
 			pickers
 				.new(opts, {
 					finder = finders.new_table({
-						results = vim.tbl_filter(function(e)
-							local g4 = require("profile").envs.g4
-							if g4 then
-								local root = g4.root()
-								if not vim.startswith(e, root) then
-									return vim.fn.filereadable(e) ~= 0
-								else
-									return true
-								end
-							else
-								return vim.fn.filereadable(e) ~= 0
-							end
-						end, require("oldfiles").oldfiles()),
+						-- results = vim.tbl_filter(function(e)
+						-- 	local g4 = require("profile").envs.g4
+						-- 	if g4 then
+						-- 		local root = g4.root()
+						-- 		if not vim.startswith(e, root) then
+						-- 			return vim.fn.filereadable(e) ~= 0
+						-- 		else
+						-- 			return true
+						-- 		end
+						-- 	else
+						-- 		return vim.fn.filereadable(e) ~= 0
+						-- 	end
+						-- end, require("oldfiles").oldfiles()),
+						results = require("oldfiles").oldfiles(),
+						entry_maker = require("telescope.make_entry").gen_from_file(opts),
 					}),
 					previewer = conf.file_previewer(opts),
-					sorter = conf.generic_sorter(opts),
+					sorter = conf.file_sorter(opts),
 				})
 				:find()
 		end)
 	end,
 })
+
+Plug("LukasPietzschmann/telescope-tabs", {
+	config = function()
+		require("telescope-tabs").setup({})
+	end,
+})
+
+Plug("jubnzv/virtual-types.nvim")
 
 Plug("gbprod/yanky.nvim", {
 	config = function()
@@ -790,9 +833,9 @@ Plug("hrsh7th/nvim-cmp", {
 				{ name = "luasnip" },
 				{ name = "nvim_lsp_signature_help" },
 				{ name = "nvim_lua" },
+				{ name = "buffer" },
 				{ name = "nvim_lsp" },
 				{ name = "nvim_lsp_signature_help" },
-				{ name = "buffer" },
 				{ name = "path" },
 			}),
 			window = {
@@ -969,7 +1012,7 @@ Plug("kevinhwang91/nvim-bqf", {
 				tabdrop = "<cr>",
 				open = "<c-e>",
 			},
-			preview = { win_height = 50 },
+			preview = { win_height = 35 },
 		})
 	end,
 })
@@ -1255,17 +1298,26 @@ Plug("git@github.com:ipod825/oldfiles.nvim", {
 	end,
 })
 
+Plug("gorbit99/codewindow.nvim", {
+	config = function()
+		local codewindow = require("codewindow")
+		codewindow.setup()
+		codewindow.apply_default_keybinds()
+	end,
+})
+
 Plug("git@github.com:ipod825/igit.nvim", {
 	config = function()
-		vim.cmd("cnoreabbrev G IGit status")
-		vim.cmd("cnoreabbrev gbr IGit branch")
-		vim.cmd("cnoreabbrev glg IGit log")
-		vim.cmd("cnoreabbrev gps IGit push")
-		vim.cmd("cnoreabbrev gpl IGit pull")
-		vim.cmd("cnoreabbrev grc IGit rebase --continue")
-		vim.cmd("cnoreabbrev gra IGit rebase --abort")
-		vim.cmd(
-			[[cnoreabbrev glc exec 'IGit log --branches --graph  --author="Shih-Ming Wang" --follow -- '.expand("%:p")]]
+		utils.cmdabbrev("G", "IGit status")
+		utils.cmdabbrev("gbr", " IGit branch")
+		utils.cmdabbrev("glg", " IGit log")
+		utils.cmdabbrev("gps", " IGit push")
+		utils.cmdabbrev("gpl", " IGit pull")
+		utils.cmdabbrev("grc", " IGit rebase --continue")
+		utils.cmdabbrev("gra", " IGit rebase --abort")
+		utils.cmdabbrev(
+			"glc",
+			[[exec 'IGit log --branches --graph  --author="Shih-Ming Wang" --follow -- '.expand("%:p")]]
 		)
 		require("igit").setup({
 			branch = {
@@ -1287,6 +1339,13 @@ Plug("ziontee113/color-picker.nvim", {
 	end,
 })
 Plug("powerman/vim-plugin-AnsiEsc")
+
+Plug("nvim-orgmode/orgmode", {
+	config = function()
+		require("orgmode").setup({})
+		require("orgmode").setup_ts_grammar()
+	end,
+})
 
 Plug("git@github.com:ipod825/ranger.nvim", {
 	config = function()
@@ -1310,15 +1369,30 @@ Plug("git@github.com:ipod825/ranger.nvim", {
 	end,
 })
 
+function OpenHgStatus()
+	if vim.fn.bufnr("hg://main-status") ~= -1 then
+		vim.cmd("Tabdrop hg://main-status")
+	else
+		vim.cmd("Hg status")
+	end
+end
+
+function OpenHgLog()
+	if vim.fn.bufnr("hg://main-log") ~= -1 then
+		vim.cmd("Tabdrop hg://main-log")
+	else
+		vim.cmd("Hg log")
+	end
+end
 Plug("git@github.com:ipod825/hg.nvim", {
 	config = function()
-		vim.cmd("cnoreabbrev hg Hg")
-		vim.cmd("cnoreabbrev hlg Hg log")
-		vim.cmd("cnoreabbrev hlgm Hg log -G -f -u " .. vim.env.USER)
-		vim.cmd("cnoreabbrev H Hg status")
-		-- vim.cmd('cnoreabbrev HH Hg status --rev "parents(min(tip))"')
+		utils.cmdabbrev("hg", "Hg")
+		utils.cmdabbrev("hlg", "lua OpenHgLog()")
+		utils.cmdabbrev("hlgm", "Hg log -G -f -u " .. vim.env.USER)
+		utils.cmdabbrev("H", "lua OpenHgStatus()")
+		-- utils.cmdabbrev("HH", 'Hg status --rev "parents(min(tip))"')
 		-- TODO: figure out why quotation mark is not passed through.
-		vim.cmd("cnoreabbrev HH Hg status --rev parents(min(.))")
+		utils.cmdabbrev("HH", "Hg status --rev parents(min(.))")
 		require("hg").setup({
 			hg_sub_commands = { "uc" },
 		})

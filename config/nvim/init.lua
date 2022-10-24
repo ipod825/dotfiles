@@ -134,11 +134,10 @@ vim.api.nvim_create_autocmd("Filetype", {
 	group = GENERAL,
 	pattern = { "markdown", "tex" },
 	callback = function()
-		local map = vim.keymap.set
-		map("i", "sl", "\\", { buffer = true })
-		map("i", "<m-j>", "_", { buffer = true })
-		map("i", "<m-k>", "&", { buffer = true })
-		map("i", "<m-q>", "{}<Left>", { buffer = true })
+		vim.keymap.set("i", "sl", "\\", { buffer = true })
+		vim.keymap.set("i", "<m-j>", "_", { buffer = true })
+		vim.keymap.set("i", "<m-k>", "&", { buffer = true })
+		vim.keymap.set("i", "<m-q>", "{}<Left>", { buffer = true })
 		vim.cmd("inoreabbrev <buffer> an &")
 		vim.cmd("inoreabbrev <buffer> da $$<left>")
 		vim.cmd("inoreabbrev <buffer> pl +")
@@ -151,11 +150,10 @@ vim.api.nvim_create_autocmd("Filetype", {
 	group = GENERAL,
 	pattern = { "markdown", "tex" },
 	callback = function()
-		local map = vim.keymap.set
-		map("i", "sl", "\\", { buffer = true })
-		map("i", "<m-j>", "_", { buffer = true })
-		map("i", "<m-k>", "&", { buffer = true })
-		map("i", "<m-q>", "{}<Left>", { buffer = true })
+		vim.keymap.set("i", "sl", "\\", { buffer = true })
+		vim.keymap.set("i", "<m-j>", "_", { buffer = true })
+		vim.keymap.set("i", "<m-k>", "&", { buffer = true })
+		vim.keymap.set("i", "<m-q>", "{}<Left>", { buffer = true })
 		vim.cmd("inoreabbrev <buffer> an &")
 		vim.cmd("inoreabbrev <buffer> da $$<left>")
 		vim.cmd("inoreabbrev <buffer> pl +")
@@ -170,6 +168,16 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 	callback = function()
 		if vim.wo.diff then
 			vim.cmd("diffupdate")
+		end
+	end,
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+	group = GENERAL,
+	callback = function()
+		if vim.wo.diff then
+			vim.keymap.set("n", "<c-j>", "]c", { buffer = true })
+			vim.keymap.set("n", "<c-k>", "[c", { buffer = true })
 		end
 	end,
 })

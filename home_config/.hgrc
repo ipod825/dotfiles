@@ -2,11 +2,12 @@
 status.relative = False
 
 [ui]
-merge = nvr
+merge = :merge
 editor = nvr -cc tabe --remote-wait +"setlocal bufhidden=wipe"
 
 [merge-tools]
-nvr.args = -s -cc tabnew -o $base -O $other $local +"windo diffthis"
+# nvr.args = -cc tabe -O other local base +"wincmd J | windo diffthis"
+# nvr.args = -s -cc tabnew -O $other $local +"wincmd J | windo diffthis"
 nvr.gui = False
 
 [pager]
@@ -17,6 +18,7 @@ pager = delta
 beautifygraph =
 unsupported.tree =
 pager =
+journal =
 
 [color]
 desc.here = red bold

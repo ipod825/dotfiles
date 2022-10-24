@@ -10,11 +10,15 @@ function M.goto_tag_or_lsp_fn(target_fn)
 		active_lsp_clients = active_lsp_clients + 1
 	end)
 
-	vim.cmd("TabdropPushTag")
 	if active_lsp_clients > 0 then
+		vim.cmd("TabdropPushTag")
 		target_fn()
 	else
-		vim.api.nvim_exec("silent! TagTabdrop", true)
+		local succ, err = pcall(vim.fn.taglist, vim.fn.expand("<cword>"))
+		if succ then
+			vim.cmd("TabdropPushTag")
+			vim.api.nvim_exec("silent! TagTabdrop", true)
+		end
 	end
 end
 map("n", "<m-d>", function()
@@ -27,7 +31,7 @@ function M.goto_handler(_, res, _)
 		print("No location found")
 		return nil
 	end
-	vim.cmd("TabdropPushTag")
+	-- vim.cmd("TabdropPushTag")
 	local uri = res[1].uri or res[1].targetUri
 	local range = res[1].range or res[1].targetRange
 	vim.fn["tabdrop#tabdrop"](vim.uri_to_fname(uri), range.start.line + 1, range.start.character + 1)
@@ -86,10 +90,10 @@ map("n", "<leader>k", vim.diagnostic.open_float)
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 if pcall(require, "cmp_nvim_lsp") then
-	capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+	capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 end
 
-function M.set_lsp(name, options)
+function M.set_lsp(names, options)
 	options = vim.tbl_deep_extend("keep", options or {}, {
 		profile = "default",
 		capabilities = capabilities,
@@ -98,18 +102,30 @@ function M.set_lsp(name, options)
 			if lsp_signature then
 				lsp_signature.on_attach()
 			end
+			local virtualtypes = prequire("virtualtypes")
+			if virtualtypes then
+				_G.p("in")
+				virtualtypes.on_attach()
+			end
 		end,
 	})
+
+	if type(names) == "string" then
+		names = { names }
+	end
+
 	local lspconfig = require("lspconfig")
-	local client = lspconfig[name]
-	client.setup(options)
-	client.manager.orig_try_add = client.manager.try_add
-	client.manager.try_add = function(bufnr, ...)
-		require("profile").auto_switch_env()
-		if options.profile ~= require("profile").cur_env.name then
-			return
+	for _, name in ipairs(names) do
+		local client = lspconfig[name]
+		client.setup(options)
+		client.manager.orig_try_add = client.manager.try_add
+		client.manager.try_add = function(bufnr, ...)
+			require("profile").auto_switch_env()
+			if options.profile ~= require("profile").cur_env.name then
+				return
+			end
+			return client.manager.orig_try_add(bufnr)
 		end
-		return client.manager.orig_try_add(bufnr)
 	end
 end
 M.set_lsp("pylsp")

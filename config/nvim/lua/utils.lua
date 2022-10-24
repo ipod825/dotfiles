@@ -71,4 +71,15 @@ function M.feed_plug_keys(key)
 	vim.fn.feedkeys(string.format("%c%c%c%s", 0x80, 253, 83, key))
 end
 
+function M.cmdabbrev(o, alias)
+	vim.cmd(
+		([=[cnoreabbrev <expr> %s getcmdtype() == ":" && getcmdline() == "%s" ? "%s" : "%s"]=]):format(
+			o,
+			o,
+			alias:gsub('"', '\\"'),
+			o
+		)
+	)
+end
+
 return M
