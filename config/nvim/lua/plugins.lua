@@ -316,7 +316,12 @@ Plug("nvim-telescope/telescope.nvim", {
 			local entry = action_state.get_selected_entry()
 			local filepath = entry[1]
 			local cwd = entry.cwd or ""
-			if vim.fn.filereadable(require("libp.utils.pathfn").join(cwd, filepath)) ~= 0 and type ~= "force_edit" then
+			if
+				(
+					vim.fn.filereadable(filepath) ~= 0
+					or vim.fn.filereadable(require("libp.utils.pathfn").join(cwd, filepath)) ~= 0
+				) and type ~= "force_edit"
+			then
 				return "Tabdrop"
 			else
 				return select_to_edit_map[type]
@@ -460,6 +465,7 @@ Plug("nvim-telescope/telescope.nvim", {
 					}),
 					previewer = conf.file_previewer(opts),
 					sorter = conf.file_sorter(opts),
+					entry_maker = require("telescope.make_entry").gen_from_file(opts),
 				})
 				:find()
 		end)
@@ -468,22 +474,29 @@ Plug("nvim-telescope/telescope.nvim", {
 			pickers
 				.new(opts, {
 					finder = finders.new_table({
-						-- results = vim.tbl_filter(function(e)
-						-- 	local g4 = require("profile").envs.g4
-						-- 	if g4 then
-						-- 		local root = g4.root()
-						-- 		if not vim.startswith(e, root) then
-						-- 			return vim.fn.filereadable(e) ~= 0
-						-- 		else
-						-- 			return true
-						-- 		end
-						-- 	else
-						-- 		return vim.fn.filereadable(e) ~= 0
-						-- 	end
-						-- end, require("oldfiles").oldfiles()),
-						results = require("oldfiles").oldfiles(),
+						results = vim.tbl_filter(function(e)
+							local g4 = require("profile").envs.g4
+							if g4 then
+								local root = g4.root()
+								if not vim.startswith(e, root) then
+									return vim.fn.filereadable(e) ~= 0
+								else
+									return true
+								end
+							else
+								return vim.fn.filereadable(e) ~= 0
+							end
+						end, require("oldfiles").oldfiles()),
 						entry_maker = require("telescope.make_entry").gen_from_file(opts),
 					}),
+					attach_mappings = function(prompt_bufnr, map)
+						map("i", "<c-d>", function()
+							local current_entry = action_state.get_selected_entry()
+							vim.loop.fs_unlink(current_entry[1])
+							action_state.get_current_picker(prompt_bufnr):refresh()
+						end)
+						return true
+					end,
 					previewer = conf.file_previewer(opts),
 					sorter = conf.file_sorter(opts),
 				})
@@ -1224,12 +1237,6 @@ Plug("will133/vim-dirdiff", { on_cmd = "DirDiff" })
 Plug("mrjones2014/smart-splits.nvim")
 
 Plug("skywind3000/asyncrun.vim", {
-	utils = {
-		AsyncrunPre = function()
-			vim.cmd("wincmd o")
-			vim.g.asyncrun_win = vim.api.nvim_get_current_win()
-		end,
-	},
 	config = function()
 		vim.g.asyncrun_pathfix = 1
 		vim.g.asyncrun_open = 6
@@ -1309,12 +1316,12 @@ Plug("gorbit99/codewindow.nvim", {
 Plug("git@github.com:ipod825/igit.nvim", {
 	config = function()
 		utils.cmdabbrev("G", "IGit status")
-		utils.cmdabbrev("gbr", " IGit branch")
-		utils.cmdabbrev("glg", " IGit log")
-		utils.cmdabbrev("gps", " IGit push")
-		utils.cmdabbrev("gpl", " IGit pull")
-		utils.cmdabbrev("grc", " IGit rebase --continue")
-		utils.cmdabbrev("gra", " IGit rebase --abort")
+		utils.cmdabbrev("gbr", "IGit branch")
+		utils.cmdabbrev("glg", "IGit log")
+		utils.cmdabbrev("gps", "IGit push")
+		utils.cmdabbrev("gpl", "IGit pull")
+		utils.cmdabbrev("grc", "IGit rebase --continue")
+		utils.cmdabbrev("gra", "IGit rebase --abort")
 		utils.cmdabbrev(
 			"glc",
 			[[exec 'IGit log --branches --graph  --author="Shih-Ming Wang" --follow -- '.expand("%:p")]]
@@ -1369,33 +1376,55 @@ Plug("git@github.com:ipod825/ranger.nvim", {
 	end,
 })
 
-function OpenHgStatus()
-	if vim.fn.bufnr("hg://main-status") ~= -1 then
-		vim.cmd("Tabdrop hg://main-status")
-	else
-		vim.cmd("Hg status")
-	end
-end
+Plug("rbtnn/vim-vimscript_lasterror")
 
-function OpenHgLog()
-	if vim.fn.bufnr("hg://main-log") ~= -1 then
-		vim.cmd("Tabdrop hg://main-log")
-	else
-		vim.cmd("Hg log")
-	end
-end
 Plug("git@github.com:ipod825/hg.nvim", {
 	config = function()
 		utils.cmdabbrev("hg", "Hg")
-		utils.cmdabbrev("hlg", "lua OpenHgLog()")
+		utils.cmdabbrev("hlg", "Hg log")
 		utils.cmdabbrev("hlgm", "Hg log -G -f -u " .. vim.env.USER)
-		utils.cmdabbrev("H", "lua OpenHgStatus()")
-		-- utils.cmdabbrev("HH", 'Hg status --rev "parents(min(tip))"')
-		-- TODO: figure out why quotation mark is not passed through.
-		utils.cmdabbrev("HH", "Hg status --rev parents(min(.))")
+		utils.cmdabbrev("H", "Hg status")
+		utils.cmdabbrev("HH", 'Hg status --rev "parents(min(.))"')
 		require("hg").setup({
 			hg_sub_commands = { "uc" },
+			status = {
+				open_cmd = "Tabdrop",
+			},
+			log = {
+				open_cmd = "Tabdrop",
+			},
 		})
+	end,
+})
+
+Plug("sso://user/chmnchiang/google-comments", {
+	config = function()
+		vim.fn.sign_define("COMMENTS_ICON", { text = " " })
+		require("google.comments").setup({ sign = "COMMENTS_ICON" })
+		vim.api.nvim_set_keymap(
+			"n",
+			"]lc",
+			[[<Cmd>lua require('google.comments').goto_next_comment()<CR>]],
+			{ noremap = true, silent = true }
+		)
+		vim.api.nvim_set_keymap(
+			"n",
+			"[lc",
+			[[<Cmd>lua require('google.comments').goto_prev_comment()<CR>]],
+			{ noremap = true, silent = true }
+		)
+		vim.api.nvim_set_keymap(
+			"n",
+			"<Leader>lc",
+			[[<Cmd>lua require('google.comments').toggle_line_comments()<CR>]],
+			{ noremap = true, silent = true }
+		)
+		vim.api.nvim_set_keymap(
+			"n",
+			"<Leader>ac",
+			[[<Cmd>lua require('google.comments').show_all_comments()<CR>]],
+			{ noremap = true, silent = true }
+		)
 	end,
 })
 

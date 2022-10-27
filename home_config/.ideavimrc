@@ -20,6 +20,7 @@ nmap <c-k> :action EditorCodeBlockStart<cr>
 nmap <c-l> gt
 nmap <c-h> gT
 nmap q :quit<cr>
+nmap 8 :action FindWordAtCaret<cr>
 vmap <c-j> :action EditorCodeBlockEndWithSelection<cr>
 vmap <c-k> :action EditorCodeBlockStartWithSelection<cr>
 vmap <A-y> "+y
@@ -29,7 +30,12 @@ imap <c-s-v> <esc>"+Pi
 imap jk <Esc>
 vmap <A-h> g^
 vmap <A-l> g$
+nmap <A-k> :action EditorSelectWord<cr>
+vmap <A-k> :action EditSelectGroup<cr>
+vmap <cr> <esc>
 nmap / :action Find<cr>
+nmap n <esc>:action FindNext<cr><esc>
+nmap N <esc>:action FindPrevious<cr><esc>
 nmap <A-s> :q<cr>:action Back<cr>
 nmap <A-e> :action ActivateTerminalToolWindow<cr>
 nmap <leader>r :action ChooseRunConfiguration<cr>

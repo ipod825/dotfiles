@@ -1,5 +1,7 @@
 local M = {}
 local map = vim.keymap.set
+local vimfn = require("libp.utils.vimfn")
+local range = require("libp.itertools").range
 
 vim.api.nvim_create_autocmd("FileType", {
 	group = vim.api.nvim_create_augroup("QF", {}),
@@ -31,6 +33,13 @@ function M.setup()
 	map("n", "co", "<cmd>:colder<cr>")
 	map("n", "cn", "<cmd>:cnewer<cr>")
 	map("n", "<cr>", function()
+		local qflist = vim.fn.getqflist()
+		for i in range(vimfn.getrow(), 1, -1) do
+			if qflist[i].valid ~= 0 then
+				vimfn.setrow(i)
+				break
+			end
+		end
 		require("qf").open()
 	end, { buffer = true })
 	map("n", "/", function()

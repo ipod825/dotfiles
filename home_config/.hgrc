@@ -1,6 +1,10 @@
 [commands]
 status.relative = False
 
+[defaults]
+commit = -A
+amend = -A
+
 [ui]
 merge = :merge
 editor = nvr -cc tabe --remote-wait +"setlocal bufhidden=wipe"

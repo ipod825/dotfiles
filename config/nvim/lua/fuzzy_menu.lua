@@ -12,16 +12,15 @@ function M.telescope_pick(content, cb, opts)
 	opts = opts or {}
 	pickers
 		.new(opts, {
-			finder = finders.new_table({
+			finder = finders.new_table(vim.tbl_extend("keep", {
 				results = content,
-			}),
+			}, opts)),
 			sorter = conf.generic_sorter(opts),
 			attach_mappings = function(prompt_bufnr)
-				action_set.select:replace(function()
+				actions.select_default:replace(function()
 					actions.close(prompt_bufnr)
 					cb(action_state.get_selected_entry().value)
 				end)
-
 				return true
 			end,
 		})

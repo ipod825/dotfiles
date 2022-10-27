@@ -104,7 +104,6 @@ function M.set_lsp(names, options)
 			end
 			local virtualtypes = prequire("virtualtypes")
 			if virtualtypes then
-				_G.p("in")
 				virtualtypes.on_attach()
 			end
 		end,
