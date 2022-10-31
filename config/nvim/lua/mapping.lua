@@ -243,6 +243,9 @@ map("c", "qq", ":bwipeout<cr>")
 -- misc
 -- paste yanked text in command line
 map("c", "<m-p>", '<c-r>"')
+map("n", "gp", function()
+	return ("`[%s`]"):format(vim.fn.strpart(vim.fn.getregtype(), 0, 1))
+end, { expr = true })
 -- paste current file name in command line
 map("c", "<m-f>", "<c-r>%<c-f>")
 -- yank to system clipboard

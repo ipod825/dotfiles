@@ -31,8 +31,15 @@ end
 
 function M.ends()
 	vim.fn["plug#end"]()
+	local errors = {}
 	for _, config in pairs(M.configs.start) do
-		config()
+		local _, error = pcall(config)
+		if error then
+			table.insert(errors, error)
+		end
+	end
+	if #errors > 0 then
+		vim.notify(table.concat(errors, "\n"), vim.log.levels.WARN)
 	end
 end
 

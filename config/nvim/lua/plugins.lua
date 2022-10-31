@@ -118,8 +118,8 @@ Plug("kevinhwang91/nvim-ufo", {
 				},
 			},
 		})
-		vim.keymap.set("n", "zR", require("ufo").openAllFolds)
-		vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+		vim.keymap.set("n", "<leader>o", require("ufo").openAllFolds)
+		vim.keymap.set("n", "<leader>c", require("ufo").closeAllFolds)
 		vim.keymap.set("n", "K", function()
 			local winid = require("ufo").peekFoldedLinesUnderCursor()
 			if not winid then
@@ -513,6 +513,14 @@ Plug("LukasPietzschmann/telescope-tabs", {
 
 Plug("jubnzv/virtual-types.nvim")
 
+Plug("norcalli/nvim-terminal.lua", {
+	config = function()
+		require("terminal").setup()
+	end,
+})
+
+Plug("vim-scripts/AnsiEsc.vim")
+
 Plug("gbprod/yanky.nvim", {
 	config = function()
 		require("yanky").setup({
@@ -521,25 +529,19 @@ Plug("gbprod/yanky.nvim", {
 				on_yank = false,
 			},
 		})
-		local function visual_paste(key)
+		local function visual_paste()
 			local ori_mode = vim.fn.mode()
 			vim.cmd('normal! "_d')
 			if ori_mode ~= "V" then
 				vim.fn.setreg('"', vim.trim(vim.fn.getreg('"')))
 			end
-			vim.cmd("normal! " .. key)
-			-- utils.feed_plug_keys(key)
+			vim.cmd("normal! P")
 		end
 
 		vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)")
 		vim.keymap.set("n", "P", "<Plug>(YankyPutBefore)")
 		vim.keymap.set("x", "p", function()
-			visual_paste("P")
-		end)
-		vim.keymap.set("n", "gp", "<Plug>(YankyGPutAfter)")
-		vim.keymap.set("n", "gP", "<Plug>(YankyGPutBefore)")
-		vim.keymap.set("x", "gp", function()
-			visual_paste("gP")
+			visual_paste()
 		end)
 		require("telescope._extensions").load("yank_history")
 	end,
