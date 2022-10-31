@@ -89,7 +89,7 @@ add_util_menu("LspDiagnosticOpen", vim.diagnostic.setloclist)
 map("n", "<leader>k", vim.diagnostic.open_float)
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-if pcall(require, "cmp_nvim_lsp") then
+if prequire("cmp_nvim_lsp") then
 	capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 end
 
