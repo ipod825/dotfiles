@@ -933,7 +933,11 @@ Plug("L3MON4D3/LuaSnip", {
 		require("luasnip.loaders.from_lua").lazy_load({ paths = vim.fn.stdpath("config") .. "/snippets/luasnippets" })
 
 		vim.api.nvim_create_user_command("LuaSnipEdit", function()
-			require("luasnip.loaders").edit_snippet_files(nil)
+			require("luasnip.loaders").edit_snippet_files({
+				edit = function(file)
+					vim.cmd("Tabdrop " .. file)
+				end,
+			})
 		end, {})
 	end,
 })

@@ -123,6 +123,14 @@ vim.api.nvim_create_autocmd("BufRead", {
 
 vim.api.nvim_create_autocmd("Filetype", {
 	group = GENERAL,
+	pattern = "cpp",
+	callback = function()
+		vim.bo.commentstring = "// %s"
+	end,
+})
+
+vim.api.nvim_create_autocmd("Filetype", {
+	group = GENERAL,
 	pattern = { "tex" },
 	callback = function()
 		vim.wo.cursorline = false

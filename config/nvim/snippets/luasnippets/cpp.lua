@@ -36,11 +36,26 @@ rec_case = function()
 end
 
 ls.add_snippets("cpp", {
+	s("log", fmt("LOG({}) << {};{}", { i(1, "ERROR"), i(2), i(0) })),
+	s("vec", fmt("std::vector<{}> {}", { i(1, "int"), i(2, "vec") })),
+	s(
+		"hash",
+		fmta(
+			[[
+    template <typename H>
+    friend H AbslHashValue(H h, const ^$& ^$) {
+        return H::combine(std::move(h), ^$);
+    }^$
+	]],
+			{ i(1, "Type"), i(2, ""), i(3, ""), i(0) },
+			{ delimiters = "^$" }
+		)
+	),
 	s(
 		"inc",
 		fmt(
 			"#include {}{}{}{}",
-			{ i(1, "<"), dl(2, l._1:gsub("<", "iostream"):gsub('"', "util.h"), 1), m(1, "<", ">", '"'), i(0) }
+			{ i(1, '"'), dl(2, l._1:gsub("<", "iostream"):gsub('"', "util.h"), 1), m(1, "<", ">", '"'), i(0) }
 		)
 	),
 	s("cout", fmt("std::cout << {} << std::endl;", i(1))),

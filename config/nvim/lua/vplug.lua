@@ -16,13 +16,21 @@ M.configs = { lazy = {}, start = {} }
 M.utils = {}
 
 function M.reload(target)
-	for name, _ in pairs(package.loaded) do
-		if name:match(target) then
-			package.loaded[name] = nil
+	local function do_reload(t)
+		local reloaded = false
+		for name, _ in pairs(package.loaded) do
+			if name:match(t) then
+				package.loaded[name] = nil
+				reloaded = true
+			end
 		end
+		if reloaded then
+			package.loaded.plugins = nil
+			require("plugins")
+		end
+		return reloaded
 	end
-	package.loaded.plugins = nil
-	require("plugins")
+	return do_reload(target) or do_reload(target:gsub("^nvim-", ""))
 end
 
 function M.begin()
