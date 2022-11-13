@@ -222,9 +222,9 @@ vim.api.nvim_create_autocmd("Filetype", {
 vim.api.nvim_create_autocmd("BufWritePost", {
 	group = GENERAL,
 	callback = function(arg)
-		if vim.bo.filetype ~= "lua" then
-			vim.lsp.buf.format()
-		end
+			vim.lsp.buf.format({filter= function (client)
+			    return not client.name:match('sumneko_lua')
+			end})
 	end,
 })
 

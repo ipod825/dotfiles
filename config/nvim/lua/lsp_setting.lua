@@ -47,22 +47,23 @@ vim.lsp.handlers["textDocument/implementation"] = M.goto_handler
 
 function M.switch_source_header()
 	local bufnr = 0
-	local client = vim.lsp.get_active_clients()[1]
 	local params = { uri = vim.uri_from_bufnr(bufnr) }
-	if client then
-		client.request("textDocument/switchSourceHeader", params, function(err, result)
-			if err then
-				error(tostring(err))
-			end
-			if not result then
-				print("Corresponding file cannot be determined")
-				return
-			end
-			vim.api.nvim_command("Tabdrop " .. vim.uri_to_fname(result))
-		end, bufnr)
-	else
-		print("method textDocument/switchSourceHeader is not supported by any servers active on the current buffer")
+	for _, client in ipairs(vim.lsp.get_active_clients()) do
+		if client.server_capabilities.switchSourceHeaderProvider then
+			client.request("textDocument/switchSourceHeader", params, function(err, result)
+				if err then
+					error(tostring(err))
+				end
+				if not result then
+					print("Corresponding file cannot be determined")
+					return
+				end
+				vim.api.nvim_command("Tabdrop " .. vim.uri_to_fname(result))
+			end)
+			return
+		end
 	end
+	require("fuzzy_menu").oldfiles({ default_text = vim.fn.expand("%:p:t:r") .. ".h" })
 end
 add_util_menu("LspSourceHeader", M.switch_source_header)
 add_util_menu("LspHover", vim.lsp.buf.hover)

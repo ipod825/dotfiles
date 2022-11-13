@@ -1,3 +1,28 @@
+-- Plug("mhartington/formatter.nvim", {
+-- 	config = function()
+-- 		require("formatter").setup({
+-- 			logging = true,
+-- 			filetype = {
+-- 				python = { require("formatter.filetypes.python").isort },
+-- 				lua = {
+-- 					require("formatter.filetypes.lua").stylua,
+-- 				},
+-- 				json = {
+-- 					require("formatter.filetypes.json").jq,
+-- 				},
+-- 				["*"] = {
+-- 					require("formatter.filetypes.any").remove_trailing_whitespace,
+-- 				},
+-- 			},
+-- 		})
+-- 		vim.api.nvim_create_autocmd("BufwritePost", {
+-- 			group = vim.api.nvim_create_augroup("FORMATTER", {}),
+-- 			callback = function()
+-- 				vim.cmd("silent! FormatWrite")
+-- 			end,
+-- 		})
+-- 	end,
+-- })
 -- Plug("lukas-reineke/lsp-format.nvim", {
 -- 	config = function()
 -- 		require("lsp-format").setup({

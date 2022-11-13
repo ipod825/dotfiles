@@ -7,6 +7,7 @@ local actions = require("telescope.actions")
 local action_set = require("telescope.actions.set")
 local action_state = require("telescope.actions.state")
 local conf = require("telescope.config").values
+local utils = require("utils")
 
 function M.telescope_pick(content, cb, opts)
 	opts = opts or {}
@@ -135,5 +136,30 @@ map("n", "<m-c>", M.cheat_sheet)
 M.add_util_menu("RunTests", function()
 	vim.cmd("AsyncTask test")
 end)
+
+function M.oldfiles(opts)
+	opts = opts or {}
+	pickers
+		.new(opts, {
+			finder = finders.new_table({
+				results = vim.tbl_filter(function(e)
+					return e:match("cloud/" .. vim.env.USER) or vim.fn.filereadable(e) ~= 0
+				end, require("oldfiles").oldfiles()),
+				entry_maker = require("telescope.make_entry").gen_from_file(opts),
+			}),
+			attach_mappings = function(prompt_bufnr, mapfn)
+				mapfn("i", "<c-d>", function()
+					local current_entry = action_state.get_selected_entry()
+					vim.loop.fs_unlink(current_entry[1])
+					action_state.get_current_picker(prompt_bufnr):refresh()
+				end)
+				return true
+			end,
+			previewer = conf.file_previewer(opts),
+			sorter = conf.file_sorter(opts),
+		})
+		:find()
+end
+map("n", "<c-m-o>", M.oldfiles)
 
 return M

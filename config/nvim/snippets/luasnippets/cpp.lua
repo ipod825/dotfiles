@@ -36,7 +36,7 @@ rec_case = function()
 end
 
 ls.add_snippets("cpp", {
-	s("log", fmt("LOG({}) << {};{}", { i(1, "ERROR"), i(2), i(0) })),
+	s("log", fmt("LOG({}) << absl::Format({});{}", { i(1, "ERROR"), i(2), i(0) })),
 	s("vec", fmt("std::vector<{}> {}", { i(1, "int"), i(2, "vec") })),
 	s(
 		"hash",

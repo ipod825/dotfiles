@@ -1,0 +1,6 @@
+[vim]
+any = true
+
+[prequire]
+any=true
+

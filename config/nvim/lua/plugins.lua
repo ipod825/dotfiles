@@ -469,39 +469,6 @@ Plug("nvim-telescope/telescope.nvim", {
 				})
 				:find()
 		end)
-		map("n", "<c-m-o>", function()
-			local opts = {}
-			pickers
-				.new(opts, {
-					finder = finders.new_table({
-						results = vim.tbl_filter(function(e)
-							local g4 = require("profile").envs.g4
-							if g4 then
-								local root = g4.root()
-								if not vim.startswith(e, root) then
-									return vim.fn.filereadable(e) ~= 0
-								else
-									return true
-								end
-							else
-								return vim.fn.filereadable(e) ~= 0
-							end
-						end, require("oldfiles").oldfiles()),
-						entry_maker = require("telescope.make_entry").gen_from_file(opts),
-					}),
-					attach_mappings = function(prompt_bufnr, map)
-						map("i", "<c-d>", function()
-							local current_entry = action_state.get_selected_entry()
-							vim.loop.fs_unlink(current_entry[1])
-							action_state.get_current_picker(prompt_bufnr):refresh()
-						end)
-						return true
-					end,
-					previewer = conf.file_previewer(opts),
-					sorter = conf.file_sorter(opts),
-				})
-				:find()
-		end)
 	end,
 })
 
@@ -944,7 +911,176 @@ Plug("L3MON4D3/LuaSnip", {
 
 Plug("rhysd/vim-grammarous", { on_cmd = "GrammarousCheck" })
 
-Plug("mfussenegger/nvim-dap")
+Plug("mfussenegger/nvim-dap", {
+	config = function()
+		local dap = require("dap")
+		dap.adapters.python = {
+			type = "executable",
+			command = "python",
+			args = { "-m", "debugpy.adapter" },
+		}
+		dap.configurations.python = {
+			{
+				type = "python",
+				request = "launch",
+				name = "Launch file",
+				program = "${file}",
+				pythonPath = function()
+					return "python"
+				end,
+			},
+		}
+
+		dap.configurations.lua = {
+			{
+				type = "nlua",
+				request = "attach",
+				name = "attach",
+				host = function()
+					local value = vim.fn.input("Host [127.0.0.1]: ")
+					if value ~= "" then
+						return value
+					end
+					return "127.0.0.1"
+				end,
+				port = function()
+					local val = tonumber(vim.fn.input("Port: "))
+					assert(val, "Please provide a port number")
+					return val
+				end,
+			},
+		}
+		dap.adapters.nlua = function(callback, config)
+			callback({ type = "server", host = config.host, port = config.port })
+		end
+
+		vim.fn.sign_define("DapBreakpoint", { text = " ", texthl = "DapBreakpoint" })
+		vim.fn.sign_define("DapBreakpointCondition", { text = " ", texthl = "DapBreakpointCondition" })
+		vim.fn.sign_define("DapBreakpointRejected", { text = " ", texthl = "DapBreakpointRejected" })
+		vim.fn.sign_define("DapLogPoint", { text = " ", texthl = "DapLogPoint" })
+		vim.fn.sign_define("DapStopped", {
+			text = " ",
+			texthl = "DapStopped",
+			linehl = "DapStoppedLine",
+		})
+		local color = require("colorscheme").color
+		require("colorscheme").add_plug_hl({
+			DapBreakpoint = { fg = color.red },
+			DapBreakpointCondition = { fg = color.red },
+			DapStopped = { fg = color.green },
+			DapStoppedLine = { bg = color.base4 },
+		})
+
+		vim.api.nvim_create_user_command("Debug", function(args)
+			local debug_mappings = {
+				n = {
+					x = {
+						callback = function()
+							vim.cmd("DapStepOver")
+						end,
+					},
+					s = {
+						callback = function()
+							vim.cmd("DapStepInto")
+						end,
+					},
+					c = {
+						callback = function()
+							vim.cmd("DapContinue")
+						end,
+					},
+					E = {
+						callback = function()
+							require("dapui").eval(nil, { enter = true })
+						end,
+					},
+					B = {
+						callback = function()
+							vim.cmd("DapToggleBreakpoint")
+						end,
+					},
+				},
+				v = {
+					E = {
+						callback = function()
+							require("dapui").eval(nil, { enter = true })
+						end,
+					},
+				},
+			}
+
+			local bufnr = vim.api.nvim_get_current_buf()
+			local lnum = vim.api.nvim_win_get_cursor(0)[1]
+			require("dap.breakpoints").remove(bufnr, lnum)
+			vim.cmd("DapToggleBreakpoint")
+			local original_mappings = utils.save_keymap(debug_mappings)
+			utils.restore_keymap(debug_mappings.n, "n")
+			utils.restore_keymap(debug_mappings.v, "v")
+			vim.o.mouse = "a"
+			map("n", "T", function()
+				vim.cmd("silent! DapTerminate")
+				utils.restore_keymap(original_mappings)
+				vim.keymap.del("n", "T")
+				vim.o.mouse = ""
+			end)
+			vim.cmd("DapContinue")
+		end, { nargs = "?" })
+	end,
+})
+
+Plug("rcarriga/nvim-dap-ui", {
+	config = function()
+		local dapui = require("dapui")
+		local dap = require("dap")
+		dapui.setup({
+			layouts = {
+				{
+					elements = {
+						"breakpoints",
+						"stacks",
+					},
+					size = 0.3,
+					position = "bottom",
+				},
+			},
+			controls = {
+				enabled = true,
+				element = "breakpoints",
+			},
+		})
+		dap.listeners.after.event_initialized["dapui_config"] = function()
+			dapui.open()
+		end
+		dap.listeners.before.event_terminated["dapui_config"] = function()
+			dapui.close()
+		end
+		dap.listeners.before.event_exited["dapui_config"] = function()
+			dapui.close()
+		end
+	end,
+})
+
+Plug("Weissle/persistent-breakpoints.nvim", {
+	config = function()
+		require("persistent-breakpoints").setup({
+			save_dir = vim.fn.stdpath("data") .. "/nvim_checkpoints",
+			-- when to load the breakpoints? "BufReadPost" is recommanded.
+			load_breakpoints_event = "BufReadPost",
+			-- record the performance of different function. run :lua require('persistent-breakpoints.api').print_perf_data() to see the result.
+			perf_record = false,
+		})
+	end,
+})
+
+Plug("theHamsta/nvim-dap-virtual-text", {
+	config = function()
+		require("nvim-dap-virtual-text").setup({})
+	end,
+})
+
+Plug("nvim-neotest/neotest")
+Plug("nvim-neotest/neotest-plenary")
+
 Plug("puremourning/vimspector")
 
 Plug("git@github.com:ipod825/julia-unicode.vim", { ft = "julia" })
@@ -971,7 +1107,14 @@ Plug("git@github.com:ipod825/war.vim", {
 			pattern = "bookmark",
 			callback = function()
 				vim.fn["war#fire"](-1, 1, -1, 0.2)
-				vim.fn["war#enter"](-1)
+				vim.fn["war#enter"]()
+			end,
+		})
+		vim.api.nvim_create_autocmd("Filetype", {
+			group = WAR,
+			pattern = { "dapui_breakpoints", "dapui_stacks" },
+			callback = function()
+				vim.fn["war#fire"](0.8, 0.3, 0.5, 0.3)
 			end,
 		})
 	end,
@@ -1036,35 +1179,30 @@ Plug("kevinhwang91/nvim-bqf", {
 	end,
 })
 
-Plug("williamboman/nvim-lsp-installer", {
+Plug("williamboman/mason.nvim", {
 	config = function()
-		require("nvim-lsp-installer").setup({})
+		require("mason").setup()
 	end,
 })
 Plug("neovim/nvim-lspconfig")
 
-Plug("mhartington/formatter.nvim", {
+Plug("jose-elias-alvarez/null-ls.nvim", {
 	config = function()
-		require("formatter").setup({
-			logging = true,
-			filetype = {
-				python = { require("formatter.filetypes.python").isort },
-				lua = {
-					require("formatter.filetypes.lua").stylua,
-				},
-				json = {
-					require("formatter.filetypes.json").jq,
-				},
-				["*"] = {
-					require("formatter.filetypes.any").remove_trailing_whitespace,
-				},
+		local null_ls = require("null-ls")
+		null_ls.setup({
+			sources = {
+				null_ls.builtins.formatting.stylua,
+				null_ls.builtins.formatting.jq,
+				null_ls.builtins.formatting.trim_whitespace,
+				null_ls.builtins.diagnostics.selene.with({
+					cwd = function()
+						return vim.fs.dirname(
+							vim.fs.find({ "selene.toml" }, { upward = true, path = vim.api.nvim_buf_get_name(0) })[1]
+						) or vim.fn.expand("~/.config/selene/") -- fallback value
+					end,
+				}),
+				null_ls.builtins.completion.spell,
 			},
-		})
-		vim.api.nvim_create_autocmd("BufwritePost", {
-			group = vim.api.nvim_create_augroup("FORMATTER", {}),
-			callback = function()
-				vim.cmd("silent! FormatWrite")
-			end,
 		})
 	end,
 })
@@ -1151,6 +1289,10 @@ Plug("git@github.com:ipod825/vim-bookmark", {
 	end,
 })
 
+Plug("MattesGroeger/vim-bookmarks", {
+	config = function() end,
+})
+
 Plug("kylechui/nvim-surround", {
 	config = function()
 		require("nvim-surround").setup({
@@ -1167,8 +1309,12 @@ Plug("justinmk/vim-sneak", {
 		vim.g["sneak#absolute_dir"] = -4
 		map("n", "f", "<Plug>Sneak_f", { remap = true })
 		map("n", "F", "<Plug>Sneak_F", { remap = true })
+		map("x", "f", "<Plug>Sneak_f", { remap = true })
+		map("x", "F", "<Plug>Sneak_F", { remap = true })
 		map("n", "L", "<Plug>Sneak_;")
 		map("n", "H", "<Plug>Sneak_,")
+		map("x", "L", "<Plug>Sneak_;")
+		map("x", "H", "<Plug>Sneak_,")
 
 		vim.api.nvim_create_autocmd("ColorScheme", {
 			group = vim.api.nvim_create_augroup("SNEAK", {}),
@@ -1287,12 +1433,6 @@ Plug("skywind3000/asynctasks.vim", {
 -- 	end,
 -- })
 -- Plug("TimUntersberger/neogit")
-Plug("lambdalisue/gina.vim", {
-	config = function()
-		vim.g["gina#action#index#discard_directories"] = 1
-		vim.cmd(string.format("source %s", vim.fn.stdpath("config") .. "/ginasetup.vim"))
-	end,
-})
 
 Plug("whiteinge/diffconflicts")
 

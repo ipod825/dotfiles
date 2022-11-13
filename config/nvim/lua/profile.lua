@@ -15,6 +15,13 @@ function M.register_env(opts)
 	env.mappings = opts.keymaps or {}
 	default_env.mappings = vim.tbl_extend("keep", default_env.mappings or {}, utils.save_keymap(env.mappings))
 
+	env.o = env.o or {}
+	default_env.o = default_env.o or {}
+	for name, _ in pairs(opts.o or {}) do
+		if default_env.o[name] == nil then
+			default_env.o[name] = vim.o[name]
+		end
+	end
 	env.g = env.g or {}
 	default_env.g = default_env.g or {}
 	for k, v in pairs(env.g) do
@@ -54,6 +61,13 @@ function M.switch_env(env)
 	end
 	for k, v in pairs(M.cur_env.g) do
 		vim.g[k] = v
+	end
+
+	for k, v in pairs(default_env.o) do
+		vim.o[k] = v
+	end
+	for k, v in pairs(M.cur_env.o) do
+		vim.o[k] = v
 	end
 end
 
