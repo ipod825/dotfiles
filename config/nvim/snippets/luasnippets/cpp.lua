@@ -36,7 +36,7 @@ rec_case = function()
 end
 
 ls.add_snippets("cpp", {
-	s("log", fmt("LOG({}) << absl::Format({});{}", { i(1, "ERROR"), i(2), i(0) })),
+	s("log", fmt('LOG({}) << absl::StrFormat("{}%v", {});{}', { i(1, "ERROR"), i(2), i(3), i(0) })),
 	s("vec", fmt("std::vector<{}> {}", { i(1, "int"), i(2, "vec") })),
 	s(
 		"hash",
@@ -77,7 +77,7 @@ ls.add_snippets("cpp", {
 			[[
         namespace <> {
             <>
-        } // namespace <>
+        }  // namespace <>
     ]],
 			{ i(1, "name"), i(0), rep(1) }
 		)
@@ -133,6 +133,17 @@ ls.add_snippets("cpp", {
         <>
         ]],
 			{ i(1, "cond"), i(2), i(0) }
+		)
+	),
+	s(
+		"timeit",
+		fmt(
+			[[
+            auto t_start = std::chrono::high_resolution_clock::now();
+            auto t_end = std::chrono::high_resolution_clock::now();
+            double elapsed_time_ms = std::chrono::duration<double, std::milli>(t_end-t_start).count();{}
+		]],
+			i(0)
 		)
 	),
 	s(

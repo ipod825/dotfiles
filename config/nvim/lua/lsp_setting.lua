@@ -63,7 +63,14 @@ function M.switch_source_header()
 			return
 		end
 	end
-	require("fuzzy_menu").oldfiles({ default_text = vim.fn.expand("%:p:t:r") .. ".h" })
+	local file = vim.fn.expand("%:p:t")
+	_G.p(file)
+	if vim.endswith(file, ".h") then
+		file = vim.fn.expand("%:p:t:r") .. ".c"
+	else
+		file = vim.fn.expand("%:p:t:r") .. ".h"
+	end
+	require("fuzzy_menu").oldfiles({ default_text = file })
 end
 add_util_menu("LspSourceHeader", M.switch_source_header)
 add_util_menu("LspHover", vim.lsp.buf.hover)

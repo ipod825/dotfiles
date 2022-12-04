@@ -358,7 +358,7 @@ Plug("nvim-telescope/telescope.nvim", {
 				winblend = 10,
 				sorting_strategy = "ascending",
 				multi_icon = "* ",
-				path_display = function(opts, path)
+				path_display = function(_, path)
 					path = path:gsub(vim.env.HOME, "~")
 					for _, env in pairs(require("profile").envs) do
 						if env.telescope_path_display then
@@ -783,6 +783,12 @@ Plug("folke/trouble.nvim", {
 	end,
 })
 
+Plug("ray-x/lsp_signature.nvim", {
+	config = function()
+		require("lsp_signature").setup({})
+	end,
+})
+
 Plug("hrsh7th/cmp-nvim-lua")
 Plug("saadparwaiz1/cmp_luasnip")
 Plug("hrsh7th/cmp-nvim-lsp-signature-help")
@@ -813,11 +819,10 @@ Plug("hrsh7th/nvim-cmp", {
 			},
 			sources = cmp.config.sources({
 				{ name = "luasnip" },
-				{ name = "nvim_lsp_signature_help" },
+				-- { name = "nvim_lsp_signature_help" },
 				{ name = "nvim_lua" },
 				{ name = "buffer" },
 				{ name = "nvim_lsp" },
-				{ name = "nvim_lsp_signature_help" },
 				{ name = "path" },
 			}),
 			window = {
@@ -831,7 +836,7 @@ Plug("hrsh7th/nvim-cmp", {
 
 					-- The function below will be called before any actual modifications from lspkind
 					-- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
-					before = function(entry, vim_item)
+					before = function(_, vim_item)
 						return vim_item
 					end,
 				}),
@@ -913,6 +918,27 @@ Plug("rhysd/vim-grammarous", { on_cmd = "GrammarousCheck" })
 
 Plug("mfussenegger/nvim-dap", {
 	config = function()
+		_G.DapGetArgs = function(program, dap_run_co)
+			program = program:gsub("/", "_")
+			local dap_folder = vim.fn.stdpath("data") .. "/dap"
+			vim.fn.mkdir(dap_folder, "p")
+			local arg_file = ("%s/%s"):format(dap_folder, program)
+			vim.cmd("split " .. arg_file)
+			vim.cmd("silent! write")
+			vim.bo.bufhidden = "wipe"
+			vim.api.nvim_create_autocmd("Bufunload", {
+				buffer = 0,
+				once = true,
+				callback = function()
+					coroutine.resume(
+						dap_run_co,
+						vim.tbl_filter(function(e)
+							return e and #e > 0
+						end, vim.fn.readfile(arg_file))
+					)
+				end,
+			})
+		end
 		local dap = require("dap")
 		dap.adapters.python = {
 			type = "executable",
@@ -971,7 +997,7 @@ Plug("mfussenegger/nvim-dap", {
 			DapStoppedLine = { bg = color.base4 },
 		})
 
-		vim.api.nvim_create_user_command("Debug", function(args)
+		vim.api.nvim_create_user_command("Debug", function()
 			local debug_mappings = {
 				n = {
 					x = {
@@ -1018,10 +1044,10 @@ Plug("mfussenegger/nvim-dap", {
 			utils.restore_keymap(debug_mappings.v, "v")
 			vim.o.mouse = "a"
 			map("n", "T", function()
-				vim.cmd("silent! DapTerminate")
 				utils.restore_keymap(original_mappings)
 				vim.keymap.del("n", "T")
 				vim.o.mouse = ""
+				pcall(require("dap").terminate)
 			end)
 			vim.cmd("DapContinue")
 		end, { nargs = "?" })
@@ -1036,6 +1062,13 @@ Plug("rcarriga/nvim-dap-ui", {
 			layouts = {
 				{
 					elements = {
+						"repl",
+					},
+					size = 0.01,
+					position = "top",
+				},
+				{
+					elements = {
 						"breakpoints",
 						"stacks",
 					},
@@ -1044,31 +1077,23 @@ Plug("rcarriga/nvim-dap-ui", {
 				},
 			},
 			controls = {
+				icons = {
+					pause = "",
+					play = "",
+					step_into = "",
+					step_over = "",
+					step_out = "",
+					step_back = "",
+					run_last = "↻",
+					terminate = "□",
+				},
 				enabled = true,
 				element = "breakpoints",
 			},
 		})
-		dap.listeners.after.event_initialized["dapui_config"] = function()
-			dapui.open()
-		end
-		dap.listeners.before.event_terminated["dapui_config"] = function()
-			dapui.close()
-		end
-		dap.listeners.before.event_exited["dapui_config"] = function()
-			dapui.close()
-		end
-	end,
-})
-
-Plug("Weissle/persistent-breakpoints.nvim", {
-	config = function()
-		require("persistent-breakpoints").setup({
-			save_dir = vim.fn.stdpath("data") .. "/nvim_checkpoints",
-			-- when to load the breakpoints? "BufReadPost" is recommanded.
-			load_breakpoints_event = "BufReadPost",
-			-- record the performance of different function. run :lua require('persistent-breakpoints.api').print_perf_data() to see the result.
-			perf_record = false,
-		})
+		dap.listeners.after.event_initialized["dapui_config"] = dapui.open
+		dap.listeners.before.event_terminated["dapui_config"] = dapui.close
+		dap.listeners.before.event_exited["dapui_config"] = dapui.close
 	end,
 })
 
@@ -1115,6 +1140,13 @@ Plug("git@github.com:ipod825/war.vim", {
 			pattern = { "dapui_breakpoints", "dapui_stacks" },
 			callback = function()
 				vim.fn["war#fire"](0.8, 0.3, 0.5, 0.3)
+			end,
+		})
+		vim.api.nvim_create_autocmd("Filetype", {
+			group = WAR,
+			pattern = { "dapui_repl", "dapui_console" },
+			callback = function()
+				vim.fn["war#fire"](0.8, 0.3, 0.5, 0.01)
 			end,
 		})
 	end,

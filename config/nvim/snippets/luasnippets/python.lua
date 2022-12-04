@@ -23,6 +23,7 @@ ls.add_snippets("python", {
 			{ i(0) }
 		)
 	),
+    s("pudb", t("from pudb import set_trace; set_trace()")),
 	s(
 		"parse_args",
 		fmt(
