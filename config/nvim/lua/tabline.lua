@@ -175,10 +175,11 @@ function M.dedup(labels)
 		label.ind = #label.segs - 1
 	end
 
+	local content_count = vim.defaulttable(function()
+		return 0
+	end)
+
 	while true do
-		local content_count = vim.defaulttable(function()
-			return 0
-		end)
 		for label in itt.values(labels) do
 			if not label.unique then
 				label.content = pathfn.join(label.segs[label.ind], label.content)
