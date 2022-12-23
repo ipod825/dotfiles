@@ -1,6 +1,7 @@
 local M = {}
 local map = vim.keymap.set
 
+local itt = require("libp.itertools")
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local actions = require("telescope.actions")
@@ -64,6 +65,16 @@ M.add_util_menu("CopyBaseName", function()
 	local path = vim.fn.expand("%:p:t")
 	vim.fn.setreg("+", path)
 	vim.fn.setreg('"', path)
+end)
+
+M.add_util_menu("JavaCopyInclude", function()
+	for i in itt.range(1, vim.api.nvim_buf_line_count(0)) do
+		local package = vim.fn.getline(i):match("^package (.*);")
+		if package then
+			vim.fn.setreg('"', ("import %s.%s;"):format(package, vim.fn.expand("<cword>")))
+			return
+		end
+	end
 end)
 
 M.add_util_menu("SelectYank", function()
@@ -151,6 +162,7 @@ function M.oldfiles(opts)
 				mapfn("i", "<c-d>", function()
 					local current_entry = action_state.get_selected_entry()
 					vim.loop.fs_unlink(current_entry[1])
+					require("oldfiles").remove(current_entry[1])
 					action_state.get_current_picker(prompt_bufnr):refresh()
 				end)
 				return true
@@ -160,6 +172,6 @@ function M.oldfiles(opts)
 		})
 		:find()
 end
-map("n", "<c-m-o>", M.oldfiles)
+map("n", "<c-o>", M.oldfiles)
 
 return M

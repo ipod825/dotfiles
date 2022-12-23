@@ -429,7 +429,7 @@ Plug("nvim-telescope/telescope.nvim", {
 
 		utils.cmdabbrev("help", "lua require'telescope.builtin'.help_tags({default_text=''})<left><left><left>")
 
-		map("n", "<c-o>", function()
+		map("n", "<c-m-o>", function()
 			builtin.fd({ cwd = require("libp.utils.pathfn").find_directory(root_markers) })
 		end)
 
@@ -1471,9 +1471,12 @@ Plug("whiteinge/diffconflicts")
 Plug("git@github.com:ipod825/libp.nvim", {
 	config = function()
 		require("libp").setup({
+		    integration = {
 			web_devicon = {
 				alias = { igit = "git", hg = "git" },
 			},
+
+		    }
 		})
 	end,
 })
