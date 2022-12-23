@@ -1254,13 +1254,6 @@ Plug("jose-elias-alvarez/null-ls.nvim", {
 				null_ls.builtins.formatting.stylua,
 				null_ls.builtins.formatting.jq,
 				null_ls.builtins.formatting.trim_whitespace,
-				null_ls.builtins.diagnostics.selene.with({
-					cwd = function()
-						return vim.fs.dirname(
-							vim.fs.find({ "selene.toml" }, { upward = true, path = vim.api.nvim_buf_get_name(0) })[1]
-						) or vim.fn.expand("~/.config/selene/") -- fallback value
-					end,
-				}),
 				null_ls.builtins.completion.spell,
 			},
 		})
@@ -1587,10 +1580,10 @@ Plug("git@github.com:ipod825/ranger.nvim", {
 					p = function()
 						action.transfer.paste({
 							copy_fn = function(...)
-							    (profile.cur_env.ranger_copy_fn or fs.copy)(...)
+								(profile.cur_env.ranger_copy_fn or fs.copy)(...)
 							end,
 							rename_fn = function(...)
-                                    (profile.cur_env.ranger_rename_fn or uv.fs_rename)(...)
+								(profile.cur_env.ranger_rename_fn or uv.fs_rename)(...)
 							end,
 						})
 					end,
