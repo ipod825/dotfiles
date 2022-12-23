@@ -1213,7 +1213,36 @@ Plug("kevinhwang91/nvim-bqf", {
 
 Plug("williamboman/mason.nvim", {
 	config = function()
-		require("mason").setup()
+		require("mason").setup({
+			ui = {
+				keymaps = {
+					toggle_package_expand = "<space><space>",
+					install_package = "<cr>",
+					update_package = "u",
+					check_package_version = "c",
+					update_all_packages = "U",
+					check_outdated_packages = "C",
+					uninstall_package = "X",
+					cancel_installation = "<C-c>",
+					apply_language_filter = "<C-f>",
+				},
+			},
+		})
+	end,
+})
+Plug("WhoIsSethDaniel/mason-tool-installer.nvim", {
+	config = function()
+		require("mason-tool-installer").setup({
+			ensure_installed = {
+				 "lua-language-server",
+				 "stylua",
+				 "clangd",
+				 "selene"
+			},
+			auto_update = true,
+			run_on_start = false,
+			start_delay = 3000,
+		})
 	end,
 })
 Plug("neovim/nvim-lspconfig")
@@ -1471,12 +1500,11 @@ Plug("whiteinge/diffconflicts")
 Plug("git@github.com:ipod825/libp.nvim", {
 	config = function()
 		require("libp").setup({
-		    integration = {
-			web_devicon = {
-				alias = { igit = "git", hg = "git" },
+			integration = {
+				web_devicon = {
+					alias = { igit = "git", hg = "git" },
+				},
 			},
-
-		    }
 		})
 	end,
 })
@@ -1578,36 +1606,6 @@ Plug("git@github.com:ipod825/hg.nvim", {
 	end,
 })
 
-Plug("sso://user/chmnchiang/google-comments", {
-	config = function()
-		vim.fn.sign_define("COMMENTS_ICON", { text = " " })
-		require("google.comments").setup({ sign = "COMMENTS_ICON" })
-		vim.api.nvim_set_keymap(
-			"n",
-			"]lc",
-			[[<Cmd>lua require('google.comments').goto_next_comment()<CR>]],
-			{ noremap = true, silent = true }
-		)
-		vim.api.nvim_set_keymap(
-			"n",
-			"[lc",
-			[[<Cmd>lua require('google.comments').goto_prev_comment()<CR>]],
-			{ noremap = true, silent = true }
-		)
-		vim.api.nvim_set_keymap(
-			"n",
-			"<Leader>lc",
-			[[<Cmd>lua require('google.comments').toggle_line_comments()<CR>]],
-			{ noremap = true, silent = true }
-		)
-		vim.api.nvim_set_keymap(
-			"n",
-			"<Leader>ac",
-			[[<Cmd>lua require('google.comments').show_all_comments()<CR>]],
-			{ noremap = true, silent = true }
-		)
-	end,
-})
 
 Plug.ends()
 
