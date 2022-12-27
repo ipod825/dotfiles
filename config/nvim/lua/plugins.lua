@@ -1234,10 +1234,9 @@ Plug("WhoIsSethDaniel/mason-tool-installer.nvim", {
 	config = function()
 		require("mason-tool-installer").setup({
 			ensure_installed = {
-				 "lua-language-server",
-				 "stylua",
-				 "clangd",
-				 "selene"
+				"lua-language-server",
+				"stylua",
+				"clangd",
 			},
 			auto_update = true,
 			run_on_start = false,
@@ -1566,6 +1565,9 @@ Plug("nvim-orgmode/orgmode", {
 Plug("git@github.com:ipod825/ranger.nvim", {
 	config = function()
 		local action = require("ranger.action")
+		local profile = require("profile")
+		local fs = require("libp.fs")
+		local uv = require("libp.fs.uv")
 		require("ranger").setup({
 			hijack_netrw = true,
 			rifle_path = require("libp.utils.pathfn").join(vim.fn.stdpath("config"), "settings/rifle.conf"),
@@ -1578,6 +1580,19 @@ Plug("git@github.com:ipod825/ranger.nvim", {
 						else
 							vim.fn["esearch#init"]({ paths = vim.fn.getcwd(), root_markers = {} })
 						end
+					end,
+					i = function()
+						action.rename(profile.cur_env.ranger_rename_fn or uv.fs_rename)
+					end,
+					p = function()
+						action.transfer.paste({
+							copy_fn = function(...)
+							    (profile.cur_env.ranger_copy_fn or fs.copy)(...)
+							end,
+							rename_fn = function(...)
+                                    (profile.cur_env.ranger_rename_fn or uv.fs_rename)(...)
+							end,
+						})
 					end,
 				},
 			},
@@ -1605,7 +1620,6 @@ Plug("git@github.com:ipod825/hg.nvim", {
 		})
 	end,
 })
-
 
 Plug.ends()
 
