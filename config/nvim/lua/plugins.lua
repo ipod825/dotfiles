@@ -630,7 +630,9 @@ Plug("mg979/vim-visual-multi", {
 			utils.feed_plug_keys("(VM-Goto-Prev)")
 		end, { desc = "select all marks" })
 		map("x", "<leader>r", function()
-			local beg, ends = require("libp.utils.vimfn").visual_rows()
+			local vimfn = require("libp.utils.vimfn")
+			local beg, ends = vimfn.visual_rows()
+			vimfn.ensure_exit_visual_mode()
 			vim.cmd(string.format("%d,%d VMSearch %s", beg, ends, vim.fn["msearch#joint_pattern"]()))
 		end)
 		vim.g.VM_maps = {
@@ -1503,14 +1505,6 @@ Plug("git@github.com:ipod825/libp.nvim", {
 Plug("git@github.com:ipod825/oldfiles.nvim", {
 	config = function()
 		require("oldfiles").setup()
-	end,
-})
-
-Plug("gorbit99/codewindow.nvim", {
-	config = function()
-		local codewindow = require("codewindow")
-		codewindow.setup()
-		codewindow.apply_default_keybinds()
 	end,
 })
 
