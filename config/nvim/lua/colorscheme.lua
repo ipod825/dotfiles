@@ -104,7 +104,7 @@ function M.builtin_hl_def(color)
 		ErrorMsg = { fg = color.red, bg = color.none, bold = true },
 		WarningMsg = { fg = color.yellow, bg = color.none, bold = true },
 		ModeMsg = { fg = color.fg, bg = color.none, bold = true },
-		MatchParen = { fg = color.red, bg = color.none, reverse=true },
+		MatchParen = { fg = color.red, bg = color.none, reverse = true },
 		NonText = { fg = color.bg1 },
 		Whitespace = { fg = color.base4 },
 		SpecialKey = { fg = color.bg1 },

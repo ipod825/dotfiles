@@ -480,12 +480,6 @@ Plug("LukasPietzschmann/telescope-tabs", {
 
 Plug("jubnzv/virtual-types.nvim")
 
-Plug("norcalli/nvim-terminal.lua", {
-	config = function()
-		require("terminal").setup()
-	end,
-})
-
 Plug("vim-scripts/AnsiEsc.vim")
 
 Plug("gbprod/yanky.nvim", {
@@ -526,7 +520,7 @@ Plug("nvim-telescope/telescope-fzf-native.nvim", {
 	end,
 })
 
-Plug("junegunn/fzf", { run = "call fzf#install()" })
+Plug("junegunn/fzf", { run = ":call fzf#install()" })
 
 Plug("jreybert/vimagit")
 
@@ -1108,8 +1102,6 @@ Plug("theHamsta/nvim-dap-virtual-text", {
 Plug("nvim-neotest/neotest")
 Plug("nvim-neotest/neotest-plenary")
 
-Plug("puremourning/vimspector")
-
 Plug("git@github.com:ipod825/julia-unicode.vim", { ft = "julia" })
 
 Plug("junegunn/vim-easy-align", {
@@ -1316,6 +1308,8 @@ Plug("git@github.com:ipod825/vim-expand-region", {
 })
 
 Plug("majutsushi/tagbar")
+
+Plug("dstein64/vim-startuptime")
 
 Plug("git@github.com:ipod825/vim-bookmark", {
 	config = function()
@@ -1589,7 +1583,7 @@ Plug("git@github.com:ipod825/ranger.nvim", {
 
 Plug("rbtnn/vim-vimscript_lasterror")
 
-Plug("git@github.com:ipod825/hg.nvim", {
+Plug("sso://user/smwang/hg.nvim", {
 	config = function()
 		utils.cmdabbrev("hg", "Hg")
 		utils.cmdabbrev("hlg", "Hg log")
@@ -1600,9 +1594,11 @@ Plug("git@github.com:ipod825/hg.nvim", {
 			hg_sub_commands = { "uc" },
 			status = {
 				open_cmd = "Tabdrop",
+				buf_enter_reload = false,
 			},
 			log = {
 				open_cmd = "Tabdrop",
+				buf_enter_reload = false,
 			},
 		})
 	end,
