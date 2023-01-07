@@ -2,7 +2,7 @@ local M = {}
 local api = vim.api
 local devicon = require("libp.integration.web_devicon")
 local List = require("libp.datatype.List")
-local itt = require("libp.itertools")
+local iter = require("libp.iter")
 local pathfn = require("libp.utils.pathfn")
 
 local scratch_name = "[Scratch]"
@@ -26,7 +26,7 @@ function M.tab_label(tab_id, current_tab_id)
 	local buf_id = api.nvim_win_get_buf(win_id)
 	local abspath = api.nvim_buf_get_name(buf_id)
 	if abspath == "" then
-		for win in itt.values(api.nvim_tabpage_list_wins(tab_id)) do
+		for win in iter.values(api.nvim_tabpage_list_wins(tab_id)) do
 			if win ~= win_id then
 				buf_id = api.nvim_win_get_buf(win)
 				abspath = api.nvim_buf_get_name(buf_id)
@@ -158,7 +158,7 @@ function M.dedup(labels)
 	local buf_id_count = vim.defaulttable(function()
 		return 0
 	end)
-	for label in itt.values(labels) do
+	for label in iter.values(labels) do
 		buf_id_count[label.buf_id] = buf_id_count[label.buf_id] + 1
 	end
 	labels = labels:filter(function(e)
@@ -170,7 +170,7 @@ function M.dedup(labels)
 	end
 
 	-- Join the full path segment by segment until each path is unique among all tabs.
-	for label in itt.values(labels) do
+	for label in iter.values(labels) do
 		label.segs = vim.split(label.abspath, "/")
 		label.ind = #label.segs - 1
 	end
@@ -180,7 +180,7 @@ function M.dedup(labels)
 	end)
 
 	while true do
-		for label in itt.values(labels) do
+		for label in iter.values(labels) do
 			if not label.unique then
 				label.content = pathfn.join(label.segs[label.ind], label.content)
 				label.ind = label.ind - 1
@@ -189,7 +189,7 @@ function M.dedup(labels)
 		end
 
 		local unique_count = 0
-		for label in itt.values(labels) do
+		for label in iter.values(labels) do
 			if content_count[label.content] == 1 then
 				label.unique = true
 				unique_count = unique_count + 1
@@ -203,7 +203,7 @@ function M.dedup(labels)
 end
 
 function M.build_elements(labels)
-	for label in itt.values(labels) do
+	for label in iter.values(labels) do
 		local icon, icon_hl = M.get_file_icon(label.buf_id)
 		label.elements = {
 			{ highlight = "Directory", content = label.is_current and "|" or "" },

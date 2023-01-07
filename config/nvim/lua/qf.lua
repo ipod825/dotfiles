@@ -1,7 +1,7 @@
 local M = {}
 local map = vim.keymap.set
 local vimfn = require("libp.utils.vimfn")
-local range = require("libp.itertools").range
+local iter = require("libp.iter")
 
 vim.api.nvim_create_autocmd("FileType", {
 	group = vim.api.nvim_create_augroup("QF", {}),
@@ -34,7 +34,7 @@ function M.setup()
 	map("n", "cn", "<cmd>:cnewer<cr>")
 	map("n", "<cr>", function()
 		local qflist = vim.fn.getqflist()
-		for i in range(vimfn.getrow(), 1, -1) do
+		for i in iter.range(vimfn.getrow(), 1, -1) do
 			if qflist[i].valid ~= 0 then
 				vimfn.setrow(i)
 				break

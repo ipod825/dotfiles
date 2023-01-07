@@ -1,7 +1,7 @@
 local M = {}
 local map = vim.keymap.set
 
-local itt = require("libp.itertools")
+local iter = require("libp.iter")
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local actions = require("telescope.actions")
@@ -68,7 +68,7 @@ M.add_util_menu("CopyBaseName", function()
 end)
 
 M.add_util_menu("JavaCopyInclude", function()
-	for i in itt.range(1, vim.api.nvim_buf_line_count(0)) do
+	for i in iter.range(1, vim.api.nvim_buf_line_count(0)) do
 		local package = vim.fn.getline(i):match("^package (.*);")
 		if package then
 			vim.fn.setreg('"', ("import %s.%s;"):format(package, vim.fn.expand("<cword>")))

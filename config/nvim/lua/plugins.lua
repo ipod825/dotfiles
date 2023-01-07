@@ -72,6 +72,7 @@ Plug("terrortylor/nvim-comment", {
 	end,
 })
 
+Plug('chrisbra/csv.vim')
 Plug("kevinhwang91/promise-async")
 Plug("kevinhwang91/nvim-ufo", {
 	config = function()
@@ -1228,7 +1229,7 @@ Plug("WhoIsSethDaniel/mason-tool-installer.nvim", {
 	config = function()
 		require("mason-tool-installer").setup({
 			ensure_installed = {
-			    "python-lsp-server",
+				"python-lsp-server",
 				"lua-language-server",
 				"stylua",
 				"clangd",
@@ -1241,7 +1242,7 @@ Plug("WhoIsSethDaniel/mason-tool-installer.nvim", {
 })
 Plug("neovim/nvim-lspconfig")
 
-Plug("jose-elias-alvarez/null-ls.nvim", {
+    Plug("jose-elias-alvarez/null-ls.nvim", {
 	config = function()
 		local null_ls = require("null-ls")
 		null_ls.setup({
