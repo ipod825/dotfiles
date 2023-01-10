@@ -1,15 +1,3 @@
-function _G.prequire(...)
-	local status, lib = pcall(require, ...)
-	if status then
-		return lib
-	end
-	return nil
-end
-
-function _G.p(...)
-	vim.pretty_print(...)
-end
-
 vim.g.mapleader = " "
 vim.o.syntax = "on"
 vim.o.filetype = "on"
@@ -48,7 +36,6 @@ vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 vim.o.expandtab = true
 vim.o.scrolloff = 2
--- vim.o.cmdheight = 0
 vim.o.spell = false
 vim.o.updatetime = 1000
 vim.paste = (function(overridden)
@@ -61,8 +48,21 @@ vim.paste = (function(overridden)
 	end
 end)(vim.paste)
 
-require("utils")
-require("plugins")
+require("global")
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable", -- latest stable release
+		lazypath,
+	})
+end
+vim.opt.rtp:prepend(lazypath)
+require("lazy").setup("plugins")
+
 require("mapping")
 require("tabline")
 require("qf")
