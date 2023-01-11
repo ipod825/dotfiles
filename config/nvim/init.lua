@@ -131,6 +131,14 @@ vim.api.nvim_create_autocmd("Filetype", {
 
 vim.api.nvim_create_autocmd("Filetype", {
 	group = GENERAL,
+	pattern = "sql",
+	callback = function()
+		vim.bo.commentstring = "-- %s"
+	end,
+})
+
+vim.api.nvim_create_autocmd("Filetype", {
+	group = GENERAL,
 	pattern = { "tex" },
 	callback = function()
 		vim.wo.cursorline = false
