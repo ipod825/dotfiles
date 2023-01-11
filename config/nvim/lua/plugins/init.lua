@@ -28,7 +28,6 @@ return {
 	"nvim-neotest/neotest-plenary",
 	"neovim/nvim-lspconfig",
 	"majutsushi/tagbar",
-	{ "MattesGroeger/vim-bookmarks", enabled = false },
 	"theHamsta/nvim-dap-virtual-text",
 	"machakann/vim-swap",
 	"LukasPietzschmann/telescope-tabs",

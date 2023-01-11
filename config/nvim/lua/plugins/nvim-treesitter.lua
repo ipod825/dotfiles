@@ -11,6 +11,7 @@ return {
 				"python",
 				"kotlin",
 				"org",
+			    "vim",
 			}
 			local languages_spell_set = vim.list_extend({ "gitcommit", "proto", "sdl", "hgcommit" }, languages)
 			vim.tbl_add_reverse_lookup(languages_spell_set)
