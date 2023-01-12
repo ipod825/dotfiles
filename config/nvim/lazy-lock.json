@@ -17,7 +17,7 @@
   "hg.nvim": { "branch": "main", "commit": "39b21de9224a8432599132ad421f064b933839a4" },
   "igit.nvim": { "branch": "main", "commit": "395feaa02610456acbfa54ced9a4a875d58e7272" },
   "indent-blankline.nvim": { "branch": "master", "commit": "c4c203c3e8a595bc333abaf168fcb10c13ed5fb7" },
-  "lazy.nvim": { "branch": "main", "commit": "d2110278be136fd977d357ff49689352d58b2e83" },
+  "lazy.nvim": { "branch": "main", "commit": "8756c0950ca9053713262abd1092f6d100adc9a5" },
   "libp.nvim": { "branch": "main", "commit": "998f7606aff4477e042d6086a1ed3187be254c55" },
   "linediff.vim": { "branch": "main", "commit": "b4d3c3f03eed00caa741c2650e13db5b7b7ce0ef" },
   "lsp_signature.nvim": { "branch": "master", "commit": "1979f1118e2b38084e7c148f279eed6e9300a342" },
@@ -85,5 +85,6 @@
   "vimtex": { "branch": "master", "commit": "2cebf6872bcb0ad1176a0b5eba36946d4bd889a5" },
   "virtual-types.nvim": { "branch": "master", "commit": "12d55d6dc7cebddf4ab276b5934e02e0d41416a1" },
   "war.vim": { "branch": "master", "commit": "a30b9c388ce15550edf923db1a79f6824a732f1f" },
+  "which-key.nvim": { "branch": "main", "commit": "e4fa445065a2bb0bbc3cca85346b67817f28e83e" },
   "yanky.nvim": { "branch": "main", "commit": "83bb1dc935b126b59acbd22225a421f0f38a7cde" }
 }
