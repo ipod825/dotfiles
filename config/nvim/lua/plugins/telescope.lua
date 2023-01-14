@@ -1,7 +1,18 @@
 return {
 	"nvim-telescope/telescope.nvim",
 	dependencies = {
-		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+		{
+			"nvim-telescope/telescope-fzf-native.nvim",
+			build = "make",
+			config = function()
+				require("telescope._extensions.fzf").setup({
+					fuzzy = true,
+					override_generic_sorter = true,
+					override_file_sorter = true,
+				}, {})
+				require("telescope").load_extension("fzf")
+			end,
+		},
 	},
 	config = function()
 		local actions = require("telescope.actions")
@@ -139,9 +150,10 @@ return {
 		end)
 
 		vim.keymap.set("n", "/", function()
-			builtin.current_buffer_fuzzy_find({
-				previewer = false,
-			})
+			builtin.current_buffer_fuzzy_find()
+			-- builtin.current_buffer_fuzzy_find({
+			-- 	previewer = false,
+			-- })
 		end)
 
 		vim.keymap.set("n", "z=", function()

@@ -34,7 +34,7 @@ return {
 	{ "will133/vim-dirdiff", cmd = "DirDiff" },
 	"mrjones2014/smart-splits.nvim",
 	"whiteinge/diffconflicts",
-    {"git@github.com:ipod825/oldfiles.nvim", config=true},
+	{ "git@github.com:ipod825/oldfiles.nvim", config = true },
 	"andymass/vim-matchup",
 	{ "AndrewRadev/linediff.vim", cmd = { "LineDiffAdd" } },
 	"chrisbra/Colorizer",

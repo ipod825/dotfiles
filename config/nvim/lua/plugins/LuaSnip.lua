@@ -3,7 +3,7 @@ return {
 		config = function()
 			vim.keymap.set({ "i", "s", "n" }, "<tab>", function()
 				if vim.fn["luasnip#expand_or_jumpable"]() then
-					utils.feed_plug_keys("luasnip-expand-or-jump")
+					require("utils").feed_plug_keys("luasnip-expand-or-jump")
 				else
 					return "\t"
 				end

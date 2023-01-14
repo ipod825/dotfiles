@@ -25,11 +25,12 @@ return {
 		end,
 	},
 
-  {
-    "nvim-treesitter/nvim-treesitter-context",
-    event = "BufReadPre",
-    config = true,
-  },
+	{
+		"nvim-treesitter/nvim-treesitter-context",
+		enabled=false,
+		event = "BufReadPre",
+		config = true,
+	},
 
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
@@ -97,7 +98,7 @@ return {
 				"python",
 				"kotlin",
 				"org",
-			    "vim",
+				"vim",
 			}
 			local languages_spell_set = vim.list_extend({ "gitcommit", "proto", "sdl", "hgcommit" }, languages)
 			vim.tbl_add_reverse_lookup(languages_spell_set)
