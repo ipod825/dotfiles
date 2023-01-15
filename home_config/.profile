@@ -103,7 +103,7 @@ dtach -A /tmp/$1 -r winch nvim .
 }
 
 # fzf
-addToPATH $HOME/.local/share/nvim/site/pluggins/fzf/bin
+addToPATH $HOME/.local/share/nvim/lazy/fzf/bin
 export FZF_DEFAULT_OPTS="--color --reverse --bind 'ctrl-s:jump,ctrl-f:page-down,ctrl-b:page-up,ctrl-y:execute-silent(echo {} | xclip -sel clip)+abort'"
 unalias z 2> /dev/null
 
