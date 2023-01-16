@@ -241,6 +241,10 @@ vim.cmd("cnoreabbrev man Man")
 map("c", "qq", ":bwipeout<cr>")
 
 -- misc
+-- undo to last wrtie
+map("n", "<m-u>", "<cmd>earlier 1f<cr>")
+-- Goto last jump position
+map({ "i", "n" }, "<m-'>", "''")
 -- paste yanked text in command line
 map("c", "<m-p>", '<c-r>"')
 map("n", "gp", function()
@@ -272,7 +276,9 @@ map("n", "U", function()
 	else
 		vim.bo.textwidth = 80
 	end
-	vim.cmd("normal! gwj")
+	vim.o.copyindent=false
+	vim.cmd("normal! gww")
+	vim.o.copyindent=true
 	vim.bo.textwidth = 0
 end, { desc = "comment_unwrap" })
 map("n", "<F5>", function()

@@ -1,3 +1,4 @@
+local utils  = require("utils")
 return {
 		"mg979/vim-visual-multi",
 		branch = "test",

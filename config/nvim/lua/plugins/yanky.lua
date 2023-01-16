@@ -13,7 +13,11 @@ return {
 				if ori_mode ~= "V" then
 					vim.fn.setreg('"', vim.trim(vim.fn.getreg('"')))
 				end
-				vim.cmd("normal! P")
+				if vim.fn.col('.') == vim.fn.col("$") - 1 then
+                    vim.cmd("normal! p")
+                else
+                    vim.cmd("normal! P")
+                end
 			end
 
 			vim.keymap.set("n", "p", "<Plug>(YankyPutAfter)")

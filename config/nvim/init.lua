@@ -61,7 +61,9 @@ if not vim.loop.fs_stat(lazypath) then
 	})
 end
 vim.opt.rtp:prepend(lazypath)
-require("lazy").setup("plugins")
+require("lazy").setup("plugins", {  dev = {
+    path = "~/projects",
+  }})
 
 require("mapping")
 require("tabline")
@@ -131,11 +133,12 @@ vim.api.nvim_create_autocmd("Filetype", {
 
 vim.api.nvim_create_autocmd("Filetype", {
 	group = GENERAL,
-	pattern = "sql",
+    pattern = {"sql", "lua"},
 	callback = function()
 		vim.bo.commentstring = "-- %s"
 	end,
 })
+
 
 vim.api.nvim_create_autocmd("Filetype", {
 	group = GENERAL,
@@ -222,7 +225,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 vim.api.nvim_create_autocmd("Filetype", {
 	group = GENERAL,
 	callback = function()
-		vim.opt.formatoptions:remove({ "c", "r", "o" })
+		vim.opt.formatoptions:remove({ "o" })
 	end,
 })
 
