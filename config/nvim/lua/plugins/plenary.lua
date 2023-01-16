@@ -1,6 +1,7 @@
 return {
-	"nvim-lua/plenary.nvim",
-	dev = true,
+	-- "nvim-lua/plenary.nvim",
+	"ipod825/plenary.nvim",
+	branch = "revert-async-test",
 	config = function()
 		vim.api.nvim_create_autocmd("Filetype", {
 			group = vim.api.nvim_create_augroup("PLENARY", {}),
