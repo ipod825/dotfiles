@@ -2,6 +2,7 @@
 /config/karabiner/automatic_backups/
 
 /config/nvim/autoload
+/config/nvim/lazy-lock.json
 /config/nvim/undo
 /config/nvim/sessions
 /config/nvim/plugin/packer_compiled.lua
