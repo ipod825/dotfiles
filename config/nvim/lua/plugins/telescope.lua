@@ -145,7 +145,7 @@ return {
 			"lua require'telescope.builtin'.help_tags({default_text=''})<left><left><left>"
 		)
 
-		vim.keymap.set("n", "<c-m-o>", function()
+		vim.keymap.set("n", "<c-p>", function()
 			builtin.fd({ cwd = require("libp.utils.pathfn").find_directory(require("plugins").root_markers) })
 		end)
 
