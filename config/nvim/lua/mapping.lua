@@ -288,7 +288,7 @@ map("n", "<F5>", function()
 	for _, buffer in pairs(require("libp.global")("libp").buffers) do
 		vim.cmd("bwipe " .. buffer.id)
 	end
-	require("vplug").reload(plugin)
+	require("pluggins").reload(plugin)
 end)
 -- folding
 map("n", "<leader><space>", "za", { remap = true })

@@ -105,11 +105,20 @@ function M.set_lsp(names, options)
 	options = vim.tbl_deep_extend("keep", options or {}, {
 		profile = "default",
 		capabilities = capabilities,
-		on_attach = function(client)
+		on_attach = function(client, bufnr)
 			local lsp_signature = prequire("lsp_signature")
 			if lsp_signature then
 				lsp_signature.on_attach()
 			end
+
+			if client.server_capabilities.documentSymbolProvider then
+				local navic = prequire("nvim-navic")
+				if navic then
+				    require("libp.log").warn('in')
+					navic.attach(client, bufnr)
+				end
+			end
+
 			local virtualtypes = prequire("virtualtypes")
 			if virtualtypes then
 				virtualtypes.on_attach()
