@@ -276,9 +276,9 @@ map("n", "U", function()
 	else
 		vim.bo.textwidth = 80
 	end
-	vim.o.copyindent=false
+	vim.o.copyindent = false
 	vim.cmd("normal! gww")
-	vim.o.copyindent=true
+	vim.o.copyindent = true
 	vim.bo.textwidth = 0
 end, { desc = "comment_unwrap" })
 map("n", "<F5>", function()

@@ -1,5 +1,6 @@
 return {
 		"justinmk/vim-sneak",
+		enabled=false,
 		config = function()
 			vim.g["sneak#label"] = 1
 			vim.g["sneak#absolute_dir"] = -4
