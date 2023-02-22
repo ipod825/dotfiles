@@ -118,7 +118,6 @@ function M.set_lsp(names, options)
             if client.server_capabilities.documentSymbolProvider then
                 local navic = prequire("nvim-navic")
                 if navic then
-                    require("libp.log").warn("in")
                     navic.attach(client, bufnr)
                 end
             end
