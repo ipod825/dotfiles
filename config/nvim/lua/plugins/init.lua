@@ -8,7 +8,7 @@ local M = {
 	},
 	{ "Susensio/magic-bang.nvim", config = true },
 	{ "folke/neodev.nvim", config = true },
-	{ "kyazdani42/nvim-web-devicons" },
+	{ "nvim-tree/nvim-web-devicons" },
 	{ "tridactyl/vim-tridactyl" },
 	{ "wsdjeg/vim-fetch" },
 	{ "farmergreg/vim-lastplace" },
