@@ -33,7 +33,6 @@ workspace 3 output DP-2
 bindsym $mod+Shift+1 exec "i3-msg move container to workspace number 1;i3-msg workspace number 1"
 bindsym $mod+Shift+2 exec "i3-msg move container to workspace number 2;i3-msg workspace number 2"
 bindsym $mod+Shift+3 exec "i3-msg move container to workspace number 3;i3-msg workspace number 3"
-bindsym Mod1+Tab exec i3_cycle_windows --switch
 bindsym F11 exec i3-msg fullscreen toggle
 
 
@@ -73,3 +72,5 @@ exec libinput-gestures
 
 # Ibus doesn't play well with sxhkd if the following snippet is put in ~/.xinitrc. So it must be put here.
 exec --no-startup-id PYENV_VERSION=system ibus-daemon --xim -d -r
+
+exec_always alttab
