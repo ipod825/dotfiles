@@ -41,6 +41,7 @@ local M = {
 	{ "ziontee113/color-picker.nvim" },
 	{ "rbtnn/vim-vimscript_lasterror" },
 	{ url = "sso://user/jackcogdill/nvim-figtree" },
+    {"mhinz/vim-signify"}
 }
 
 function M.reload(target)

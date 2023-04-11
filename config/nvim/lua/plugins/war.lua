@@ -11,6 +11,13 @@ return {
 			})
 			vim.api.nvim_create_autocmd("Filetype", {
 				group = WAR,
+				pattern = "tagbar",
+				callback = function()
+					vim.fn["war#fire"](0.7, -1, -1, -1)
+				end,
+			})
+			vim.api.nvim_create_autocmd("Filetype", {
+				group = WAR,
 				pattern = "bookmark",
 				callback = function()
 					vim.fn["war#fire"](-1, 1, -1, 0.2)

@@ -7,7 +7,7 @@ function _G.prequire(...)
 end
 
 function _G.p(...)
-	vim.pretty_print(...)
+	vim.print(...)
 end
 
 
