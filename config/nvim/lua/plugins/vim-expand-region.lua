@@ -42,7 +42,7 @@ return {
 			})
 			vim.keymap.set("x", "<m-k>", "<Plug>(expand_region_expand)", { remap = true })
 			vim.keymap.set("x", "<m-j>", "<Plug>(expand_region_shrink)", { remap = true })
-			vim.keymap.set("n", "<m-k>", "<Plug>(expand_region_expand)", { remap = true })
-			vim.keymap.set("n", "<m-j>", "<Plug>(expand_region_shrink)", { remap = true })
+			vim.keymap.set("n", "<m-k>", "<Plug>(expand_region_expand)", { remap = true , nowait = true })
+			vim.keymap.set("n", "<m-j>", "<Plug>(expand_region_shrink)", { remap = true , nowait = true })
 		end,
 	}

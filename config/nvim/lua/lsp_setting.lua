@@ -66,7 +66,6 @@ function M.switch_source_header()
         end
     end
     local file = vim.fn.expand("%:p:t")
-    _G.p(file)
     if vim.endswith(file, ".h") then
         file = vim.fn.expand("%:p:t:r") .. ".c"
     else
@@ -76,13 +75,6 @@ function M.switch_source_header()
 end
 
 add_util_menu("LspSourceHeader", M.switch_source_header)
-add_util_menu("LspHover", vim.lsp.buf.hover)
-add_util_menu("LspReferences", vim.lsp.buf.references)
-add_util_menu("LspIncomingCalls", vim.lsp.buf.incoming_calls)
-add_util_menu("LspOutgoingCalls", vim.lsp.buf.outgoing_calls)
-add_util_menu("LspRename", vim.lsp.buf.rename)
-add_util_menu("LspCodeAction", vim.lsp.buf.code_action)
-add_util_menu("LspSignatureHelp", vim.lsp.buf.signature_help)
 add_util_menu("LspGotoImplementation", function()
     M.goto_tag_or_lsp_fn(vim.lsp.buf.implementation)
 end)
@@ -90,14 +82,6 @@ add_util_menu("LspGotoDeclaration", function()
     M.goto_tag_or_lsp_fn(vim.lsp.buf.declaration)
 end)
 
-function M.lsp_diagnostic_open(line_number)
-    vim.lsp.diagnostic.set_loclist()
-    vim.defer_fn(function()
-        vim.fn.search(string.format("|%d col", line_number), "cw")
-    end, 10)
-end
-
-add_util_menu("LspDiagnosticOpen", vim.diagnostic.setloclist)
 map("n", "<leader>k", vim.diagnostic.open_float)
 
 local capabilities = vim.lsp.protocol.make_client_capabilities()
