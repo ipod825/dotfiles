@@ -9,7 +9,7 @@ return {
 		utils.cmdabbrev("H", "Hg status")
 		utils.cmdabbrev("HH", 'Hg status --rev "parents(min(.))"')
 		require("hg").setup({
-			hg_sub_commands = { "uc" },
+			hg_sub_commands = { "uc", 'ut' },
 			status = {
 				open_cmd = "Tabdrop",
 				buf_enter_reload = false,

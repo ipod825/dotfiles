@@ -40,7 +40,17 @@ return {
             },
             t = {
                 name = "telescope",
-                b = { "<cmd>Telescope buffers<cr>", "Find Buffers" },
+                b = {
+                    function()
+                        require("telescope.builtin").buffers({
+                            previewer = false,
+                            ignore_current_buffer = true,
+                            sort_lastused = true,
+                            sort_mru=true
+                        })
+                    end,
+                    "Find Buffers",
+                },
                 y = { "<cmd>Telescope yank_history<cr>", "Yank History" },
                 d = { "<cmd>Telescope diagnostics<cr>", "diagnostics" },
                 o = { "<cmd>Telescope oldfiles<cr>", "Open Recent File" },

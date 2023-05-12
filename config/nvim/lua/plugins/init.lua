@@ -39,6 +39,7 @@ local M = {
     { "ziontee113/color-picker.nvim" },
     { "rbtnn/vim-vimscript_lasterror" },
     { url = "sso://user/jackcogdill/nvim-figtree" },
+    {url='sso://user/vvvv/ai.nvim'},
     { "mhinz/vim-signify" },
 }
 

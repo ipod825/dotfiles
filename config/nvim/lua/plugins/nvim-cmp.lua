@@ -34,6 +34,7 @@ return {
                 { name = "luasnip" },
                 -- { name = "nvim_lsp_signature_help" },
                 { name = "nvim_lua" },
+                { name = "fuzzy_buffer" },
                 { name = "buffer" },
                 { name = "nvim_lsp" },
                 { name = "path" },
@@ -42,6 +43,10 @@ return {
                 completion = cmp.config.window.bordered(),
                 documentation = cmp.config.window.bordered(),
             },
+    confirmation = {
+      default_behavior = cmp.ConfirmBehavior.Replace,
+    },
+
             -- formatting = {
             --     fields = { "kind", "abbr", "menu" },
             --     format = function(entry, vim_item)
@@ -55,7 +60,7 @@ return {
                 format = require("lspkind").cmp_format({
                     mode = "symbol_text", -- show only symbol annotations
                     maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
-            
+
                     -- The function below will be called before any actual modifications from lspkind
                     -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
                     before = function(_, vim_item)
@@ -64,5 +69,8 @@ return {
                 }),
             },
         })
+
+        local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+        cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
     end,
 }
