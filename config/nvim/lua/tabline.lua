@@ -239,5 +239,5 @@ function M.tabline()
 	return M.gen_tab_line(labels, total_length, left_has_more, right_has_more)
 end
 
-vim.o.tabline = "%!v:lua.require('tabline').tabline()"
+vim.o.tabline = "%!v:lua.require'tabline'.tabline()"
 return M
