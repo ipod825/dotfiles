@@ -13,6 +13,13 @@ return {
 				require("telescope").load_extension("fzf")
 			end,
 		},
+		 {
+  'prochri/telescope-all-recent.nvim',
+  config = function()
+    require'telescope-all-recent'.setup{
+    }
+  end
+}
 	},
 	config = function()
 		local actions = require("telescope.actions")
