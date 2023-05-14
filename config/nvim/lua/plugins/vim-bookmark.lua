@@ -21,7 +21,5 @@ return {
 			})
 			vim.keymap.set("n", "'", "<cmd>BookmarkGo directory<cr>")
 			vim.keymap.set("n", "m", "<cmd>BookmarkAddPos directory<cr>")
-			vim.keymap.set("n", "<leader>'", "<cmd>BookmarkGo<cr>")
-			vim.keymap.set("n", "<leader>m", "<cmd>BookmarkAddPos<cr>")
 		end,
 	}

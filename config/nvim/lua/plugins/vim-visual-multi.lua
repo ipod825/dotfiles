@@ -4,12 +4,12 @@ return {
 		branch = "test",
 		init = function()
 			vim.g.VM_default_mappings = 0
-			vim.keymap.set("n", "<leader>r", function()
+			vim.keymap.set("n", "<leader>m", function()
 				vim.cmd("VMSearch " .. vim.fn["msearch#joint_pattern"]())
 				utils.feed_plug_keys("(VM-Select-All)")
 				utils.feed_plug_keys("(VM-Goto-Prev)")
 			end, { desc = "select all marks" })
-			vim.keymap.set("x", "<leader>r", function()
+			vim.keymap.set("x", "<leader>m", function()
 				local vimfn = require("libp.utils.vimfn")
 				local beg, ends = vimfn.visual_rows()
 				vimfn.ensure_exit_visual_mode()
