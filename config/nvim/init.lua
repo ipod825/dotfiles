@@ -241,6 +241,9 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 	end,
 })
 
+-- Filetype alias
+vim.filetype.add { extension = { sdl = 'sql' } }
+
 -- -- Show long line
 -- vim.api.nvim_create_autocmd("CursorHold", {
 --     group = GENERAL,

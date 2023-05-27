@@ -98,6 +98,7 @@ return {
 				"python",
 				"kotlin",
 				"org",
+				"sql",
 				"vim",
 			}
 			local languages_spell_set = vim.list_extend({ "gitcommit", "proto", "sdl", "hgcommit" }, languages)

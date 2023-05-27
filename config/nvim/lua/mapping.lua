@@ -334,9 +334,9 @@ function M.diff_put()
 	end
 	vimfn.ensure_exit_visual_mode()
 end
--- map("n", "<leader>h", M.diff_get)
--- map("n", "<leader>l", M.diff_put)
--- map("x", "<leader>h", M.diff_get)
--- map("x", "<leader>l", M.diff_put)
+map("n", "<leader>dh", M.diff_get)
+map("n", "<leader>dl", M.diff_put)
+map("x", "<leader>dh", M.diff_get)
+map("x", "<leader>dl", M.diff_put)
 
 return M
