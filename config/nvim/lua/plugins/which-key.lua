@@ -42,11 +42,18 @@ return {
                 name = "telescope",
                 b = {
                     function()
+                        local action_set = require("telescope.actions.set")
                         require("telescope.builtin").buffers({
                             previewer = false,
                             ignore_current_buffer = true,
                             sort_lastused = true,
-                            sort_mru=true
+                            sort_mru = true,
+                            attach_mappings = function(_, map)
+                                map({ "i", "n" }, "<cr>", function(prompt_bufnr)
+                                    action_set.edit(prompt_bufnr, "tab drop")
+                                end)
+                                return true
+                            end,
                         })
                     end,
                     "Find Buffers",

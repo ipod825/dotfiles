@@ -29,6 +29,7 @@ return {
             local entry = action_state.get_selected_entry()
             local filepath = entry[1]
             local cwd = entry.cwd or ""
+
             if (
                 vim.fn.filereadable(filepath) ~= 0
                     or vim.fn.filereadable(require("libp.utils.pathfn").join(cwd, filepath)) ~= 0
