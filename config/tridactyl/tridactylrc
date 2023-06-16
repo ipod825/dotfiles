@@ -11,11 +11,11 @@ set followpagepatterns.next ^(next|newer|prochain)\b|»|>>
 set followpagepatterns.prev ^(prev(ious)?|older|précédent)\b|«|<<
 set hintuppercase false
 set hintshift true
-set editorcmd kitty -e "nvim %f"
+set editorcmd xterm -e "nvim %f"
 set smoothscroll true
 set scrollduration 150
 set modeindicator false
-command editor_rm composite editor | jsb -p tri.native.run(`rm -f '${JS_ARG[0]}'`)
+command editor_rm composite editor
 command tabuniq jsb browser.tabs.query({}).then(tabs => browser.tabs.remove(tabs.filter((tab, index) => tabs.slice(index + 1).find(t => t.url == tab.url)).map(tab => tab.id)))
 command tabcloseallbykeyword jsb -p browser.tabs.query({}).then(tabs => tabs.forEach( t => { if(t.url.includes(JS_ARG)) browser.tabs.remove(t.id) }))
 
@@ -55,10 +55,10 @@ bind --mode=ex <c-c> ex.hide_and_clear
 bind --mode=ex <c-h> text.backward_char
 bind --mode=ex <c-l> text.forward_char
 
-bindurl --mode=insert <C-i> editor_rm
-bindurl --mode=input <C-i> editor_rm
+bindurl --mode=insert <C-i> editor
+bindurl --mode=input <C-i> editor
 
-seturl colab.corp.google.com.* editorcmd xterm -e "nvim +'setlocal filetype=python' %f"
+seturl colab.corp.google.com.* editorcmd xterm -e "nvim -c 'set filetype=python tabstop=2 shiftwidth=2 expandtab' %f"
 unbindurl colab.corp.google.com --mode=insert <Escape>
 unbindurl colab.corp.google.com --mode=normal j
 unbindurl colab.corp.google.com --mode=normal k
