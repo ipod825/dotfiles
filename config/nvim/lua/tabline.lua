@@ -219,7 +219,7 @@ function M.tabline()
 	local total_length, left_has_more, right_has_more
 
 	local current_tab_id = api.nvim_get_current_tabpage()
-	local content_dedup = vim.defaulttable(List)
+	local content_dedup = vim.defaulttable(function() return List() end)
 	for _, tab_id in pairs(api.nvim_list_tabpages()) do
 		local label = M.tab_label(tab_id, current_tab_id)
 		labels:append(label)

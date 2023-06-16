@@ -36,6 +36,10 @@ return {
                     envrun("OpenSrcOrTest"),
                     "Source or Test",
                 },
+                h = {
+                    require("lsp_setting").switch_source_header,
+                    "Switch source header",
+                },
                 p = { envrun("OpenProducerOrGraph"), "Producer or Graph" },
             },
             t = {
@@ -57,6 +61,9 @@ return {
                         })
                     end,
                     "Find Buffers",
+                },
+                i = {
+                    function()require("g4").handlers["InsertIssue"]() end,"Insert Issue",
                 },
                 y = { "<cmd>Telescope yank_history<cr>", "Yank History" },
                 d = { "<cmd>Telescope diagnostics<cr>", "diagnostics" },

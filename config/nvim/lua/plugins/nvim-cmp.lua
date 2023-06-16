@@ -30,6 +30,7 @@ return {
                 ["<cr>"] = cmp.mapping.confirm({ select = true }),
             },
             sources = cmp.config.sources({
+                {name = 'buganizer'},
                 { name = "nvim_ciderlsp" },
                 { name = "luasnip" },
                 -- { name = "nvim_lsp_signature_help" },

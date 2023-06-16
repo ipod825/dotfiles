@@ -8,6 +8,7 @@ amend = -A
 [ui]
 merge = :merge
 editor = nvr -cc tabe --remote-wait +"setlocal bufhidden=wipe"
+origbackuppath = /tmp
 
 [merge-tools]
 # nvr.args = -cc tabe -O other local base +"wincmd J | windo diffthis"
