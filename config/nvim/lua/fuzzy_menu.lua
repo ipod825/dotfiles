@@ -5,10 +5,8 @@ local iter = require("libp.iter")
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local actions = require("telescope.actions")
-local action_set = require("telescope.actions.set")
 local action_state = require("telescope.actions.state")
 local conf = require("telescope.config").values
-local utils = require("utils")
 
 function M.telescope_pick(content, cb, opts)
     opts = opts or {}
@@ -28,6 +26,12 @@ function M.telescope_pick(content, cb, opts)
         })
         :find()
 end
+
+M.telescope_pick_async = require("plenary.async").wrap(function(content, opts, callback)
+    vim.validate({ opts = { opts, "t" }, callback = { callback, "f" } })
+    opts = opts or {}
+    return M.telescope_pick(content, callback, opts)
+end, 3)
 
 M.menu_actions = M.menu_actions or { default = {} }
 function M.add_util_menu(name, fn, id)
