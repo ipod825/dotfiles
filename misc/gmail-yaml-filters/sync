@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+gmail-yaml-filters --sync gmail.yaml
