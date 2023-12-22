@@ -1,5 +1,9 @@
 local M = {}
 
+function M.find_project_root()
+	require("libp.utils.pathfn").find_directory(require("plugins").root_markers)
+end
+
 function M.list_unique(lst)
 	local cache = {}
 	local res = {}

@@ -13,6 +13,8 @@ return {
 				ncl = { "nclfmt" },
 				piccolo = { "pyformat" },
 				textpb = { "txtpbfmt" },
+				javascript = { "prettierd" },
+				json = { "jq" },
 				["_"] = { "trim_whitespace" },
 			},
 			formatters = {

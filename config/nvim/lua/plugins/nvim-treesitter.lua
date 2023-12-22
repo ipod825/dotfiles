@@ -27,7 +27,7 @@ return {
 
 	{
 		"nvim-treesitter/nvim-treesitter-context",
-		enabled=false,
+		enabled = false,
 		event = "BufReadPre",
 		config = true,
 	},
@@ -94,6 +94,7 @@ return {
 				"bash",
 				"cpp",
 				"java",
+				"javascript",
 				"lua",
 				"python",
 				"kotlin",
