@@ -1,5 +1,6 @@
 return {
 		"git@github.com:ipod825/war.vim",
+		lazy=false,
 		config = function()
 			local WAR = vim.api.nvim_create_augroup("WAR", {})
 			vim.api.nvim_create_autocmd("Filetype", {

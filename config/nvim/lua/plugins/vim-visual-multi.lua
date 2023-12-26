@@ -1,6 +1,7 @@
 local utils  = require("utils")
 return {
 		"mg979/vim-visual-multi",
+		lazy=false,
 		branch = "test",
 		init = function()
 			vim.g.VM_default_mappings = 0

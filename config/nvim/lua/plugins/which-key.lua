@@ -7,7 +7,7 @@ end
 
 return {
     "folke/which-key.nvim",
-    enabled = true,
+    lazy = false,
     config = function()
         require("which-key").setup({
             triggers = { "<leader>" },

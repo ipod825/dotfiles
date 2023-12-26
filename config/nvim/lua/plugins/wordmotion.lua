@@ -1,5 +1,6 @@
 return {
 		"chaoren/vim-wordmotion",
+		lazy=false,
 		init = function()
 			vim.g.wordmotion_nomap = 1
 			vim.keymap.set("n", "w", "<Plug>WordMotion_w", { remap = true })

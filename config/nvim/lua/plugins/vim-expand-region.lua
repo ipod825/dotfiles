@@ -1,5 +1,6 @@
 return {
 	"git@github.com:ipod825/vim-expand-region",
+	lazy=false,
 	init = function()
 		vim.g.vim_textobj_parameter_mapping = ","
 		vim.g.expand_region_text_objects = {

@@ -1,5 +1,6 @@
 return {
     "eugen0329/vim-esearch",
+    lazy=false,
     init = function()
         vim.g.esearch = {
             adapter = "rg",

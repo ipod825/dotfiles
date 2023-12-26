@@ -1,6 +1,7 @@
 local navic = prequire("nvim-navic")
 return {
 	"hoob3rt/lualine.nvim",
+	lazy = false,
 	config = function()
 		require("lualine").setup({
 			options = {

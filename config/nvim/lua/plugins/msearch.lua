@@ -11,6 +11,7 @@ end
 
 return {
 	"git@github.com:ipod825/msearch.vim",
+	lazy=false,
 	config = function()
 		vim.keymap.set("n", "8", normal_toggle_add_word)
 		vim.keymap.set("x", "8", "<Plug>MSToggleAddVisual", { remap = true })

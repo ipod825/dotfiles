@@ -1,5 +1,6 @@
 return {
     "git@github.com:ipod825/ranger.nvim",
+    lazy=false,
     config = function()
         local action = require("ranger.action")
         local profile = require("profile")

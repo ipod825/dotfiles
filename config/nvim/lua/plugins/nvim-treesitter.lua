@@ -87,6 +87,7 @@ return {
 
 	{
 		"nvim-treesitter/nvim-treesitter",
+		lazy=false,
 		build = ":TSUpdate",
 		config = function()
 			local color = require("colorscheme").color
