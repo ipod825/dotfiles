@@ -80,17 +80,17 @@ if [[ ! -x $HOME/.local/bin/nvim ]]; then
     pip install pynvim --upgrade
 fi
 
-if [[ ! -x $HOME/.local/bin/luarocks ]]; then
-    echo "==Setting luarocks=="
-    luarocks_version="3.9.0"
-    echo $luarocks_version
-    wget https://luarocks.org/releases/luarocks-${luarocks_version}.tar.gz
-    tar zxpf luarocks-${luarocks_version}.tar.gz
-    pushd luarocks-${luarocks_version}
-    ./configure --prefix=$HOME/.local
-    make && make install
-    luarocks install penlight ldoc
-fi
+# if [[ ! -x $HOME/.local/bin/luarocks ]]; then
+#     echo "==Setting luarocks=="
+#     luarocks_version="3.9.0"
+#     echo $luarocks_version
+#     wget https://luarocks.org/releases/luarocks-${luarocks_version}.tar.gz
+#     tar zxpf luarocks-${luarocks_version}.tar.gz
+#     pushd luarocks-${luarocks_version}
+#     ./configure --prefix=$HOME/.local
+#     make && make install
+#     luarocks install penlight ldoc
+# fi
 
 if [[ ! -z $gpg_key ]]; then
     gpg-connect-agent KILLAGENT
@@ -99,7 +99,7 @@ if [[ ! -z $gpg_key ]]; then
     if [ ! -x $HOME/.local/bin/git-crypt ]; then
           git clone --depth 1 https://github.com/AGWA/git-crypt.git /tmp/git-crypt
           pushd /tmp/git-crypt
-          make -j 9
+          CXXFLAGS='-DOPENSSL_API_COMPAT=0x30000000L' make -j 9
           make install PREFIX=$HOME/.local
           popd
     fi
