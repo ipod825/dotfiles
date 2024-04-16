@@ -6,7 +6,6 @@
 /config/nvim/lua/g4.lua filter=git-crypt diff=git-crypt
 /config/nvim/g4_plugins.lua filter=git-crypt diff=git-crypt
 /config/nvim/lua/android.lua filter=git-crypt diff=git-crypt
-/partial_config/.ssh/config filter=git-crypt diff=git-crypt
 /config/qutebrowser/bookmarks/urls filter=git-crypt diff=git-crypt
 /misc/pass.csv filter=git-crypt diff=git-crypt
 /misc/gmail-yaml-filters/client_secret.json filter=git-crypt diff=git-crypt
