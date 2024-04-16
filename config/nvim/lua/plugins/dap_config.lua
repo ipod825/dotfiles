@@ -46,6 +46,7 @@ local dap_ui = {
 return {
     "mfussenegger/nvim-dap",
     dependencies = { dap_ui },
+    enabled=false,
     config = function()
         _G.DapGetArgs = function(program, dap_run_co)
             program = program:gsub("/", "_")
