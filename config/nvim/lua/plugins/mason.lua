@@ -1,5 +1,6 @@
 return {
 	"williamboman/mason.nvim",
+	cmd={"Mason", "MasonUpdate", "MasonInstall"},
 	dependencies = {{
 	"WhoIsSethDaniel/mason-tool-installer.nvim",
 	config = function()

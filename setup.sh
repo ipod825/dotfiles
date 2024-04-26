@@ -40,7 +40,6 @@ function pyenv_install(){
 
 LinkDotfiles $DOTDIR/config $XDG_CONFIG_HOME
 LinkDotfiles $DOTDIR/home_config ~
-LinkDotfiles $DOTDIR/partial_config/.ssh ~/.ssh
 LinkDotfiles $DOTDIR/partial_config/Vieb ~/.config/Vieb
 
 echo "==Setting pyenv=="
@@ -61,9 +60,9 @@ if [[ ! -x $HOME/.local/kitty.app/bin/kitty ]]; then
 fi
 
 echo "==Setting neovim=="
-if [[ ! -d $HOME/.local/share/fonts ]]; then
+if [[ ! -f "$HOME/.local/share/fonts/Hack Regular Nerd Font Complete.ttf" ]]; then
     mkdir -p $HOME/.local/share/fonts
-    cd $HOME/.local/share/fonts &&curl -fLo "Hack Regular Nerd Font Complete.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Hack/Regular/complete/Hack%20Regular%20Nerd%20Font%20Complete%20Mono.ttf
+    cd $HOME/.local/share/fonts && curl -fLo "Hack Regular Nerd Font Complete.ttf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/Hack/Regular/HackNerdFontMono-Regular.ttf
 fi
 if [[ ! -x $HOME/.local/bin/nvim ]]; then
     mkdir -p $HOME/.local/bin
@@ -91,6 +90,13 @@ fi
 #     make && make install
 #     luarocks install penlight ldoc
 # fi
+
+if [[ ! -x "$(command -v cargo)" ]]; then
+    curl https://sh.rustup.rs -sSf | sh
+fi
+if [[ ! -x "$(command -v rg)"  ]]; then
+    cargo install ripgrep
+fi
 
 if [[ ! -z $gpg_key ]]; then
     gpg-connect-agent KILLAGENT

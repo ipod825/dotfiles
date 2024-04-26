@@ -49,3 +49,4 @@ bind "TAB":menu-complete
 bind "\e[Z":menu-complete-backward
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+. "$HOME/.cargo/env"
