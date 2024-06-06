@@ -3,8 +3,7 @@ return {
 	lazy=false,
 	config = function()
 		require("conform").setup({
-			format_on_save = {
-				async = true,
+			format_after_save = {
 				lsp_fallback = true,
 			},
 			formatters_by_ft = {

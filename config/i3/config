@@ -69,6 +69,7 @@ focus_follows_mouse yes
 exec --no-startup-id easystroke --config-dir $HOME/dotfiles/home_config/.easystroke/i3 hide
 # exec --no-startup-id alttab
 exec libinput-gestures
+exec keynav "loadconfig $HOME/dotfiles/config/keynav/keynavrc"
 
 # Ibus doesn't play well with sxhkd if the following snippet is put in ~/.xinitrc. So it must be put here.
 exec --no-startup-id PYENV_VERSION=system ibus-daemon --xim -d -r

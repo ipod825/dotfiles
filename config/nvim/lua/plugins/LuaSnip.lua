@@ -1,6 +1,9 @@
 return {
 		"L3MON4D3/LuaSnip",
-		config = function()
+		lazy=false,
+		cmd="LuaSnipEdit",
+		config =
+		function()
 			vim.keymap.set({ "i", "s", "n" }, "<tab>", function()
 				if vim.fn["luasnip#expand_or_jumpable"]() then
 					require("utils").feed_plug_keys("luasnip-expand-or-jump")

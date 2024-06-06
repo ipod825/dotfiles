@@ -13,6 +13,7 @@ local sn = ls.snippet_node
 local d = ls.dynamic_node
 
 ls.add_snippets("python", {
+	s("log", fmt("logging.{}('{}'){}", { i(1, "info"), i(2), i(0) })),
 	s(
 		"main",
 		fmt(

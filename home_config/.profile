@@ -46,7 +46,7 @@ alias hdf='hg diff'
 alias hps='hg upload tree'
 alias gprun='cuthon --'
 alias cprun='cuthon -n 0 --'
-alias hi='notify-send -u critical -t 5000 "Job Finished" `printf "~%.0s" {1..100}`'
+alias sayhi='notify-send -u critical -t 5000 "Job Finished" `printf "~%.0s" {1..100}`'
 
 if [ "$(uname 2> /dev/null)" = "Darwin" ]; then
     alias ls='ls -G'
