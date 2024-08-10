@@ -1,7 +1,8 @@
 # vim: filetype=i3config
 
 set $mod Mod4
-set $term "kitty --single-instance"
+# set $term "kitty --single-instance"
+set $term "xterm"
 for_window [class="^.*"] border pixel 0
 floating_modifier $mod
 hide_edge_borders both
