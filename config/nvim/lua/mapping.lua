@@ -1,4 +1,5 @@
 local M = {}
+local actions = require("actions")
 
 local map = vim.keymap.set
 local vimfn = require("libp.utils.vimfn")
@@ -338,5 +339,8 @@ map("n", "<leader>dh", M.diff_get)
 map("n", "<leader>dl", M.diff_put)
 map("x", "<leader>dh", M.diff_get)
 map("x", "<leader>dl", M.diff_put)
+
+map("t", "<m-c>", actions.cheat_sheet)
+map("n", "<m-c>", actions.cheat_sheet)
 
 return M

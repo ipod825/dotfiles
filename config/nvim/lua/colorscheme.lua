@@ -80,7 +80,7 @@ function M.builtin_hl_def(color)
 		SignColumn = { fg = color.fg, bg = color.bg },
 		FoldColumn = { fg = color.fg_alt, bg = color.black },
 		VertSplit = { fg = color.orange, bg = color.bg },
-		WinSeparator = {default=true, link='Label'},
+		WinSeparator = { default = true, link = "Label" },
 		Folded = { fg = color.grey, bg = color.bg_highlight },
 		EndOfBuffer = { fg = color.bg, bg = color.none },
 		IncSearch = { fg = color.bg1, bg = color.orange },
@@ -105,7 +105,7 @@ function M.builtin_hl_def(color)
 		ErrorMsg = { fg = color.red, bg = color.none, bold = true },
 		WarningMsg = { fg = color.yellow, bg = color.none, bold = true },
 		ModeMsg = { fg = color.fg, bg = color.none, bold = true },
-		MatchParen = { fg = color.red, bg = color.none, reverse = true },
+		MatchParen = { fg = color.none, bg = color.red },
 		NonText = { fg = color.bg1 },
 		Whitespace = { fg = color.base4 },
 		SpecialKey = { fg = color.bg1 },
@@ -175,7 +175,7 @@ end
 
 M.plugin_hl_def = {}
 function M.add_plug_hl(hls)
-	if vim.tbl_islist(hls) then
+	if vim.islist(hls) then
 		for _, name in ipairs(hls) do
 			M.plugin_hl_def[name] = M.plugin_hl_def[name] or false
 		end

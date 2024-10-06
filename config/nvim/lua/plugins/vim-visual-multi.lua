@@ -1,7 +1,7 @@
 local utils = require("utils")
 return {
 	"mg979/vim-visual-multi",
-	lazy = false,
+	event = "VeryLazy",
 	init = function()
 		vim.g.VM_default_mappings = 0
 		vim.keymap.set("n", "<leader>m", function()

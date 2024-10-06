@@ -87,7 +87,7 @@ return {
 
 	{
 		"nvim-treesitter/nvim-treesitter",
-		lazy=false,
+		lazy = false,
 		build = ":TSUpdate",
 		config = function()
 			local color = require("colorscheme").color
@@ -104,7 +104,9 @@ return {
 				"vim",
 			}
 			local languages_spell_set = vim.list_extend({ "gitcommit", "proto", "sdl", "hgcommit" }, languages)
-			vim.tbl_add_reverse_lookup(languages_spell_set)
+			for k, v in pairs(languages_spell_set) do
+				languages_spell_set[v] = k
+			end
 
 			require("colorscheme").add_plug_hl({
 				TSFunction = { fg = color.cyan },

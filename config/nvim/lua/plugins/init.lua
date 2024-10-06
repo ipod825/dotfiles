@@ -2,21 +2,21 @@ local M = {
 	root_markers = { ".git", ".hg", ".svn", ".bzr", "_darcs", ".root" },
 	{
 		"SmiteshP/nvim-navic",
+		event = "VeryLazy",
 		config = function()
-			require("nvim-navic").setup()
+			require("nvim-navic").setup({})
 		end,
 	},
 	{ "rcarriga/nvim-notify" },
 	{ "Susensio/magic-bang.nvim", config = true },
-	{ "nvim-tree/nvim-web-devicons" },
+	{ "nvim-tree/nvim-web-devicons", event = "VeryLazy" },
 	{ "tridactyl/vim-tridactyl" },
 	{ "wsdjeg/vim-fetch" },
-	{ "farmergreg/vim-lastplace" },
-	{ "git@github.com:ipod825/vim-tabdrop", lazy = false },
+	{ "git@github.com:ipod825/vim-tabdrop", event = "VeryLazy" },
 	{ "RRethy/nvim-treesitter-endwise" },
 	{ "windwp/nvim-ts-autotag" },
 	{ "haringsrob/nvim_context_vt" },
-	{ "tpope/vim-abolish" },
+	{ "tpope/vim-abolish", event = "VeryLazy" },
 	{ "tami5/sqlite.lua" },
 	{ "jubnzv/virtual-types.nvim" },
 	{ "junegunn/fzf", build = ":call fzf#install()" },
@@ -26,7 +26,7 @@ local M = {
 	{ "rhysd/vim-grammarous", cmd = "GrammarousCheck" },
 	{ "nvim-neotest/neotest" },
 	{ "neovim/nvim-lspconfig" },
-	{ "majutsushi/tagbar", lazy = false },
+	{ "majutsushi/tagbar", event = "VeryLazy" },
 	{ "theHamsta/nvim-dap-virtual-text" },
 	{ "machakann/vim-swap" },
 	{ "LukasPietzschmann/telescope-tabs" },
@@ -44,23 +44,23 @@ local M = {
 	{ "mhinz/vim-signify" },
 }
 
-function M.reload(target)
-	local function do_reload(t)
-		local reloaded = false
-		for name, _ in pairs(package.loaded) do
-			if name:match(t) then
-				package.loaded[name] = nil
-				reloaded = true
+local LAZY = vim.api.nvim_create_augroup("LAZY", { clear = true })
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+	group = LAZY,
+	pattern = "*/plugins/*.lua",
+	callback = function(event)
+		local file_name = string.sub(event.file, 1, -5)
+		local lazy_root = vim.fn.stdpath("data") .. "/lazy"
+		for name, _ in vim.fs.dir(lazy_root) do
+			for affix in vim.iter({ "", "nvim", "vim" }) do
+				if file_name == name .. "." .. affix then
+					require("lazy.core.loader").reload(name)
+					return
+				end
 			end
 		end
-		if reloaded then
-			package.loaded.plugins = nil
-			require("plugins")
-		end
-		return reloaded
-	end
-
-	return do_reload(target) or do_reload(target:gsub("^nvim-", ""))
-end
+	end,
+})
 
 return M

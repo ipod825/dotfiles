@@ -1,7 +1,6 @@
 local M = {}
 local map = vim.keymap.set
 
-local iter = require("libp.iter")
 local pickers = require("telescope.pickers")
 local finders = require("telescope.finders")
 local actions = require("telescope.actions")
@@ -30,7 +29,7 @@ end
 M.telescope_pick_async = require("plenary.async").wrap(function(content, opts, callback)
 	vim.validate({ opts = { opts, "t" }, callback = { callback, "f" } })
 	opts = opts or {}
-	return M.telescope_pick(content, callback, opts)
+	return M.pick(content, callback, opts)
 end, 3)
 
 M.menu_actions = M.menu_actions or { default = {} }
@@ -52,81 +51,12 @@ function M.select(ids)
 	local names = vim.tbl_keys(menu_actions)
 	table.sort(names)
 
-	M.telescope_pick(names, function(value)
+	M.pick(names, function(value)
 		menu_actions[value]()
 	end)
 end
 
 map("n", "<leader><cr>", M.select)
-
-M.add_util_menu("JavaCopyInclude", function()
-	for i in iter.range(1, vim.api.nvim_buf_line_count(0)) do
-		local package = vim.fn.getline(i):match("^package (.*);")
-		if package then
-			vim.fn.setreg('"', ("import %s.%s;"):format(package, vim.fn.expand("<cword>")))
-			return
-		end
-	end
-end)
-
-M.add_util_menu("EditBin", function()
-	vim.bo.bin = true
-	vim.api.nvim_exec(
-		[[
-      autocmd BufReadPost <buffer> if &bin | %!xxd
-      autocmd BufReadPost <buffer> set ft=xxd | endif
-      autocmd BufWritePre <buffer> if &bin | let b:cursorpos=getcurpos() | %!xxd -r
-      autocmd BufWritePre <buffer> endif
-      autocmd BufWritePost <buffer> if &bin | undojoin | silent keepjumps %!xxd
-      autocmd BufWritePost <buffer> set nomod | call setpos('.', b:cursorpos) | endif
-      edit
-  ]],
-		false
-	)
-end)
-
-M.add_util_menu("RelatedFile", function()
-	require("telescope.builtin").fd({
-		default_text = vim.fn.expand("%:t:r"),
-		cwd = require("utils").find_project_root(),
-	})
-end)
-
-M.add_util_menu("ReloadPlugin", function()
-	local pathfn = require("libp.utils.pathfn")
-	local plugin = vim.split(pathfn.basename(pathfn.find_directory(".git")), "%.")[1]
-
-	for _, buffer in pairs(require("libp.global")("libp").buffers) do
-		vim.cmd("bwipe " .. buffer.id)
-	end
-	require("vplug").reload(plugin)
-end)
-
-function M.cheat_sheet()
-	local id = vim.b.terminal_job_id
-	local cheats = vim.list_extend(
-		vim.fn.systemlist(string.format("cat %s/dotfiles/misc/cheatsheet", vim.env.HOME)),
-		vim.fn.systemlist(string.format("cat %s/.local/share/cheatsheet", vim.env.HOME))
-	)
-
-	M.telescope_pick(cheats, function(value)
-		if id then
-			vim.fn.chansend(id, value)
-			vim.defer_fn(function()
-				vim.cmd("normal! i")
-			end, 50)
-		else
-			vim.fn.setreg('"', value)
-		end
-	end)
-end
-
-map("t", "<m-c>", M.cheat_sheet)
-map("n", "<m-c>", M.cheat_sheet)
-
-M.add_util_menu("RunTests", function()
-	vim.cmd("AsyncTask test")
-end)
 
 function M.oldfiles(opts)
 	opts = opts or {}

@@ -50,7 +50,7 @@ end)(vim.paste)
 
 require("global")
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
+if not vim.uv.fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
 		"clone",
@@ -60,13 +60,17 @@ if not vim.loop.fs_stat(lazypath) then
 		lazypath,
 	})
 end
-vim.opt.rtp:prepend(lazypath)
-require("lazy").setup("plugins", {
-    defaults = { lazy = true },
-    dev = {
-        path = "~/projects",
-    },
-})
+
+if not vim.g._LAZY_LOADED then
+	vim.opt.rtp:prepend(lazypath)
+	require("lazy").setup("plugins", {
+		defaults = { lazy = true },
+		dev = {
+			path = "~/projects",
+		},
+	})
+	vim.g._LAZY_LOADED = true
+end
 
 require("mapping")
 require("tabline")
@@ -78,15 +82,19 @@ prequire("android")
 prequire("g4")
 vim.cmd("colorscheme main")
 
-local GENERAL = vim.api.nvim_create_augroup("GENERAL", {})
+local GENERAL = vim.api.nvim_create_augroup("GENERAL", { clear = true })
 
 -- auto reload config files
+vim.api.nvim_create_autocmd("BufReadPost", {
+	group = GENERAL,
+	command = 'silent! normal! g`"zv',
+})
+
 vim.api.nvim_create_autocmd("BufWritePost", {
 	group = GENERAL,
 	pattern = vim.split(vim.fn.glob("$HOME/dotfiles/config/nvim/**/*.lua"), "\n"),
 	callback = function(arg)
 		vim.defer_fn(function()
-			package.loaded[vim.split(vim.fs.basename(arg.file), "%.")[1]] = nil
 			vim.cmd("source " .. arg.file)
 			if arg.file == "init.lua" then
 				vim.cmd("edit")

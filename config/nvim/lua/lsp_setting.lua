@@ -4,11 +4,7 @@ local map = vim.keymap.set
 local add_util_menu = require("fuzzy_menu").add_util_menu
 
 function M.goto_tag_or_lsp_fn(target_fn)
-	local active_lsp_clients = 0
-
-	vim.lsp.for_each_buffer_client(0, function()
-		active_lsp_clients = active_lsp_clients + 1
-	end)
+	local active_lsp_clients = #vim.lsp.get_clients({})
 
 	if active_lsp_clients > 0 then
 		vim.cmd("TabdropPushTag")
@@ -17,7 +13,7 @@ function M.goto_tag_or_lsp_fn(target_fn)
 		local succ, err = pcall(vim.fn.taglist, vim.fn.expand("<cword>"))
 		if succ then
 			vim.cmd("TabdropPushTag")
-			vim.api.nvim_exec("silent! TagTabdrop", true)
+			vim.api.nvim_exec2("silent! TagTabdrop", {})
 		end
 	end
 end
@@ -136,7 +132,7 @@ M.set_lsp("pylsp")
 M.set_lsp("clangd")
 M.set_lsp("gopls")
 M.set_lsp("rls")
-M.set_lsp("tsserver")
+M.set_lsp("ts_ls")
 
 local runtime_path = vim.split(package.path, ";")
 table.insert(runtime_path, "lua/?.lua")
