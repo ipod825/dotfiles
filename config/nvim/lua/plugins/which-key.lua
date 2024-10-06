@@ -13,8 +13,15 @@ return {
             triggers = { "<leader>" },
         })
         require("which-key").register({
+            ['<leader>'] = {
+                name = "TransformCode",
+                ['<leader>'] = { ":TransformCode", "FreeText" },
+                ['w'] = { "<cmd>TransformCode Fix all warnings<cr>", "Fix Warnings" },
+                ['d'] = { "<cmd>TransformCode Add docstring and typings<cr>", "Docstring & Typing" },
+                ['i'] = { "<cmd>TransformCode Add all missing imports/includes<cr>", "Add imports" },
+            },
             a = {
-                "Abolish",
+                name = "Abolish",
                 c = { "<cmd>normal crc<cr>", "camelCase" },
                 m = { "<cmd>normal crm<cr>", "MixedCase" },
                 s = { "<cmd>normal crs<cr>", "snake_case" },
@@ -63,7 +70,7 @@ return {
                     "Find Buffers",
                 },
                 i = {
-                    function()require("g4").handlers["InsertIssue"]() end,"Insert Issue",
+                    function() require("g4").handlers["InsertIssue"]() end, "Insert Issue",
                 },
                 y = { "<cmd>Telescope yank_history<cr>", "Yank History" },
                 d = { "<cmd>Telescope diagnostics<cr>", "diagnostics" },
