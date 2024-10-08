@@ -12,6 +12,18 @@ return {
 	},
 	config = function()
 		local cmp = require("cmp")
+		local neocodeium = require("neocodeium")
+		function do_cmp_or_neocodium(cmp_fn, neocodium_fn)
+			return cmp.mapping(function(fallback)
+				if cmp_fn and cmp.visible() then
+					cmp_fn()
+				elseif neocodium_fn and neocodeium and neocodeium.visible() then
+					neocodium_fn()
+				else
+					fallback()
+				end
+			end)
+		end
 		cmp.setup({
 			completion = { completeopt = "menu,menuone,noinsert" },
 			snippet = {
@@ -20,14 +32,18 @@ return {
 				end,
 			},
 			mapping = {
-				["<c-j>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+				["<c-j>"] = do_cmp_or_neocodium(
+					cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+					neocodeium.cycle
+				),
 				["<c-k>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
 				["<c-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
 				["<c-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
 				["<c-e>"] = cmp.mapping.scroll_docs(4),
 				["<c-y>"] = cmp.mapping.scroll_docs(-4),
 				["<c-c>"] = cmp.mapping.close(),
-				["<cr>"] = cmp.mapping.confirm({ select = true }),
+				["<cr>"] = do_cmp_or_neocodium(cmp.confirm, nil),
+				["<tab>"] = do_cmp_or_neocodium(nil, neocodeium.accept),
 			},
 			sources = cmp.config.sources({
 				{ name = "buganizer" },
@@ -50,15 +66,6 @@ return {
 				default_behavior = cmp.ConfirmBehavior.Replace,
 			},
 
-			-- formatting = {
-			--     fields = { "kind", "abbr", "menu" },
-			--     format = function(entry, vim_item)
-			--         vim_item.kind = kind_icons[vim_item.kind]
-			--         vim_item.menu = source_names[entry.source.name]
-			--         vim_item.dup = duplicates[entry.source.name]
-			--         return vim_item
-			--     end,
-			-- },
 			formatting = {
 				format = require("lspkind").cmp_format({
 					mode = "symbol_text", -- show only symbol annotations
@@ -72,9 +79,7 @@ return {
 				}),
 			},
 			experimental = {
-				ghost_text = {
-					hl_group = "Title",
-				},
+				ghost_text = false,
 			},
 		})
 

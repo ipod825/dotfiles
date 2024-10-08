@@ -150,12 +150,12 @@ return {
 			builtin.fd({ cwd = require("libp.utils.pathfn").find_directory(require("plugins").root_markers) })
 		end)
 
-		-- vim.keymap.set("n", "/", function()
-		-- 	-- builtin.current_buffer_fuzzy_find()
-		-- 	builtin.current_buffer_fuzzy_find({
-		-- 		previewer = false,
-		-- 	})
-		-- end)
+		vim.keymap.set("n", "/", function()
+			-- builtin.current_buffer_fuzzy_find()
+			builtin.current_buffer_fuzzy_find({
+				previewer = false,
+			})
+		end)
 
 		vim.keymap.set("n", "z=", function()
 			builtin.spell_suggest()

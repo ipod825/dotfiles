@@ -54,11 +54,22 @@ function M.run_handler(name, ...)
 	return handlers[name](...)
 end
 
+function M.on_switch_on()
+	vim.cmd([[NeoCodeium enable]])
+end
+
+function M.on_switch_off()
+	vim.cmd([[NeoCodeium! disable]])
+end
+
 function M.switch_env(env)
 	if M.cur_env == env then
 		return
 	end
+	M.cur_env.on_switch_off()
 	M.cur_env = env
+	M.cur_env.on_switch_on()
+
 	local default_env = M
 	-- Restore default mappings and then apply current env mappings.
 	utils.restore_keymap(default_env.mappings)

@@ -132,7 +132,7 @@ M.set_lsp("pylsp")
 M.set_lsp("clangd")
 M.set_lsp("gopls")
 M.set_lsp("rls")
-M.set_lsp("ts_ls")
+M.set_lsp("tsserver")
 
 local runtime_path = vim.split(package.path, ";")
 table.insert(runtime_path, "lua/?.lua")
