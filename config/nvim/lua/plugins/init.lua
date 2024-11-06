@@ -35,7 +35,7 @@ local M = {
 	{ "whiteinge/diffconflicts" },
 	{ "git@github.com:ipod825/oldfiles.nvim", config = true },
 	{ "andymass/vim-matchup" },
-	{ "AndrewRadev/linediff.vim" },
+	{ "AndrewRadev/linediff.vim", event="VeryLazy" },
 	{ "chrisbra/Colorizer" },
 	{ "ziontee113/color-picker.nvim" },
 	{ "rbtnn/vim-vimscript_lasterror" },

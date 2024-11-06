@@ -7,7 +7,7 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 local conf = require("telescope.config").values
 
-function M.telescope_pick(content, cb, opts)
+function M.pick(content, cb, opts)
 	opts = opts or {}
 	pickers
 		.new(opts, {
