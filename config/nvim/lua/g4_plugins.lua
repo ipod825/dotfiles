@@ -4,6 +4,7 @@ end
 
 local ts_codesearch = {
 	url = "sso://user/vintharas/telescope-codesearch.nvim",
+    event = "VeryLazy",
 	config = function()
 		require("telescope").load_extension("codesearch")
 	end,

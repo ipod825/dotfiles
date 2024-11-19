@@ -27,9 +27,13 @@ return {
 
 	{
 		"nvim-treesitter/nvim-treesitter-context",
-		enabled = false,
-		event = "BufReadPre",
-		config = true,
+		event = "VeryLazy",
+		config = function() 
+		    require'treesitter-context'.setup({
+		        max_lines = 4,
+		        trim_scope = 'inner',
+            })
+		end,
 	},
 
 	{

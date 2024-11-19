@@ -74,11 +74,10 @@ return {
 				multi_icon = "* ",
 				path_display = function(_, path)
 					path = path:gsub(vim.env.HOME, "~")
-					for _, env in pairs(require("profile").envs) do
-						if env.telescope_path_display then
-							path = env.telescope_path_display(path)
-						end
-					end
+					local cur_env = require("profile").cur_env
+                    if cur_env.telescope_path_display then
+                        path = cur_env.telescope_path_display(path)
+                    end
 					return path
 				end,
 				layout_strategy = "vertical",
