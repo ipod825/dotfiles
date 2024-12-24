@@ -1,7 +1,8 @@
 # vim: filetype=i3config
 
 set $mod Mod4
-set $term "kitty --single-instance"
+# set $term "kitty --single-instance"
+set $term "foot"
 for_window [class="^.*"] border pixel 0
 floating_modifier $mod
 hide_edge_borders both
@@ -36,6 +37,7 @@ bindsym $mod+n exec dunstctl close
 bindsym $mod+shift+n exec dunstctl close-all
 bindsym $mod+shift+i exec dunstctl context
 bindsym $mod+shift+ctrl+n exec dunstctl history-pop
+bindsym Mod1+Tab exec sway-alttab
 
 mode "window" {
     bindsym s exec "swaymsg layout toggle split; swaymsg mode default"
@@ -50,6 +52,7 @@ mode "passthrough" {
         bindsym $mod+F12 mode "default"
 }
 bindsym $mod+F12 mode "passthrough"
+
 bar {
 	font pango:mono 11
 	status_command SCRIPT_DIR=~/dotfiles/config/i3blocks/bin i3blocks
@@ -61,14 +64,20 @@ bar {
 
 exec --no-startup-id easystroke --config-dir $HOME/dotfiles/home_config/.easystroke/i3 hide
 
-exec libinput-gestures
+exec $HOME/.local/bin/ydotoold
+bindgesture swipe:3:up exec swaymsg fullscreen toggle
+bindgesture swipe:3:left exec "$HOME/.local/bin/ydotool key 29:1 35:1 35:0 29:0"
+bindgesture swipe:3:right exec "$HOME/.local/bin/ydotool key 29:1 38:1 38:0 29:0"
+bindgesture swipe:3:down exec "$HOME/.local/bin/ydotool key 29:1 17:1 17:0 29:0"
+bindgesture swipe:4:left exec "$HOME/.local/bin/ydotool key 35:1 35:0"
+bindgesture swipe:4:right exec "$HOME/.local/bin/ydotool key 38:1 38:0"
 exec swayidle -w \
          timeout 300 'swaylock -f -c 000000' \
          timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
          before-sleep 'swaylock -f -c 000000'
 exec --no-startup-id PYENV_VERSION=system ibus-daemon --xim -d -r
 
-output eDP-1 scale 2.8
+output eDP-1 scale 2.3
 input type:keyboard {
     repeat_delay 200
     repeat_rate 40

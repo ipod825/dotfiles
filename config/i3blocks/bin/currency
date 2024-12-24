@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+# Function to get the exchange rate from XE.com using only built-in tools and sed
+get_exchange_rate() {
+  local from_currency="$1"
+  local to_currency="$2"
+
+  local url="https://www.xe.com/currencyconverter/convert/?Amount=1&From=${from_currency}&To=${to_currency}"
+  local headers="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+
+  # Use curl to fetch the page content
+  local response=$(curl -s -L -H "$headers" "$url")
+
+  # Check if curl was successful
+  if [ $? -ne 0 ]; then
+    echo "Error: Failed to fetch data from XE.com" >&2
+    return 1
+  fi
+
+  # Use sed to find the line containing the rate. This is more fragile than using an HTML parser
+  # and highly depends on the structure of XE.com's HTML.
+  local rate_line=$(echo "$response" | sed -n -E 's/.*<p class="sc-b5d1d4ba-1 bPeOTN">(.*)<\/p>.*/\1/p')
+
+  # Check if the rate was found
+  if [ -z "$rate_line" ]; then
+    echo "Error: Could not find the exchange rate element on XE.com" >&2
+    return 1
+  fi
+  
+  # Clean the rate string (remove non-numeric characters except .) using sed
+  local cleaned_rate=$(echo "$rate_line" | sed 's/[^0-9\.]//g')
+
+  # Output the cleaned rate
+  echo "$cleaned_rate"
+}
+
+# Get the currencies from command-line arguments or use default
+from_currency="${1:-USD}"
+to_currency="${2:-TWD}"
+
+# # Get the exchange rate
+exchange_rate=$(get_exchange_rate "$from_currency" "$to_currency")
+
+# Check if the exchange rate was retrieved successfully
+if [ $? -eq 0 ]; then
+  # Print the exchange rate, limiting to 5 decimal places using `printf`
+  printf "%s\n" "${exchange_rate:0:5}"
+else
+  exit 1
+fi

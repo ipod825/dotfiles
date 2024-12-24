@@ -2,7 +2,7 @@ separator_block_width=15
 markup=pango
 
 [currency]
-command=$SCRIPT_DIR/currency.py
+command=$SCRIPT_DIR/currency
 interval=900
 label=$
 color=#008700
