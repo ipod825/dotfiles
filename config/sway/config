@@ -62,7 +62,9 @@ bar {
 }
 
 
+exec "ssh-agent -a $SSH_AUTH_SOCK"
 exec --no-startup-id easystroke --config-dir $HOME/dotfiles/home_config/.easystroke/i3 hide
+exec dunst
 
 exec $HOME/.local/bin/ydotoold
 bindgesture swipe:3:up exec swaymsg fullscreen toggle
@@ -78,6 +80,7 @@ exec swayidle -w \
 exec --no-startup-id PYENV_VERSION=system ibus-daemon --xim -d -r
 
 output eDP-1 scale 2.3
+output DP-1 scale 1.3
 input type:keyboard {
     repeat_delay 200
     repeat_rate 40
