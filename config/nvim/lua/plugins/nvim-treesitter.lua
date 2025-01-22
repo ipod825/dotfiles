@@ -28,11 +28,11 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter-context",
 		event = "VeryLazy",
-		config = function() 
-		    require'treesitter-context'.setup({
-		        max_lines = 4,
-		        trim_scope = 'inner',
-            })
+		config = function()
+			require("treesitter-context").setup({
+				max_lines = 4,
+				trim_scope = "inner",
+			})
 		end,
 	},
 

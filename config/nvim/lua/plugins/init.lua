@@ -3,9 +3,7 @@ local M = {
 	{
 		"SmiteshP/nvim-navic",
 		event = "VeryLazy",
-		config = function()
-			require("nvim-navic").setup({})
-		end,
+		config = true,
 	},
 	{ "rcarriga/nvim-notify" },
 	{ "Susensio/magic-bang.nvim", config = true },
@@ -35,7 +33,7 @@ local M = {
 	{ "whiteinge/diffconflicts" },
 	{ "git@github.com:ipod825/oldfiles.nvim", config = true },
 	{ "andymass/vim-matchup" },
-	{ "AndrewRadev/linediff.vim", event="VeryLazy" },
+	{ "AndrewRadev/linediff.vim", event = "VeryLazy" },
 	{ "chrisbra/Colorizer" },
 	{ "ziontee113/color-picker.nvim" },
 	{ "rbtnn/vim-vimscript_lasterror" },
