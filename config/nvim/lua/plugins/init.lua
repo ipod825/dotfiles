@@ -31,7 +31,7 @@ local M = {
 	{ "will133/vim-dirdiff", cmd = "DirDiff" },
 	{ "mrjones2014/smart-splits.nvim" },
 	{ "whiteinge/diffconflicts" },
-	{ "git@github.com:ipod825/oldfiles.nvim", config = true },
+	{ "git@github.com:ipod825/oldfiles.nvim", config = true, event = "VeryLazy" },
 	{ "andymass/vim-matchup" },
 	{ "AndrewRadev/linediff.vim", event = "VeryLazy" },
 	{ "chrisbra/Colorizer" },
