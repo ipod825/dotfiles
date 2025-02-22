@@ -105,7 +105,7 @@ if [[ ! -z $gpg_key ]]; then
     if [ ! -x $HOME/.local/bin/git-crypt ]; then
           git clone --depth 1 https://github.com/AGWA/git-crypt.git /tmp/git-crypt
           pushd /tmp/git-crypt
-          CXXFLAGS='-DOPENSSL_API_COMPAT=0x30000000L' make -j 9
+          # CXXFLAGS='-DOPENSSL_API_COMPAT=0x30000000L' make -j 9
           make install PREFIX=$HOME/.local
           popd
     fi
