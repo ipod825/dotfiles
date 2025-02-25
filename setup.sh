@@ -103,7 +103,8 @@ if [[ ! -z $gpg_key ]]; then
     gpg --import $gpg_key
     echo "==Setting git-crypt=="
     if [ ! -x $HOME/.local/bin/git-crypt ]; then
-          git clone --depth 1 https://github.com/AGWA/git-crypt.git /tmp/git-crypt
+          # git clone --depth 1 https://github.com/AGWA/git-crypt.git /tmp/git-crypt
+          git clone --depth 1 https://github.com/maxisam/git-crypt/releases /tmp/git-crypt
           pushd /tmp/git-crypt
           # CXXFLAGS='-DOPENSSL_API_COMPAT=0x30000000L' make -j 9
           make install PREFIX=$HOME/.local
