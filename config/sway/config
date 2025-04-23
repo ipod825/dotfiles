@@ -1,8 +1,8 @@
 # vim: filetype=i3config
 
 set $mod Mod4
-# set $term "kitty --single-instance"
-set $term "foot"
+set $term "kitty --single-instance"
+# set $term "foot"
 for_window [class="^.*"] border pixel 0
 floating_modifier $mod
 hide_edge_borders both
@@ -48,6 +48,36 @@ mode "window" {
 }
 bindsym $mod+w mode "window"
 
+mode Mouse {
+    # bindsym a mode default, exec 'wl-kbptr-sway-active-win; swaymsg mode Mouse'
+    bindsym a mode default, exec 'wl-kbptr; swaymsg mode Mouse'
+
+    # Mouse move
+    bindsym h seat seat0 cursor move -15 0
+    bindsym j seat seat0 cursor move 0 15
+    bindsym k seat seat0 cursor move 0 -15
+    bindsym l seat seat0 cursor move 15 0
+
+    # Left button
+    bindsym s seat seat0 cursor press button1
+    bindsym --release s seat seat0 cursor release button1; mode default
+
+    bindsym Return seat seat0 cursor press button1
+    bindsym --release Return seat seat0 cursor release button1; mode default
+
+    # Middle button
+    bindsym d seat seat0 cursor press button2
+    bindsym --release d seat seat0 cursor release button2; mode default
+
+    # Right button
+    bindsym f seat seat0 cursor press button3
+    bindsym --release f seat seat0 cursor release button3; mode default
+
+    bindsym Escape mode default
+}
+
+bindsym $mod+m mode Mouse
+
 mode "passthrough" {
         bindsym $mod+F12 mode "default"
 }
@@ -74,15 +104,15 @@ bindgesture swipe:3:down exec "$HOME/.local/bin/ydotool key 29:1 17:1 17:0 29:0"
 bindgesture swipe:4:left exec "$HOME/.local/bin/ydotool key 35:1 35:0"
 bindgesture swipe:4:right exec "$HOME/.local/bin/ydotool key 38:1 38:0"
 exec swayidle -w \
-         timeout 300 'swaylock -f -c 000000' \
-         timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+         timeout 1500 'swaylock -f -c 000000' \
+         timeout 1800 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
          before-sleep 'swaylock -f -c 000000'
 exec --no-startup-id PYENV_VERSION=system ibus-daemon --xim -d -r
 
 output eDP-1 scale 2.3
 output DP-1 scale 1.3
 input type:keyboard {
-    repeat_delay 200
+    repeat_delay 300
     repeat_rate 40
 }
 input type:touchpad {
