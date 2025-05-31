@@ -1,0 +1,2 @@
+# Example prompt_prefix that shows the session in square brackets
+prompt_prefix = "[$SHPOOL_SESSION_NAME]"

@@ -59,7 +59,9 @@ function M.on_switch_on()
 end
 
 function M.on_switch_off()
-	vim.cmd([[NeoCodeium! disable]])
+	if prequire("neocodeium") then
+		vim.cmd([[NeoCodeium! disable]])
+	end
 end
 
 function M.switch_env(env)
